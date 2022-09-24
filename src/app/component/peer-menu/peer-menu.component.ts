@@ -10,6 +10,9 @@ import { LobbyComponent } from 'component/lobby/lobby.component';
 import { AppConfigService } from 'service/app-config.service';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
+import { ChatMessageService } from 'service/chat-message.service';
+import { ConfirmationComponent, ConfirmationType } from 'component/confirmation/confirmation.component';
+import { GameCharacter } from '@udonarium/game-character';
 
 @Component({
   selector: 'peer-menu',
@@ -25,10 +28,17 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
+  get isGMMode(): boolean{ return PeerCursor.myCursor ? PeerCursor.myCursor.isGMMode : false; }
+  set isGMMode(isGMMode: boolean) { if (PeerCursor.myCursor) PeerCursor.myCursor.isGMMode = isGMMode; }
+
+  get isGMHold(): boolean { return PeerCursor.isGMHold; }
+  get isDisableConnect(): boolean { return this.isGMHold || this.isGMMode; }
+
   constructor(
     private ngZone: NgZone,
     private modalService: ModalService,
     private panelService: PanelService,
+    private chatMessageService: ChatMessageService,
     public appConfigService: AppConfigService
   ) { }
 
@@ -87,5 +97,60 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
         (err) => {
           console.error("Failed to copy userId: ", err);
         });
+  }
+  onGMMode($event: Event) {
+    if (PeerCursor.isGMHold || this.isGMMode) {
+      if (this.isGMMode) {
+        $event.preventDefault();
+        this.modalService.open(ConfirmationComponent, {
+          title: 'GMモード解除',
+          text: 'GMモードを解除しますか？',
+          type: ConfirmationType.OK_CANCEL,
+          materialIcon: 'person_remove',
+          action: () => {
+            PeerCursor.isGMHold = false;
+            this.isGMMode = false;
+            (<HTMLInputElement>$event.target).checked = false;
+            this.chatMessageService.sendOperationLog('GMモードを解除');
+            EventSystem.trigger('CHANGE_GM_MODE', null);
+            //this.changeDetector.markForCheck();
+            if (GameCharacter.isStealthMode) {
+              this.modalService.open(ConfirmationComponent, {
+                title: 'ステルスモード',
+                text: 'ステルスモードになります。',
+                help: '位置を自分だけ見ているキャラクターが1つ以上テーブル上にある間、あなたのカーソル位置は他の参加者に伝わりません。',
+                type: ConfirmationType.OK,
+                materialIcon: 'disabled_visible'
+              });
+            }
+          }
+        });
+      } else {
+        PeerCursor.isGMHold = false;
+        this.isGMMode = false;
+      }
+    } else {
+      $event.preventDefault();
+      this.modalService.open(ConfirmationComponent, {
+        title: 'GMモードになる',
+        text: 'GMモードになりますか？\nGMモード中（保留中含む）はあなたからプライベート接続、ルームへの接続は行えません。',
+        helpHtml: 'GMモードでは、<b>秘話</b>、裏向きの<b>カード</b>、公開されていない<b>ダイスシンボル</b>、<b>キャラクター</b>位置、<b>カーソル</b>位置をすべて見ることができ、あなたのカーソル位置は他の参加者に伝わらなくなります。\n\n<b><big>—With great power comes great responsibility.</big></b>',
+        type: ConfirmationType.OK_CANCEL,
+        materialIcon: 'person_add',
+        action: () => {
+          PeerCursor.isGMHold = true;
+          this.isGMMode = false;
+          (<HTMLInputElement>$event.target).checked = true;
+          //this.changeDetector.markForCheck();
+          this.modalService.open(ConfirmationComponent, {
+            title: 'GMモードになる',
+            text: 'まだGMモードではありません。',
+            helpHtml: 'GMモードになるには、チャットから <b>GMになる</b> または <b>GMになります</b> を含む文を送信します。',
+            type: ConfirmationType.OK,
+            materialIcon: 'person_add'
+          });
+        }
+      });
+    }
   }
 }

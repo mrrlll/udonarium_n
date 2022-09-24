@@ -4,6 +4,7 @@
     (click)="changeIcon()">
     <!--<img *ngIf="myPeer.image" [src]="myPeer.image.url | safe: 'resourceUrl'" />-->
   </div>
+  <label style="display: inline-block; margin-bottom: 2px" [ngClass]="{'i-am-gm': isGMMode || isGMHold}"><b style="font-size: smaller"><input type="checkbox" name="i-am-gamemaster" value="I'm Gamemaster" checked="{{ isGMMode || isGMHold ? 'checked' : '' }}" (click)="onGMMode($event)">{{ isGMMode ? '現在GMモードです' : (isGMHold ? 'GMモード保留中' : 'GMモードになる') }}</b></label>※実装途中<br />
   <span>あなたのニックネーム：  <input [(ngModel)]="myPeer.name"  placeholder="ニックネーム" /></span>
 </div>
 <div>

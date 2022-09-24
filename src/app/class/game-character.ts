@@ -1,12 +1,15 @@
 import { ChatPalette } from './chat-palette';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { DataElement } from './data-element';
+import { Network } from './core/system';
 import { TabletopObject } from './tabletop-object';
+import { ObjectStore } from './core/synchronize-object/object-store';
 
 @SyncObject('character')
 export class GameCharacter extends TabletopObject {
   @SyncVar() rotate: number = 0;
   @SyncVar() roll: number = 0;
+  @SyncVar() owner: string = '';
 
   get name(): string { return this.getCommonValue('name', ''); }
   get size(): number { return this.getCommonValue('size', 1); }
@@ -25,6 +28,16 @@ export class GameCharacter extends TabletopObject {
     gameCharacter.createTestGameDataElement(name, size, imageIdentifier);
 
     return gameCharacter;
+  }
+
+  get isHideIn(): boolean { return !!this.owner; }
+  get isVisible(): boolean { return !this.owner || Network.peerContext.userId === this.owner; }
+
+  static get isStealthMode(): boolean {
+    for (const character of ObjectStore.instance.getObjects(GameCharacter)) {
+      if (character.isHideIn && character.isVisible && character.location.name === 'table') return true;
+    }
+    return false;
   }
 
   createTestGameDataElement(name: string, size: number, imageIdentifier: string) {
