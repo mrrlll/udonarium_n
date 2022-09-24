@@ -7,8 +7,9 @@
   <span>あなたのニックネーム：  <input [(ngModel)]="myPeer.name"  placeholder="ニックネーム" /></span>
 </div>
 <div>
-  <span>あなたのID：<span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peerContext.userId}}</span>
+  <span>あなたのID：<span id="userId" *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peerContext.userId}}</span>
   <span *ngIf="!networkService.isOpen" style="font-weight: bold;">???</span>
+  <button (click)="copyUserIdToClipboard()"><i class="material-icons">content_copy</i></button>
   </span>
 </div>
 <!--<div>host ID:{{networkService.hostPeerID}}</div>-->
