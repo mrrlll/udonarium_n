@@ -234,9 +234,17 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
             this.owners = newOwners;
           }
         }
-        : {
-          name: null, enabled: false
+        : {name : null, enabled: false}
+      ),
+      (this.isHand && this.card.owners.length >= 2
+        ? {
+          name: '自分だけで見直す', action: () => {
+            SoundEffect.play(PresetSound.cardDraw);
+            this.card.faceDown();
+            this.owners = [Network.peerContext.userId];
+          }
         }
+        : {name : null, enabled: false}
       ),
       ContextMenuSeparator,
       {
