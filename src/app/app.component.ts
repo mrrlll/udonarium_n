@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, NgZone, OnDestroy, ViewChild, ViewContainerRef } from '@angular/core';
-
+import { NgSelectConfig } from '@ng-select/ng-select';
 import { ChatTabList } from '@udonarium/chat-tab-list';
+import { Config } from '@udonarium/config';
 import { AudioPlayer } from '@udonarium/core/file-storage/audio-player';
 import { AudioSharingSystem } from '@udonarium/core/file-storage/audio-sharing-system';
 import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
@@ -19,6 +20,11 @@ import { Jukebox } from '@udonarium/Jukebox';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TableSelecter } from '@udonarium/table-selecter';
+import { CutIn } from '@udonarium/cut-in';
+import { CutInLauncher } from '@udonarium/cut-in-launcher';
+
+import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
+import { CutInListComponent } from 'component/cut-in-list/cut-in-list.component';
 
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
@@ -61,6 +67,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private chatMessageService: ChatMessageService,
     private appConfigService: AppConfigService,
     private saveDataService: SaveDataService,
+    private ngSelectConfig: NgSelectConfig,
     private ngZone: NgZone
   ) {
 
@@ -79,9 +86,12 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     });
     this.appConfigService.initialize();
     this.pointerDeviceService.initialize();
+    this.ngSelectConfig.appendTo = 'body';
 
     TableSelecter.instance.initialize();
     ChatTabList.instance.initialize();
+    DataSummarySetting.instance.initialize();
+
     DataSummarySetting.instance.initialize();
 
     let diceBot: DiceBot = new DiceBot('DiceBot');
@@ -90,6 +100,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     let jukebox: Jukebox = new Jukebox('Jukebox');
     jukebox.initialize();
+
+    let cutInLauncher = new CutInLauncher('CutInLauncher');
+    cutInLauncher.initialize();
 
     let soundEffect: SoundEffect = new SoundEffect('SoundEffect');
     soundEffect.initialize();
@@ -139,6 +152,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     PeerCursor.myCursor.imageIdentifier = noneIconImage.identifier;
 
     EventSystem.register(this)
+      .on('START_CUT_IN', event => { this.startCutIn( event.data.cutIn ); })
+      .on('STOP_CUT_IN', event => { if ( ! event.data.cutIn ) return; console.log('カットインイベント_ストップ'  + event.data.cutIn.name ); })
       .on('UPDATE_GAME_OBJECT', event => { this.lazyNgZoneUpdate(event.isSendFromSelf); })
       .on('DELETE_GAME_OBJECT', event => { this.lazyNgZoneUpdate(event.isSendFromSelf); })
       .on('SYNCHRONIZE_AUDIO_LIST', event => { if (event.isSendFromSelf) this.lazyNgZoneUpdate(false); })
@@ -195,6 +210,42 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     EventSystem.unregister(this);
   }
 
+  startCutIn( cutIn: CutIn ){
+    if ( ! cutIn ) return;
+    console.log( 'カットインイベント_スタート' + cutIn.name );
+    let option: PanelOption = { width: 200, height: 100, left: 300 , top: 100};
+    option.title = 'カットイン : ' + cutIn.name ;
+
+    console.log( '画面領域 w:' + window.innerWidth + ' h:' + window.innerHeight );
+
+    let cutin_w = cutIn.width;
+    let cutin_h = cutIn.height;
+
+    console.log( '画像サイズ w:' + cutin_w + ' h:' + cutin_h );
+
+    let margin_w = window.innerWidth - cutin_w ;
+    let margin_h = window.innerHeight - cutin_h - 25 ;
+
+    if ( margin_w < 0 )margin_w = 0 ;
+    if ( margin_h < 0 )margin_h = 0 ;
+
+    let margin_x = margin_w * cutIn.x_pos / 100;
+    let margin_y = margin_h * cutIn.y_pos / 100;
+
+    option.width = cutin_w ;
+    option.height = cutin_h + 25 ;
+    option.left = margin_x ;
+    option.top = margin_y;
+    option.isCutIn = true;
+    option.cutInIdentifier = cutIn.identifier;
+
+
+    let component = this.panelService.open(CutInWindowComponent, option);
+    component.cutIn = cutIn;
+    component.startCutIn();
+
+  }
+
   open(componentName: string) {
     let component: { new(...args: any[]): any } = null;
     let option: PanelOption = { width: 450, height: 600, left: 100 }
@@ -218,6 +269,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         break;
       case 'JukeboxComponent':
         component = JukeboxComponent;
+        break;
+      case 'CutInListComponent':
+        component = CutInListComponent;
+        option = {width: 650, height: 740}
         break;
       case 'GameCharacterGeneratorComponent':
         component = GameCharacterGeneratorComponent;

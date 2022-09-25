@@ -108,5 +108,8 @@
       }
     }
   },
-  "defaultProject": "udonarium"
+  "defaultProject": "udonarium",
+  "cli": {
+    "analytics": false
+  }
 }

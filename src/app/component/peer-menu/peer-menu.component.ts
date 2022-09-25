@@ -28,6 +28,26 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
+  set myPeerName(name: string) {
+    if (window.localStorage) {
+      localStorage.setItem(PeerCursor.CHAT_MY_NAME_LOCAL_STORAGE_KEY, name);
+    }
+    if (PeerCursor.myCursor) PeerCursor.myCursor.name = name;
+  }
+
+  get myPeerColor(): string {
+    if (!PeerCursor.myCursor) return PeerCursor.CHAT_DEFAULT_COLOR;
+    return PeerCursor.myCursor.color;
+  }
+  set myPeerColor(color: string) {
+    if (PeerCursor.myCursor) {
+      PeerCursor.myCursor.color = (color == PeerCursor.CHAT_TRANSPARENT_COLOR) ? PeerCursor.CHAT_DEFAULT_COLOR : color;
+    }
+    if (window.localStorage) {
+      localStorage.setItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY, PeerCursor.myCursor.color);
+    }
+  }
+
   get isGMMode(): boolean{ return PeerCursor.myCursor ? PeerCursor.myCursor.isGMMode : false; }
   set isGMMode(isGMMode: boolean) { if (PeerCursor.myCursor) PeerCursor.myCursor.isGMMode = isGMMode; }
 
@@ -43,7 +63,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   ) { }
 
   ngOnInit() {
-    Promise.resolve().then(() => this.panelService.title = '接続情報');
+    Promise.resolve().then(() => {this.panelService.title = '接続情報'; this.panelService.isAbleFullScreenButton = false});
   }
 
   ngAfterViewInit() {
@@ -73,9 +93,25 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     if (context.isRoom) return;
     ObjectStore.instance.clearDeleteHistory();
     Network.connect(context.peerId);
+    if (PeerCursor.isGMHold || this.isGMMode) {
+      PeerCursor.isGMHold = false;
+      this.isGMMode = false;
+      if (this.isGMMode) {
+        this.chatMessageService.sendOperationLog('GMモードを解除');
+        EventSystem.trigger('CHANGE_GM_MODE', null);
+      }
+    }
   }
 
   showLobby() {
+    if (PeerCursor.isGMHold || this.isGMMode) {
+      PeerCursor.isGMHold = false;
+      this.isGMMode = false;
+      if (this.isGMMode) {
+        this.chatMessageService.sendOperationLog('GMモードを解除');
+        EventSystem.trigger('CHANGE_GM_MODE', null);
+      }
+    }
     this.modalService.open(LobbyComponent, { width: 700, height: 400, left: 0, top: 400 });
   }
 
@@ -89,6 +125,11 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     return peerCursor ? peerCursor.name : '';
   }
 
+  findPeerIsGMMode(peerId: string): boolean {
+    const peerCursor = PeerCursor.findByPeerId(peerId);
+    return peerCursor ? peerCursor.isGMMode : false;
+  }
+
   copyUserIdToClipboard() {
     var userId = document.querySelector("#userId").textContent;
     navigator.clipboard.writeText(userId)
@@ -97,7 +138,13 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
         (err) => {
           console.error("Failed to copy userId: ", err);
         });
+    document.getElementById('copybutton').textContent = 'コピーしました';
+    setTimeout(function(){
+      document.getElementById('copybutton').textContent = 'IDをコピー';
+    }, 2000)
+
   }
+
   onGMMode($event: Event) {
     if (PeerCursor.isGMHold || this.isGMMode) {
       if (this.isGMMode) {

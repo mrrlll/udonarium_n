@@ -8,6 +8,16 @@ export interface PaletteLine {
   palette: string;
 }
 
+export interface PaletteIndex {
+  name: string;
+  line: number;
+}
+
+export interface PaletteMatch {
+  text: string;
+  line: number;
+}
+
 export interface PaletteVariable {
   name: string;
   value: string;
@@ -15,17 +25,92 @@ export interface PaletteVariable {
 
 @SyncObject('chat-palette')
 export class ChatPalette extends ObjectNode {
-  @SyncVar() dicebot: string = '';
+  @SyncVar() dicebot: string = 'DiceBot';
   //TODO: キャラシ項目のコピー
 
   get paletteLines(): PaletteLine[] {
-    if (!this.isAnalized) this.parse(<string>this.value);
+    if (!this.isAnalized) this.parse(<string> this.value);
     return this._paletteLines;
   }
 
   get paletteVariables(): PaletteVariable[] {
-    if (!this.isAnalized) this.parse(<string>this.value);
+    if (!this.isAnalized) this.parse(<string> this.value);
     return this._paletteVariables;
+  }
+
+  isPaletteIndex( line: string , no: number): PaletteIndex{
+    let index: PaletteIndex = {
+      name: '',
+      line: 0,
+    };
+
+    // コマ作成サイト(ユドナリウムのキャラコマを作るやつ様)の標準的な見出し区切りの書式から見出し語を抜き出す
+    let matchRes1 = line.match(/^\/\/--[-]+(.*)$/);
+    let matchRes2 = line.match(/^◆(.*)$/);
+    if (matchRes1){
+      index.name = matchRes1[1].replace(/-+$/,'');
+      index.line = no;
+      return index;
+    }
+
+    if (matchRes2){
+      index.name = matchRes2[1];
+      index.line = no;
+      return index;
+    }
+
+    return null;
+  }
+
+  get paletteIndex(): PaletteIndex[]{
+    let count = 0;
+    let ret;
+    let indexList: PaletteIndex[] = [];
+    let palettString = <string> this.value;
+    let palettes = palettString.split('\n');
+
+    for (let line of palettes ){
+      ret = this.isPaletteIndex(line, count);
+      if (ret){
+        indexList.push(ret);
+      }
+      count++;
+    }
+    return indexList;
+  }
+
+  paletteMatch(text: string): string[]{
+    let count = 0;
+    let matchList: string[] = [];
+
+    let palettString = <string> this.value;
+    let palettes = palettString.split('\n');
+
+    for (let line of palettes ){
+      if (line.indexOf(text) >= 0){
+        matchList.push(line);
+      }
+      count++;
+    }
+    return matchList;
+  }
+
+  paletteMatchLine(text: string ,nth :number): number{
+    let matchCount = 0;
+    let lineNo = 0;
+    let palettString = <string> this.value;
+    let palettes = palettString.split('\n');
+
+    for (let line of palettes ){
+      if (line.indexOf(text) >= 0){
+        if(matchCount == nth){
+          return lineNo;
+        }
+        matchCount++;
+      }
+      lineNo++;
+    }
+    return -1;
   }
 
   private _palettes: string[] = [];
@@ -34,7 +119,7 @@ export class ChatPalette extends ObjectNode {
   private isAnalized: boolean = false;
 
   getPalette(): string[] {
-    if (!this.isAnalized) this.parse(<string>this.value);
+    if (!this.isAnalized) this.parse(<string> this.value);
     return this._palettes;
   }
 
@@ -111,4 +196,13 @@ export class ChatPalette extends ObjectNode {
     super.apply(context);
     this.isAnalized = false;
   }
+}
+
+@SyncObject('buff-palette')
+export class BuffPalette extends ChatPalette {
+}
+
+
+@SyncObject('dice-table-palette')
+export class DiceTablePalette extends ChatPalette {
 }

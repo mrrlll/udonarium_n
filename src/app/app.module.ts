@@ -5,6 +5,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BadgeComponent } from 'component/badge/badge.component';
 import { CardStackListComponent } from 'component/card-stack-list/card-stack-list.component';
+import { CardStackListComponentEx } from 'component/card-stack-list-ex/card-stack-list-ex.component';
+import { CardStackListImageComponent } from 'component/card-stack-list-img/card-stack-list-img.component';
+
 import { CardStackComponent } from 'component/card-stack/card-stack.component';
 import { CardComponent } from 'component/card/card.component';
 import { ChatInputComponent } from 'component/chat-input/chat-input.component';
@@ -13,6 +16,12 @@ import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.compon
 import { ChatTabSettingComponent } from 'component/chat-tab-setting/chat-tab-setting.component';
 import { ChatTabComponent } from 'component/chat-tab/chat-tab.component';
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
+
+import { ChatTachieComponent } from 'component/chat-tachie/chat-tachie.component';
+import { ChatTachieImageComponent } from 'component/chat-tachie-img/chat-tachie-img.component';
+import { ChatColorSettingComponent } from 'component/chat-color-setting/chat-color-setting.component';
+import { ChatMessageSettingComponent } from 'component/chat-message-setting/chat-message-setting.component';
+
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
 import { DiceSymbolComponent } from 'component/dice-symbol/dice-symbol.component';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
@@ -27,13 +36,16 @@ import { GameTableSettingComponent } from 'component/game-table-setting/game-tab
 import { GameTableComponent } from 'component/game-table/game-table.component';
 import { JukeboxComponent } from 'component/jukebox/jukebox.component';
 import { LobbyComponent } from 'component/lobby/lobby.component';
+import { LinkyModule } from 'ngx-linky';
 import { ModalComponent } from 'component/modal/modal.component';
 import { NetworkIndicatorComponent } from 'component/network-indicator/network-indicator.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { OverviewPanelComponent } from 'component/overview-panel/overview-panel.component';
 import { PasswordCheckComponent } from 'component/password-check/password-check.component';
 import { PeerCursorComponent } from 'component/peer-cursor/peer-cursor.component';
 import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
 import { RoomSettingComponent } from 'component/room-setting/room-setting.component';
+
 import { TerrainComponent } from 'component/terrain/terrain.component';
 import { TextNoteComponent } from 'component/text-note/text-note.component';
 import { TextViewComponent } from 'component/text-view/text-view.component';
@@ -44,6 +56,14 @@ import { ResizableDirective } from 'directive/resizable.directive';
 import { RotableDirective } from 'directive/rotable.directive';
 import { TooltipDirective } from 'directive/tooltip.directive';
 import { SafePipe } from 'pipe/safe.pipe';
+
+import { OpenUrlComponent } from 'component/open-url/open-url.component';
+import { YouTubePlayerModule } from '@angular/youtube-player';
+
+import { CutInListComponent } from 'component/cut-in-list/cut-in-list.component';
+import { CutInBgmComponent } from 'component/cut-in-bgm/cut-in-bgm.component';
+
+import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
 
 import { AppConfigService } from 'service/app-config.service';
 import { ChatMessageService } from 'service/chat-message.service';
@@ -63,12 +83,21 @@ import { AppComponent } from './app.component';
     CardComponent,
     CardStackComponent,
     CardStackListComponent,
+    CardStackListComponentEx,
+//    CardStackListImageComponent,
     ChatMessageComponent,
     ChatPaletteComponent,
     ChatTabComponent,
     ChatTabSettingComponent,
     ChatWindowComponent,
+
+    ChatTachieComponent,
+    ChatTachieImageComponent,
+    ChatColorSettingComponent,
+    ChatMessageSettingComponent,
+
     ContextMenuComponent,
+
     FileSelecterComponent,
     FileStorageComponent,
     GameCharacterGeneratorComponent,
@@ -80,6 +109,13 @@ import { AppComponent } from './app.component';
     GameTableSettingComponent,
     GameTableComponent,
     JukeboxComponent,
+
+    OpenUrlComponent,
+
+    CutInListComponent,
+    CutInBgmComponent,
+    CutInWindowComponent,
+
     LobbyComponent,
     ModalComponent,
     OverviewPanelComponent,
@@ -106,7 +142,10 @@ import { AppComponent } from './app.component';
     BrowserModule,
     BrowserAnimationsModule,
     CommonModule,
-    FormsModule
+    FormsModule,
+    LinkyModule,
+    YouTubePlayerModule,
+    NgSelectModule
   ],
   providers: [
     AppConfigService,

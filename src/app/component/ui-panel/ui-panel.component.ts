@@ -1,7 +1,11 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { Component, ElementRef, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { PanelService } from 'service/panel.service';
+import { PeerCursor } from '@udonarium/peer-cursor';
 import { PointerDeviceService } from 'service/pointer-device.service';
+
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { CutIn } from '@udonarium/cut-in';
 
 @Component({
   selector: 'ui-panel',
@@ -28,25 +32,39 @@ export class UIPanelComponent implements OnInit {
   @ViewChild('draggablePanel', { static: true }) draggablePanel: ElementRef<HTMLElement>;
   @ViewChild('scrollablePanel', { static: true }) scrollablePanel: ElementRef<HTMLDivElement>;
   @ViewChild('content', { read: ViewContainerRef, static: true }) content: ViewContainerRef;
+  @ViewChild('titleBar', { static: true }) titleBar: ElementRef<HTMLDivElement>;
 
   @Input() set title(title: string) { this.panelService.title = title; }
   @Input() set left(left: number) { this.panelService.left = left; }
   @Input() set top(top: number) { this.panelService.top = top; }
   @Input() set width(width: number) { this.panelService.width = width; }
   @Input() set height(height: number) { this.panelService.height = height; }
+  @Input() set isAbleMinimizeButton(isAbleMinimizeButton: boolean) { this.panelService.isAbleMinimizeButton = isAbleMinimizeButton; }
+  @Input() set isAbleFullScreenButton(isAbleFullScreenButton: boolean) { this.panelService.isAbleFullScreenButton = isAbleFullScreenButton; }
+  @Input() set isAbleCloseButton(isAbleCloseButton: boolean) { this.panelService.isAbleCloseButton = isAbleCloseButton; }
+  @Input() set isAbleRotateButton(isAbleRotateButton: boolean) { this.panelService.isAbleRotateButton = isAbleRotateButton; }
 
   get title(): string { return this.panelService.title; }
   get left() { return this.panelService.left; }
   get top() { return this.panelService.top; }
   get width() { return this.panelService.width; }
   get height() { return this.panelService.height; }
+  get isAbleMinimizeButton() { return this.panelService.isAbleMinimizeButton; }
+  get isAbleFullScreenButton() { return this.panelService.isAbleFullScreenButton; }
+  get isAbleCloseButton() { return this.panelService.isAbleCloseButton; }
+  get isAbleRotateButton() { return this.panelService.isAbleRotateButton; }
 
+  get isGMMode(): boolean{ return PeerCursor.myCursor ? PeerCursor.myCursor.isGMMode : false; }
+  
   private preLeft: number = 0
   private preTop: number = 0;
   private preWidth: number = 100;
   private preHeight: number = 100;
 
   private isFullScreen: boolean = false;
+  private isMinimized: boolean = false;
+
+  private timerCheckWindowSize = null;
 
   get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging; }
 
@@ -57,6 +75,76 @@ export class UIPanelComponent implements OnInit {
 
   ngOnInit() {
     this.panelService.scrollablePanel = this.scrollablePanel.nativeElement;
+    this.timerCheckWindowSize = setInterval(() => {
+      this.chkeWindowMinSize();
+    },500);
+  }
+
+  chkeWindowMinSize(){
+    const id = this.panelService.cutInIdentifier;
+    if(!id )return;
+    const cutIn = ObjectStore.instance.get<CutIn>(id);
+    if(!cutIn)return;
+    if(!cutIn.videoId)return;
+
+    let panel = this.draggablePanel.nativeElement
+    console.log('chkeWindowMinSize:' + panel.style.width + ' H:' + panel.style.height);
+    
+    const nowW = parseInt(panel.style.width);
+    const nowH = parseInt(panel.style.height);
+    if (nowW < cutIn.minSizeWidth(true)){
+      panel.style.width = cutIn.minSizeWidth(true) + 'px';
+      console.log('サイズ補正W');
+    }
+    if (nowH < cutIn.minSizeHeight(true)){
+      panel.style.height = cutIn.minSizeHeight(true) + 'px';
+      console.log('サイズ補正H');
+    }
+    // はみ出し防止処理
+    const winW = window.innerWidth;
+    const winH = window.innerHeight;
+
+    const offsetL: number = panel.offsetLeft; 
+    const offsetT: number = panel.offsetTop;
+
+    const overR = offsetL + cutIn.minSizeWidth(true) - winW;
+    if( overR >= 0){
+      const newOffL = offsetL - overR <= 0 ? 0 : offsetL - overR;
+      panel.style.left = newOffL + 'px';
+      console.log('はみ出し防止処理横');
+    }
+
+    const overB = offsetT + cutIn.minSizeHeight(true) - winH;
+    if( overB >= 0){
+      const newOffT = offsetT - overB <= 0 ? 0 : offsetT - overB;
+      panel.style.top = newOffT + 'px';
+      console.log('はみ出し防止処理縦');
+    }
+  }
+
+  toggleMinimize() {
+    if (this.isFullScreen) return;
+    const id = this.panelService.cutInIdentifier;
+    if (id){
+      const cutIn = ObjectStore.instance.get<CutIn>(id);
+      if (cutIn.videoId){
+        return;
+      }
+    }
+
+    let body  = this.scrollablePanel.nativeElement;
+    let panel = this.draggablePanel.nativeElement;
+    if (this.isMinimized) {
+      this.isMinimized = false;
+      body.style.display = null;
+      this.height = this.preHeight;
+    } else {
+      this.preHeight = panel.offsetHeight;
+
+      this.isMinimized = true;
+      body.style.display = 'none';
+      this.height = this.titleBar.nativeElement.offsetHeight;
+    }
   }
 
   toggleFullScreen() {

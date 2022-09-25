@@ -1,5 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
+import Autolinker from 'autolinker';
+import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 
@@ -10,12 +12,14 @@ import { PanelService } from 'service/panel.service';
 })
 export class TextViewComponent implements OnInit {
 
-  @Input() text: string = '';
+  @Input() text: string|string[] = '';
   @Input() title: string = '';
   constructor(
     private panelService: PanelService,
     private modalService: ModalService
   ) { }
+
+  stringUtil = StringUtil;
 
   ngOnInit() {
     Promise.resolve().then(() => {
@@ -27,4 +31,43 @@ export class TextViewComponent implements OnInit {
     });
   }
 
+  htmlEscapeLinking(str, shorten=false): string {
+    return Autolinker.link(StringUtil.escapeHtml(str), {
+      urls: {schemeMatches: true, tldMatches: false}, 
+      truncate: {length: 96, location: 'end'}, 
+      decodePercentEncoding: shorten, 
+      stripPrefix: shorten, 
+      stripTrailingSlash: shorten, 
+      email: false, 
+      phone: false,
+      replaceFn : function(m) {
+        if (m.getType() == 'url' && StringUtil.validUrl(m.getAnchorHref())) {
+          if (StringUtil.sameOrigin(m.getAnchorHref())) {
+            return true;
+          } else {
+            const tag = m.buildTag();
+            tag.setAttr('rel', 'nofollow');
+            tag.addClass('outer-link');
+            return tag;
+          }
+        }
+        return false;
+      }
+    });
+  }
+
+  isObj(val) { return typeof val == 'object'; }
+
+  onLinkClick($event) {
+    //console.log($event.target.tagName);
+    if ($event && $event.target.tagName == 'A') {
+      const href = $event.target.getAttribute('href');
+      if (!StringUtil.sameOrigin(href)) {
+        $event.preventDefault();
+        this.modalService.open(OpenUrlComponent, { url: $event.target.getAttribute('href') });
+        return false;
+      }
+    }
+    return true;
+  }
 }

@@ -7,6 +7,7 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { Network } from '@udonarium/core/system';
 import { GameCharacter } from '@udonarium/game-character';
 import { PeerCursor } from '@udonarium/peer-cursor';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
 
 const HOURS = 60 * 60 * 1000;
 
@@ -100,7 +101,6 @@ export class ChatMessageService {
         timestamp: this.calcTimeStamp(chatTab),
         tag: 'opelog',
         text: StringUtil.cr(text),
-        color: PeerCursor.myCursor.color
       };
 
       chatTab.addMessage(chatMessage);
