@@ -12,6 +12,7 @@ import { ImageService } from 'service/image.service';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
+import { Config } from '@udonarium/config';
 
 @Component({
   selector: 'game-table-setting',
@@ -21,6 +22,8 @@ import { SaveDataService } from 'service/save-data.service';
 export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   minSize: number = 1;
   maxSize: number = 100;
+
+  get config(): Config { return ObjectStore.instance.get<Config>('Config')};
   get tableBackgroundImage(): ImageFile {
     return this.imageService.getEmptyOr(this.selectedTable ? this.selectedTable.imageIdentifier : null);
   }

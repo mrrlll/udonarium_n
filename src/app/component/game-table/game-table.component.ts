@@ -27,6 +27,7 @@ import { GridLineRender } from './grid-line-render';
 import { TableMouseGesture } from './table-mouse-gesture';
 import { TableTouchGesture } from './table-touch-gesture';
 
+
 @Component({
   selector: 'game-table',
   templateUrl: './game-table.component.html',

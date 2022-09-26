@@ -1,0 +1,221 @@
+.area {
+  position: relative;
+  margin: 2em 0;
+  padding: 0.5em 1em;
+  border: solid 3px rgba(255, 255, 255, 0.9);
+}
+
+.area-title {
+  color: rgba(255, 255, 255, 1);
+  position: absolute;
+  display: inline-block;
+  top: -27px;
+  left: -3px;
+  padding: 0 9px;
+  height: 25px;
+  line-height: 25px;
+  font-size: 15px;
+  background: rgba(180, 180, 180, 0.9);
+  border-radius: 5px 5px 0 0;
+}
+
+.timer-quick-button-area {
+  color: rgba(122, 122, 122, 0.7);
+  display: flex;
+  justify-content: space-between;
+}
+
+.quick-button {
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  position: relative;
+  text-align: center;
+}
+
+.quick-button:hover label {
+  font-size: 1.1rem;
+  text-shadow: 2px 2px 2px rgba(255, 255, 255, 0.3);
+}
+
+.quick-button:hover i {
+  text-shadow: 0px 0px 2px rgba(255, 255, 255, 0.3);
+}
+
+.quick-button label {
+  cursor: pointer;
+  width: 50px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  line-height: 50px;
+  color: rgba(255, 255, 255, 1);
+  transition: all 0.2s;
+}
+
+.quick-button label span {
+  font-size: 0.3rem;
+}
+
+.quick-button i {
+  position: absolute;
+  top: 0;
+  font-size: 50px;
+  display: block;
+  z-index: 0;
+  transition: all 0.2s;
+}
+
+.timer-input {
+  display: flex;
+  align-items: center;
+}
+
+.timer-input label {
+  display: block;
+  margin-bottom: 1px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.009em;
+}
+
+.timer-input .input-div-wrap {
+  width: 80%;
+}
+.input-div-timer-time {
+  display: flex;
+}
+.input-div-timer-time .input-div {
+  width: 50%;
+  position: relative;
+}
+
+.timer-input input {
+  width: 80%;
+  line-height: 1.5;
+  box-sizing: border-box;
+  color: rgba(255, 255, 255, 1);
+  padding: 4px 0;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.9);
+  background-color: transparent;
+  outline: none;
+}
+
+.timer-input .focus_line {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  transition: 0.4s;
+  background-color: rgba(233, 237, 255, 0.9);
+}
+.timer-input input:focus ~ .focus_line {
+  left: 0;
+  width: 80%;
+  transition: 0.2s;
+}
+
+.alerm-sound-input-div {
+  margin-top: 15px;
+}
+
+.alerm-sound-input-div select {
+  color: rgba(255, 255, 255, 1);
+  position: relative;
+  font-family: inherit;
+  background-color: transparent;
+  width: 90%;
+  padding: 2px 10px 10px 0;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.9);
+}
+.alerm-sound-input-div select:focus {
+  outline: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0);
+}
+.alerm-sound-input-div select::-ms-expand {
+  display: none;
+}
+
+.alerm-sound-input-div option {
+  background-color: rgba(48, 48, 48, 0.7);
+}
+
+.alerm-sound-input-div::after {
+  position: absolute;
+  top: 18px;
+  right: 10px;
+  width: 0;
+  height: 0;
+  padding: 0;
+  content: "";
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+.selectbar {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+.selectbar:before,
+.selectbar:after {
+  content: "";
+  height: 2px;
+  width: 0;
+  bottom: 1px;
+  position: absolute;
+  background: #ffffff;
+  transition: 0.2s ease all;
+}
+.selectbar:before {
+  left: 50%;
+}
+.selectbar:after {
+  right: 50%;
+}
+select:focus ~ .selectbar:before,
+select:focus ~ .selectbar:after {
+  width: 50%;
+}
+.highlight {
+  position: absolute;
+  top: 25%;
+  left: 0;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.timer-button {
+  width: 20%;
+  padding: 10px 0 0 0;
+  text-align: center;
+}
+
+.timer-button button {
+  background-color: rgba(48, 48, 48, 0.7);
+  color: rgba(255, 255, 255, 0.9);
+  box-sizing: border-box;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  transition: all 0.1s;
+}
+
+.timer-button button:hover {
+  color: rgba(48, 48, 48, 0.9);
+  background-color: rgba(255, 255, 255, 0.9);
+  transition: all 0.2s;
+}
+
+.mt {
+  margin-top: 50px;
+}
