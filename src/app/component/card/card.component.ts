@@ -219,7 +219,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         }
         : {
-          name: '自分だけ見る', action: () => {
+          name: '自分だけで見る', action: () => {
             SoundEffect.play(PresetSound.cardDraw);
             this.card.faceDown();
             this.owners = [Network.peerContext.userId];
@@ -238,7 +238,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
       ),
       (this.isHand && this.card.owners.length >= 2
         ? {
-          name: '自分だけで見直す', action: () => {
+          name: '自分だけで見る', action: () => {
             SoundEffect.play(PresetSound.cardDraw);
             this.card.faceDown();
             this.owners = [Network.peerContext.userId];
