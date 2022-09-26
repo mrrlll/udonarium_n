@@ -93,12 +93,10 @@ export class TimerModalComponent implements OnInit, OnDestroy, AfterViewInit {
   };
 
   setInfo = () => {
-    const alermElm: HTMLInputElement = <HTMLInputElement>(
-      document.getElementById('alerm-sound')
-    );
-    console.log(alermElm.value);
+    const alermElm = './assets/sounds/alerm/alerm.mp3';
+    console.log(alermElm);
     if (alermElm) {
-      this.timerBot.alerm = alermElm.value;
+      this.timerBot.alerm = alermElm;
     }
     const minElm: HTMLInputElement = <HTMLInputElement>(
       document.getElementById('minute-input')
