@@ -16,6 +16,7 @@ export interface PanelOption {
 
   isCutIn?: boolean; //この方式でよいか検討のこと
   cutInIdentifier?: string;
+  className?: string;
 }
 
 @Injectable()
