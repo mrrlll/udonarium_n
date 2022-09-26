@@ -32,7 +32,7 @@
     "msgpack-lite": "^0.1.26",
     "ngx-linky": "^4.0.0",
     "pako": "^2.0.4",
-    "rxjs": "~7.5.6",
+    "rxjs": "~7.5.7",
     "tslib": "^2.4.0",
     "vkbeautify": "^0.99.3",
     "zone.js": "~0.11.8"
@@ -49,7 +49,7 @@
     "@types/js-yaml": "^4.0.5",
     "@types/jszip": "^3.4.0",
     "@types/msgpack-lite": "^0.1.8",
-    "@types/node": "^18.7.20",
+    "@types/node": "^18.7.21",
     "@types/pako": "^2.0.0",
     "@types/vkbeautify": "^0.99.2",
     "jasmine-core": "~4.4.0",
