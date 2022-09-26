@@ -25,6 +25,8 @@ import { CutInLauncher } from '@udonarium/cut-in-launcher';
 
 import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
 import { CutInListComponent } from 'component/cut-in-list/cut-in-list.component';
+import { TimerBot } from '@udonarium/timer-bot';
+
 
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
@@ -45,6 +47,9 @@ import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { SaveDataService } from 'service/save-data.service';
+import { AlermSound } from '@udonarium/timer-bot';
+// タイマーメニュー
+import { TimerMenuComponent } from 'component/timer/timer-menu.component';
 
 @Component({
   selector: 'app-root',
@@ -91,6 +96,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     TableSelecter.instance.initialize();
     ChatTabList.instance.initialize();
     DataSummarySetting.instance.initialize();
+    Config.instance.initialize();
 
     DataSummarySetting.instance.initialize();
 
@@ -106,6 +112,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     let soundEffect: SoundEffect = new SoundEffect('SoundEffect');
     soundEffect.initialize();
+
+    let timerBot: TimerBot = new TimerBot('timer-bot');
+    timerBot.initialize();
 
     ChatTabList.instance.addChatTab('メインタブ', 'MainTab');
     ChatTabList.instance.addChatTab('サブタブ', 'SubTab');
@@ -146,6 +155,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     AudioStorage.instance.get(PresetSound.lock).isHidden = true;
     AudioStorage.instance.get(PresetSound.unlock).isHidden = true;
     AudioStorage.instance.get(PresetSound.sweep).isHidden = true;
+
+    // アラーム
+    AlermSound.alermFileList.forEach((o) => {
+      const sound: AudioFile = AudioStorage.instance.add(o.path);
+      sound.isHidden = true;
+      sound.name = 'アラーム_' + o.name;
+    });
 
     PeerCursor.createMyCursor();
     PeerCursor.myCursor.name = 'プレイヤー';
