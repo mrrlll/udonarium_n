@@ -62,6 +62,9 @@ import { YouTubePlayerModule } from '@angular/youtube-player';
 
 import { CutInListComponent } from 'component/cut-in-list/cut-in-list.component';
 import { CutInBgmComponent } from 'component/cut-in-bgm/cut-in-bgm.component';
+import { TimerModalComponent } from 'component/timer-modal/timer-modal.component';
+import { TimerMenuComponent } from 'component/timer/timer-menu.component';
+
 
 import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
 
@@ -137,6 +140,8 @@ import { AppComponent } from './app.component';
     DraggableDirective,
     ResizableDirective,
     ChatInputComponent,
+    TimerMenuComponent,
+    TimerModalComponent,
   ],
   imports: [
     BrowserModule,
