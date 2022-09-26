@@ -1,9 +1,17 @@
 <div>試聴音量：<input [(ngModel)]="auditionVolume" type="range" min="0" max="1" step="0.01" /></div>
 <div>BGM音量：<input [(ngModel)]="volume" type="range" min="0" max="1" step="0.01" /></div>
 <hr/>
-<div>全体音量：<input [(ngModel)]="roomVolume" type="range" min="0" max="2" step="0.01" /><font style="font-size: 12px;">※全プレイヤー共通</font></div>
+<div class="volume-area">
+  <span>SE音量</span>：<input
+    [(ngModel)]="seVolume"
+    type="range"
+    min="0"
+    max="1"
+    step="0.002"
+  />
+</div>
 <hr/>
-<button *ngIf="1" (click)="openCutInList()" [disabled]="0" >カットイン編集</button>
+<div>全体音量：<input [(ngModel)]="roomVolume" type="range" min="0" max="2" step="0.01" /><font style="font-size: 12px;">※全プレイヤー共通</font></div>
 <hr/>
 <div>
   <div *ngFor="let audio of audios" class="box">
@@ -34,3 +42,5 @@
 <div style="font-size: 12px;">※「試聴」は自分のスピーカーだけで音楽を1回再生します。</div>
 <div style="font-size: 12px;">※「BGM」はルーム内の全員で1つの音楽をループ再生します。</div>
 <div style="font-size: 12px;">※現行バージョンのセーブデータ（zip）には音楽ファイルは含まれません。（毎回アップロードが必要です）</div>
+<hr/>
+<button *ngIf="1" (click)="openCutInList()" [disabled]="0" >カットインリストを開く</button>

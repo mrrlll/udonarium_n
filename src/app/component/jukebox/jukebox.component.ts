@@ -15,6 +15,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 
 import { CutInLauncher } from '@udonarium/cut-in-launcher';
+import { SeBox } from '@udonarium/SeBox';
 
 @Component({
   selector: 'app-jukebox',
@@ -49,8 +50,18 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     EventSystem.trigger('CHANGE_JUKEBOX_VOLUME', null); 
   }
 
+  get seVolume(): number {
+    return AudioPlayer.seVolume;
+  }
+  set seVolume(seVolume: number) {
+    AudioPlayer.seVolume = seVolume;
+  }
+
   get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
   get jukebox(): Jukebox { return ObjectStore.instance.get<Jukebox>('Jukebox'); }
+  get seBox(): SeBox {
+    return ObjectStore.instance.get<SeBox>('SeBox');
+  }
 
   get cutInLauncher(): CutInLauncher { return ObjectStore.instance.get<CutInLauncher>('CutInLauncher'); }
 
@@ -98,6 +109,15 @@ export class JukeboxComponent implements OnInit, OnDestroy {
 
   stopBGM(audio: AudioFile) {
     if (this.jukebox.audio === audio) this.jukebox.stop();
+  }
+
+  //SE再生
+  playSE(audio: AudioFile) {
+    this.seBox.play(audio.identifier, false);
+  }
+
+  stopSE(audio: AudioFile) {
+    if (this.seBox.audio === audio) this.seBox.stop();
   }
 
   handleFileSelect(event: Event) {

@@ -26,7 +26,7 @@ import { CutInLauncher } from '@udonarium/cut-in-launcher';
 import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
 import { CutInListComponent } from 'component/cut-in-list/cut-in-list.component';
 import { TimerBot } from '@udonarium/timer-bot';
-
+import { SeBox } from '@udonarium/SeBox';
 
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
@@ -50,6 +50,8 @@ import { SaveDataService } from 'service/save-data.service';
 import { AlermSound } from '@udonarium/timer-bot';
 // タイマーメニュー
 import { TimerMenuComponent } from 'component/timer/timer-menu.component';
+import { AudioFile } from '@udonarium/core/file-storage/audio-file';
+
 
 @Component({
   selector: 'app-root',
@@ -106,6 +108,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     let jukebox: Jukebox = new Jukebox('Jukebox');
     jukebox.initialize();
+
+    let seBox: SeBox = new SeBox('SeBox');
+    seBox.initialize();
 
     let cutInLauncher = new CutInLauncher('CutInLauncher');
     cutInLauncher.initialize();
@@ -219,6 +224,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     setTimeout(() => {
       this.panelService.open(PeerMenuComponent, { width: 500, height: 450, left: 100 });
       this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 100, top: 450 });
+      this.panelService.open(TimerMenuComponent, {
+        width: 180,
+        height: 80,
+        left: 1500,
+        top: 10,
+        className: 'timer-menu-panel',
+      });
     }, 0);
   }
 
@@ -297,6 +309,21 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       case 'GameObjectInventoryComponent':
         component = GameObjectInventoryComponent;
         break;
+
+        // タイマーメニュー(特殊処理)
+      case 'TimerMenuComponent':
+        component = TimerMenuComponent;
+        option = {
+          width: 180,
+          height: 80,
+          left: 1500,
+          top: 10,
+          className: 'timer-menu-panel',
+        };
+        this.openPanelCount = this.openPanelCount + 1;
+        option.top = option.top + this.openPanelCount * 10;
+        this.panelService.open(component, option);
+        return;
     }
     if (component) {
       option.top = (this.openPanelCount % 10 + 1) * 20;

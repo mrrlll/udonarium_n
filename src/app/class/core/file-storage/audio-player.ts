@@ -4,6 +4,7 @@ import { FileReaderUtil } from './file-reader-util';
 export enum VolumeType {
   MASTER,
   AUDITION,
+  SE,
 }
 
 declare global {
@@ -36,6 +37,23 @@ export class AudioPlayer {
     AudioPlayer.auditionGainNode.gain.setTargetAtTime(AudioPlayer._auditionVolume, AudioPlayer.audioContext.currentTime, 0.01);
   }
 
+  private static _seVolume: number = 0.5;
+  static get seVolume(): number {
+    return AudioPlayer._seVolume;
+  }
+  static set seVolume(seVolume: number) {
+    AudioPlayer._seVolume = seVolume;
+    AudioPlayer.seGainNode.gain.setTargetAtTime(
+      AudioPlayer._seVolume,
+      AudioPlayer.audioContext.currentTime,
+      0.01
+    );
+  }
+
+  public endMusic = () => {
+    return;
+  };
+
   private static _masterGainNode: GainNode
   private static get masterGainNode(): GainNode {
     if (!AudioPlayer._masterGainNode) {
@@ -56,6 +74,21 @@ export class AudioPlayer {
       AudioPlayer._auditionGainNode = auditionGain;
     }
     return AudioPlayer._auditionGainNode;
+  }
+
+  //SE Gainnode
+  private static _seGainNode: GainNode;
+  private static get seGainNode(): GainNode {
+    if (!AudioPlayer._seGainNode) {
+      let seGain = AudioPlayer.audioContext.createGain();
+      seGain.gain.setValueAtTime(
+        AudioPlayer._seVolume,
+        AudioPlayer.audioContext.currentTime
+      );
+      seGain.connect(AudioPlayer.audioContext.destination);
+      AudioPlayer._seGainNode = seGain;
+    }
+    return AudioPlayer._seGainNode;
   }
 
   static get rootNode(): AudioNode { return AudioPlayer.masterGainNode; }

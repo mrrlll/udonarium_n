@@ -35,6 +35,10 @@ export class AudioFile {
     return AudioState.COMPLETE;
   }
 
+  set name(name: string) {
+    this.context.name = name;
+  }
+
   isHidden: boolean = false;
 
   private constructor() { }
