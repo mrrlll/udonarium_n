@@ -66,11 +66,6 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     private appCustomService: AppConfigCustomService
   ) { }
 
-  output() {
-    this.appCustomService.isViewer.next(this.isViewer);
-    this.appCustomService.dataViewer = this.isViewer;
-    this.changeGMModeName();
-  }
 
   ngOnInit() {
     this.isViewer = this.appCustomService.dataViewer;
@@ -156,6 +151,18 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
       document.getElementById('copybutton').textContent = 'IDをコピー';
     }, 2000)
 
+  }
+
+  output() {
+    this.appCustomService.isViewer.next(this.isViewer);
+    this.appCustomService.dataViewer = this.isViewer;
+    this.changeGMModeName();
+    if (this.isViewer) {
+      this.chatMessageService.sendOperationLog('GM&観戦モードを解除しました。');
+    }
+    else {
+      this.chatMessageService.sendOperationLog('GM&観戦モードになりました。');
+    }
   }
 
   onGMMode($event: Event) {

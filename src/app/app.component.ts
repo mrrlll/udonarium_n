@@ -122,7 +122,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     timerBot.initialize();
 
     ChatTabList.instance.addChatTab('メインタブ', 'MainTab');
-    ChatTabList.instance.addChatTab('サブタブ', 'SubTab');
+    let subTab = ChatTabList.instance.addChatTab('サブタブ', 'SubTab');
+    subTab.recieveOperationLogLevel = 1;
 
     let fileContext = ImageFile.createEmpty('none_icon').toContext();
     fileContext.url = './assets/images/ic_account_circle_black_24dp_2x.png';

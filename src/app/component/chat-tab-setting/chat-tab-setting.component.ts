@@ -31,6 +31,9 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   isSaveing: boolean = false;
   progresPercent: number = 0;
 
+  get recieveOperationLogLevel(): number { return this.selectedTab.recieveOperationLogLevel; }
+  set recieveOperationLogLevel(recieveOperationLogLevel: number) { if (this.isEditable) this.selectedTab.recieveOperationLogLevel = recieveOperationLogLevel; }
+
   constructor(
     private modalService: ModalService,
     private panelService: PanelService,

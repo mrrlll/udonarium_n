@@ -13,6 +13,7 @@ import { PeerContext } from '@udonarium/core/system/network/peer-context';
 
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { CutInLauncher } from './cut-in-launcher';
+import { StringUtil } from './core/system/util/string-util';
 
 @SyncObject('chat-tab')
 export class ChatTab extends ObjectNode implements InnerXml {
