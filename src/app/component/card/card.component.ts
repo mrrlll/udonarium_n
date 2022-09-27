@@ -22,6 +22,8 @@ import { GameCharacterSheetComponent } from 'component/game-character-sheet/game
 import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
+import { Observable, Subscription } from 'rxjs';
+import { AppConfigCustomService } from 'service/app-config-custom.service';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { ImageService } from 'service/image.service';
 import { PanelOption, PanelService } from 'service/panel.service';
@@ -37,6 +39,11 @@ import { TabletopService } from 'service/tabletop.service';
 export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() card: Card = null;
   @Input() is3D: boolean = false;
+
+  // GMフラグ
+  obs: Observable<boolean>;
+  subs: Subscription;
+  isGM: boolean;
 
   get name(): string { return this.card.name; }
   get state(): CardState { return this.card.state; }
@@ -79,10 +86,20 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
     private changeDetector: ChangeDetectorRef,
     private tabletopService: TabletopService,
     private imageService: ImageService,
-    private pointerDeviceService: PointerDeviceService
+    private pointerDeviceService: PointerDeviceService,
+    private appCustomService: AppConfigCustomService
   ) { }
 
   ngOnInit() {
+    //GMフラグ管理
+    this.obs = this.appCustomService.isViewer$;
+    this.subs = this.obs.subscribe((flg) => {
+      this.isGM = flg;
+      // 同期をする
+      this.changeDetector.markForCheck();
+    });
+    this.isGM = this.appCustomService.dataViewer;
+
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         let object = ObjectStore.instance.get(event.data.identifier);
@@ -121,6 +138,9 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
+    if (this.subs) {
+      this.subs.unsubscribe();
+    }
     this.input.destroy();
     EventSystem.unregister(this);
   }
@@ -238,7 +258,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
       ),
       (this.isHand && this.card.owners.length >= 2
         ? {
-          name: '自分だけで見る', action: () => {
+          name: 'やっぱり自分だけで見る', action: () => {
             SoundEffect.play(PresetSound.cardDraw);
             this.card.faceDown();
             this.owners = [Network.peerContext.userId];
