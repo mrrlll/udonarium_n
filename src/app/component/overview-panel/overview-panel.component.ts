@@ -14,6 +14,8 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
 import { TabletopObject } from '@udonarium/tabletop-object';
+import { Observable, Subscription } from 'rxjs';
+import { AppConfigCustomService } from 'service/app-config-custom.service';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
@@ -46,6 +48,11 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
   @Input() left: number = 0;
   @Input() top: number = 0;
 
+  // GMフラグ
+  obs: Observable<boolean>;
+  subs: Subscription;
+  isGM: boolean;
+
   get imageUrl(): string { return this.tabletopObject && this.tabletopObject.imageFile ? this.tabletopObject.imageFile.url : ''; }
   get hasImage(): boolean { return 0 < this.imageUrl.length; }
 
@@ -63,8 +70,20 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
   constructor(
     private inventoryService: GameObjectInventoryService,
     private changeDetector: ChangeDetectorRef,
-    private pointerDeviceService: PointerDeviceService
+    private pointerDeviceService: PointerDeviceService,
+    private appCustomService: AppConfigCustomService
   ) { }
+
+  ngOnInit() {
+    //GMフラグ管理
+    this.obs = this.appCustomService.isViewer$;
+    this.subs = this.obs.subscribe((flg) => {
+      this.isGM = flg;
+      // 同期をする
+      this.changeDetector.markForCheck();
+    });
+    this.isGM = this.appCustomService.dataViewer;
+  }
 
   ngAfterViewInit() {
     this.initPanelPosition();
@@ -88,6 +107,9 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    if (this.subs) {
+      this.subs.unsubscribe();
+    }
     EventSystem.unregister(this);
   }
 

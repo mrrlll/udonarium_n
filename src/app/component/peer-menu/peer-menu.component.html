@@ -15,8 +15,10 @@
           [(ngModel)]="isViewer"
           (change)="output()"
       /></span>
+      GM&観戦モード<br>
       ※裏になっているカードが透けて見えます。
     </div>
+  <hr/>
   <span>あなたのニックネーム：  <input [(ngModel)]="myPeer.name"  placeholder="ニックネーム" /></span>
 </div>
 <div>
@@ -51,10 +53,3 @@
   <button *ngIf="networkService.peerIds.length <= 1" (click)="showLobby()" [disabled]="!networkService.isOpen">ロビー（ルーム一覧）を表示</button>
 </div>
 <div><span style="font-size: 12px;">{{help}}</span></div>
-<ng-container *ngIf="!networkService.peerContext.isRoom">
-  <div style="font-size: 12px;" *ngIf="networkService.peerContexts.length < 1">※プライベート接続を使用する場合は、お互いのIDをユドナリウム外で共有してください。</div>
-  <div style="font-size: 12px;" *ngIf="networkService.peerContexts.length < 1">※一人で動作確認を行いたい場合はブラウザを2つ開くと良いと思います。</div>
-</ng-container>
-<ng-container *ngIf="networkService.peerContext.isRoom">
-  <div style="font-size: 12px;">※ルーム機能を利用している時はプライベート接続を利用できません。</div>
-</ng-container>
