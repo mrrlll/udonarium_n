@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, NgZone, OnDestroy, OnInit, Input } from '@angular/core';
 
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
@@ -13,6 +13,7 @@ import { PanelService } from 'service/panel.service';
 import { ChatMessageService } from 'service/chat-message.service';
 import { ConfirmationComponent, ConfirmationType } from 'component/confirmation/confirmation.component';
 import { GameCharacter } from '@udonarium/game-character';
+import { AppConfigCustomService } from 'service/app-config-custom.service';
 
 @Component({
   selector: 'peer-menu',
@@ -25,6 +26,8 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   networkService = Network
   gameRoomService = ObjectStore.instance;
   help: string = '';
+
+  @Input() isViewer: boolean = false;
 
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
@@ -59,11 +62,20 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     private modalService: ModalService,
     private panelService: PanelService,
     private chatMessageService: ChatMessageService,
-    public appConfigService: AppConfigService
+    public appConfigService: AppConfigService,
+    private appCustomService: AppConfigCustomService
   ) { }
 
+  output() {
+    this.appCustomService.isViewer.next(this.isViewer);
+    this.appCustomService.dataViewer = this.isViewer;
+    this.changeGMModeName();
+  }
+
   ngOnInit() {
+    this.isViewer = this.appCustomService.dataViewer;
     Promise.resolve().then(() => {this.panelService.title = '接続情報'; this.panelService.isAbleFullScreenButton = false});
+    Promise.resolve().then(() => {console.log;});
   }
 
   ngAfterViewInit() {
@@ -84,6 +96,23 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+  private changeGMModeName() {
+    if (!this.myPeer || !this.myPeer.name) {
+      return;
+    }
+    if (this.isViewer) {
+      if (this.myPeer.name.match(/^👁.*/)) {
+        return;
+      } else {
+        this.myPeer.name = '👁' + this.myPeer.name;
+      }
+    } else {
+      if (this.myPeer.name.match(/^👁.*/)) {
+        this.myPeer.name = this.myPeer.name.replace('👁', '');
+      }
+    }
+  }
+
   connectPeer() {
     let targetUserId = this.targetUserId;
     this.targetUserId = '';
@@ -93,25 +122,9 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     if (context.isRoom) return;
     ObjectStore.instance.clearDeleteHistory();
     Network.connect(context.peerId);
-    if (PeerCursor.isGMHold || this.isGMMode) {
-      PeerCursor.isGMHold = false;
-      this.isGMMode = false;
-      if (this.isGMMode) {
-        this.chatMessageService.sendOperationLog('GMモードを解除');
-        EventSystem.trigger('CHANGE_GM_MODE', null);
-      }
-    }
   }
 
   showLobby() {
-    if (PeerCursor.isGMHold || this.isGMMode) {
-      PeerCursor.isGMHold = false;
-      this.isGMMode = false;
-      if (this.isGMMode) {
-        this.chatMessageService.sendOperationLog('GMモードを解除');
-        EventSystem.trigger('CHANGE_GM_MODE', null);
-      }
-    }
     this.modalService.open(LobbyComponent, { width: 700, height: 400, left: 0, top: 400 });
   }
 
