@@ -97,6 +97,22 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     },
     {
       from: 'System',
+      timestamp: 1664371800000,
+      imageIdentifier: '',
+      tag: '',
+      name: 'アップデート',
+      text: 'アラーム音量調整機能を追加\n・元々視聴音量だった部分をアラームの音量調整に割り当てているので視聴音量調節も兼ねています。'
+    },
+    {
+      from: 'System',
+      timestamp: 1664373600000,
+      imageIdentifier: '',
+      tag: '',
+      name: 'アップデート',
+      text: '接続URL取得機能を追加\n・接続情報ウインドウに接続URL取得ボタンを追加しました。\n　コピーしたURLを共有することで直接接続してもらうことができるようになりました。\n・接続URL取得機能実装に伴いIDをコピーする機能、ボタンを削除'
+    },
+    {
+      from: 'System',
       timestamp: now,
       imageIdentifier: '',
       tag: '',

@@ -15,7 +15,7 @@
           [(ngModel)]="isViewer"
           (change)="output()"
       /></span>
-      GM&観戦モード<br>
+      GM&観戦者用モード<br>
       ※裏になっているカードが透けて見えます。
     </div>
   <hr/>
@@ -23,9 +23,8 @@
 </div>
 <div>
   <span>あなたのID：<span id="userId" *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peerContext.userId}}</span>
-  <!-- <button (click)="copyUserIdToClipboard()"><i class="material-icons">content_copy</i></button> -->
-  <button (click)="copyUserIdToClipboard()" id="copybutton">IDをコピー</button>
-  <span *ngIf="!networkService.isOpen" style="font-weight: bold;">???</span>
+    <span *ngIf="!networkService.isOpen" style="font-weight: bold;">???</span>
+    <button *ngIf="networkService.isOpen" (click)="getUrl()" id="geturlbtn">接続URL取得</button>
   </span>
 </div>
 <!--<div>host ID:{{networkService.hostPeerID}}</div>-->

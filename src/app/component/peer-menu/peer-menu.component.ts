@@ -138,21 +138,6 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     return peerCursor ? peerCursor.isGMMode : false;
   }
 
-  copyUserIdToClipboard() {
-    var userId = document.querySelector("#userId").textContent;
-    navigator.clipboard.writeText(userId)
-      .then(
-        () => { },
-        (err) => {
-          console.error("Failed to copy userId: ", err);
-        });
-    document.getElementById('copybutton').textContent = 'コピーしました';
-    setTimeout(function(){
-      document.getElementById('copybutton').textContent = 'IDをコピー';
-    }, 2000)
-
-  }
-
   output() {
     this.appCustomService.isViewer.next(this.isViewer);
     this.appCustomService.dataViewer = this.isViewer;
@@ -220,4 +205,17 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     }
   }
+
+  getUrl = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('id');
+    url.searchParams.append('id', this.networkService.peerContext.userId);
+    navigator.clipboard.writeText(url.href);
+
+    document.getElementById('geturlbtn').textContent = "コピーしました";
+    setTimeout(function(){
+      document.getElementById('geturlbtn').textContent = '接続URL取得';
+    },
+    2000
+  )};
 }
