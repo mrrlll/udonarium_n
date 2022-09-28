@@ -3,7 +3,7 @@
   <div>視聴：<input [(ngModel)]="auditionVolume" type="range" min="0" max="1" step="0.01" /></div>
 </div>
 <div class="volume-area">
-  <div>音楽：<input [(ngModel)]="volume" type="range" min="0" max="1" step="0.01" /></div>
+  <div>BGM：<input [(ngModel)]="volume" type="range" min="0" max="1" step="0.01" /></div>
 </div>
 <div>全体：<input [(ngModel)]="roomVolume" type="range" min="0" max="2" step="0.01" /><font style="font-size: 15px;">※全プレイヤー一括変更</font></div>
 <hr/>
@@ -11,14 +11,14 @@
   <span>SE</span>：<input [(ngModel)]="seVolume" type="range" min="0" max="1" step="0.01" />※アラームの音量もこちら
 </div>
 <hr/>
-<div>
+<div *ngIf="isViewer">
   <div *ngFor="let audio of audios" class="box">
-    <button *ngIf="audio !== auditionPlayer?.audio || auditionPlayer?.paused" (click)="play(audio)" [disabled]="!audio.isReady" >試聴/再生</button>
-    <button *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused" (click)="stop()" [disabled]="!audio.isReady" >試聴/停止</button>
-    <button *ngIf="audio !== jukebox?.audio" (click)="playBGM(audio)" [disabled]="!audio.isReady" >BGM/再生</button>
-    <button *ngIf="audio === jukebox?.audio" (click)="stopBGM(audio)" [disabled]="!audio.isReady" >BGM/停止</button>
-    <button *ngIf="audio !== seBox?.audio" (click)="playSE(audio)" [disabled]="!audio.isReady" >SE/再生</button>
-    <button *ngIf="audio === seBox?.audio" (click)="stopSE(audio)" [disabled]="!audio.isReady" >SE/停止</button>
+    <button *ngIf="audio !== auditionPlayer?.audio || auditionPlayer?.paused" (click)="play(audio)" [disabled]="!audio.isReady" >試聴</button>
+    <button *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused" (click)="stop()" [disabled]="!audio.isReady" >停止</button>
+    <button *ngIf="audio !== jukebox?.audio" (click)="playBGM(audio)" [disabled]="!audio.isReady" >BGM</button>
+    <button *ngIf="audio === jukebox?.audio" (click)="stopBGM(audio)" [disabled]="!audio.isReady" >停止</button>
+    <button *ngIf="audio !== seBox?.audio" (click)="playSE(audio)" [disabled]="!audio.isReady" >SE</button>
+    <button *ngIf="audio === seBox?.audio" (click)="stopSE(audio)" [disabled]="!audio.isReady" >停止</button>
     <span *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused">【試聴中】</span>
     <span *ngIf="audio === jukebox?.audio">【BGM】</span>
     <span *ngIf="audio === seBox?.audio">【SE】</span>
