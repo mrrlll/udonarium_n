@@ -1,4 +1,4 @@
-import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit, Input } from '@angular/core';
 
 import { AudioFile } from '@udonarium/core/file-storage/audio-file';
 import { AudioPlayer, VolumeType } from '@udonarium/core/file-storage/audio-player';
@@ -16,6 +16,7 @@ import { PanelOption, PanelService } from 'service/panel.service';
 
 import { CutInLauncher } from '@udonarium/cut-in-launcher';
 import { SeBox } from '@udonarium/SeBox';
+import { AppConfigCustomService } from 'service/app-config-custom.service';
 
 @Component({
   selector: 'app-jukebox',
@@ -23,6 +24,8 @@ import { SeBox } from '@udonarium/SeBox';
   styleUrls: ['./jukebox.component.css']
 })
 export class JukeboxComponent implements OnInit, OnDestroy {
+
+  @Input() isViewer: boolean;
 
   get roomVolume(): number { 
     let conf = ObjectStore.instance.get<Config>('Config');
@@ -72,10 +75,12 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     private modalService: ModalService,
     private panelService: PanelService,
     private pointerDeviceService: PointerDeviceService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private appCustomService: AppConfigCustomService
   ) { }
 
   ngOnInit() {
+    this.isViewer = this.appCustomService.dataViewer;
     Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'ジュークボックス');
     this.auditionPlayer.volumeType = VolumeType.AUDITION;
     EventSystem.register(this)

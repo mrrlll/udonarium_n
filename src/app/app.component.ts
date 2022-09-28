@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, NgZone, OnDestroy, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, NgZone, OnDestroy, ViewChild, ViewContainerRef, Input } from '@angular/core';
 import { NgSelectConfig } from '@ng-select/ng-select';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { Config } from '@udonarium/config';
@@ -53,6 +53,8 @@ import { AlermSound } from '@udonarium/timer-bot';
 import { TimerMenuComponent } from 'component/timer/timer-menu.component';
 import { AudioFile } from '@udonarium/core/file-storage/audio-file';
 
+import { AppConfigCustomService } from 'service/app-config-custom.service';
+
 
 @Component({
   selector: 'app-root',
@@ -60,7 +62,7 @@ import { AudioFile } from '@udonarium/core/file-storage/audio-file';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
-
+  @Input() isViewer: boolean;
   @ViewChild('modalLayer', { read: ViewContainerRef, static: true }) modalLayerViewContainerRef: ViewContainerRef;
   private immediateUpdateTimer: NodeJS.Timer = null;
   private lazyUpdateTimer: NodeJS.Timer = null;
@@ -76,7 +78,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private appConfigService: AppConfigService,
     private saveDataService: SaveDataService,
     private ngSelectConfig: NgSelectConfig,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private appCustomService: AppConfigCustomService
   ) {
 
     this.ngZone.runOutsideAngular(() => {
@@ -240,6 +243,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       });
   }
 
+  ngOnInit() {
+    this.isViewer = this.appCustomService.dataViewer;
+  }
+
   ngAfterViewInit() {
     PanelService.defaultParentViewContainerRef = ModalService.defaultParentViewContainerRef = ContextMenuService.defaultParentViewContainerRef = this.modalLayerViewContainerRef;
     setTimeout(() => {
@@ -301,12 +308,18 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         option.width = 700;
         break;
       case 'GameTableSettingComponent':
-        component = GameTableSettingComponent;
-        option = { width: 630, height: 400, left: 100 };
-        break;
+        if (this.appCustomService.dataViewer) {
+          component = GameTableSettingComponent;
+          option = { width: 630, height: 400, left: 100 };
+          break;
+        }
+        else break;
       case 'FileStorageComponent':
-        component = FileStorageComponent;
-        break;
+        if (this.appCustomService.dataViewer) {
+          component = FileStorageComponent;
+          break;
+        }
+        else break;
       case 'GameCharacterSheetComponent':
         component = GameCharacterSheetComponent;
         break;
@@ -314,17 +327,22 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         component = JukeboxComponent;
         break;
       case 'CutInListComponent':
-        component = CutInListComponent;
-        option = {width: 650, height: 740}
-        break;
+        if (this.appCustomService.dataViewer) {
+          component = CutInListComponent;
+          option = {width: 650, height: 740}
+          break;
+        }
+        else break;
       case 'GameCharacterGeneratorComponent':
         component = GameCharacterGeneratorComponent;
         option = { width: 500, height: 300, left: 100 };
         break;
       case 'GameObjectInventoryComponent':
-        component = GameObjectInventoryComponent;
-        break;
-
+        if (this.appCustomService.dataViewer) {
+          component = GameObjectInventoryComponent;
+          break;
+        }
+        else break;
         // タイマーメニュー(特殊処理)
       case 'TimerMenuComponent':
         component = TimerMenuComponent;
