@@ -42,7 +42,7 @@ export class TimerBot extends GameObject {
         this.stopTime();
       })
       .on('TIMER_ALERM', (value) => {
-        this.audioPlayer.volumeType = VolumeType.AUDITION;
+        this.audioPlayer.volumeType = VolumeType.SE;
         this.audioPlayer.play(AudioStorage.instance.get(value.data));
       });
   }
