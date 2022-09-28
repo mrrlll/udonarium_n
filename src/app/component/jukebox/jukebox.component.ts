@@ -32,21 +32,24 @@ export class JukeboxComponent implements OnInit, OnDestroy {
 //    console.log("roomVolume()" + conf +" "+ conf.roomVolume);
     return conf? conf.roomVolume : 1 ;
   }
-
   set roomVolume(volume: number){
     let conf = ObjectStore.instance.get<Config>('Config');
     if(conf) conf.roomVolume = volume;
     this.jukebox.setNewVolume();
   }
 
-  get volume(): number { return this.jukebox.volume; }
-  set volume(volume: number) { 
+  get volume(): number {
+    return this.jukebox.volume;
+  }
+  set volume(volume: number) {
     this.jukebox.volume = volume;
     AudioPlayer.volume = volume * this.roomVolume;
     EventSystem.trigger('CHANGE_JUKEBOX_VOLUME', null);
   }
 
-  get auditionVolume(): number { return this.jukebox.auditionVolume; }
+  get auditionVolume(): number {
+    return this.jukebox.auditionVolume;
+  }
   set auditionVolume(auditionVolume: number) { 
     this.jukebox.auditionVolume = auditionVolume;
     AudioPlayer.auditionVolume = auditionVolume * this.roomVolume;
