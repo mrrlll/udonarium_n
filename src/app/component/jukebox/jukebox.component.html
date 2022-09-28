@@ -17,6 +17,7 @@
     <button *ngIf="audio === seBox?.audio" (click)="stopSE(audio)" [disabled]="!audio.isReady" >SE/停止</button>
     <span *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused">【試聴中】</span>
     <span *ngIf="audio === jukebox?.audio">【BGM】</span>
+    <span *ngIf="audio === seBox?.audio">【SE】</span>
     <span>{{audio.name}}</span><br>
   </div>
   <!-- <div *ngIf="audios.length < 1" >アップロードされた音楽ファイルはここに表示されます。</div> -->

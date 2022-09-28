@@ -118,7 +118,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
 
   stopSE(audio: AudioFile) {
     if (this.seBox.audio === audio) this.seBox.stop();
-  }
+  }     
 
   handleFileSelect(event: Event) {
     let input = <HTMLInputElement>event.target;
