@@ -113,6 +113,14 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     },
     {
       from: 'System',
+      timestamp: 1664382600000,
+      imageIdentifier: '',
+      tag: '',
+      name: '仕様変更',
+      text: 'アラームのタイプをSEに変更\n音量はSEの音量で変更することができます。'
+    },
+    {
+      from: 'System',
       timestamp: now,
       imageIdentifier: '',
       tag: '',
