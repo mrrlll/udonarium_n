@@ -29,6 +29,7 @@ type ScrollPosition = { top: number, bottom: number, clientHeight: number, scrol
 const ua = window.navigator.userAgent.toLowerCase();
 const isiOS = ua.indexOf('iphone') > -1 || ua.indexOf('ipad') > -1 || ua.indexOf('macintosh') > -1 && 'ontouchend' in document;
 
+const now = Date.now()
 @Component({
   selector: 'chat-tab',
   templateUrl: './chat-tab.component.html',
@@ -36,13 +37,71 @@ const isiOS = ua.indexOf('iphone') > -1 || ua.indexOf('ipad') > -1 || ua.indexOf
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges, AfterViewChecked {
+  
   sampleMessages: ChatMessageContext[] = [
-    { from: 'System', timestamp: 0, imageIdentifier: '', tag: '', name: 'チュートリアル', text: 'サーバーを使用しないTRPGオンセツールです。参加者同士で接続し、コマや画像ファイルなどを同期します。' },
-    { from: 'System', timestamp: 0, imageIdentifier: '', tag: '', name: 'チュートリアル', text: '全てのデータが各参加者のブラウザ内にあるため、ルームの状態を次回に持ち越したい場合は、必ず「保存」を実行してセーブデータ（zip）を生成してください。保存したzipの読み込みはブラウザ画面へのファイルドロップで行えます。' },
-    { from: 'System', to: '???', timestamp: 0, imageIdentifier: '', tag: '', name: 'チュートリアル > プレイヤー', text: 'ダイレクトメッセージ（秘密会話）はセーブデータに記録されません。' },
-    { from: 'System', to: '???', timestamp: 0, imageIdentifier: '', tag: '', name: 'チュートリアル > プレイヤー', text: 'また、過去のダイレクトメッセージはあなたのIDが更新されると同じルーム内であっても見えなくなります。注意してください。' },
-    { from: 'System', timestamp: 0, imageIdentifier: '', tag: '', name: 'チュートリアル', text: '動作推奨環境はデスクトップChromeです。今のところ、スマホからだと上手く操作できません。' },
-    { from: 'System', timestamp: 0, imageIdentifier: '', tag: '', name: 'チュートリアル', text: 'チュートリアルは以上です。このチュートリアルは最初のチャットを入力すると非表示になります。' },
+    {
+      from: 'System',
+      timestamp: 1663923600000,
+      imageIdentifier: '',
+      tag: '',
+      name: 'チュートリアル',
+      text: 'サーバーを使用しないTRPGオンセツールです。参加者同士で接続し、コマや画像ファイルなどを同期します。\n本家ユドナリウム(https://udonarium.app/)をベースにカスタマイズされた様々なユドナリウムシステムを参考にし、機能を実装しています。'
+    },
+    {
+      from: 'System',
+      timestamp: 1663923600000,
+      imageIdentifier: '',
+      tag: '',
+      name: 'チュートリアル',
+      text: 'バグ修正＆機能追加等のアップデート情報を以下でアナウンスしていきます。'
+    },
+    {
+      from: 'System',
+      timestamp: 1664182800000,
+      imageIdentifier: '',
+      tag: '',
+      name: 'アップデート',
+      text: '複数人で同時にカードを見れる機能を追加。\n・「自分だけで見る」されているカードに対しての右クリックメニューに「自分も見る」が追加されます。\n　「自分も見る」を実行することで同時にカードを閲覧することができます。\n・「自分も見る」しているカードに対しての右クリックメニューに「見るのをやめる」が追加されます。\n　「見るのをやめる」を実行することで「自分も見る」状態を解除します。\n・自分を含む複数人が見ているカードに対しての右クリックメニューに「やっぱり自分だけでみる」が追加されます。\n　「やっぱり自分だけでみる」を実行することで自分を含む複数人が見ている状態のカードを自分だけが見ている状態にします。'
+    },
+    {
+      from: 'System',
+      timestamp: 1664182800000,
+      imageIdentifier: '',
+      tag: '',
+      name: 'アップデート',
+      text: 'カットイン機能を追加\n・YouTubeなどを再生できる機能。YouTubeの利用規約に則って使用してください。'
+    },
+    {
+      from: 'System',
+      timestamp: 1664182800000,
+      imageIdentifier: '',
+      tag: '',
+      name: 'アップデート',
+      text: 'SE再生機能を追加\n・音楽（ジュークボックス）ウインドウに追加された音声ファイルをBGMとは別にSEとして再生することができます。\n　SE再生はループ再生されず、１度のみの再生となります。\n・SE再生機能追加に伴いSEの音量調節に対応'
+    },
+    {
+      from: 'System',
+      timestamp: 1664182800000,
+      imageIdentifier: '',
+      tag: '',
+      name: 'アップデート',
+      text: 'タイマー機能を追加\n・設定した時間が経過したらアラームを鳴らす機能です。\n　画面に表示されているタイマーにマウスオーバーすることで操作メニューが表示されます。タイマーを消した後再表示する場合はメニューから行えます。\n※アラームの音量調整は後日対応予定'
+    },
+    {
+      from: 'System',
+      timestamp: 1664269200000,
+      imageIdentifier: '',
+      tag: '',
+      name: 'アップデート',
+      text: 'GM＆観戦モードを追加\n・接続情報ウインドウのモード切り替え用のチェックボックスでモード切り替え。\n裏面になっているカードの表面が透けて表示されます。\nGM&観戦者モード中はニックネームの先頭に「👁」マークが表示されます。'
+    },
+    {
+      from: 'System',
+      timestamp: now,
+      imageIdentifier: '',
+      tag: '',
+      name: 'システム情報',
+      text: 'チュートリアル＆アップデート情報は以上です。これらのチャットは誰かが最初のチャットを入力すると非表示になります。' },
   ];
 
   private topTimestamp = 0;
