@@ -11,6 +11,9 @@
   <span>SE</span>：<input [(ngModel)]="seVolume" type="range" min="0" max="1" step="0.01" />※アラームの音量もこちら
 </div>
 <hr/>
+<label *ngIf="!isViewer">
+  👁GM&観戦者モードを有効にして開き直すと表示されます。
+</label>
 <div *ngIf="isViewer">
   <div *ngFor="let audio of audios" class="box">
     <button *ngIf="audio !== auditionPlayer?.audio || auditionPlayer?.paused" (click)="play(audio)" [disabled]="!audio.isReady" >試聴</button>
@@ -26,9 +29,6 @@
   </div>
   <!-- <div *ngIf="audios.length < 1" >アップロードされた音楽ファイルはここに表示されます。</div> -->
 </div>
-<label *ngIf="!isViewer">
-  👁GM&観戦者モードを有効にして開き直すと表示されます。
-</label>
 <label *ngIf="isViewer">
   <div class="drop-zone">
     <div>
