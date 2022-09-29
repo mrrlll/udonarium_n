@@ -1,5 +1,5 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
-import { Component, ElementRef, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
 import { PanelService } from 'service/panel.service';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PointerDeviceService } from 'service/pointer-device.service';
@@ -44,6 +44,8 @@ export class UIPanelComponent implements OnInit {
   @Input() set isAbleCloseButton(isAbleCloseButton: boolean) { this.panelService.isAbleCloseButton = isAbleCloseButton; }
   @Input() set isAbleRotateButton(isAbleRotateButton: boolean) { this.panelService.isAbleRotateButton = isAbleRotateButton; }
 
+  @Output() rotateEvent = new EventEmitter<boolean>();
+
   get title(): string { return this.panelService.title; }
   get left() { return this.panelService.left; }
   get top() { return this.panelService.top; }
@@ -53,16 +55,21 @@ export class UIPanelComponent implements OnInit {
   get isAbleFullScreenButton() { return this.panelService.isAbleFullScreenButton; }
   get isAbleCloseButton() { return this.panelService.isAbleCloseButton; }
   get isAbleRotateButton() { return this.panelService.isAbleRotateButton; }
-
-  get isGMMode(): boolean{ return PeerCursor.myCursor ? PeerCursor.myCursor.isGMMode : false; }
   
   private preLeft: number = 0
   private preTop: number = 0;
   private preWidth: number = 100;
   private preHeight: number = 100;
 
+   // 今はメニューだけなのでとりあえず
+   private horizontalWidth: number = 1032;
+   private horizontalHeight: number = 100;
+   private verticalWidth: number = 0;
+   private verticalHeight: number = 0;
+
   private isFullScreen: boolean = false;
   private isMinimized: boolean = false;
+  isHorizontal: boolean = false;
 
   private timerCheckWindowSize = null;
 
@@ -179,6 +186,41 @@ export class UIPanelComponent implements OnInit {
       this.width = this.preWidth;
       this.height = this.preHeight;
     }
+  }
+
+  toggleRotate() {
+    //if (this.isMinimized) return;
+    const panel = this.draggablePanel.nativeElement;
+    const cntent = this.scrollablePanel.nativeElement;
+    panel.style.transition = 'width 0.1s ease-in-out, height 0.1s ease-in-out';
+    cntent.style.overflowY = 'hidden';
+    setTimeout(() => {
+      panel.style.transition = null;
+      cntent.style.overflowY = null;
+    }, 100);
+
+    const saveWidth = panel.offsetWidth;
+    const saveHeight = panel.offsetHeight;
+    if (this.isHorizontal) {
+      this.isHorizontal = false;
+      panel.style.width = (this.verticalWidth < 100 ? 100 : this.verticalWidth) + 'px';
+      panel.style.height = (this.verticalHeight < 100 ? 100 : this.verticalHeight) + 'px';
+      if (!this.isMinimized && !this.isFullScreen) {
+        this.horizontalWidth = saveWidth;
+        this.horizontalHeight = saveHeight;
+      }
+    } else {
+      this.isHorizontal = true;
+      panel.style.width = (this.horizontalWidth < 100 ? 100 : this.horizontalWidth) + 'px';
+      panel.style.height = (this.horizontalHeight < 100 ? 100 : this.horizontalHeight) + 'px';
+      if (!this.isMinimized && !this.isFullScreen) {
+        this.verticalWidth = saveWidth;
+        this.verticalHeight = saveHeight;
+      }
+    }
+    this.isMinimized = false;
+    this.isFullScreen = false;
+    this.rotateEvent.emit(this.isHorizontal);
   }
 
   close() {

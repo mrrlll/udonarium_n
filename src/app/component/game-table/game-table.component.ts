@@ -102,40 +102,9 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
         this.pointerDeviceService.isDragging = false;
         let opacity: number = this.tableSelecter.gridShow ? 1.0 : 0.0;
         this.gridCanvas.nativeElement.style.opacity = opacity + '';
-      })
-      .on('RESET_POINT_OF_VIEW', event => {
-        this.isTransformMode = false;
-        this.pointerDeviceService.isDragging = false;
-
-        this.setTransform(this.viewPotisonX, this.viewPotisonY, this.viewPotisonZ, this._rightRotate(this.viewRotateX), this._rightRotate(this.viewRotateY, true), this._rightRotate(this.viewRotateZ), true);
-        setTimeout(() => {
-          this.gridCanvas.nativeElement.style.opacity = '0.0';
-          this.gameTable.nativeElement.style.transition = '0.1s ease-out';
-          setTimeout(() => {
-            this.gameTable.nativeElement.style.transition = null;
-          }, 100);
-          if (event && event.data == 'top') {
-            this.setTransform(0, 0, 0, 0, 0, 0, true);
-          } else {
-            this.setTransform(100, 0, 0, 50, 0, 10, true);
-          }
-        }, 50);
-        this.removeFocus();
-      })
+      });
     this.tabletopActionService.makeDefaultTable();
     this.tabletopActionService.makeDefaultTabletopObjects();
-  }
-
-  private _rightRotate(rotate: number, just: boolean=false): number {
-    let tmp = rotate % 360;
-    if (!just) {
-      if (tmp > 180) {
-        tmp = tmp - 360;
-      } else if (tmp < -180) {
-        tmp = tmp + 360;
-      }
-    }
-    return tmp;
   }
 
   ngAfterViewInit() {
@@ -268,7 +237,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
     this.contextMenuService.open(menuPosition, menuActions, this.currentTable.name);
   }
 
-  private setTransform(transformX: number, transformY: number, transformZ: number, rotateX: number, rotateY: number, rotateZ: number, isAbsolute: boolean=false) {
+  private setTransform(transformX: number, transformY: number, transformZ: number, rotateX: number, rotateY: number, rotateZ: number) {
     this.viewRotateX += rotateX;
     this.viewRotateY += rotateY;
     this.viewRotateZ += rotateZ;

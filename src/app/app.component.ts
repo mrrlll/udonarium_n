@@ -70,6 +70,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   isSaveing: boolean = false;
   progresPercent: number = 0;
 
+  isHorizontal = false;
+
   constructor(
     private modalService: ModalService,
     private panelService: PanelService,
@@ -415,11 +417,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       }, 100);
     }
   }
-  resetPointOfView() {
-    this.contextMenuService.open(this.pointerDeviceService.pointers[0], [
-      { name: '初期視点に戻す', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', null) },
-      { name: '真上から視る', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', 'top') }
-    ], '視点リセット');
+  rotateChange(isHorizontal) {
+    this.isHorizontal = isHorizontal;
   }
 }
 

@@ -81,3 +81,18 @@ nav ul a, nav ul a:hover, nav ul a:active, nav ul a:visited {
   50%  { transform: scale(1.02, 0.95) translate(0%, 5%); }
   100% { transform: scale(1.0, 1.0) translate(0%, 0%); }
 }
+
+.horizontal ul {
+  display: flex;
+  flex-wrap: nowrap;
+}
+.horizontal ul > li {
+  display: inline-block;
+  width: 70px;
+}
+:not(.horizontal) .self-only-indicater {
+  margin-top: 2em;
+}
+.horizontal .self-only-indicater {
+  display: none;
+}
