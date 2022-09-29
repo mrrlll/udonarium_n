@@ -75,6 +75,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private panelService: PanelService,
     private pointerDeviceService: PointerDeviceService,
     private chatMessageService: ChatMessageService,
+    private contextMenuService: ContextMenuService,
     private appConfigService: AppConfigService,
     private saveDataService: SaveDataService,
     private ngSelectConfig: NgSelectConfig,
@@ -413,6 +414,12 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         this.ngZone.run(() => { });
       }, 100);
     }
+  }
+  resetPointOfView() {
+    this.contextMenuService.open(this.pointerDeviceService.pointers[0], [
+      { name: '初期視点に戻す', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', null) },
+      { name: '真上から視る', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', 'top') }
+    ], '視点リセット');
   }
 }
 
