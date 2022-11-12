@@ -1,8 +1,9 @@
 <div
-  class="component is-3d is-pointer-events-none is-grab"
+  class="component is-3d is-pointer-events-none" [ngClass]="{'is-grab': !isLocked}"
   [style.width.px]="size * gridSize"
   appMovable
   [movable.option]="movableOption"
+  [movable.disable]="isLocked"
   (movable.ondragstart)="onMove()"
   (movable.ondragend)="onMoved()"
 >
@@ -10,6 +11,7 @@
     class="component-content is-pointer-events-auto is-3d"
     appRotable
     [rotable.option]="rotableOption"
+    [rotable.disable]="isLocked"
     (rotable.ondragstart)="onMove()"
     (rotable.ondragend)="onMoved()"
   >
@@ -37,16 +39,16 @@
     />
     <ng-container *ngIf="!isIconHidden">
       <div class="rotate-grab of-left-top">
-        <i class="material-icons">autorenew</i>
+        <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
       </div>
       <div class="rotate-grab of-left-bottom">
-        <i class="material-icons">autorenew</i>
+        <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
       </div>
       <div class="rotate-grab of-right-bottom">
-        <i class="material-icons">autorenew</i>
+        <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
       </div>
       <div class="rotate-grab of-right-top">
-        <i class="material-icons">autorenew</i>
+        <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
       </div>
       <div class="border-bg is-pointer-events-none"></div>
     </ng-container>

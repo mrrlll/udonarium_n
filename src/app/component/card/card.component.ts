@@ -68,6 +68,9 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   private iconHiddenTimer: NodeJS.Timer = null;
   get isIconHidden(): boolean { return this.iconHiddenTimer != null };
 
+  get isLocked(): boolean { return this.card ? this.card.isLocked : false; }
+  set isLocked(isLocked: boolean) { if (this.card) this.card.isLocked = isLocked; }
+
   gridSize: number = 50;
 
   movableOption: MovableOption = {};
@@ -154,6 +157,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
     e.preventDefault();
 
     if (e.detail instanceof CardStack) {
+      if (this.isLocked) return;
       let cardStack: CardStack = e.detail;
       let distance: number = (cardStack.location.x - this.card.location.x) ** 2 + (cardStack.location.y - this.card.location.y) ** 2 + (cardStack.posZ - this.card.posZ) ** 2;
       if (distance < 25 ** 2) {
@@ -161,6 +165,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
         cardStack.location.y = this.card.location.y;
         cardStack.posZ = this.card.posZ;
         cardStack.putOnBottom(this.card);
+        this.isLocked = false;
       }
     }
   }
@@ -187,6 +192,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onDoubleClick() {
+    if (this.isLocked) return;
     this.stopDoubleClickTimer();
     let distance = (this.doubleClickPoint.x - this.input.pointer.x) ** 2 + (this.doubleClickPoint.y - this.input.pointer.y) ** 2;
     if (distance < 10 ** 2) {
@@ -208,6 +214,11 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.startDoubleClickTimer(e);
     this.card.toTopmost();
     this.startIconHiddenTimer();
+
+    // TODO:もっと良い方法考える
+    if (this.isLocked) {
+      EventSystem.trigger('DRAG_LOCKED_OBJECT', {});
+    }
   }
 
   @HostListener('contextmenu', ['$event'])
@@ -217,18 +228,31 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
     let position = this.pointerDeviceService.pointers[0];
     this.contextMenuService.open(position, [
+      (this.isLocked
+        ? {
+          name: '☑ 固定', action: () => {
+            this.isLocked = false;
+            SoundEffect.play(PresetSound.unlock);
+          }
+        } : {
+          name: '☐ 固定', action: () => {
+            this.isLocked = true;
+            SoundEffect.play(PresetSound.lock);
+          }
+        }),
+      ContextMenuSeparator,
       (!this.isVisible || this.isHand
         ? {
           name: '表にする', action: () => {
             this.card.faceUp();
             SoundEffect.play(PresetSound.cardDraw);
-          }
+          },
         }
         : {
           name: '裏にする', action: () => {
             this.card.faceDown();
             SoundEffect.play(PresetSound.cardDraw);
-          }
+          },
         }
       ),
       (this.isHand
@@ -273,6 +297,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
           SoundEffect.play(PresetSound.cardPut);
         }
       },
+      
       ContextMenuSeparator,
       { name: 'カードを編集', action: () => { this.showDetail(this.card); } },
       {
@@ -281,6 +306,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
           cloneObject.location.x += this.gridSize;
           cloneObject.location.y += this.gridSize;
           cloneObject.toTopmost();
+          cloneObject.isLocked = false;
           SoundEffect.play(PresetSound.cardPut);
         }
       },
@@ -304,6 +330,12 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private createStack() {
+    let cards: Card[] = this.tabletopService.cards.filter(card => {
+      let distance: number = (card.location.x - this.card.location.x) ** 2 + (card.location.y - this.card.location.y) ** 2 + (card.posZ - this.card.posZ) ** 2;
+      return distance < 100 ** 2 && !card.isLocked;
+    });
+
+    if (cards.length == 0) return;
     let cardStack = CardStack.create('山札');
     cardStack.location.x = this.card.location.x;
     cardStack.location.y = this.card.location.y;
@@ -311,11 +343,6 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
     cardStack.location.name = this.card.location.name;
     cardStack.rotate = this.rotate;
     cardStack.zindex = this.card.zindex;
-
-    let cards: Card[] = this.tabletopService.cards.filter(card => {
-      let distance: number = (card.location.x - this.card.location.x) ** 2 + (card.location.y - this.card.location.y) ** 2 + (card.posZ - this.card.posZ) ** 2;
-      return distance < 100 ** 2;
-    });
 
     cards.sort((a, b) => {
       if (a.zindex < b.zindex) return 1;

@@ -76,6 +76,9 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
   private iconHiddenTimer: NodeJS.Timer = null;
   get isIconHidden(): boolean { return this.iconHiddenTimer != null };
 
+  get isLocked(): boolean { return this.cardStack ? this.cardStack.isLocked : false; }
+  set isLocked(isLocked: boolean) { if (this.cardStack) this.cardStack.isLocked = isLocked; }
+
   gridSize: number = 50;
 
   movableOption: MovableOption = {};
@@ -219,6 +222,11 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cardStack.toTopmost();
     this.startIconHiddenTimer();
 
+    // TODO:もっと良い方法考える
+    if (this.isLocked) {
+      EventSystem.trigger('DRAG_LOCKED_OBJECT', {});
+    }
+
     EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: this.cardStack.identifier, className: 'GameCharacter' });
   }
 
@@ -230,6 +238,19 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
     let position = this.pointerDeviceService.pointers[0];
     this.contextMenuService.open(position, [
+      (this.isLocked
+        ? {
+          name: '☑ 固定', action: () => {
+            this.isLocked = false;
+            SoundEffect.play(PresetSound.unlock);
+          }
+        } : {
+          name: '☐ 固定', action: () => {
+            this.isLocked = true;
+            SoundEffect.play(PresetSound.lock);
+          }
+        }),
+      ContextMenuSeparator,
       {
         name: '１枚引く', action: () => {
           if (this.drawCard() != null) {
@@ -305,6 +326,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
           cloneObject.location.x += this.gridSize;
           cloneObject.location.y += this.gridSize;
           cloneObject.owner = '';
+          cloneObject.isLocked = false;
           cloneObject.toTopmost();
           SoundEffect.play(PresetSound.cardPut);
         }
