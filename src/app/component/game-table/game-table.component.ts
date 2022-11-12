@@ -55,6 +55,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private isTableTransformMode: boolean = false;
+  private isTableTransformed: boolean = false;
 
   get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging; }
 
@@ -170,6 +171,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
     if (750 < transformZ + this.viewPotisonZ) transformZ += 750 - (transformZ + this.viewPotisonZ);
 
     this.setTransform(transformX, transformY, transformZ, rotateX, rotateY, rotateZ);
+    this.isTableTransformed = true;
   }
 
   onTableMouseStart(e: any) {
@@ -206,6 +208,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
     transformY *= scale;
 
     this.setTransform(transformX, transformY, transformZ, rotateX, rotateY, rotateZ);
+    this.isTableTransformed = true;
   }
 
   cancelInput() {
@@ -235,6 +238,21 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     });
     this.contextMenuService.open(menuPosition, menuActions, this.currentTable.name);
+  }
+
+  @HostListener('document:mousedown', ['$event'])
+  onDocumentMouseDown(e: MouseEvent) {
+    this.isTableTransformed = false;
+  }
+
+  @HostListener('document:touchstart', ['$event'])
+  onDocumentTouchStart(e: TouchEvent) {
+    this.isTableTransformed = false;
+  }
+
+  @HostListener('document:contextmenu', ['$event'])
+  onDocumentContextMenu(e: MouseEvent) {
+    if (this.isTableTransformed && !this.pointerDeviceService.isAllowedToOpenContextMenu) e.preventDefault();
   }
 
   private setTransform(transformX: number, transformY: number, transformZ: number, rotateX: number, rotateY: number, rotateZ: number) {
