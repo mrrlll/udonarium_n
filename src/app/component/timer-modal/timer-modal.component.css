@@ -1,3 +1,7 @@
+:host {
+  display: block;
+}
+
 .area {
   position: relative;
   margin: 2em 0;
