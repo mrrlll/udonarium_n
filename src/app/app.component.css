@@ -88,7 +88,7 @@ nav ul a, nav ul a:hover, nav ul a:active, nav ul a:visited {
 }
 .horizontal ul > li {
   display: inline-block;
-  width: 70px;
+  width: 74px;
 }
 :not(.horizontal) .self-only-indicater {
   margin-top: 2em;
