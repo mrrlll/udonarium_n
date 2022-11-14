@@ -4,7 +4,7 @@ import { CardStack } from '@udonarium/card-stack';
 
 declare var Type: FunctionConstructor;
 interface Type<T> extends Function {
-  new(...args: any[]): T;
+  new (...args: any[]): T;
 }
 
 export interface PanelOption {
@@ -23,7 +23,7 @@ export interface PanelOption {
 export class PanelService {
   /* Todo */
   static defaultParentViewContainerRef: ViewContainerRef;
-  static UIPanelComponentClass: { new(...args: any[]): any } = null;
+  static UIPanelComponentClass: { new (...args: any[]): any } = null;
 
   private panelComponentRef: ComponentRef<any>
   title: string = '無名のパネル';
@@ -39,6 +39,7 @@ export class PanelService {
   cutInIdentifier: string = '';
   chatTab: ChatTab = null;
   cardStack: CardStack = null;
+  className: string = '';
 
   scrollablePanel: HTMLDivElement = null;
 
@@ -73,6 +74,7 @@ export class PanelService {
       if (option.left) childPanelService.left = option.left;
       if (option.width) childPanelService.width = option.width;
       if (option.height) childPanelService.height = option.height;
+      if (option.className) childPanelService.className = option.className;
     }
     panelComponentRef.onDestroy(() => {
       childPanelService.panelComponentRef = null;

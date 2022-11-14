@@ -55,6 +55,8 @@ import { AudioFile } from '@udonarium/core/file-storage/audio-file';
 
 import { AppConfigCustomService } from 'service/app-config-custom.service';
 
+import { timer } from 'rxjs';
+
 
 @Component({
   selector: 'app-root',
@@ -352,7 +354,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         option = {
           width: 180,
           height: 80,
-          left: 1500,
+          left: 1000,
           top: 10,
           className: 'timer-menu-panel',
         };

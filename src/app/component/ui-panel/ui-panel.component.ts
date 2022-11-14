@@ -1,7 +1,6 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
 import { PanelService } from 'service/panel.service';
-import { PeerCursor } from '@udonarium/peer-cursor';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -24,9 +23,9 @@ import { CutIn } from '@udonarium/cut-in';
       ]),
       transition('* => void', [
         animate(100, style({ transform: 'scale(0, 0)' }))
-      ])
-    ])
-  ]
+      ]),
+    ]),
+  ],
 })
 export class UIPanelComponent implements OnInit {
   @ViewChild('draggablePanel', { static: true }) draggablePanel: ElementRef<HTMLElement>;
@@ -43,6 +42,7 @@ export class UIPanelComponent implements OnInit {
   @Input() set isAbleFullScreenButton(isAbleFullScreenButton: boolean) { this.panelService.isAbleFullScreenButton = isAbleFullScreenButton; }
   @Input() set isAbleCloseButton(isAbleCloseButton: boolean) { this.panelService.isAbleCloseButton = isAbleCloseButton; }
   @Input() set isAbleRotateButton(isAbleRotateButton: boolean) { this.panelService.isAbleRotateButton = isAbleRotateButton; }
+  @Input() set className(className: string) { this.panelService.className = className; }
 
   @Output() rotateEvent = new EventEmitter<boolean>();
 
@@ -55,11 +55,13 @@ export class UIPanelComponent implements OnInit {
   get isAbleFullScreenButton() { return this.panelService.isAbleFullScreenButton; }
   get isAbleCloseButton() { return this.panelService.isAbleCloseButton; }
   get isAbleRotateButton() { return this.panelService.isAbleRotateButton; }
-  
-  private preLeft: number = 0
+  get className() { return this.panelService.className; }
+
+  private preLeft: number = 0;
   private preTop: number = 0;
   private preWidth: number = 100;
   private preHeight: number = 100;
+  private preClassName: string = '';
 
    // 今はメニューだけなのでとりあえず
   private saveWidth: number = 1034;
@@ -76,7 +78,7 @@ export class UIPanelComponent implements OnInit {
   constructor(
     public panelService: PanelService,
     private pointerDeviceService: PointerDeviceService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.panelService.scrollablePanel = this.scrollablePanel.nativeElement;

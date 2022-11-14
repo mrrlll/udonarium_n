@@ -1,6 +1,16 @@
-<div [@flyInOut]="'in'" [ngClass]="{'pointer-events-none': isPointerDragging}" class="draggable-panel"
-  [style.left.px]="left" [style.top.px]="top" [style.width.px]="width" [style.height.px]="height"
-  [draggable.stack]="'.draggable-panel'" [resizable.stack]="'.draggable-panel'" appDraggable appResizable #draggablePanel>
+<div
+  [@flyInOut]="'in'"
+  [ngClass]="{ 'pointer-events-none': isPointerDragging }"
+  class="draggable-panel {{ className }}"
+  [style.left.px]="left"
+  [style.top.px]="top"
+  [style.width.px]="width"
+  [style.height.px]="height"
+  [draggable.stack]="'.draggable-panel'"
+  appDraggable
+  appResizable
+  #draggablePanel
+>
   <div class="title" #titleBar>
     <button *ngIf="isAbleRotateButton" style="padding: 0px; height: 14px; margin-top: 3px; margin-left: 1px" (click)="toggleRotate()"><i class="material-icons" style="font-size: 14px;">pivot_table_chart</i></button>
     <div [ngClass]="{'rotateble': isAbleRotateButton}">{{panelService.title}}</div>
