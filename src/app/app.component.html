@@ -1,52 +1,58 @@
 <div id="app-table-layer" style="position: absolute; width: 100%; height: 100%; overflow: hidden;">
   <game-table></game-table>
 </div>
-<ui-panel (rotateEvent)="rotateChange($event)" [top]="0" [left]="0" [width]="100" [height]="560" [title]="'メニュー'" [isAbleFullScreenButton]="false" [isAbleCloseButton]="false"  [isAbleRotateButton]="true">
+<ui-panel (rotateEvent)="rotateChange($event)" [top]="0" [left]="0" [width]="100" [height]="menuHeight" [title]="'メニュー'" [isAbleFullScreenButton]="true" [isAbleCloseButton]="false"  [isAbleRotateButton]="true" [className]="'main-panel'">
   <nav [ngClass]="{'horizontal': isHorizontal}">
     <ul>
-      <li (click)="open('PeerMenuComponent')">
+      <li (click)="open('PeerMenuComponent')" *ngIf="isGM || roomSetting.peerMenuAuthority">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">people</i></div>
           <div>接続情報</div>
         </a>
       </li>
-      <li (click)="open('ChatWindowComponent')">
+      <li (click)="open('ChatWindowComponent')" *ngIf="isGM || roomSetting.chatWindowAuthority">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">speaker_notes</i></div>
           <div>チャット</div>
         </a>
       </li>
-      <li (click)="open('GameTableSettingComponent')">
+      <li (click)="open('GameTableSettingComponent')" *ngIf="isGM || roomSetting.gameTableSettingAuthority">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">layers</i></div>
-          <div><font color='red'>👁</font>テーブル設定</div>
+          <div>テーブル設定</div>
         </a>
       </li>
-      <li (click)="open('FileStorageComponent')">
+      <li (click)="open('FileStorageComponent')" *ngIf="isGM || roomSetting.fileStorageAuthority">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">photo_library</i></div>
-          <div><font color='red'>👁</font>画像</div>
+          <div>画像</div>
         </a>
       </li>
-      <li (click)="open('JukeboxComponent')">
+      <li (click)="open('JukeboxComponent')" *ngIf="isGM || roomSetting.jukeboxAuthority">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons">queue_music</i></div>
           <div>音楽</div>
         </a>
       </li>
-      <li (click)="open('CutInListComponent')">
+      <li (click)="open('CutInListComponent')" *ngIf="isGM || roomSetting.cutinAuthority">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons">movie</i></div>
-          <div><font color='red'>👁</font>カットイン</div>
+          <div>カットイン</div>
         </a>
       </li>
-      <li (click)="open('GameObjectInventoryComponent')">
+      <li (click)="open('GameObjectInventoryComponent')" *ngIf="isGM || roomSetting.gameObjectInventoryAuthority">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">folder_shared</i></div>
-          <div><font color='red'>👁</font>インベントリ</div>
+          <div>インベントリ</div>
         </a>
       </li>
-      <li>
+      <li (click)="open('GamePanelSettingComponent')" *ngIf="isGM || roomSetting.gamePanelSettingAuthority">
+        <a routerLink="/" routerLinkActive="active">
+          <div><i class="material-icons icon-size">picture_as_pdf</i></div>
+          <div>PDF</div>
+        </a>
+      </li>
+      <li *ngIf="isGM || roomSetting.fileSelectAuthority">
         <a routerLink="/" routerLinkActive="active">
           <label>
             <div><i class="material-icons">open_in_browser</i></div>
@@ -56,7 +62,7 @@
           </label>
         </a>
       </li>
-      <li *ngIf="!isSaveing" (click)="save()">
+      <li *ngIf="!isSaveing && isGM || roomSetting.fileSaveAuthority" (click)="save()">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons">sd_storage</i></div>
           <div>保存</div>
@@ -68,7 +74,7 @@
           <div>{{progresPercent}}%</div>
         </a>
       </li>
-      <li (click)="open('TimerMenuComponent')">
+      <li (click)="open('TimerMenuComponent')" *ngIf="isGM || roomSetting.timerAuthority">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">access_alarm</i></div>
           <div>タイマー</div>
@@ -79,3 +85,4 @@
 </ui-panel>
 <div #modalLayer></div>
 <network-indicator class="networkIndicator"></network-indicator>
+<app-game-panel-store></app-game-panel-store>

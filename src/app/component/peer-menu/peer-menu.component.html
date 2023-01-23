@@ -9,23 +9,79 @@
   </div>
   <div>
     <div>
-      <span
-        ><span class="property"><i class="material-icons"><font style="font-size: 16px;">visibility</font></i></span><input
-          type="checkbox"
-          [(ngModel)]="isViewer"
-          (change)="output()"
-      /></span>
-      GM&観戦者用モード<br>
-      ※裏になっているカードが透けて見えます。
+      <span>
+        <span class="property">GMモード</span>：
+        <input type="checkbox" [(ngModel)]="isViewer" (change)="output()" id="isViewerCheck" />
+        <label for="isViewerCheck">
+          GM＆観戦者用モード<br>
+        </label>
+          ┣非公開カードが透けて見えます。<br>
+          ┗制限されている機能が解放されます。
+      </span>
     </div>
+  </div>
   <hr/>
-  <span>あなたのニックネーム：  <input [(ngModel)]="myPeer.name"  placeholder="ニックネーム" /></span>
+  <span>あなたのニックネーム：<input [(ngModel)]="myPeer.name"  placeholder="ニックネーム" /></span>
 </div>
 <div>
-  <span>あなたのID：<span id="userId" *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peerContext.userId}}</span>
+  <span>あなたのID：<input id="userId" [(ngModel)]="networkService.peerContext.userId" *ngIf="networkService.isOpen" readonly />
     <span *ngIf="!networkService.isOpen" style="font-weight: bold;">???</span>
     <button *ngIf="networkService.isOpen" (click)="getUrl()" id="geturlbtn">接続URL取得</button>
   </span>
+</div>
+<div *ngIf="isViewer">
+  <hr />
+  <p class="menu-able-box-description">GM以外の参加者が利用できるメニューパネル</p>
+  <div class="menu-able-box">
+    <div class="checkbox">
+      <input type="checkbox" id="isPeerWindowAble" [(ngModel)]="isPeerWindowAble" />
+      <label for="isPeerWindowAble"><i class="material-icons icon-size">people</i>接続情報</label>
+    </div>
+    <div class="checkbox">
+      <input type="checkbox" id="isChatWindowAble" [(ngModel)]="isChatWindowAble" />
+      <label for="isChatWindowAble"><i class="material-icons icon-size">speaker_notes</i>チャット画面</label>
+    </div>
+    <div class="checkbox">
+      <input type="checkbox" id="isGameTableSettingAble" [(ngModel)]="isGameTableSettingAble" />
+      <label for="isGameTableSettingAble"><i class="material-icons icon-size">layers</i>テーブル設定</label>
+    </div>
+    <div class="checkbox">
+      <input type="checkbox" id="isFileStorageAble" [(ngModel)]="isFileStorageAble" />
+      <label for="isFileStorageAble"><i class="material-icons icon-size">photo_library</i>画像</label>
+    </div>
+    <div class="checkbox">
+      <input type="checkbox" id="isJukeboxAble" [(ngModel)]="isJukeboxAble" />
+      <label for="isJukeboxAble"><i class="material-icons icon-size">queue_music</i>音楽</label>
+    </div>
+    <div class="checkbox">
+      <input type="checkbox" id="isCutinAble" [(ngModel)]="isCutinAble" />
+      <label for="isCutinAble"><i class="material-icons icon-size">movie</i>カットイン</label>
+    </div>
+    <div class="checkbox">
+      <input type="checkbox" id="isGameObjectInventoryAble" [(ngModel)]="isGameObjectInventoryAble" />
+      <label for="isGameObjectInventoryAble"><i class="material-icons icon-size">folder_shared</i>インベントリ</label>
+    </div>
+    <div class="checkbox">
+      <input type="checkbox" id="isGamePanelSettingAble" [(ngModel)]="isGamePanelSettingAble" />
+      <label for="isGamePanelSettingAble"><i class="material-icons icon-size">picture_as_pdf</i>PDF</label>
+    </div>
+    <div class="checkbox">
+      <input type="checkbox" id="isFileSelectAble" [(ngModel)]="isFileSelectAble" />
+      <label for="isFileSelectAble"><i class="material-icons icon-size">open_in_browser</i>ZIP読込</label>
+    </div>
+    <div class="checkbox">
+      <input type="checkbox" id="isFileSaveAble" [(ngModel)]="isFileSaveAble" />
+      <label for="isFileSaveAble"><i class="material-icons icon-size">sd_storage</i>保存</label>
+    </div>
+    <div class="checkbox">
+      <input type="checkbox" id="isTimerAble" [(ngModel)]="isTimerAble" />
+      <label for="isTimerAble"><i class="material-icons icon-size">access_alarm</i>タイマー</label>
+    </div>
+  </div>
+  <label class="menu-able-box-description">
+    初期状態ではネタバレに繋がる機能などは無効になっています。<br>
+    [音楽]はGM状態の時のみ曲リストが表示され、非GM状態の時は音量調整のみ可能です。
+  </label>
 </div>
 <!--<div>host ID:{{networkService.hostPeerID}}</div>-->
 <ng-container *ngIf="networkService.peerContext.isRoom">

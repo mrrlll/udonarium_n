@@ -1,11 +1,11 @@
 【音量】
 <div class="volume-area">
-  <div>視聴：<input [(ngModel)]="auditionVolume" type="range" min="0" max="1" step="0.01" /></div>
+  <div>試聴：<input [(ngModel)]="auditionVolume" type="range" min="0" max="1" step="0.01" /></div>
 </div>
 <div class="volume-area">
   <div>BGM：<input [(ngModel)]="volume" type="range" min="0" max="1" step="0.01" /></div>
 </div>
-<div>全体：<input [(ngModel)]="roomVolume" type="range" min="0" max="2" step="0.01" /><font style="font-size: 15px;">※全プレイヤー一括変更</font></div>
+<div *ngIf="isViewer">全体：<input [(ngModel)]="roomVolume" type="range" min="0" max="2" step="0.01" /><font style="font-size: 15px;">※全プレイヤー一括変更</font></div>
 <hr/>
 <div class="volume-area">
   <span>SE</span>：<input [(ngModel)]="seVolume" type="range" min="0" max="1" step="0.01" />※アラームの音量もこちら

@@ -11,9 +11,8 @@ import { AppConfigService } from 'service/app-config.service';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 import { ChatMessageService } from 'service/chat-message.service';
-import { ConfirmationComponent, ConfirmationType } from 'component/confirmation/confirmation.component';
-import { GameCharacter } from '@udonarium/game-character';
 import { AppConfigCustomService } from 'service/app-config-custom.service';
+import { RoomSetting } from '@udonarium/room-setting';
 
 @Component({
   selector: 'peer-menu',
@@ -30,7 +29,95 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() isViewer: boolean = false;
 
-  get myPeer(): PeerCursor { return PeerCursor.myCursor; }
+  roomSetting: RoomSetting;
+
+  get myPeer(): PeerCursor {
+    return PeerCursor.myCursor;
+  }
+
+  get isPeerWindowAble(): boolean {
+    return this.roomSetting.peerMenuAuthority;
+  }
+  set isPeerWindowAble(checkbox: boolean) {
+    console.log("接続情報：", checkbox);
+    this.roomSetting.peerMenuAuthority = checkbox;
+  }
+  get isChatWindowAble(): boolean {
+    return this.roomSetting.chatWindowAuthority;
+  }
+  set isChatWindowAble(checkbox: boolean) {
+    console.log("チャット：", checkbox);
+    this.roomSetting.chatWindowAuthority = checkbox;
+  }
+  get isGameTableSettingAble(): boolean {
+    return this.roomSetting.gameTableSettingAuthority;
+  }
+  set isGameTableSettingAble(checkbox: boolean) {
+    console.log("テーブル設定：", checkbox);
+    this.roomSetting.gameTableSettingAuthority = checkbox;
+  }
+  get isFileStorageAble(): boolean {
+    return this.roomSetting.fileStorageAuthority;
+  }
+  set isFileStorageAble(checkbox: boolean) {
+    console.log("画像：", checkbox);
+    this.roomSetting.fileStorageAuthority = checkbox;
+  }
+
+  get isJukeboxAble(): boolean {
+    return this.roomSetting.jukeboxAuthority;
+  }
+  set isJukeboxAble(checkbox: boolean) {
+    console.log("音楽：", checkbox);
+    this.roomSetting.jukeboxAuthority = checkbox;
+  }
+  get isCutinAble(): boolean {
+    return this.roomSetting.cutinAuthority;
+  }
+  set isCutinAble(checkbox: boolean) {
+    console.log("カットイン：", checkbox);
+    this.roomSetting.cutinAuthority = checkbox;
+  }
+  get isGameObjectInventoryAble(): boolean {
+    return this.roomSetting.gameObjectInventoryAuthority;
+  }
+  set isGameObjectInventoryAble(checkbox: boolean) {
+    console.log("インベントリ：", checkbox);
+    this.roomSetting.gameObjectInventoryAuthority = checkbox;
+  }
+  get isFileSelectAble(): boolean {
+    return this.roomSetting.fileSelectAuthority;
+  }
+  set isFileSelectAble(checkbox: boolean) {
+    console.log("ZIP読込：", checkbox);
+    this.roomSetting.fileSelectAuthority = checkbox;
+  }
+
+  get isFileSaveAble(): boolean {
+    return this.roomSetting.fileSaveAuthority;
+  }
+  set isFileSaveAble(checkbox: boolean) {
+    console.log("保存：", checkbox);
+    this.roomSetting.fileSaveAuthority = checkbox;
+  }
+
+  get isTimerAble(): boolean {
+    return this.roomSetting.timerAuthority;
+  }
+  set isTimerAble(checkbox: boolean) {
+    console.log("タイマー：", checkbox);
+    this.roomSetting.timerAuthority = checkbox;
+  }
+
+  get isGamePanelSettingAble(): boolean {
+    return this.roomSetting.gamePanelSettingAuthority;
+  }
+
+  set isGamePanelSettingAble(checkbox: boolean) {
+    console.log("PDF：", checkbox);
+    this.roomSetting.gamePanelSettingAuthority = checkbox;
+  }
+
 
   set myPeerName(name: string) {
     if (window.localStorage) {
@@ -70,8 +157,8 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     this.isViewer = this.appCustomService.dataViewer;
+    this.roomSetting = ObjectStore.instance.get<RoomSetting>('room-setting');
     Promise.resolve().then(() => {this.panelService.title = '接続情報'; this.panelService.isAbleFullScreenButton = false});
-    Promise.resolve().then(() => {console.log;});
   }
 
   ngAfterViewInit() {
@@ -148,10 +235,10 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     this.appCustomService.dataViewer = this.isViewer;
     this.changeGMModeName();
     if (this.isViewer) {
-      this.chatMessageService.sendOperationLog('GM&観戦モードを解除しました。');
+      this.chatMessageService.sendOperationLog('GM＆観戦モードを解除しました。');
     }
     else {
-      this.chatMessageService.sendOperationLog('GM&観戦モードになりました。');
+      this.chatMessageService.sendOperationLog('GM＆観戦モードを有効にしました。');
     }
   }
 

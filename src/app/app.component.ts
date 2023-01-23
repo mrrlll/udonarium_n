@@ -53,9 +53,14 @@ import { AlermSound } from '@udonarium/timer-bot';
 import { TimerMenuComponent } from 'component/timer/timer-menu.component';
 import { AudioFile } from '@udonarium/core/file-storage/audio-file';
 
+import { GamePanelSettingComponent } from 'component/game-panel-setting/game-panel-setting.component';
+import { GamePanelSelecter } from '@udonarium/game-panel-selecter';
+
+import { RoomSetting } from '@udonarium/room-setting';
+import { Observable, Subscription, timer } from 'rxjs';
 import { AppConfigCustomService } from 'service/app-config-custom.service';
 
-import { timer } from 'rxjs';
+const MENU_LENGTH: number = 11;
 
 
 @Component({
@@ -71,6 +76,18 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private openPanelCount: number = 0;
   isSaveing: boolean = false;
   progresPercent: number = 0;
+
+  roomSetting: RoomSetting;
+
+  // GMフラグ
+  obs: Observable<boolean>;
+  subs: Subscription;
+  isGM: boolean = false;
+
+  get menuHeight(): number {
+    if (this.isGM) return MENU_LENGTH * 50 + 60;
+    return this.roomSetting.getMenuHeight();
+  }
 
   isHorizontal = false;
 
@@ -100,6 +117,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       ObjectStore.instance;
       ObjectSynchronizer.instance.initialize();
     });
+
     this.appConfigService.initialize();
     this.pointerDeviceService.initialize();
     this.ngSelectConfig.appendTo = 'body';
@@ -108,6 +126,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     ChatTabList.instance.initialize();
     DataSummarySetting.instance.initialize();
     Config.instance.initialize();
+    GamePanelSelecter.instance;
 
     DataSummarySetting.instance.initialize();
 
@@ -129,6 +148,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     let timerBot: TimerBot = new TimerBot('timer-bot');
     timerBot.initialize();
+
+    this.roomSetting = new RoomSetting('room-setting');
+    this.roomSetting.initialize();
 
     ChatTabList.instance.addChatTab('メインタブ', 'MainTab');
     let subTab = ChatTabList.instance.addChatTab('サブタブ', 'SubTab');
@@ -246,17 +268,32 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       .on('DISCONNECT_PEER', event => {
         this.lazyNgZoneUpdate(event.isSendFromSelf);
       });
+
+    // GMフラグ管理
+    this.obs = this.appCustomService.isViewer$;
+    this.subs = this.obs.subscribe((flg) => {
+      this.isGM = flg;
+    });
+    this.isGM = this.appCustomService.dataViewer;
   }
 
   ngOnInit() {
-    this.isViewer = this.appCustomService.dataViewer;
+    ;
   }
 
   ngAfterViewInit() {
-    PanelService.defaultParentViewContainerRef = ModalService.defaultParentViewContainerRef = ContextMenuService.defaultParentViewContainerRef = this.modalLayerViewContainerRef;
+    PanelService.defaultParentViewContainerRef =
+      ModalService.defaultParentViewContainerRef =
+        ContextMenuService.defaultParentViewContainerRef =
+          this.modalLayerViewContainerRef;
+    PanelService.defaultParentViewContainerRef =
+      ModalService.defaultParentViewContainerRef =
+        ContextMenuService.defaultParentViewContainerRef =
+          this.modalLayerViewContainerRef;
+
     setTimeout(() => {
-      this.panelService.open(PeerMenuComponent, { width: 500, height: 450, left: 100 });
-      this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 100, top: 450 });
+      this.panelService.open(PeerMenuComponent, { width: 500, height: 550, left: 100 });
+      //this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 100, top: 450 });
       this.panelService.open(TimerMenuComponent, { width: 180, height: 90, left: 1500, top: 10, className: 'timer-menu-panel' });
     }, 0);
   }
@@ -313,18 +350,12 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         option.width = 700;
         break;
       case 'GameTableSettingComponent':
-        if (this.appCustomService.dataViewer) {
-          component = GameTableSettingComponent;
-          option = { width: 630, height: 400, left: 100 };
+        component = GameTableSettingComponent;
+        option = { width: 630, height: 400, left: 100 };
           break;
-        }
-        else break;
       case 'FileStorageComponent':
-        if (this.appCustomService.dataViewer) {
-          component = FileStorageComponent;
-          break;
-        }
-        else break;
+        component = FileStorageComponent;
+        break;
       case 'GameCharacterSheetComponent':
         component = GameCharacterSheetComponent;
         break;
@@ -332,23 +363,21 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         component = JukeboxComponent;
         break;
       case 'CutInListComponent':
-        if (this.appCustomService.dataViewer) {
-          component = CutInListComponent;
-          option = {width: 650, height: 740}
-          break;
-        }
-        else break;
+        component = CutInListComponent;
+        option = {width: 650, height: 740}
+        break;
       case 'GameCharacterGeneratorComponent':
         component = GameCharacterGeneratorComponent;
         option = { width: 500, height: 300, left: 100 };
         break;
       case 'GameObjectInventoryComponent':
-        if (this.appCustomService.dataViewer) {
-          component = GameObjectInventoryComponent;
-          break;
-        }
-        else break;
-        // タイマーメニュー(特殊処理)
+        component = GameObjectInventoryComponent;
+        break;
+      case 'GamePanelSettingComponent':
+        component = GamePanelSettingComponent ;
+        option = { width: 600, height: 440, left: 100 };
+        break;
+      // タイマーメニュー(特殊処理)
       case 'TimerMenuComponent':
         component = TimerMenuComponent;
         option = {
