@@ -49,7 +49,7 @@ export class CutInListComponent implements OnInit, OnDestroy {
 
   set cutInWidth(cutInWidth: number) {
     if (this.isEditable) this.selectedCutIn.width = cutInWidth;
-    if ( this.keepImageAspect ){
+    if (this.keepImageAspect){
       if (this.isYouTubeCutIn){
         this.selectedCutIn.height = Math.floor( cutInWidth * this.selectedCutIn.defVideoSizeHeight /  this.selectedCutIn.defVideoSizeWidth );
       }else{

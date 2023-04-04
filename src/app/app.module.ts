@@ -83,6 +83,7 @@ import { GamePanelSettingComponent } from 'component/game-panel-setting/game-pan
 import { AppComponent } from './app.component';
 import { UIGamePanelComponent } from 'component/ui-game-panel/ui-game-panel.component';
 import { GamePanelStoreComponent } from './component/game-panel-store/game-panel-store.component';
+import { UnsplashsearchComponent } from 'component/unsplashsearch/unsplashsearch.component';
 
 @NgModule({
   declarations: [
@@ -151,6 +152,7 @@ import { GamePanelStoreComponent } from './component/game-panel-store/game-panel
     GamePanelSettingComponent,
     UIGamePanelComponent,
     GamePanelStoreComponent,
+    UnsplashsearchComponent,
   ],
   imports: [
     BrowserModule,

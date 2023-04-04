@@ -7,3 +7,8 @@ webrtc:
         credential: homeo
 app: #未使用
 dice: #未使用
+unsplash:
+  access_key: bWI8fdsKw0MiDGAPAHyraLZPj6hjHbUyO72k-1fXhCI
+  secret_key: fM6gT5ihwFmI5lrnGepUAV8914CUbqCTDlelLVLDZiQ
+deepl:
+  key: efd93a4f-099a-1bbd-7dfe-a863e3901c80:fx

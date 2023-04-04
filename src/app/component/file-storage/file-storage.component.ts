@@ -7,7 +7,8 @@ import { EventSystem, Network } from '@udonarium/core/system';
 import { kdf } from 'crypto-js';
 import { ModalService } from 'service/modal.service';
 
-import { PanelService } from 'service/panel.service';
+import { PanelOption, PanelService } from 'service/panel.service';
+import { UnsplashsearchComponent } from 'component/unsplashsearch/unsplashsearch.component';
 
 @Component({
   selector: 'file-storage',
@@ -74,5 +75,10 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (file.url.length <= 0) return;
     console.log('onSelectedFile', file);
     EventSystem.call('SELECT_FILE', { fileIdentifier: file.identifier }, Network.peerId);
+  }
+
+  unsplashsearch() {
+    let option: PanelOption = { width: 450, height: 600, left: 100 }
+    this.panelService.open<UnsplashsearchComponent>(UnsplashsearchComponent, option);
   }
 }
