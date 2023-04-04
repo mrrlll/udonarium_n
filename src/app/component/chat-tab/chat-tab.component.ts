@@ -37,7 +37,7 @@ const now = Date.now()
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges, AfterViewChecked {
-  
+
   sampleMessages: ChatMessageContext[] = [
     {
       from: 'System',
@@ -118,6 +118,14 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       tag: '',
       name: '仕様変更',
       text: 'アラームのタイプをSEに変更\n音量はSEの音量で変更することができます。'
+    },
+    {
+      from: 'System',
+      timestamp: 1674464400000,
+      imageIdentifier: '',
+      tag: '',
+      name: 'アップデート',
+      text: 'PDFアップロード＆閲覧機能の追加\nPDFファイルをドラッグすることで画面左下にストックされていきます。\nGMは専用のパネルから特定の人物にのみ見せるなどの設定が行なえます。'
     },
     {
       from: 'System',
