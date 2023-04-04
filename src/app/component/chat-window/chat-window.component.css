@@ -1,5 +1,6 @@
 :host {
   display: block;
+  height: 100%;
 }
 
 .loop-anime {
@@ -43,7 +44,7 @@
   outline: 0;
   font-size: 12px;
   background-color: transparent;
-  color: #444; 
+  color: #444;
   border: solid 1px #555;
   padding: 2px 8px;
   margin: 2px;
@@ -70,7 +71,7 @@
 
 .tab-setting {
   background-color: transparent;
-  color: #444; 
+  color: #444;
   border: solid 1px #555;
   padding: 2px 4px;
   border-radius: 5px;
