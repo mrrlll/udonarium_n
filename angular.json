@@ -31,7 +31,8 @@
               "lzbase62",
               "pako",
               "pdfjs-dist/build/pdf",
-              "pdfjs-dist.web/pdf_viewer"
+              "pdfjs-dist.web/pdf_viewer",
+              "localforage"
             ]
           },
           "configurations": {
