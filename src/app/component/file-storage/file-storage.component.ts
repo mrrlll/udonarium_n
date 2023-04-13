@@ -7,6 +7,8 @@ import { EventSystem, Network } from '@udonarium/core/system';
 import { kdf } from 'crypto-js';
 import { ModalService } from 'service/modal.service';
 
+import axios from 'axios'
+
 import { PanelOption, PanelService } from 'service/panel.service';
 import { UnsplashsearchComponent } from 'component/unsplashsearch/unsplashsearch.component';
 
@@ -79,6 +81,9 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   unsplashsearch() {
     let option: PanelOption = { width: 450, height: 600, left: 100 }
-    this.panelService.open<UnsplashsearchComponent>(UnsplashsearchComponent, option);
+    let res = axios.get('https://api.unsplash.com/search/photos?query=cat&client_id=bWI8fdsKw0MiDGAPAHyraLZPj6hjHbUyO72k-1fXhCI')
+    .then(res => {
+      this.panelService.open<UnsplashsearchComponent>(UnsplashsearchComponent, option, res.data);
+    });
   }
 }

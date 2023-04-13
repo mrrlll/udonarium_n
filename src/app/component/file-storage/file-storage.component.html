@@ -1,5 +1,18 @@
 <div id="unsplash">
-  <button (click)="unsplashsearch()">Unsplashから画像を探す</button>
+  <form>
+    <input type="text" class="unsplash keywords" list="keywordslist" />
+    <input type="submit" class="unsplash search" (click)="unsplashsearch()" value="検索" />
+  </form>
+  <datalist id="keywordslist">
+    <option value="forest"></option>
+    <option value="city"></option>
+    <option value="sea"></option>
+    <option value="village"></option>
+    <option value="cave"></option>
+    <option value="mountain"></option>
+    <option value="river"></option>
+    <option value="room"></option>
+  </datalist>
 </div>
 <hr>
 <label>

@@ -17,7 +17,6 @@ export class UnsplashsearchComponent implements OnInit {
   }
 
   unsplashsearch() {
-    axios.get('https://api.unsplash.com/search/photos?query=cat&client_id=bWI8fdsKw0MiDGAPAHyraLZPj6hjHbUyO72k-1fXhCI')
-    .then(res => console.log(res));
+    console.log('a')
   }
 }
