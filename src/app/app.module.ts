@@ -84,6 +84,7 @@ import { AppComponent } from './app.component';
 import { UIGamePanelComponent } from 'component/ui-game-panel/ui-game-panel.component';
 import { GamePanelStoreComponent } from './component/game-panel-store/game-panel-store.component';
 import { UnsplashsearchComponent } from 'component/unsplashsearch/unsplashsearch.component';
+import { UnsplashService } from 'service/unsplash.service'
 
 @NgModule({
   declarations: [
@@ -173,6 +174,7 @@ import { UnsplashsearchComponent } from 'component/unsplashsearch/unsplashsearch
     PanelService,
     PointerDeviceService,
     TabletopService,
+    UnsplashService,
   ],
   bootstrap: [AppComponent]
 })

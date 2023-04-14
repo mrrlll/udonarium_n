@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { PanelOption, PanelService } from 'service/panel.service';
 
-import axios from 'axios'
+import { UnsplashService } from 'service/unsplash.service';
 
 @Component({
   selector: 'app-unsplashsearch',
@@ -9,14 +9,9 @@ import axios from 'axios'
   styleUrls: ['./unsplashsearch.component.css']
 })
 export class UnsplashsearchComponent implements OnInit {
-  constructor(private changeDetector: ChangeDetectorRef, private panelService: PanelService) {}
+  photos: any[] = [];
+  constructor(private changeDetector: ChangeDetectorRef, private panelService: PanelService, private unsplashService: UnsplashService) {}
   ngOnInit() {
-    Promise.resolve().then(() => {
-      this.panelService.title = 'Unsplash画像検索';
-    });
-  }
-
-  unsplashsearch() {
-    console.log('a')
+    this.unsplashService.searchPhotos('nature').subscribe(data => { this.photos = data.results;})
   }
 }

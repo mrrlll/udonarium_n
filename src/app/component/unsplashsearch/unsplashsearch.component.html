@@ -1,5 +1,9 @@
-<div class="component">
-  <div class="result">
+<div class="grid-container">
+  <div class="grid-item" *ngFor="let photo of photos">
+    <img src="{{ photo.urls.small }}" alt="{{ photo.alt_description }}">
+    <div class="photo-info">
+      <p>By {{ photo.user.name }}</p>
+      <p>{{ photo.likes }} likes</p>
+    </div>
   </div>
 </div>
-
