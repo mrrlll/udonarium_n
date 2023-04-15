@@ -80,10 +80,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   unsplashsearch() {
-    let option: PanelOption = { width: 450, height: 600, left: 100 }
-    let res = axios.get('https://api.unsplash.com/search/photos?query=cat&client_id=bWI8fdsKw0MiDGAPAHyraLZPj6hjHbUyO72k-1fXhCI')
-    .then(res => {
-      this.panelService.open<UnsplashsearchComponent>(UnsplashsearchComponent, option, res.data);
-    });
+    let option: PanelOption = { width: 450, height: 600, left: 100, title: "Unsplash検索"}
+    this.panelService.open<UnsplashsearchComponent>(UnsplashsearchComponent, option)
   }
 }

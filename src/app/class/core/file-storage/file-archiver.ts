@@ -84,16 +84,21 @@ export class FileArchiver {
   async load(files: File[]): Promise<void>;
   async load(files: FileList): Promise<void>;
   async load(files: any): Promise<void> {
-    if (!files) return;
+    if (!files) {
+      console.log('b')
+      return;
+    }
     let loadFiles: File[] = files instanceof FileList ? toArrayOfFileList(files) : files;
-
+    console.log(files)
     for (let file of loadFiles) {
+      console.log(file.type)
       await this.handleImage(file);
       const filename: string = file.name;
       const pdfFile: ImageFile = await this.handlePdf(file);
       await this.handleAudio(file);
       await this.handleText(file);
       await this.handleZip(file);
+      // await this.handleUnsplash(file);
       EventSystem.trigger('FILE_LOADED', { file: file });
 
       // pdfFileに該当するパネル追加
@@ -108,6 +113,16 @@ export class FileArchiver {
   }
 
   private async handleImage(file: File) {
+    if (file.type.indexOf('image/') < 0) return;
+    if (this.maxImageSize < file.size) {
+      console.warn(`File size limit exceeded. -> ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
+      return;
+    }
+    console.log(file.name + ' type:' + file.type);
+    await ImageStorage.instance.addAsync(file);
+  }
+
+  private async handleUnsplash(file: File) {
     if (file.type.indexOf('image/') < 0) return;
     if (this.maxImageSize < file.size) {
       console.warn(`File size limit exceeded. -> ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`);

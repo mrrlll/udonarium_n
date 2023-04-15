@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BadgeComponent } from 'component/badge/badge.component';
 import { CardStackListComponent } from 'component/card-stack-list/card-stack-list.component';
@@ -163,7 +164,8 @@ import { UnsplashService } from 'service/unsplash.service'
     LinkyModule,
     YouTubePlayerModule,
     NgSelectModule,
-    PdfViewerModule
+    PdfViewerModule,
+    HttpClientModule,
   ],
   providers: [
     AppConfigService,
