@@ -1,55 +1,58 @@
-【音量】
-<div class="volume-area">
-  <div>試聴：<input [(ngModel)]="auditionVolume" type="range" min="0" max="1" step="0.01" /></div>
-</div>
-<div class="volume-area">
-  <div>BGM：<input [(ngModel)]="volume" type="range" min="0" max="1" step="0.01" /></div>
-</div>
-<div *ngIf="isViewer">全体：<input [(ngModel)]="roomVolume" type="range" min="0" max="2" step="0.01" /><font style="font-size: 15px;">※全プレイヤー一括変更</font></div>
-<hr/>
-<div class="volume-area">
-  <span>SE</span>：<input [(ngModel)]="seVolume" type="range" min="0" max="1" step="0.01" />※アラームの音量もこちら
-</div>
-<hr/>
-<label *ngIf="!isViewer">
-  👁GM&観戦者モードを有効にして開き直すと表示されます。
-</label>
-<div *ngIf="isViewer">
-  <div *ngFor="let audio of audios" class="box">
-    <div class="audiolist">
-      <button *ngIf="audio !== auditionPlayer?.audio || auditionPlayer?.paused" (click)="play(audio)" [disabled]="!audio.isReady" >試聴</button>
-      <button *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused" (click)="stop()" [disabled]="!audio.isReady" >停止</button>
-      <button *ngIf="audio !== jukebox?.audio" (click)="playBGM(audio)" [disabled]="!audio.isReady" >BGM</button>
-      <button *ngIf="audio === jukebox?.audio" (click)="stopBGM(audio)" [disabled]="!audio.isReady" >停止</button>
-      <button *ngIf="audio !== seBox?.audio" (click)="playSE(audio)" [disabled]="!audio.isReady" >SE</button>
-      <button *ngIf="audio === seBox?.audio" (click)="stopSE(audio)" [disabled]="!audio.isReady" >停止</button>
-      <span *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused">【試聴中】</span>
-      <span *ngIf="audio === jukebox?.audio">【BGM】</span>
-      <span *ngIf="audio === seBox?.audio">【SE】</span>
-      <span>{{audio.name}}</span>
-    </div>
-    <div class="deletebutton">
-      <button (click)="deleteAudioFile(audio)">削除</button>
-    </div>
+<div class="jukebox">
+  【音量】
+  <div class="volume-area">
+    <div>試聴：<input [(ngModel)]="auditionVolume" type="range" min="0" max="1" step="0.01" /></div>
+  </div>
+  <div class="volume-area">
+    <div>BGM：<input [(ngModel)]="volume" type="range" min="0" max="1" step="0.01" /></div>
+  </div>
+  <div *ngIf="isViewer">全体：<input [(ngModel)]="roomVolume" type="range" min="0" max="2" step="0.01" /><font style="font-size: 15px;">※全プレイヤー一括変更</font></div>
+  <hr/>
+  <div class="volume-area">
+    <span>SE</span>：<input [(ngModel)]="seVolume" type="range" min="0" max="1" step="0.01" />※アラームの音量もこちら
+  </div>
+  <hr/>
+  <label *ngIf="!isViewer">
+    👁GM&観戦者モードを有効にして開き直すと表示されます。
+  </label>
+  <div *ngIf="isViewer">
+    <div *ngFor="let audio of audios" class="box">
+      <div class="audiolist">
+        <button *ngIf="audio !== auditionPlayer?.audio || auditionPlayer?.paused" (click)="play(audio)" [disabled]="!audio.isReady" >試聴</button>
+        <button *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused" (click)="stop()" [disabled]="!audio.isReady" >停止</button>
+        <button *ngIf="audio !== jukebox?.audio" (click)="playBGM(audio)" [disabled]="!audio.isReady" >BGM</button>
+        <button *ngIf="audio === jukebox?.audio" (click)="stopBGM(audio)" [disabled]="!audio.isReady" >停止</button>
+        <button *ngIf="audio !== seBox?.audio" (click)="playSE(audio)" [disabled]="!audio.isReady" >SE</button>
+        <button *ngIf="audio === seBox?.audio" (click)="stopSE(audio)" [disabled]="!audio.isReady" >停止</button>
+        <span *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused">【試聴中】</span>
+        <span *ngIf="audio === jukebox?.audio">【BGM】</span>
+        <span *ngIf="audio === seBox?.audio">【SE】</span>
+        <span>{{audio.name}}</span>
+      </div>
+      <div class="deletebutton">
+        <button (click)="deleteAudioFile(audio)">削除</button>
+      </div>
 
-  </div>
-  <!-- <div *ngIf="audios.length < 1" >アップロードされた音楽ファイルはここに表示されます。</div> -->
-</div>
-<label *ngIf="isViewer">
-  <div class="drop-zone">
-    <div>
-      <i class="material-icons large-font">playlist_add</i>
     </div>
-    <div>ここに音楽をドロップ</div>
-    <div class="small-font">またはここをクリックして選択</div>
-    <input type="file" style="display: none;" (change)="handleFileSelect($event)" multiple accept="audio/*"/>
-    <div class="small-font">
-      <br>１ファイルにつき10MBまで</div>
+    <!-- <div *ngIf="audios.length < 1" >アップロードされた音楽ファイルはここに表示されます。</div> -->
   </div>
-</label>
-<hr *ngIf="isViewer"/>
-<div class="utility-button">
-  <button *ngIf="isViewer" (click)="openCutInList()" [disabled]="0" >カットインリスト</button>
-  <button *ngIf="isViewer" (click)="audioControl()" [disabled]="0" >オーディオコントロール</button>
+  <label *ngIf="isViewer">
+    <div class="drop-zone">
+      <div>
+        <i class="material-icons large-font">playlist_add</i>
+      </div>
+      <div>ここに音楽をドロップ</div>
+      <div class="small-font">またはここをクリックして選択</div>
+      <input type="file" style="display: none;" (change)="handleFileSelect($event)" multiple accept="audio/*"/>
+      <div class="small-font">
+        <br>１ファイルにつき10MBまで</div>
+    </div>
+  </label>
+  <hr *ngIf="isViewer"/>
+  <div class="utility-button">
+    <button *ngIf="isViewer" (click)="openCutInList()" [disabled]="0" >カットインリスト</button>
+    <button *ngIf="isViewer" (click)="audioControl()" [disabled]="0" >オーディオコントロール</button>
+  </div>
 </div>
+
 
