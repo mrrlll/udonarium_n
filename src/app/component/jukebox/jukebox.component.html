@@ -48,4 +48,8 @@
   </div>
 </label>
 <hr *ngIf="isViewer"/>
-<button *ngIf="isViewer" (click)="openCutInList()" [disabled]="0" >カットインリストを開く</button>
+<div class="utility-button">
+  <button *ngIf="isViewer" (click)="openCutInList()" [disabled]="0" >カットインリスト</button>
+  <button *ngIf="isViewer" (click)="audioControl()" [disabled]="0" >オーディオコントロール</button>
+</div>
+
