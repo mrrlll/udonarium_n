@@ -16,16 +16,22 @@
 </label>
 <div *ngIf="isViewer">
   <div *ngFor="let audio of audios" class="box">
-    <button *ngIf="audio !== auditionPlayer?.audio || auditionPlayer?.paused" (click)="play(audio)" [disabled]="!audio.isReady" >試聴</button>
-    <button *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused" (click)="stop()" [disabled]="!audio.isReady" >停止</button>
-    <button *ngIf="audio !== jukebox?.audio" (click)="playBGM(audio)" [disabled]="!audio.isReady" >BGM</button>
-    <button *ngIf="audio === jukebox?.audio" (click)="stopBGM(audio)" [disabled]="!audio.isReady" >停止</button>
-    <button *ngIf="audio !== seBox?.audio" (click)="playSE(audio)" [disabled]="!audio.isReady" >SE</button>
-    <button *ngIf="audio === seBox?.audio" (click)="stopSE(audio)" [disabled]="!audio.isReady" >停止</button>
-    <span *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused">【試聴中】</span>
-    <span *ngIf="audio === jukebox?.audio">【BGM】</span>
-    <span *ngIf="audio === seBox?.audio">【SE】</span>
-    <span>{{audio.name}}</span><br>
+    <div class="audiolist">
+      <button *ngIf="audio !== auditionPlayer?.audio || auditionPlayer?.paused" (click)="play(audio)" [disabled]="!audio.isReady" >試聴</button>
+      <button *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused" (click)="stop()" [disabled]="!audio.isReady" >停止</button>
+      <button *ngIf="audio !== jukebox?.audio" (click)="playBGM(audio)" [disabled]="!audio.isReady" >BGM</button>
+      <button *ngIf="audio === jukebox?.audio" (click)="stopBGM(audio)" [disabled]="!audio.isReady" >停止</button>
+      <button *ngIf="audio !== seBox?.audio" (click)="playSE(audio)" [disabled]="!audio.isReady" >SE</button>
+      <button *ngIf="audio === seBox?.audio" (click)="stopSE(audio)" [disabled]="!audio.isReady" >停止</button>
+      <span *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused">【試聴中】</span>
+      <span *ngIf="audio === jukebox?.audio">【BGM】</span>
+      <span *ngIf="audio === seBox?.audio">【SE】</span>
+      <span>{{audio.name}}</span>
+    </div>
+    <div class="deletebutton">
+      <button (click)="deleteAudioFile(audio)">削除</button>
+    </div>
+
   </div>
   <!-- <div *ngIf="audios.length < 1" >アップロードされた音楽ファイルはここに表示されます。</div> -->
 </div>
