@@ -27,7 +27,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
 
   @Input() isViewer: boolean;
 
-  get roomVolume(): number { 
+  get roomVolume(): number {
     let conf = ObjectStore.instance.get<Config>('Config');
 //    console.log("roomVolume()" + conf +" "+ conf.roomVolume);
     return conf? conf.roomVolume : 1 ;
@@ -50,10 +50,10 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   get auditionVolume(): number {
     return this.jukebox.auditionVolume;
   }
-  set auditionVolume(auditionVolume: number) { 
+  set auditionVolume(auditionVolume: number) {
     this.jukebox.auditionVolume = auditionVolume;
     AudioPlayer.auditionVolume = auditionVolume * this.roomVolume;
-    EventSystem.trigger('CHANGE_JUKEBOX_VOLUME', null); 
+    EventSystem.trigger('CHANGE_JUKEBOX_VOLUME', null);
   }
 
   get seVolume(): number {
@@ -106,13 +106,13 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   }
 
   playBGM(audio: AudioFile) { //memoこっちが全体
-    
+
     //タグなしのBGM付きカットインはジュークボックスと同時に鳴らさないようにする
     //BGM駆動のためのインスタンスを別にしているため現状この処理で止める
     this.cutInLauncher.stopBlankTagCutIn();
-    
+
     this.jukebox.play(audio.identifier, true);
-    
+
   }
 
   stopBGM(audio: AudioFile) {
@@ -126,7 +126,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
 
   stopSE(audio: AudioFile) {
     if (this.seBox.audio === audio) this.seBox.stop();
-  }     
+  }
 
   handleFileSelect(event: Event) {
     let input = <HTMLInputElement>event.target;
@@ -146,6 +146,17 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   openCutInList() {
     let coordinate = this.pointerDeviceService.pointers[0];
     let option: PanelOption = { left: coordinate.x+25, top: coordinate.y+25, width: 650, height: 740 };
+    this.panelService.open<CutInListComponent>(CutInListComponent, option);
+  }
+
+  deleteAudioFile() {
+
+  }
+
+  openaudioControl() {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x+25, top: coordinate.y+25, width: 650, height: 740 };
+    // 仮でカットインリストを開く
     this.panelService.open<CutInListComponent>(CutInListComponent, option);
   }
 
