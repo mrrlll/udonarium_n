@@ -149,8 +149,19 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     this.panelService.open<CutInListComponent>(CutInListComponent, option);
   }
 
-  deleteAudioFile() {
+  deleteAudioFile(audio) {
+    const audioStorage = AudioStorage.instance;
+    if (this.auditionPlayer.audio && this.auditionPlayer.audio.identifier === audio.identifier) {
+      this.stop();
+    }
+    if (this.jukebox.audio && this.jukebox.audio.identifier === audio.identifier) {
+      this.jukebox.stop();
+    }
+    if (this.seBox.audio && this.seBox.audio.identifier === audio.identifier) {
+      this.seBox.stop();
+    }
 
+    AudioStorage.instance.delete(audio.identifier);
   }
 
   openaudioControl() {
