@@ -13,6 +13,9 @@ export interface AudioFileContext {
   type: string;
   blob: Blob;
   url: string;
+  loopStart?: number;
+  loopLength?: number;
+  loopEnd?: number;
 }
 
 export class AudioFile {
@@ -21,7 +24,7 @@ export class AudioFile {
     name: '',
     blob: null,
     type: '',
-    url: ''
+    url: '',
   };
 
   get identifier(): string {
@@ -121,6 +124,17 @@ export class AudioFile {
         window.URL.revokeObjectURL(this.context.url);
       this.context.url = context.url;
     }
+
+    if (
+      context.loopStart !== undefined &&
+      context.loopLength !== undefined &&
+      context.loopEnd !== undefined
+    ) {
+      this.context.loopStart = context.loopStart;
+      this.context.loopLength = context.loopLength;
+      this.context.loopEnd = context.loopEnd;
+    }
+
     this.createURLs();
   }
 
@@ -140,7 +154,10 @@ export class AudioFile {
       name: this.context.name,
       blob: this.context.blob,
       type: this.context.type,
-      url: this.context.url
+      url: this.context.url,
+      loopStart: this.context.loopStart,
+      loopLength: this.context.loopLength,
+      loopEnd: this.context.loopEnd,
     }
   }
 }
