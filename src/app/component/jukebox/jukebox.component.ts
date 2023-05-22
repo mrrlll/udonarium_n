@@ -150,7 +150,6 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   }
 
   deleteAudioFile(audio) {
-    const audioStorage = AudioStorage.instance;
     if (this.auditionPlayer.audio && this.auditionPlayer.audio.identifier === audio.identifier) {
       this.stop();
     }
@@ -160,8 +159,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     if (this.seBox.audio && this.seBox.audio.identifier === audio.identifier) {
       this.seBox.stop();
     }
-
-    AudioStorage.instance.delete(audio.identifier);
+    EventSystem.call('DELETE_AUDIO_FILE', audio.identifier);
   }
 
   openaudioControl() {

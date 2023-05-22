@@ -107,6 +107,10 @@ export class AudioSharingSystem {
         } else {
           this.startReceiveTask(identifier);
         }
+      })
+      .on('DELETE_AUDIO_FILE', event => {
+        let identifier: string = event.data;
+        this.deleteAudioFile(identifier);
       });
   }
 
@@ -204,4 +208,15 @@ export class AudioSharingSystem {
     }
     return false;
   }
+
+  private deleteAudioFile(identifier: string) {
+    if (this.sendTaskMap.has(identifier)) {
+      this.stopSendTask(identifier);
+    }
+    if (this.receiveTaskMap.has(identifier)) {
+      this.stopReceiveTask(identifier);
+    }
+    AudioStorage.instance.delete(identifier);
+  }
 }
+
