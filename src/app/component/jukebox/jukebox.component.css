@@ -32,7 +32,7 @@
 }
 
 .deletebutton {
-  border-reft: 2px solid #000;
+  /* border-left: 2px solid #000; */
   display: inline-block;
   float: right;
 }
