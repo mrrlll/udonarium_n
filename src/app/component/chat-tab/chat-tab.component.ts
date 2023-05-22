@@ -45,7 +45,7 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       imageIdentifier: '',
       tag: '',
       name: 'チュートリアル',
-      text: 'サーバーを使用しないTRPGオンセツールです。参加者同士で接続し、コマや画像ファイルなどを同期します。\n本家ユドナリウム(https://udonarium.app/)をベースにカスタマイズされた様々なユドナリウムシステムを参考にし、機能を実装しています。'
+      text: 'サーバーを使用しないTRPGオンセツールです。参加者同士で接続し、コマや画像ファイルなどを同期します。\n本家ユドナリウム( https://udonarium.app/ )をベースにカスタマイズされた様々なユドナリウムシステムを参考にし、機能を実装しています。'
     },
     {
       from: 'System',
@@ -129,11 +129,20 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     },
     {
       from: 'System',
+      timestamp: 1684724400000,
+      imageIdentifier: '',
+      tag: '',
+      name: 'アップデート',
+      text: 'アップロードされているBGMの削除機能を実装。\nBGMの横に設置されている削除ボタンを押すことで削除されます。\n再生中のBGMを削除した場合、BGMを停止した上で削除を行います。'
+    },
+    {
+      from: 'System',
       timestamp: now,
       imageIdentifier: '',
       tag: '',
       name: 'システム情報',
-      text: 'チュートリアル＆アップデート情報は以上です。これらのチャットは誰かが最初のチャットを入力すると非表示になります。' },
+      text: 'チュートリアル＆アップデート情報は以上です。これらのチャットは誰かが最初のチャットを入力すると非表示になります。'
+    },
   ];
 
   private topTimestamp = 0;
