@@ -6,11 +6,11 @@
   <div class="volume-area">
     <div>BGM：<input [(ngModel)]="volume" type="range" min="0" max="1" step="0.01" /></div>
   </div>
-  <div *ngIf="isViewer">全体：<input [(ngModel)]="roomVolume" type="range" min="0" max="2" step="0.01" /><font style="font-size: 15px;">※全プレイヤー一括変更</font></div>
-  <hr/>
   <div class="volume-area">
     <span>SE</span>：<input [(ngModel)]="seVolume" type="range" min="0" max="1" step="0.01" />※アラームの音量もこちら
   </div>
+  <hr/>
+  <div *ngIf="isViewer">全体：<input [(ngModel)]="roomVolume" type="range" min="0" max="2" step="0.01" /><font style="font-size: 15px;">※全プレイヤー一括変更</font></div>
   <hr/>
   <label *ngIf="!isViewer">
     👁GM&観戦者モードを有効にして開き直すと表示されます。
