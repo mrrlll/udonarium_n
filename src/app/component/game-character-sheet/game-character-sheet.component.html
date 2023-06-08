@@ -35,7 +35,8 @@
   </select>
 </ng-container>
 <!-- <input type="checkbox" [(ngModel)]="isViewerOnly" id="isViewerCheck" /> -->
-<input type="checkbox" [(ngModel)]="tabletopObject.isHide"/>GMにのみパネルを表示する
+<input type="checkbox" [(ngModel)]="tabletopObject.isHide" id="isHideCheck"/>
+<label for="isHideCheck">GMにのみパネルを表示する<br>
 
 <div *ngIf="tabletopObject" class="flex-container">
   <div *ngIf="0 < tabletopObject.imageFile?.url.length" class="box main-image-box">
