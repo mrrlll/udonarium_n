@@ -73,7 +73,33 @@
 </ng-template>
 
 <ng-template #overviewCharacter let-character="character">
-  <div *ngIf="isGM" class="component-content character-grid-container is-middle-size">
+  <div *ngIf="!tabletopObject.isHide" class="component-content character-grid-container is-middle-size">
+    <div class="title-bg-area title-background"
+      [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
+    </div>
+    <div class="image-area character-image-box"
+      [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }"
+      *ngIf="hasImage">
+      <img class="character-image" [src]="imageUrl | safe: 'resourceUrl'" />
+    </div>
+    <div class="title-area component-title" [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging,
+    'pointer-events-none': this.isPointerDragging }">{{character.name}}</div>
+    <div class="void-area is-pointer-events-none"></div>
+    <div class="dataElm-area component-background"
+      [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
+      <div class="grid-container-root" *ngIf="hasDataElms">
+        <!--<ng-container *ngFor="let dataElm of dataElms">-->
+        <ng-container *ngFor="let dataElm of inventoryDataElms">
+          <ng-container *ngIf="dataElm && dataElm.name !== newLineString">
+            <div class="grid-container">
+              <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm }"></ng-container>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="tabletopObject.isHide && isGM" class="component-content character-grid-container is-middle-size">
     <div class="title-bg-area title-background"
       [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
     </div>
