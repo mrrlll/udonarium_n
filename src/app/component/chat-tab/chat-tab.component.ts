@@ -137,6 +137,22 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     },
     {
       from: 'System',
+      timestamp: 1686214800000,
+      imageIdentifier: '',
+      tag: '',
+      name: 'アップデート',
+      text: '音楽パネルの機能拡張\n・全体音量のフェードイン＆アウト機能\n・各音量の数値を直接入力できるようにした\n・「視聴：」、「BGM：」などの部分をダブルクリックでミュート切り替え'
+    },
+    {
+      from: 'System',
+      timestamp: 1686214800000,
+      imageIdentifier: '',
+      tag: '',
+      name: 'アップデート',
+      text: 'キャラクターシートの機能拡張\nGMにのみパネルを表示するのチェックが有効なコマは、マウスオーバー時に表示されるパネルがGMのみ表示されるようにした'
+    },
+    {
+      from: 'System',
       timestamp: now,
       imageIdentifier: '',
       tag: '',
