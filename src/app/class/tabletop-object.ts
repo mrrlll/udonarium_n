@@ -79,6 +79,7 @@ export class TabletopObject extends ObjectNode {
 
   @SyncVar() isNotRide: boolean = true;
   @SyncVar() isInventoryIndicate: boolean = true;
+  @SyncVar() isHide: boolean = false;
 
   get isGMMode(): boolean{ return PeerCursor.myCursor ? PeerCursor.myCursor.isGMMode : false; }
 
