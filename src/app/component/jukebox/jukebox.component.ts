@@ -181,13 +181,44 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     this.panelService.open<CutInListComponent>(CutInListComponent, option);
   }
 
+  fadeoutInProgress = false;
+  fadeinInProgress = false;
+
   fadeout() {
+    // フェードアウトorイン処理が既に実行中の場合は処理を無視
+    if (this.fadeoutInProgress || this.fadeinInProgress || this.roomVolume <= 0) {
+      return;
+    }
+
+    // フェードアウト処理の進行中フラグを設定
+    this.fadeoutInProgress = true;
+
     //roomVolumeを徐々に0に減らしていく
     let fadeoutInterval = setInterval(() => {
       this.roomVolume -= 0.05;
       if (this.roomVolume <= 0) {
         clearInterval(fadeoutInterval);
         this.roomVolume = 0;
+        this.fadeoutInProgress = false;  // フェードアウト処理の進行中フラグをリセット
+      }
+    }, 100);
+  }
+
+  fadein() {
+    // フェードアウトorイン処理が既に実行中の場合は処理を無視
+    if (this.fadeoutInProgress || this.fadeinInProgress || this.roomVolume >= 1) {
+      return;
+    }
+    // フェードアウト処理の進行中フラグを設定
+    this.fadeinInProgress = true;
+
+    //roomVolumeを徐々に100に増やしていく
+    let fadeinInterval = setInterval(() => {
+      this.roomVolume += 0.05;
+      if (this.roomVolume >= 1) {
+        clearInterval(fadeinInterval);
+        this.roomVolume = 1;
+        this.fadeinInProgress = false;  // フェードイン処理の進行中フラグをリセット
       }
     }, 100);
   }
@@ -208,4 +239,90 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     this.roomVolume = parseFloat(this.roomVolume.toFixed(2));
   }
 
+  // コンポーネントのクラス内に宣言を追加します
+  previousAuditionVolume: number;
+  previousVolume: number;
+  previousSEVolume: number;
+  previousRoomVolume: number;
+
+  isAuditionMuted: boolean = false;
+  isBgmMuted: boolean = false;
+  isSeMuted: boolean = false;
+  isRoomMuted: boolean = false;
+
+  auditionLabel: string = "試聴:";
+  bgmLabel: string = "BGM:";
+  seLabel: string = "SE:";
+  roomLabel: string = "全体:";
+
+  toggleMute(target: string) {
+    switch (target) {
+      case 'audition':
+        this.isAuditionMuted = !this.isAuditionMuted;
+        this.auditionLabel = this.isAuditionMuted ? "試聴🔇:" : "試聴:";
+        if (this.isAuditionMuted) {
+          this.previousAuditionVolume = this.auditionVolume;
+          this.auditionVolume = 0;
+        } else {
+          this.auditionVolume = this.previousAuditionVolume;
+        }
+        break;
+      case 'bgm':
+        this.isBgmMuted = !this.isBgmMuted;
+        this.bgmLabel = this.isBgmMuted ? "BGM🔇:" : "BGM:";
+        if (this.isBgmMuted) {
+          this.previousVolume = this.volume;
+          this.volume = 0;
+        } else {
+          this.volume = this.previousVolume;
+        }
+        break;
+      case 'se':
+        this.isSeMuted = !this.isSeMuted;
+        this.seLabel = this.isSeMuted ? "SE🔇:" : "SE:";
+        if (this.isSeMuted) {
+          this.previousSEVolume = this.seVolume;
+          this.seVolume = 0;
+        } else {
+          this.seVolume = this.previousSEVolume;
+        }
+        break;
+      case 'room':
+        this.isRoomMuted = !this.isRoomMuted;
+        this.roomLabel = this.isRoomMuted ? "全体🔇:" : "全体:";
+        if (this.isRoomMuted) {
+          this.previousRoomVolume = this.roomVolume;
+          this.roomVolume = 0;
+        } else {
+          this.roomVolume = this.previousRoomVolume;
+        }
+        break;
+    }
+  }
+
+  // コンポーネントのメソッド内に追加します
+  tooltipTexts: { [key: string]: string } = {
+    audition: "ダブルクリックでミュート切り替え",
+    bgm: "ダブルクリックでミュート切り替え",
+    se: "ダブルクリックでミュート切り替え",
+    room: "ダブルクリックでミュート切り替え"
+  };
+  tooltipVisible: { [key: string]: boolean } = {
+    audition: false,
+    bgm: false,
+    se: false,
+    room: false
+  };
+
+  getTooltip(target: string): string {
+    return this.tooltipTexts[target];
+  }
+
+  showTooltip(target: string): void {
+    this.tooltipVisible[target] = true;
+  }
+
+  hideTooltip(target: string): void {
+    this.tooltipVisible[target] = false;
+  }
 }
