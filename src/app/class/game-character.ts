@@ -147,7 +147,7 @@ export class GameCharacter extends TabletopObject {
         if (index < parentElement.children.length - 1) {
           let nextElement = parentElement.children[index + 1];
           console.log("立ち絵の次に差し込み nextElement" + nextElement);
-          
+
           parentElement.insertBefore(elementKoma, nextElement);
         }
       }
@@ -454,7 +454,7 @@ export class GameCharacter extends TabletopObject {
     let type = '';
     const data = this.detailDataElement.getFirstElementByName(name);
     if(!data)return null;
-    
+
     if(data.type == 'numberResource'){
       if(nowOrMax == 'now'){
         type = 'currentValue';
@@ -477,7 +477,7 @@ export class GameCharacter extends TabletopObject {
     let type = '';
     const data = this.detailDataElement.getFirstElementByName(name);
     if(!data)return null;
-    
+
     if(data.type == 'numberResource'){
       type = 'currentValue';
     }else{
