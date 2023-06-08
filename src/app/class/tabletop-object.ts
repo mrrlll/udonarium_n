@@ -42,7 +42,7 @@ export class TabletopObject extends ObjectNode {
   get buffDataElement(): DataElement { return this.getElement('buff'); }//リリィにてバフ機能用の追加
 
 
-  addBuffDataElement(){ 
+  addBuffDataElement(){
     if (!this.buffDataElement){
       this.rootDataElement.appendChild(DataElement.create('buff', '', {}, 'buff_' + this.identifier));
     }
