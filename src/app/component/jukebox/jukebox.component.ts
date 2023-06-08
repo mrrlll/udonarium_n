@@ -69,6 +69,18 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     return ObjectStore.instance.get<SeBox>('SeBox');
   }
 
+  get percentVolume(): number { return Math.floor(this.volume * 100); }
+  set percentVolume(percentVolume: number) { this.volume = percentVolume / 100; }
+
+  get percentRoomVolume(): number { return Math.floor(this.roomVolume * 100); }
+  set percentRoomVolume(percentRoomVolume: number) { this.roomVolume = percentRoomVolume / 100; }
+
+  get percentAuditionVolume(): number { return Math.floor(this.auditionVolume * 100); }
+  set percentAuditionVolume(percentAuditionVolume: number) { this.auditionVolume = percentAuditionVolume / 100; }
+
+  get percentSEVolume(): number { return Math.floor(this.seVolume * 100); }
+  set percentSEVolume(percentSEVolume: number) { this.seVolume = percentSEVolume / 100; }
+
   get cutInLauncher(): CutInLauncher { return ObjectStore.instance.get<CutInLauncher>('CutInLauncher'); }
 
   readonly auditionPlayer: AudioPlayer = new AudioPlayer();
@@ -167,6 +179,33 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     let option: PanelOption = { left: coordinate.x+25, top: coordinate.y+25, width: 650, height: 740 };
     // 仮でカットインリストを開く
     this.panelService.open<CutInListComponent>(CutInListComponent, option);
+  }
+
+  fadeout() {
+    //roomVolumeを徐々に0に減らしていく
+    let fadeoutInterval = setInterval(() => {
+      this.roomVolume -= 0.05;
+      if (this.roomVolume <= 0) {
+        clearInterval(fadeoutInterval);
+        this.roomVolume = 0;
+      }
+    }, 100);
+  }
+
+  updateAuditionVolume() {
+    this.auditionVolume = parseFloat(this.auditionVolume.toFixed(2));
+  }
+
+  updateSeVolume() {
+    this.seVolume = parseFloat(this.seVolume.toFixed(2));
+  }
+
+  updateVolume() {
+    this.volume = parseFloat(this.volume.toFixed(2));
+  }
+
+  updateRoomVolume() {
+    this.roomVolume = parseFloat(this.roomVolume.toFixed(2));
   }
 
 }
