@@ -34,6 +34,9 @@
     <option value="graveyard">墓地</option>
   </select>
 </ng-container>
+<!-- <input type="checkbox" [(ngModel)]="isViewerOnly" id="isViewerCheck" /> -->
+<input type="checkbox"/>GMにのみパネルを表示する
+
 <div *ngIf="tabletopObject" class="flex-container">
   <div *ngIf="0 < tabletopObject.imageFile?.url.length" class="box main-image-box">
     <img class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name"
