@@ -22,6 +22,9 @@ import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { TabletopObject } from '@udonarium/tabletop-object';
+import { AppConfigCustomService } from 'service/app-config-custom.service';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'game-character',
@@ -48,6 +51,12 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() gameCharacter: GameCharacter = null;
   @Input() is3D: boolean = false;
+  @Input() tabletopObject: TabletopObject = null;
+
+  // GMフラグ
+  obs: Observable<boolean>;
+  subs: Subscription;
+  isGM: boolean;
 
   get name(): string { return this.gameCharacter.name; }
   get size(): number { return this.adjustMinBounds(this.gameCharacter.size); }
@@ -69,7 +78,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     private contextMenuService: ContextMenuService,
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
-    private pointerDeviceService: PointerDeviceService
+    private pointerDeviceService: PointerDeviceService,
+    private appCustomService: AppConfigCustomService
   ) { }
 
   ngOnInit() {
@@ -95,6 +105,14 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     this.rotableOption = {
       tabletopObject: this.gameCharacter
     };
+    //GMフラグ管理
+    this.obs = this.appCustomService.isViewer$;
+    this.subs = this.obs.subscribe((flg) => {
+      this.isGM = flg;
+      // 同期をする
+      this.changeDetector.markForCheck();
+    });
+    this.isGM = this.appCustomService.dataViewer;
   }
 
   ngAfterViewInit() { }
