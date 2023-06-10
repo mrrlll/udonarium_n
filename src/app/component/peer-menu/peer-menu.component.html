@@ -1,16 +1,11 @@
 <div *ngIf="myPeer">
-  <div style="display: flex; align-items: flex-end; margin-bottom: 4px">
+  <button (click)="changeIcon()">プレイヤーアイコン変更</button>
+  <div style="display: flex; align-items: flex-end;">
     <div *ngIf="myPeer.image" class="image cover" [style.background-image]="'url(' + myPeer.image.url + ')' | safe: 'style' "
       (click)="changeIcon()" style="cursor: pointer">
     </div>
     <div>
-      <button (click)="changeIcon()">プレイヤーアイコン変更</button>
-    </div>
-  </div>
-  <div>
-    <div>
       <span>
-        <span class="property">GMモード</span>：
         <input type="checkbox" [(ngModel)]="isViewer" (change)="output()" id="isViewerCheck" />
         <label for="isViewerCheck">
           GM＆観戦者用モード<br>
