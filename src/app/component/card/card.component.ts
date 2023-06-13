@@ -297,7 +297,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
           SoundEffect.play(PresetSound.cardPut);
         }
       },
-      
+
       ContextMenuSeparator,
       { name: 'カードを編集', action: () => { this.showDetail(this.card); } },
       {
