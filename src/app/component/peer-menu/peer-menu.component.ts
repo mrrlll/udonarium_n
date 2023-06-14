@@ -22,7 +22,7 @@ import { RoomSetting } from '@udonarium/room-setting';
 export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   targetUserId: string = '';
-  networkService = Network
+  networkService = Network;
   gameRoomService = ObjectStore.instance;
   help: string = '';
   isPasswordVisible = false;
