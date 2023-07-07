@@ -55,6 +55,8 @@ import { AudioFile } from '@udonarium/core/file-storage/audio-file';
 
 import { GamePanelSettingComponent } from 'component/game-panel-setting/game-panel-setting.component';
 import { GamePanelSelecter } from '@udonarium/game-panel-selecter';
+import { GameCharacterGenerateWindowComponent } from './component/game-character-generate-window/game-character-generate-window.component';
+
 
 import { RoomSetting } from '@udonarium/room-setting';
 import { Observable, Subscription, timer } from 'rxjs';
@@ -391,6 +393,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         option.top = option.top + this.openPanelCount * 10;
         this.panelService.open(component, option);
         return;
+      case 'game-character-generate':
+        component = GameCharacterGenerateWindowComponent;
+        option = { width: 600, height: 180, left: 100, };
+        break;
     }
     if (component) {
       option.top = (this.openPanelCount % 10 + 1) * 20;
@@ -416,6 +422,21 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       this.isSaveing = false;
       this.progresPercent = 0;
     }, 500);
+  }
+
+  utilitymenu(event: Event){
+    const button = <HTMLElement>event.target;
+    const clientRect = button.getBoundingClientRect();
+    const position = {
+      x: window.pageXOffset + clientRect.left + (this.isHorizontal ? 0 : button.clientWidth * 0.9),
+      y: window.pageYOffset + clientRect.top + (this.isHorizontal ? button.clientHeight * 0.9 : 0)
+    };
+    this.contextMenuService.open(position, [
+      { name: `URLからキャラ駒生成`,
+        action: () => {
+          this.open("game-character-generate")
+        }
+      }])
   }
 
   handleFileSelect(event: Event) {

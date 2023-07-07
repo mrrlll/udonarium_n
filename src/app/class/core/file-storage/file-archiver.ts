@@ -84,10 +84,7 @@ export class FileArchiver {
   async load(files: File[]): Promise<void>;
   async load(files: FileList): Promise<void>;
   async load(files: any): Promise<void> {
-    if (!files) {
-      console.log('b')
-      return;
-    }
+
     let loadFiles: File[] = files instanceof FileList ? toArrayOfFileList(files) : files;
     console.log(files)
     for (let file of loadFiles) {

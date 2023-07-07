@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BadgeComponent } from 'component/badge/badge.component';
 import { CardStackListComponent } from 'component/card-stack-list/card-stack-list.component';
@@ -85,7 +85,8 @@ import { AppComponent } from './app.component';
 import { UIGamePanelComponent } from 'component/ui-game-panel/ui-game-panel.component';
 import { GamePanelStoreComponent } from './component/game-panel-store/game-panel-store.component';
 import { UnsplashsearchComponent } from 'component/unsplashsearch/unsplashsearch.component';
-import { UnsplashService } from 'service/unsplash.service'
+import { UnsplashService } from 'service/unsplash.service';
+import { GameCharacterGenerateWindowComponent } from './component/game-character-generate-window/game-character-generate-window.component';
 
 @NgModule({
   declarations: [
@@ -155,6 +156,7 @@ import { UnsplashService } from 'service/unsplash.service'
     UIGamePanelComponent,
     GamePanelStoreComponent,
     UnsplashsearchComponent,
+    GameCharacterGenerateWindowComponent,
   ],
   imports: [
     BrowserModule,
@@ -166,6 +168,7 @@ import { UnsplashService } from 'service/unsplash.service'
     NgSelectModule,
     PdfViewerModule,
     HttpClientModule,
+    HttpClientJsonpModule,
   ],
   providers: [
     AppConfigService,
