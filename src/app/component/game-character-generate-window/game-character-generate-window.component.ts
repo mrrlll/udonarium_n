@@ -107,7 +107,7 @@ export class GameCharacterGenerateWindowComponent {
     <data name="特性①" type="">${charadata['base']['talent']['name1']}</data>
     <data name="特性②" type="">${charadata['base']['talent']['name2']}</data>
     <data name="獸憑き" type="">${charadata['beastpoint']['value']}</data>
-    <data name="状態異常"></data>
+    <data name="状態異常">${joutaiijou}</data>
     </data>
     <data name="情報">
     <data type="note" name="設定">本名:${charadata['base']['name']}

@@ -62,7 +62,7 @@ import { RoomSetting } from '@udonarium/room-setting';
 import { Observable, Subscription, timer } from 'rxjs';
 import { AppConfigCustomService } from 'service/app-config-custom.service';
 
-const MENU_LENGTH: number = 11;
+const MENU_LENGTH: number = 12;
 
 
 @Component({
@@ -87,7 +87,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   isGM: boolean = false;
 
   get menuHeight(): number {
-    if (this.isGM) return MENU_LENGTH * 50 + 60;
+    if (this.isGM) return MENU_LENGTH * 50 + 85;
     return this.roomSetting.getMenuHeight();
   }
 

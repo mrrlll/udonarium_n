@@ -30,7 +30,7 @@ export class RoomSetting extends GameObject {
     if (this.timerAuthority) count++;
     if (this.cutinAuthority) count++;
     if (this.gamePanelSettingAuthority) count++;
-    return 60 + count * 50;
+    return 100 + count * 50;
   }
 
   onStoreAdded() {
