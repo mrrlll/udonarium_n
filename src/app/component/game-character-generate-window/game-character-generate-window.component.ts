@@ -84,7 +84,7 @@ export class GameCharacterGenerateWindowComponent {
     if (charadata['status']['bad']['value'] === null){
       joutaiijou = "";
     };
-    
+
     for (let val of charadata['facepower']){
       bouryoku += `${val['name']} `;
     };
@@ -164,7 +164,6 @@ KA10-{負傷}  復帰判定
 FT 大失敗表</chat-palette>
     </character>
     `
-    console.log(kemonocs)
 
     let xmlElement: Element = XmlUtil.xml2element(kemonocs);
     if (xmlElement) EventSystem.trigger('XML_LOADED', { xmlElement: xmlElement });
