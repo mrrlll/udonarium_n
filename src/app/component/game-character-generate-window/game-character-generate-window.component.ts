@@ -165,7 +165,14 @@ FT 大失敗表</chat-palette>
     </character>
     `
 
-    let xmlElement: Element = XmlUtil.xml2element(kemonocs);
+    let summary = `<?xml version="1.0" encoding="UTF-8"?>
+    <summary-setting sortTag="name" sortOrder="ASC" dataTag="開始条件　展開 耐久度　余裕　予算　威力　軽減値 特性①　特性② 　特殊効果　異形　獸憑き　状態異常 　移動　格闘　射撃　製作　察知　自制　 貌力　装備 武器　防具　小道具　持ち物"></summary-setting>
+    `
+
+    let xmlElement: Element = XmlUtil.xml2element(summary);
+    if (xmlElement) EventSystem.trigger('XML_LOADED', { xmlElement: xmlElement });
+
+    xmlElement = XmlUtil.xml2element(kemonocs);
     if (xmlElement) EventSystem.trigger('XML_LOADED', { xmlElement: xmlElement });
     };
 }
