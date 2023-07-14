@@ -5,6 +5,9 @@ import { FileReaderUtil } from '@udonarium/core/file-storage/file-reader-util';
 import { EventSystem } from '@udonarium/core/system';
 import * as JSZip from 'jszip';
 
+import { PanelOption, PanelService } from 'service/panel.service';
+import { ModalService } from 'service/modal.service';
+
 @Component({
   selector: 'app-game-character-generate-window',
   templateUrl: './game-character-generate-window.component.html',
@@ -14,6 +17,8 @@ export class GameCharacterGenerateWindowComponent {
 
   constructor(
     private generateService: GenerateService,
+    private modalService: ModalService,
+    private panelService: PanelService,
   ){}
 
   charactersheeturl: string = '';
@@ -24,6 +29,11 @@ export class GameCharacterGenerateWindowComponent {
   charadata: any = null;
 
   supportSystem: string[] = ["tiw"];
+
+
+  ngOnInit() {
+    Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'キャラ駒生成');
+  }
 
   get(download_flg){
     // エラーフラグをリセット
