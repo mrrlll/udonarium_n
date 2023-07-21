@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { saveAs } from 'file-saver';
+import { EventSystem, Network } from '@udonarium/core/system';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,6 @@ export class UnsplashService {
   constructor(private http: HttpClient) { }
 
   searchPhotos(query: string): Observable<any> {
-    // const url = `${this.apiUrl}/search/photos?query=${query}&per_page=30&client_id=${this.accessKey}`;
     const url = `${this.apiUrl}/search/photos?query=${query}&per_page=30&client_id=${this.accessKey}`;
     return this.http.get<any>(url);
   }

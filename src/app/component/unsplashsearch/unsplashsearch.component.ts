@@ -38,9 +38,9 @@ export class UnsplashsearchComponent implements OnInit {
     input.value = '';
   }
   onClick(photo) {
-    // this.onSelectedFile(photo);
-    let file = this.unsplashService.downloadImage(photo);
-    console.log(file)
+    console.log(photo)
+    // let file = this.unsplashService.downloadImage(photo);
+    this.unsplashService.downloadPhoto(photo.urls.regular, photo.id)
 
   }
   onDragStart(event: DragEvent, photo: any) {
