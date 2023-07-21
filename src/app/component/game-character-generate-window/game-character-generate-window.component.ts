@@ -5,8 +5,12 @@ import { FileReaderUtil } from '@udonarium/core/file-storage/file-reader-util';
 import { EventSystem } from '@udonarium/core/system';
 import * as JSZip from 'jszip';
 
+
 import { PanelOption, PanelService } from 'service/panel.service';
 import { ModalService } from 'service/modal.service';
+
+import { XMLParser, XMLBuilder } from 'fast-xml-parser';
+import * as KemonoSample from '../../../assets/cs/kemono_example.json'
 
 @Component({
   selector: 'app-game-character-generate-window',
@@ -84,117 +88,77 @@ export class GameCharacterGenerateWindowComponent {
     }
   }
   appspot_kemono(charadata, download_flg){
-    const name = charadata['base']['handlename'];
-    const size = 3
-    const margin = charadata['status']['margin']['limit'];
-    const yosan = charadata['status']['budget']['limit'];
+    let kemonosheet = KemonoSample;
+
     let bouryoku = "";
-    let joutaiijou = charadata['status']['bad']['value'];
 
+    /// 使用する特性を確認 ///
+    let talent = charadata.base.talent
+    const useTalent = [];
+    let anyChecked = false;
+    for (let i = 1; i <= 6; i++) {
+      const nameKey = `name${i}`;
+      const useKey = `use${i}`;
 
-    if (charadata['status']['bad']['value'] === null){
-      joutaiijou = "";
+      if (talent[useKey] === "on") {
+        useTalent.push(talent[nameKey]);
+        anyChecked = true;
+      }
+    }
+    if (!anyChecked) {
+      useTalent.push(talent.name1, talent.name2);
+    }
+    /// ここまで ///
+
+    let joutaiijou = "";
+    if (charadata.status.bad.value !== null){
+      joutaiijou = charadata.status.bad.value;
     };
 
-    for (let val of charadata['facepower']){
-      bouryoku += `${val['name']} `;
+    // 仮名
+    kemonosheet.character.data.data[1].data[0]["#text"] = charadata.base.handlename;
+    // 余裕
+    kemonosheet.character.data.data[2].data[0]["#text"] = charadata.status.margin.limit;
+    kemonosheet.character.data.data[2].data[0]["@_currentValue"] = charadata.status.margin.limit;
+    // 予算
+    kemonosheet.character.data.data[2].data[1]["#text"] = charadata.status.budget.limit;
+    kemonosheet.character.data.data[2].data[1]["@_currentValue"] = charadata.status.budget.limit;
+    // 特性
+
+
+
+
+
+
+    for (let val of charadata.facepower){
+      bouryoku += `${val.name} `;
     };
 
 
-    const kemonocs = `
-    <character location.name="table" location.x="100" location.y="1075" posZ="0" rotate="0" roll="0">
-      <data name="character">
-        <data name="image">
-          <data type="image" name="imageIdentifier">testCharacter_4_image</data>
-        </data>
-        <data name="common">
-          <data name="name">${name}</data>
-          <data name="size">${size}</data>
-        </data>
-        <data name="detail">
-          <data name="リソース">
-            <data type="" currentValue="${margin}" name="余裕">${margin}</data>
-            <data type="" currentValue="${yosan}" name="予算">${yosan}</data>
-            <data name="特性①" type="">${charadata['base']['talent']['name1']}</data>
-            <data name="特性②" type="">${charadata['base']['talent']['name2']}</data>
-            <data name="獸憑き" type="">${charadata['beastpoint']['value']}</data>
-            <data name="状態異常">${joutaiijou}</data>
-          </data>
-          <data name="情報">
-            <data type="note" name="設定">本名:${charadata['base']['name']}
-性別:${charadata['base']['sex']}　年齢:${charadata['base']['age']}
-仮面:${charadata['base']['face']}
-貌力:${bouryoku}
-雰囲気:${charadata['base']['atmosphere']}
-動機:${charadata['base']['motivation']}</data>
-            <data name="貌力の強度" type="">${Object.keys(charadata['facepower']).length}</data>
-            <data type="" name="武器">「」(威力:)(特殊効果:)</data>
-            <data name="防具">「」(軽減値:)(特殊効果:)</data>
-            <data name="小道具">「」(特殊効果:)</data>
-            <data name="持ち物" type="note">1.
-2.
-3.
-4.
-5.
-6.
-7.
-8.</data>
-          </data>
-          <data name="能力">
-            <data name="移動">${charadata['base']['ability']['move']}</data>
-            <data name="格闘">${charadata['base']['ability']['fight']}</data>
-            <data name="射撃">${charadata['base']['ability']['shooting']}</data>
-            <data name="製作">${charadata['base']['ability']['create']}</data>
-            <data name="察知">${charadata['base']['ability']['awareness']}</data>
-            <data name="自制">${charadata['base']['ability']['restraint']}</data>
-          </data>
-          <data name="絆">
-            <data name="${charadata['days'][0]['name']}" type="numberResource" currentValue="${charadata['days'][0]['current']}">${charadata['days'][0]['level']}</data>
-            <data name="${charadata['days'][1]['name']}" type="numberResource" currentValue="${charadata['days'][1]['current']}">${charadata['days'][1]['level']}</data>
-            <data name="${charadata['days'][2]['name']}" type="numberResource" currentValue="${charadata['days'][2]['current']}">${charadata['days'][2]['level']}</data>
-            <data name="${charadata['friends'][0]['name']}" type="numberResource" currentValue="${charadata['friends'][0]['current']}">${charadata['friends'][0]['level']}</data>
-            <data name="${charadata['friends'][1]['name']}" type="numberResource" currentValue="${charadata['friends'][0]['current']}">${charadata['friends'][0]['level']}</data>
-            <data name="${charadata['friends'][2]['name']}" type="numberResource" currentValue="${charadata['friends'][0]['current']}">${charadata['friends'][0]['level']}</data>
-          </data>
-        </data>
-      </data>
-      <chat-palette dicebot="KemonoNoMori">1d12
-KC
-KA{移動}  判定:移動
-KA{格闘}  判定:格闘
-KA{射撃}  判定:射撃
-KA{製作}  判定:製作
-KA{察知}  判定:察知
-KA{自制}  判定:自制
-1d12+{移動}  先制値決定:移動
-1d12+{察知}  先制値決定:察知
-1d12+{自制}  先制値決定:自制
-KA10-{負傷}  復帰判定
-FT 大失敗表</chat-palette>
-    </character>
-    `
 
     let summary = `<?xml version="1.0" encoding="UTF-8"?>
     <summary-setting sortTag="name" sortOrder="ASC" dataTag="開始条件　展開 耐久度　余裕　予算　威力　軽減値 特性①　特性② 　特殊効果　異形　獸憑き　状態異常 　移動　格闘　射撃　製作　察知　自制　 貌力　装備 武器　防具　小道具　持ち物"></summary-setting>
     `
 
+
+
     switch(download_flg){
       case false:
-        let xmlElement: Element = XmlUtil.xml2element(summary);
-        if (xmlElement) EventSystem.trigger('XML_LOADED', { xmlElement: xmlElement });
-        xmlElement = XmlUtil.xml2element(kemonocs);
-        if (xmlElement) EventSystem.trigger('XML_LOADED', { xmlElement: xmlElement });
+        // let xmlElement: Element = XmlUtil.xml2element(summary);
+        // if (xmlElement) EventSystem.trigger('XML_LOADED', { xmlElement: xmlElement });
+        // xmlElement = XmlUtil.xml2element(kemonocs);
+        // if (xmlElement) EventSystem.trigger('XML_LOADED', { xmlElement: xmlElement });
         break;
       case true:
-        const zip = new JSZip();
-        zip.file(`${name}.xml`, kemonocs);
-        zip.file('summary.xml', summary);
-        zip.generateAsync({ type: 'blob' }).then((blob) => {
-          const downloadLink = document.createElement('a');
-          downloadLink.href = URL.createObjectURL(blob);
-          downloadLink.download = `${name}.zip`;
-          downloadLink.click();
-        });
+        // const zip = new JSZip();
+        // zip.file(`${name}.xml`, kemonocs);
+        // zip.file('summary.xml', summary);
+        // zip.generateAsync({ type: 'blob' }).then((blob) => {
+        //   const downloadLink = document.createElement('a');
+        //   downloadLink.href = URL.createObjectURL(blob);
+        //   downloadLink.download = `${name}.zip`;
+        //   downloadLink.click();
+        // });
         break;
     };
   };
