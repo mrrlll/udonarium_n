@@ -124,6 +124,11 @@ export class GameCharacterGenerateWindowComponent {
     kemonosheet.character.data.data[2].data[1]["#text"] = charadata.status.budget.limit;
     kemonosheet.character.data.data[2].data[1]["@_currentValue"] = charadata.status.budget.limit;
     // 特性
+    kemonosheet.character.data.data[2].data[2]["#text"] = useTalent[0]; // 特性①
+    kemonosheet.character.data.data[2].data[3]["#text"] = useTalent[1]; // 特性②
+    // 獣憑き
+    kemonosheet.character.data.data[2].data[4]["#text"] = charadata.beastpoint.value;
+    
 
 
 
