@@ -35,7 +35,7 @@
                 },
                 {
                   "#text": 2,
-                  "@_type": "numberResource",
+                  "@_type": "",
                   "@_currentValue": "2",
                   "@_name": "予算"
                 },
