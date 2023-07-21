@@ -90,8 +90,6 @@ export class GameCharacterGenerateWindowComponent {
   appspot_kemono(charadata, download_flg){
     let kemonosheet = KemonoSample;
 
-    let bouryoku = "";
-
     /// 使用する特性を確認 ///
     let talent = charadata.base.talent
     const useTalent = [];
@@ -110,35 +108,90 @@ export class GameCharacterGenerateWindowComponent {
     }
     /// ここまで ///
 
-    let joutaiijou = "";
-    if (charadata.status.bad.value !== null){
-      joutaiijou = charadata.status.bad.value;
+    /// キャラノート ///
+    let character_note: string = "";
+    let facepower: string = "";
+    let truename: string = charadata.base.name;
+    let sex: string = charadata.base.sex;
+    let age: string = charadata.base.age;
+    let face: string = charadata.base.face;
+    let atmosphere: string = charadata.base.atmosphere;
+    let motivation: string = charadata.base.motivation;
+
+    for (let val of charadata.facepower){
+      facepower += `${val.name} `;
     };
+
+    character_note = `本名:${truename}
+    性別:${sex}　年齢:${age}
+    仮面:${face}
+    貌力:${facepower}
+    雰囲気:${atmosphere}
+    動機:${motivation}
+    `;
+    /// ここまで ///
+
+    let debuff = "";
+    if (charadata.status.bad.value !== null){
+      debuff = charadata.status.bad.value;
+    };
+
+    /// 装備中の武器を取得 ///
+    interface Weapon {
+      damage: string;
+      equipment: string;
+      explain: string;
+      name: string;
+      range: string;
+    }
+    
+    let weapons = charadata.weapons;
+
+    let weaponName: string | null = null;
+    let weaponDamage: string | null = null;
+    let weaponRange: string | null = null;
+    let explain: string | null = null;
+
+    
+
+    for (const weapon of weapons) {
+      if (weapon.equipment === "装備") {
+        weaponName = weapon.name;
+        weaponDamage = weapon.damage;
+        weaponRange = weapon.range;
+        explain = weapon.explain;
+        let equipmentWeapon: string = `「${weaponName}」(威力:${weaponDamage})(特殊効果:${explain})`
+        break; // 一つ取り出した時点で処理を終了
+      };
+    };
+    
+    
+    /// ここまで ///
+
+
+    console.log(kemonosheet.character.data.data[2].data[0].data[1]["#text"])
 
     // 仮名
     kemonosheet.character.data.data[1].data[0]["#text"] = charadata.base.handlename;
     // 余裕
-    kemonosheet.character.data.data[2].data[0]["#text"] = charadata.status.margin.limit;
-    kemonosheet.character.data.data[2].data[0]["@_currentValue"] = charadata.status.margin.limit;
+    kemonosheet.character.data.data[2].data[0].data[0]["#text"] = charadata.status.margin.limit;
+    kemonosheet.character.data.data[2].data[0].data[0]["@_currentValue"] = charadata.status.margin.limit;
     // 予算
-    kemonosheet.character.data.data[2].data[1]["#text"] = charadata.status.budget.limit;
-    kemonosheet.character.data.data[2].data[1]["@_currentValue"] = charadata.status.budget.limit;
+    kemonosheet.character.data.data[2].data[0].data[1]["#text"] = charadata.status.budget.limit;
+    kemonosheet.character.data.data[2].data[0].data[1]["@_currentValue"] = charadata.status.budget.limit;
     // 特性
-    kemonosheet.character.data.data[2].data[2]["#text"] = useTalent[0]; // 特性①
-    kemonosheet.character.data.data[2].data[3]["#text"] = useTalent[1]; // 特性②
+    kemonosheet.character.data.data[2].data[0].data[2]["#text"] = useTalent[0]; // 特性①
+    kemonosheet.character.data.data[2].data[0].data[3]["#text"] = useTalent[1]; // 特性②
     // 獣憑き
-    kemonosheet.character.data.data[2].data[4]["#text"] = charadata.beastpoint.value;
-    
-
-
-
-
-
-
-    for (let val of charadata.facepower){
-      bouryoku += `${val.name} `;
-    };
-
+    kemonosheet.character.data.data[2].data[0].data[4]["#text"] = charadata.beastpoint.value;
+    // 状態異常
+    kemonosheet.character.data.data[2].data[0].data[5]["#text"] = debuff;
+    // キャラノート
+    kemonosheet.character.data.data[2].data[1].data[0]["#text"] = character_note;
+    // 貌力の強度
+    kemonosheet.character.data.data[2].data[1].data[1]['@_name'] = Object.keys(charadata.facepower).length;
+    // 武器
+    // kemonosheet
 
 
     let summary = `<?xml version="1.0" encoding="UTF-8"?>
