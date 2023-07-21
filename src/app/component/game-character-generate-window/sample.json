@@ -1,0 +1,218 @@
+{
+  "accessories": [
+      {
+          "equipment": "装備",
+          "explain": null,
+          "name": "ホルスター"
+      },
+      {
+          "equipment": "装備",
+          "explain": null,
+          "name": "「弾薬／ショットガン」ｘ５"
+      },
+      {
+          "equipment": "荷物",
+          "explain": null,
+          "name": "「弾薬／ショットガン」ｘ５"
+      }
+  ],
+  "armors": [
+      {
+          "damage": "2",
+          "equipment": "装備",
+          "explain": null,
+          "name": "格闘用プロテクター"
+      }
+  ],
+  "base": {
+      "ability": {
+          "awareness": "7",
+          "create": "7",
+          "fight": "2",
+          "move": "5",
+          "restraint": "4",
+          "shooting": "6"
+      },
+      "age": "25",
+      "atmosphere": "元気",
+      "count": {
+          "baggage": "2",
+          "stock": "7"
+      },
+      "defensetree": "渦巻く枝の木",
+      "face": "偽装",
+      "handlename": "名も無き戌",
+      "memo": "おじいちゃんがきえたので探すぞ！\n\n仮面はおじいちゃんが大事にしてたやつらしい\n\n\n隠匿空間：普段着ｘ１\n\n\n\n\n\n特性\n■病気になりづらい\nあなたは風邪を風邪を引いたことがないレベルで丈夫な体を持っています。怪我以外の脅威にさらされたとき、それが役立つでしょう\n\n■謙虚\nあなたは自分の実力についてまったく過信していません、常に自分にふさわしい目標に挑戦することで、常に成功し続けられます。",
+      "motivation": "行方不明者",
+      "name": "林　康太",
+      "player": "ちゃろ",
+      "sex": "男",
+      "talent": {
+          "name1": "病気になりづらい",
+          "name2": "謙虚",
+          "name3": null,
+          "name4": null,
+          "name5": null,
+          "name6": null,
+          "use1": null,
+          "use2": null,
+          "use3": null,
+          "use4": null,
+          "use5": null,
+          "use6": null
+      }
+  },
+  "beastpoint": {
+      "lowerlimit": null,
+      "value": "0"
+  },
+  "beastpower": {
+      "level1": null,
+      "level2": null,
+      "level3": null,
+      "level4": null,
+      "type": null
+  },
+  "days": [
+      {
+          "current": "5",
+          "level": "5",
+          "name": "学術分野のカリスマ",
+          "remarks": "かしこいらしい　周りが馬鹿なのでは？"
+      },
+      {
+          "current": "2",
+          "level": "2",
+          "name": "非常に古い理論",
+          "remarks": "カロリック説"
+      },
+      {
+          "current": "5",
+          "level": "5",
+          "name": "常識破りの動物",
+          "remarks": "サカバンバスピスの標本"
+      }
+  ],
+  "display": "0",
+  "facepower": [
+      {
+          "effect": "藪や木を利用し、その陰に隠れつつ体表を同じテクスチャで覆うことで、攻撃を受けづらくする特殊貌力。敵にあらぬ方向に殴りつけさせることができるでしょう。\nオブジェクトの存在するコンタクト内で自分が攻撃判定の目標になった時に発動できます。\nその攻撃判定の目標をコンタクト内の任意のオブジェクト一つに変更します。",
+          "level": "1",
+          "name": "潜伏",
+          "type": "潜伏"
+      },
+      {
+          "effect": "瞬間的に近場にいるキャラクタ０と似た姿に代わり、攻撃目標を間違えさせる特殊貌力。\n自分と攻撃を行うキャラクター以外が存在するコンタクト内で自分が攻撃判定の目標になり、ダメージを受けた時に発動できます。\n【製作】＋【偽装】の行為判定を行う。\n攻撃判定の成功度以上の成功ドで判定が成功した場合、その攻撃の目標をコンタクト内の自分と攻撃を行うキャラクター以外のキャラクター１体に変更します。",
+          "level": "2",
+          "name": "陽動",
+          "type": "潜伏"
+      },
+      {
+          "effect": "ものを異次元空間のような場所に安全に隠しておく特殊貌力。\nターンの行動として発動できます。\n【察知】＋【偽装】で行為判定を行います。\n行為判定が成功した場合、成功度個までのアイテムを「隠匿空間」に隠しておくことができます。この空間に隠されたアイテムは自分だけが自由に取り出すことができます。自分が志望すると、隠匿空間内のアイテムは死体の周辺に出現します。",
+          "level": "3",
+          "name": "隠匿",
+          "type": "潜伏"
+      },
+      {
+          "effect": null,
+          "level": "4",
+          "name": "擬態",
+          "type": "潜伏"
+      }
+  ],
+  "friends": [
+      {
+          "current": "1",
+          "level": "1",
+          "name": "ウルフ・龍・テイブン",
+          "remarks": null
+      },
+      {
+          "current": "1",
+          "level": "1",
+          "name": "こんこん",
+          "remarks": null
+      },
+      {
+          "current": "1",
+          "level": "1",
+          "name": "あとら",
+          "remarks": null
+      },
+      {
+          "current": "1",
+          "level": "1",
+          "name": "硝子蜘蛛",
+          "remarks": null
+      }
+  ],
+  "others": [
+      {
+          "equipment": "荷物",
+          "explain": null,
+          "name": "ナイフ"
+      },
+      {
+          "equipment": "在庫",
+          "explain": null,
+          "name": null
+      },
+      {
+          "equipment": "在庫",
+          "explain": null,
+          "name": null
+      },
+      {
+          "equipment": "在庫",
+          "explain": null,
+          "name": "フラッシュライト"
+      },
+      {
+          "equipment": "在庫",
+          "explain": null,
+          "name": "ハンモック"
+      },
+      {
+          "equipment": "在庫",
+          "explain": null,
+          "name": "葉x10"
+      },
+      {
+          "equipment": "在庫",
+          "explain": null,
+          "name": "葉x10"
+      },
+      {
+          "equipment": "在庫",
+          "explain": null,
+          "name": "葉x10"
+      }
+  ],
+  "outline": "性別：男 年齢：25 貌：偽装 動機：行方不明者 守り木：渦巻く枝の木",
+  "status": {
+      "bad": {
+          "value": null
+      },
+      "budget": {
+          "limit": "2",
+          "value": null
+      },
+      "exp": {
+          "total": "75",
+          "value": null
+      },
+      "margin": {
+          "limit": "12",
+          "value": null
+      }
+  },
+  "weapons": [
+      {
+          "damage": "６",
+          "equipment": "装備",
+          "explain": "攻撃判定+2",
+          "name": "スリングショット喰付のショットガン",
+          "range": "射撃"
+      }
+  ]
+}
