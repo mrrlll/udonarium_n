@@ -33,9 +33,9 @@
     <option value="{{networkService.peerId}}">個人インベントリ</option>
     <option value="graveyard">墓地</option>
   </select>
+  <input type="checkbox" [(ngModel)]="tabletopObject.isHide" id="isHideCheck"/>
+  <label for="isHideCheck">GMにのみパネルを表示する</label>
 </ng-container>
-<input type="checkbox" [(ngModel)]="tabletopObject.isHide" id="isHideCheck"/>
-<label for="isHideCheck">GMにのみパネルを表示する<br>
 
 <div *ngIf="tabletopObject" class="flex-container">
   <div *ngIf="0 < tabletopObject.imageFile?.url.length" class="box main-image-box">
