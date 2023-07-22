@@ -389,7 +389,7 @@ export class GameCharacterGenerateWindowComponent {
     // キャラノート
     kemonosheet.character.data.data[2].data[1].data[0]["#text"] = character_note;
     // 貌力の強度
-    kemonosheet.character.data.data[2].data[1].data[1]["@_name"] = Object.keys(charadata.facepower).length;
+    kemonosheet.character.data.data[2].data[1].data[1]["#text"] = Object.keys(charadata.facepower).length;
     // 武器
     kemonosheet.character.data.data[2].data[1].data[2]["#text"] = equipmentWeapon;
     // 防具
