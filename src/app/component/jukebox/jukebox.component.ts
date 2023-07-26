@@ -106,14 +106,14 @@ export class JukeboxComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     EventSystem.unregister(this);
-    this.stop();
+    this.stopAudition();
   }
 
-  play(audio: AudioFile) {
+  playAudition(audio: AudioFile) {
     this.auditionPlayer.play(audio);
   }
 
-  stop() {
+  stopAudition() {
     this.auditionPlayer.stop();
   }
 
@@ -163,7 +163,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
 
   deleteAudioFile(audio) {
     if (this.auditionPlayer.audio && this.auditionPlayer.audio.identifier === audio.identifier) {
-      this.stop();
+      this.stopAudition();
     }
     if (this.jukebox.audio && this.jukebox.audio.identifier === audio.identifier) {
       this.jukebox.stop();

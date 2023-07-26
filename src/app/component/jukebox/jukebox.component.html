@@ -29,8 +29,8 @@
   <div *ngIf="isViewer">
     <div *ngFor="let audio of audios" class="box">
       <div class="audiolist">
-        <button *ngIf="audio !== auditionPlayer?.audio || auditionPlayer?.paused" (click)="play(audio)" [disabled]="!audio.isReady" >試聴</button>
-        <button *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused" (click)="stop()" [disabled]="!audio.isReady" >停止</button>
+        <button *ngIf="audio !== auditionPlayer?.audio || auditionPlayer?.paused" (click)="playAudition(audio)" [disabled]="!audio.isReady" >試聴</button>
+        <button *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused" (click)="stopAudition()" [disabled]="!audio.isReady" >停止</button>
         <button *ngIf="audio !== jukebox?.audio" (click)="playBGM(audio)" [disabled]="!audio.isReady" >BGM</button>
         <button *ngIf="audio === jukebox?.audio" (click)="stopBGM(audio)" [disabled]="!audio.isReady" >停止</button>
         <button *ngIf="audio !== seBox?.audio" (click)="playSE(audio)" [disabled]="!audio.isReady" >SE</button>
