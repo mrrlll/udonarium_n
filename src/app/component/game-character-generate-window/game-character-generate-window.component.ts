@@ -126,13 +126,13 @@ export class GameCharacterGenerateWindowComponent {
                     {
                       "#text": 24,
                       "@_type": "numberResource",
-                      "@_currentValue": 0,
+                      "@_currentValue": "",
                       "@_name": "食事"
                     },
                     {
                       "#text": 24,
                       "@_type": "numberResource",
-                      "@_currentValue": 0,
+                      "@_currentValue": "",
                       "@_name": "水分"
                     },
                     {
