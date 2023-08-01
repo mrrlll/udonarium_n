@@ -39,8 +39,7 @@
 
 <div *ngIf="tabletopObject" class="flex-container">
   <div *ngIf="0 < tabletopObject.imageFile?.url.length" class="box main-image-box">
-    <img class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name"
-    />
+    <img class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name"/>
   </div>
   <ng-container *ngIf="tabletopObject.commonDataElement">
     <div class="flex-item">
@@ -57,6 +56,35 @@
       </div>
     </div>
   </ng-container>
+
+  <ng-container [ngSwitch]="tabletopObject.aliasName">
+    <ng-container *ngSwitchCase="'numberResource'">
+    </ng-container>
+    <ng-container *ngSwitchCase="'card'">
+    </ng-container>
+    <ng-container *ngSwitchCase="'card-stack'">
+    </ng-container>
+    <ng-container *ngSwitchCase="'terrain'">
+    </ng-container>
+    <ng-container *ngSwitchCase="'dice-symbol'">
+    </ng-container>
+    <ng-container *ngSwitchCase="'table-scratch-mask'">
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+
+      <ng-container *ngIf="tabletopObject.imageDataElement">
+        <div class="flex-item">
+          <div class="table">
+            <div class="table-row" game-data-element [gameDataElement]="tabletopObject.imageDataElement" [isTagLocked]="true" [isEdit]="isEdit" [isImage]="true"></div>            </div>
+          <ng-container *ngIf="tabletopObject.aliasName === 'character'">
+            <button style="width:300px; color: #555;" (click)="showImportImages()">画像を他のコマからインポート</button>
+          </ng-container>
+        </div>
+      </ng-container>
+
+    </ng-container>
+  </ng-container>
+
 
   <ng-container *ngIf="isEdit">
     <div class="flex-item">

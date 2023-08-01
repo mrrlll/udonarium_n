@@ -136,8 +136,19 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
     });
   }
 
+  updateKomaIconMaxValue(root: DataElement){
+    let image = root.getFirstElementByName('image');
+    let icon = root.getElementsByName('ICON');
+    if(icon){
+      icon[0].value = image.children.length - 1;
+      if( icon[0].currentValue > icon[0].value ) icon[0].currentValue = icon[0].value;
+    }
+  }
+
   addImageElement() {
     this.gameDataElement.appendChild(DataElement.create('imageIdentifier', '', { type: 'image' }));
+    const root: DataElement = <DataElement>this.gameDataElement.parent;
+    this.updateKomaIconMaxValue(root);
   }
   deleteImageElement() {
     if( this.gameDataElement.parent.children[0] != this.gameDataElement)    this.gameDataElement.destroy();
