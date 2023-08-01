@@ -251,6 +251,17 @@ export class GameCharacterGenerateWindowComponent {
                     }
                   ],
                   "@_name": "絆"
+                },
+                {
+                  "data": [
+                    {
+                      "#text": "",
+                      "@_name": "ICON",
+                      "@_type": "numberResource",
+                      "@_currentValue": "0"
+                    },
+                  ],
+                  "@_name": "コマ画像"
                 }
                 ],
                 "@_name": "detail"
@@ -458,7 +469,7 @@ export class GameCharacterGenerateWindowComponent {
     };
 
     let summary = `<?xml version="1.0" encoding="UTF-8"?>
-    <summary-setting sortTag="name" sortOrder="ASC" dataTag="開始条件　展開 耐久度　余裕　食事　水分　予算　威力　軽減値 特性①　特性② 　特殊効果　異形　獸憑き　状態異常 　移動　格闘　射撃　製作　察知　自制　 貌力　装備 武器　防具　小道具　持ち物"></summary-setting>
+    <summary-setting sortTag="name" sortOrder="ASC" dataTag="開始条件　展開 耐久度　余裕　食事　水分　予算　威力　軽減値 特性①　特性② 　特殊効果　異形　獸憑き　状態異常 　移動　格闘　射撃　製作　察知　自制　 貌力　装備 武器　防具　小道具　持ち物 ICON"></summary-setting>
     `
 
     const xb = new XMLBuilder({
