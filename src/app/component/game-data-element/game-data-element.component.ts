@@ -139,4 +139,7 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
   addImageElement() {
     this.gameDataElement.appendChild(DataElement.create('imageIdentifier', '', { type: 'image' }));
   }
+  deleteImageElement() {
+    if( this.gameDataElement.parent.children[0] != this.gameDataElement)    this.gameDataElement.destroy();
+  }
 }
