@@ -7,6 +7,11 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
+import { ImageFile } from '@udonarium/core/file-storage/image-file';
+import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
+import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
+import { ModalService } from 'service/modal.service';
+import { PanelService } from 'service/panel.service';
 import { EventSystem } from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
 
@@ -21,6 +26,9 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
   @Input() isEdit: boolean = false;
   @Input() isTagLocked: boolean = false;
   @Input() isValueLocked: boolean = false;
+
+  @Input() isImage: boolean = false;
+  @Input() indexNum: number = 0;
 
   private _name: string = '';
   get name(): string { return this._name; }
@@ -37,7 +45,9 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
   private updateTimer: NodeJS.Timer = null;
 
   constructor(
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private panelService: PanelService,
+    private modalService: ModalService,
   ) { }
 
   ngOnInit() {
@@ -109,5 +119,24 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
       if (this.gameDataElement.value !== this.value) this.gameDataElement.value = this.value;
       this.updateTimer = null;
     }, 66);
+  }
+
+  get imageFileUrl(): string {
+    let image:ImageFile = ImageStorage.instance.get(<string>this.gameDataElement.value);
+    if (image) return image.url;
+    return '';
+  }
+
+  openModal(name: string = '', isAllowedEmpty: boolean = false) {
+    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty }).then(value => {
+      if (!value) return;
+      let element = this.gameDataElement;
+      if (!element) return;
+      element.value = value;
+    });
+  }
+
+  addImageElement() {
+    this.gameDataElement.appendChild(DataElement.create('imageIdentifier', '', { type: 'image' }));
   }
 }
