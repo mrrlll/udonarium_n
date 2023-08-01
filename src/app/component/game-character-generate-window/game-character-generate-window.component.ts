@@ -124,9 +124,21 @@ export class GameCharacterGenerateWindowComponent {
                       "@_name": "余裕"
                     },
                     {
+                      "#text": 24,
+                      "@_type": "numberResource",
+                      "@_currentValue": 0,
+                      "@_name": "食事"
+                    },
+                    {
+                      "#text": 24,
+                      "@_type": "numberResource",
+                      "@_currentValue": 0,
+                      "@_name": "水分"
+                    },
+                    {
                       "#text": 2,
                       "@_type": "",
-                      "@_currentValue": "2",
+                      "@_currentValue": 2,
                       "@_name": "予算"
                     },
                     {
@@ -383,16 +395,16 @@ export class GameCharacterGenerateWindowComponent {
     kemonosheet.character.data.data[2].data[0].data[0]["@_currentValue"] = charadata.status.margin.limit;
     // 予算
     if(charadata.status.budget.limit === null) charadata.status.budget.limit = 0;
-    kemonosheet.character.data.data[2].data[0].data[1]["#text"] = charadata.status.budget.limit;
-    kemonosheet.character.data.data[2].data[0].data[1]["@_currentValue"] = charadata.status.budget.limit;
+    kemonosheet.character.data.data[2].data[0].data[3]["#text"] = charadata.status.budget.limit;
+    kemonosheet.character.data.data[2].data[0].data[3]["@_currentValue"] = charadata.status.budget.limit;
     // 特性
-    kemonosheet.character.data.data[2].data[0].data[2]["#text"] = useTalent[0]; // 特性①
-    kemonosheet.character.data.data[2].data[0].data[3]["#text"] = useTalent[1]; // 特性②
+    kemonosheet.character.data.data[2].data[0].data[4]["#text"] = useTalent[0]; // 特性①
+    kemonosheet.character.data.data[2].data[0].data[5]["#text"] = useTalent[1]; // 特性②
     // 獣憑き
     if (charadata.beastpoint.value === null) charadata.beastpoint.value = 0;
-    kemonosheet.character.data.data[2].data[0].data[4]["#text"] = charadata.beastpoint.value;
+    kemonosheet.character.data.data[2].data[0].data[6]["#text"] = charadata.beastpoint.value;
     // 状態異常
-    kemonosheet.character.data.data[2].data[0].data[5]["#text"] = debuff;
+    kemonosheet.character.data.data[2].data[0].data[7]["#text"] = debuff;
     // キャラノート
     kemonosheet.character.data.data[2].data[1].data[0]["#text"] = character_note;
     // 貌力の強度
@@ -446,7 +458,7 @@ export class GameCharacterGenerateWindowComponent {
     };
 
     let summary = `<?xml version="1.0" encoding="UTF-8"?>
-    <summary-setting sortTag="name" sortOrder="ASC" dataTag="開始条件　展開 耐久度　余裕　予算　威力　軽減値 特性①　特性② 　特殊効果　異形　獸憑き　状態異常 　移動　格闘　射撃　製作　察知　自制　 貌力　装備 武器　防具　小道具　持ち物"></summary-setting>
+    <summary-setting sortTag="name" sortOrder="ASC" dataTag="開始条件　展開 耐久度　余裕　食事　水分　予算　威力　軽減値 特性①　特性② 　特殊効果　異形　獸憑き　状態異常 　移動　格闘　射撃　製作　察知　自制　 貌力　装備 武器　防具　小道具　持ち物"></summary-setting>
     `
 
     const xb = new XMLBuilder({
