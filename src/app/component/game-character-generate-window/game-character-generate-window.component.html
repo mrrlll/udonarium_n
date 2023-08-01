@@ -1,7 +1,7 @@
 <div class="generate">
   キャラクターシートURL<br>
-  ※今は獣ノ森だけ対応　装備や持ち物だけ手入力！<br>
-  <a href="https://note.com/temari_koubai/n/n5798d195d07e" target="_blank">非公式アセット</a>の形式に準拠しています。
+  ※今は獣ノ森だけ対応　持ち物は手入力で<br>
+  <a href="https://note.com/temari_koubai/n/n5798d195d07e" target="_blank">非公式アセット</a>をベースにしています。
   <input id="charactersheeturl" [(ngModel)]="charactersheeturl"/>
     <input type="button" value="生成" (click)="get(false)"><input type="button" value="ダウンロード" (click)="get(true)">
   <div class="urlerror" *ngIf="urlerror">
