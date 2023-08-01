@@ -317,6 +317,11 @@ export class GameCharacterGenerateWindowComponent {
         weaponName = weapon.name;
         weaponDamage = weapon.damage;
         weaponRange = weapon.range;
+        if (weapon.damage === null){
+          weaponDamage = "";
+        } else {
+          weaponDamage = weapon.damage;
+        }
         if (weapon.explain == null){
           weaponExplain = "";
         } else {
@@ -377,12 +382,14 @@ export class GameCharacterGenerateWindowComponent {
     kemonosheet.character.data.data[2].data[0].data[0]["#text"] = charadata.status.margin.limit;
     kemonosheet.character.data.data[2].data[0].data[0]["@_currentValue"] = charadata.status.margin.limit;
     // 予算
+    if(charadata.status.budget.limit === null) charadata.status.budget.limit = 0;
     kemonosheet.character.data.data[2].data[0].data[1]["#text"] = charadata.status.budget.limit;
     kemonosheet.character.data.data[2].data[0].data[1]["@_currentValue"] = charadata.status.budget.limit;
     // 特性
     kemonosheet.character.data.data[2].data[0].data[2]["#text"] = useTalent[0]; // 特性①
     kemonosheet.character.data.data[2].data[0].data[3]["#text"] = useTalent[1]; // 特性②
     // 獣憑き
+    if (charadata.beastpoint.value === null) charadata.beastpoint.value = 0;
     kemonosheet.character.data.data[2].data[0].data[4]["#text"] = charadata.beastpoint.value;
     // 状態異常
     kemonosheet.character.data.data[2].data[0].data[5]["#text"] = debuff;
@@ -418,11 +425,17 @@ export class GameCharacterGenerateWindowComponent {
     for (let i = 0; i <= 2; i++){
       kemonosheet.character.data.data[2].data[3].data[i]["@_name"] = charadata.days[i].name;
       kemonosheet.character.data.data[2].data[3].data[i]["#text"] = charadata.days[i].level;
-      kemonosheet.character.data.data[2].data[3].data[i]["@_currentValue"] = charadata.days[i].current;
+      if (charadata.days[i].current) {
+        kemonosheet.character.data.data[2].data[3].data[i]["@_currentValue"] = charadata.days[i].current;
+      } else {
+        kemonosheet.character.data.data[2].data[3].data[i]["@_currentValue"] = charadata.days[i].level;
+      }
     }
     // 仲間
     let friends = charadata.friends;
     for (let friend of friends) {
+      if (friend.name === null) break;
+      if (friend.current === null) friend.current = friend.level
       let data = {
         "@_name": friend.name,
         "#text": friend.level,
@@ -445,7 +458,7 @@ export class GameCharacterGenerateWindowComponent {
     });
 
     const xmlContent = xb.build(kemonosheet);
-    console.log(xmlContent)
+    // console.log(xmlContent)
 
     switch(download_flg){
       case false:
