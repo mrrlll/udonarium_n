@@ -552,9 +552,11 @@ export class GameCharacter extends TabletopObject {
     }
     let maxRecoveryMess = '';
     if ( type == 'currentValue'){
-      if ( sum >= data.value && limitMax){
-        maxRecoveryMess = '(最大)';
-        sum = this.getStatusValue(name,'max');
+      if (typeof data.value === "number"){
+        if ( sum >= data.value && limitMax){
+          maxRecoveryMess = '(最大)';
+          sum = this.getStatusValue(name,'max');
+        }
       }
       if ( limitMin && sum <= 0 && limitMin){
         maxRecoveryMess = '(最小)';
