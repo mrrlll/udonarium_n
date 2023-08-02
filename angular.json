@@ -31,8 +31,11 @@
               "lzbase62",
               "pako",
               "pdfjs-dist/build/pdf",
-              "pdfjs-dist.web/pdf_viewer",
-              "localforage"
+              "pdfjs-dist/web/pdf_viewer",
+              "localforage",
+              "fast-xml-parser",
+              "jszip",
+              "vkbeautify"
             ]
           },
           "configurations": {
