@@ -4,23 +4,21 @@
   </div>
   <div class="table-cell">
     <div>
-      <select style="width: 12em;" [(ngModel)]="sendFrom">
-        <option *ngIf="!onlyCharacters" value="{{myPeer?.identifier}}">{{myPeer?.name}}（あなた）</option>
-        <option *ngFor="let gameCharacter of gameCharacters" value="{{gameCharacter.identifier}}">{{gameCharacter.name}}
-        </option>
-      </select> ＞
-      <select style="width: 10em;" [(ngModel)]="sendTo">
-        <option value="">全員</option>
-        <option *ngFor="let peer of otherPeers" value="{{peer.identifier}}">{{peer.name}}
+      <ng-select class="ud-select is-caret" style="width: 12em;" [(ngModel)]="sendFrom" [clearable]="false">
+        <ng-option *ngIf="!onlyCharacters" [value]="myPeer?.identifier">{{myPeer?.name}}（あなた）</ng-option>
+        <ng-option *ngFor="let gameCharacter of gameCharacters" [value]="gameCharacter.identifier">{{gameCharacter.name}}
+        </ng-option>
+      </ng-select> ＞
+      <ng-select class="ud-select is-caret" style="width: 10em;" [(ngModel)]="sendTo" [clearable]="false">
+        <ng-option [value]="''">全員</ng-option>
+        <ng-option *ngFor="let peer of otherPeers" [value]="peer.identifier">{{peer.name}}
           <ng-container *ngIf="peer === myPeer">（あなた）</ng-container>
-        </option>
-      </select>
-      <ng-container *ngIf="0 < diceBotInfos.length">
-        <select style="width: 12em;" (change)="loadDiceBot($event.target.value)" [(ngModel)]="gameType"
-          [ngModelOptions]="{standalone: true}">
-          <option *ngFor="let diceBotInfo of diceBotInfos" value="{{diceBotInfo.id}}">{{diceBotInfo.name === "DiceBot" ? "ダイスボット指定なし" : diceBotInfo.name}}</option>
-        </select>
-      </ng-container>
+        </ng-option>
+      </ng-select>
+      <ng-select class="ud-select is-caret" style="width: 15em; margin-left:.1em;" (change)="loadDiceBot($event)" [(ngModel)]="gameType"
+        [ngModelOptions]="{standalone: true}" [clearable]="false">
+        <ng-option *ngFor="let diceBotInfo of diceBotInfos" [value]="diceBotInfo.id">{{diceBotInfo.name}}</ng-option>
+      </ng-select>
       <ng-container *ngIf="diceBotInfos.length < 1">
         <select style="width: 12em;" disabled>
           <option value="">ダイスボット読込中...</option>

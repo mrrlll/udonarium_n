@@ -64,3 +64,9 @@
   background-color: #555;
   color: #CCC;
 }
+
+.small-font {
+  font-size: 12px;
+  vertical-align: middle;
+}
+
