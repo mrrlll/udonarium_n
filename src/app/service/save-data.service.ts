@@ -14,6 +14,8 @@ import { Config } from '@udonarium/config';
 
 import * as Beautify from 'vkbeautify';
 
+import { ImageTagList } from '@udonarium/image-tag-list';
+
 type UpdateCallback = (percent: number) => void;
 
 @Injectable({
@@ -39,9 +41,20 @@ export class SaveDataService {
     files.push(new File([configXml], 'config.xml', { type: 'text/plain' }));
     files.push(new File([summarySetting], 'summary.xml', { type: 'text/plain' }));
 
-    files = files.concat(this.searchImageFiles(roomXml));
-    files = files.concat(this.searchImageFiles(chatXml));
+    // files = files.concat(this.searchImageFiles(roomXml));
+    // files = files.concat(this.searchImageFiles(chatXml));
 
+    let images: ImageFile[] = [];
+    images = images.concat(this.searchImageFiles(roomXml));
+    images = images.concat(this.searchImageFiles(chatXml));
+    for (const image of images) {
+      if (image.state === ImageState.COMPLETE) {
+        files.push(new File([image.blob], image.identifier + '.' + MimeType.extension(image.blob.type), { type: image.blob.type }));
+      }
+    }
+    let imageTagXml = this.convertToXml(ImageTagList.create(images));
+
+    files.push(new File([imageTagXml], 'imageTag.xml', { type: 'text/plain' }));
     return this.saveAsync(files, this.appendTimestamp(fileName), updateCallback);
   }
 
@@ -54,7 +67,18 @@ export class SaveDataService {
     let xml: string = this.convertToXml(gameObject);
 
     files.push(new File([xml], 'data.xml', { type: 'text/plain' }));
-    files = files.concat(this.searchImageFiles(xml));
+    // files = files.concat(this.searchImageFiles(xml));
+
+    let images: ImageFile[] = [];
+    images = images.concat(this.searchImageFiles(xml));
+    for (const image of images) {
+      if (image.state === ImageState.COMPLETE) {
+        files.push(new File([image.blob], image.identifier + '.' + MimeType.extension(image.blob.type), { type: image.blob.type }));
+      }
+    }
+    let imageTagXml = this.convertToXml(ImageTagList.create(images));
+
+    files.push(new File([imageTagXml], 'imageTag.xml', { type: 'text/plain' }));
 
     return this.saveAsync(files, this.appendTimestamp(fileName), updateCallback);
   }
@@ -74,9 +98,9 @@ export class SaveDataService {
     return xmlDeclaration + '\n' + Beautify.xml(gameObject.toXml(), 2);
   }
 
-  private searchImageFiles(xml: string): File[] {
+  private searchImageFiles(xml: string): ImageFile[] {
     let xmlElement: Element = XmlUtil.xml2element(xml);
-    let files: File[] = [];
+    let files: ImageFile[] = [];
     if (!xmlElement) return files;
 
     let images: { [identifier: string]: ImageFile } = {};
@@ -99,7 +123,10 @@ export class SaveDataService {
     for (let identifier in images) {
       let image = images[identifier];
       if (image && image.state === ImageState.COMPLETE) {
-        files.push(new File([image.blob], image.identifier + '.' + MimeType.extension(image.blob.type), { type: image.blob.type }));
+        // files.push(new File([image.blob], image.identifier + '.' + MimeType.extension(image.blob.type), { type: image.blob.type }));
+        if (image) {
+          files.push(image);
+        }
       }
     }
     return files;

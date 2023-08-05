@@ -62,6 +62,8 @@ import { RoomSetting } from '@udonarium/room-setting';
 import { Observable, Subscription, timer } from 'rxjs';
 import { AppConfigCustomService } from 'service/app-config-custom.service';
 
+import { ImageTag } from '@udonarium/image-tag';
+
 const MENU_LENGTH: number = 12;
 
 
@@ -161,6 +163,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     let fileContext = ImageFile.createEmpty('none_icon').toContext();
     fileContext.url = './assets/images/ic_account_circle_black_24dp_2x.png';
     let noneIconImage = ImageStorage.instance.add(fileContext);
+    ImageTag.create(noneIconImage.identifier).tag = '*default アイコン';
 
     AudioPlayer.resumeAudioContext();
     PresetSound.dicePick = AudioStorage.instance.add('./assets/sounds/soundeffect-lab/shoulder-touch1.mp3').identifier;
@@ -357,6 +360,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
           break;
       case 'FileStorageComponent':
         component = FileStorageComponent;
+        option.width = 700;
         break;
       case 'GameCharacterSheetComponent':
         component = GameCharacterSheetComponent;
