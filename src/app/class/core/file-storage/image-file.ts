@@ -34,24 +34,14 @@ export class ImageFile {
       blob: null,
       type: '',
       url: '',
-    },
+    }
   };
 
-  get identifier(): string {
-    return this.context.identifier;
-  }
-  get name(): string {
-    return this.context.name;
-  }
-  get blob(): Blob {
-    return this.context.blob ? this.context.blob : this.context.thumbnail.blob;
-  }
-  get url(): string {
-    return this.context.url ? this.context.url : this.context.thumbnail.url;
-  }
-  get thumbnail(): ThumbnailContext {
-    return this.context.thumbnail;
-  }
+  get identifier(): string { return this.context.identifier };
+  get name(): string { return this.context.name };
+  get blob(): Blob { return this.context.blob ? this.context.blob : this.context.thumbnail.blob; };
+  get url(): string { return this.context.url ? this.context.url : this.context.thumbnail.url; };
+  get thumbnail(): ThumbnailContext { return this.context.thumbnail };
 
   get state(): ImageState {
     if (!this.url && !this.blob) return ImageState.NULL;
@@ -60,11 +50,9 @@ export class ImageFile {
     return ImageState.COMPLETE;
   }
 
-  get isEmpty(): boolean {
-    return this.state <= ImageState.NULL;
-  }
+  get isEmpty(): boolean { return this.state <= ImageState.NULL; }
 
-  private constructor() {}
+  private constructor() { }
 
   static createEmpty(identifier: string): ImageFile {
     let imageFile = new ImageFile();
@@ -73,8 +61,8 @@ export class ImageFile {
     return imageFile;
   }
 
-  static create(url: string): ImageFile;
-  static create(context: ImageContext): ImageFile;
+  static create(url: string): ImageFile
+  static create(context: ImageContext): ImageFile
   static create(arg: any): ImageFile {
     if (typeof arg === 'string') {
       let imageFile = new ImageFile();
@@ -89,8 +77,8 @@ export class ImageFile {
     }
   }
 
-  static async createAsync(file: File): Promise<ImageFile>;
-  static async createAsync(blob: Blob): Promise<ImageFile>;
+  static async createAsync(file: File): Promise<ImageFile>
+  static async createAsync(blob: Blob): Promise<ImageFile>
   static async createAsync(arg: any): Promise<ImageFile> {
     if (arg instanceof File) {
       return await ImageFile._createAsync(arg, arg.name);
@@ -109,17 +97,13 @@ export class ImageFile {
     imageFile.context.url = window.URL.createObjectURL(imageFile.context.blob);
 
     try {
-      if (imageFile.blob.type.match(/pdf/)) {
-        // pdfの処理
-        imageFile.context.thumbnail = await ImageFile.createPdfThumbnailAsync();
-      } else {
-        imageFile.context.thumbnail = await ImageFile.createThumbnailAsync(imageFile.context);
-      }
-
-      if (imageFile.context.name != null) imageFile.context.name = imageFile.context.identifier;
+      imageFile.context.thumbnail = await ImageFile.createThumbnailAsync(imageFile.context);
     } catch (e) {
       throw e;
     }
+
+    if (imageFile.context.name != null) imageFile.context.name = imageFile.context.identifier;
+
     return imageFile;
   }
 
@@ -132,16 +116,11 @@ export class ImageFile {
     if (!this.context.name && context.name) this.context.name = context.name;
     if (!this.context.blob && context.blob) this.context.blob = context.blob;
     if (!this.context.type && context.type) this.context.type = context.type;
-    if (!this.context.url && context.url) {
-      if (this.state !== ImageState.URL) window.URL.revokeObjectURL(this.context.url);
-      this.context.url = context.url;
-    }
+    if (!this.context.url && context.url) this.context.url = context.url;
     if (!this.context.thumbnail.blob && context.thumbnail.blob) this.context.thumbnail.blob = context.thumbnail.blob;
     if (!this.context.thumbnail.type && context.thumbnail.type) this.context.thumbnail.type = context.thumbnail.type;
-    if (!this.context.thumbnail.url && context.thumbnail.url) {
-      if (this.state !== ImageState.URL) window.URL.revokeObjectURL(this.context.thumbnail.url);
-      this.context.thumbnail.url = context.thumbnail.url;
-    }
+    if (!this.context.thumbnail.url && context.thumbnail.url) this.context.thumbnail.url = context.thumbnail.url;
+
     this.createURLs();
   }
 
@@ -156,8 +135,8 @@ export class ImageFile {
         blob: this.context.thumbnail.blob,
         type: this.context.thumbnail.type,
         url: this.context.thumbnail.url,
-      },
-    };
+      }
+    }
   }
 
   private createURLs() {
@@ -188,7 +167,7 @@ export class ImageFile {
         render.drawImage(image, 0, 0);
         CanvasUtil.resize(canvas, dstWidth, dstHeight, true);
 
-        canvas.toBlob((blob) => {
+        canvas.toBlob(blob => {
           let thumbnail: ThumbnailContext = {
             type: blob.type,
             blob: blob,
@@ -199,40 +178,8 @@ export class ImageFile {
       };
       image.onabort = image.onerror = () => {
         reject();
-      };
+      }
       image.src = context.url;
-    });
-  }
-
-  private static createPdfThumbnailAsync(): Promise<ThumbnailContext> {
-    return new Promise((resolve, reject) => {
-      let image: HTMLImageElement = new Image();
-      image.onload = (event) => {
-        let scale: number = Math.min(128 / Math.max(image.width, image.height), 1.0);
-        let dstWidth = image.width * scale;
-        let dstHeight = image.height * scale;
-
-        let canvas: HTMLCanvasElement = document.createElement('canvas');
-        let render: CanvasRenderingContext2D = canvas.getContext('2d');
-        canvas.width = image.width;
-        canvas.height = image.height;
-
-        render.drawImage(image, 0, 0);
-        CanvasUtil.resize(canvas, dstWidth, dstHeight, true);
-
-        canvas.toBlob((blob) => {
-          let thumbnail: ThumbnailContext = {
-            type: blob.type,
-            blob: blob,
-            url: window.URL.createObjectURL(blob),
-          };
-          resolve(thumbnail);
-        }, 'image/png');
-      };
-      image.onabort = image.onerror = () => {
-        reject();
-      };
-      image.src = './assets/images/pdf.png';
     });
   }
 

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, NgZone, OnDestroy, ViewChild, ViewContainerRef, Input } from '@angular/core';
+import { AfterViewInit, Component, NgZone, OnDestroy, ViewChild, OnInit, ViewContainerRef, Input } from '@angular/core';
 import { NgSelectConfig } from '@ng-select/ng-select';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { Config } from '@udonarium/config';
@@ -62,15 +62,36 @@ import { RoomSetting } from '@udonarium/room-setting';
 import { Observable, Subscription, timer } from 'rxjs';
 import { AppConfigCustomService } from 'service/app-config-custom.service';
 
+import { ImageTag } from '@udonarium/image-tag';
+
+import * as localForage from 'localforage';
+import { animate, keyframes, style, transition, trigger } from '@angular/animations';
+
 const MENU_LENGTH: number = 12;
 
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  animations: [
+    trigger('fadeInOut', [
+      transition('void => *', [
+        animate('100ms ease-out', keyframes([
+          style({ opacity: 0, offset: 0 }),
+          style({ opacity: 1, offset: 1.0 })
+        ]))
+      ]),
+      transition('* => void', [
+        animate('100ms ease-in', keyframes([
+          style({ opacity: 1, offset: 0 }),
+          style({ opacity: 0, offset: 1.0 })
+        ]))
+      ])
+    ])
+  ]
 })
-export class AppComponent implements AfterViewInit, OnDestroy {
+export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() isViewer: boolean;
   @ViewChild('modalLayer', { read: ViewContainerRef, static: true }) modalLayerViewContainerRef: ViewContainerRef;
   private immediateUpdateTimer: NodeJS.Timer = null;
@@ -78,6 +99,11 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private openPanelCount: number = 0;
   isSaveing: boolean = false;
   progresPercent: number = 0;
+
+  static imageUrl = '';
+  get imageUrl(): string {
+    return AppComponent.imageUrl;
+  }
 
   roomSetting: RoomSetting;
 
@@ -161,6 +187,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     let fileContext = ImageFile.createEmpty('none_icon').toContext();
     fileContext.url = './assets/images/ic_account_circle_black_24dp_2x.png';
     let noneIconImage = ImageStorage.instance.add(fileContext);
+    ImageTag.create(noneIconImage.identifier).tag = '*default アイコン';
 
     AudioPlayer.resumeAudioContext();
     PresetSound.dicePick = AudioStorage.instance.add('./assets/sounds/soundeffect-lab/shoulder-touch1.mp3').identifier;
@@ -279,8 +306,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.isGM = this.appCustomService.dataViewer;
   }
 
+  private static readonly beforeUnloadProc = (event) => {
+    event.preventDefault();
+    event.returnValue = '';
+  };
+
   ngOnInit() {
-    ;
+    window.addEventListener('beforeunload', AppComponent.beforeUnloadProc);
   }
 
   ngAfterViewInit() {
@@ -357,6 +389,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
           break;
       case 'FileStorageComponent':
         component = FileStorageComponent;
+        option.width = 700;
         break;
       case 'GameCharacterSheetComponent':
         component = GameCharacterSheetComponent;
@@ -472,8 +505,14 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   rotateChange(isHorizontal) {
     this.isHorizontal = isHorizontal;
   }
+
+  closeImagePreview() {
+    URL.revokeObjectURL(AppComponent.imageUrl);
+    AppComponent.imageUrl = '';
+  }
 }
 
 PanelService.UIPanelComponentClass = UIPanelComponent;
+//ContextMenuService.UIPanelComponentClass = ContextMenuComponent;
 ContextMenuService.ContextMenuComponentClass = ContextMenuComponent;
 ModalService.ModalComponentClass = ModalComponent;
