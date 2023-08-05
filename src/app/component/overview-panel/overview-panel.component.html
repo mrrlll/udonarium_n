@@ -190,6 +190,13 @@
           </div>
         </div>
       </ng-container>
+      <ng-container *ngSwitchCase="'check'">
+        <div class="tag">{{dataElm.name}}</div>
+        <div class="value">
+          {{dataElm.value}}
+          <input type="checkbox" size="1" [(ngModel)]="dataElm.check" />
+        </div>
+      </ng-container>
       <ng-container *ngSwitchCase="'numberResource'">
         <div class="tag">{{dataElm.name}}</div>
         <div class="value">

@@ -38,6 +38,10 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
   get value(): number | string { return this._value; }
   set value(value: number | string) { this._value = value; this.setUpdateTimer(); }
 
+  private _check: number | string = 0;
+  get check(): number | string { return this._check; }
+  set check(check: number | string) { this._check = check; this.setUpdateTimer(); }
+
   private _currentValue: number | string = 0;
   get currentValue(): number | string { return this._currentValue; }
   set currentValue(currentValue: number | string) { this._currentValue = currentValue; this.setUpdateTimer(); }
@@ -109,6 +113,7 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
     this._name = object.name;
     this._currentValue = object.currentValue;
     this._value = object.value;
+    this._check = object.check;
   }
 
   private setUpdateTimer() {
@@ -117,6 +122,7 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
       if (this.gameDataElement.name !== this.name) this.gameDataElement.name = this.name;
       if (this.gameDataElement.currentValue !== this.currentValue) this.gameDataElement.currentValue = this.currentValue;
       if (this.gameDataElement.value !== this.value) this.gameDataElement.value = this.value;
+      if (this.gameDataElement.check !== this.check) this.gameDataElement.check = this.check;
       this.updateTimer = null;
     }, 66);
   }

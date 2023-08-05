@@ -144,12 +144,12 @@ export class GameCharacterGenerateWindowComponent {
                     {
                       "#text": "特性名",
                       "@_name": "特性①",
-                      "@_type": ""
+                      "@_type": "check"
                     },
                     {
                       "#text": "特性名",
                       "@_name": "特性②",
-                      "@_type": ""
+                      "@_type": "check"
                     },
                     {
                       "#text": 0,

@@ -11,6 +11,7 @@
         <ng-container *ngTemplateOutlet="editButtons"></ng-container>
         <select (change)="setElementType($event.target.value)" [ngModel]="gameDataElement.type">
           <option value="">通常</option>
+          <option value="check">通常(チェックボックス付)</option>
           <option value="numberResource">リソース</option>
           <option value="note">ノート</option>
         </select>
@@ -38,6 +39,11 @@
     </div>
     <div class="table-cell">
       <ng-container [ngSwitch]="gameDataElement.type">
+        <ng-container *ngSwitchCase="'check'">
+          <input style="width: 10em;" size="1" type="text" [(ngModel)]="value" placeholder="名前" />
+          <!-- <input *ngIf="gameDataElement.check != 0" type="checkbox" checked (click)="gameDataElement.check = 1"/> -->
+          <input type="checkbox" [(ngModel)]="check"/>
+        </ng-container>
         <ng-container *ngSwitchCase="'numberResource'">
           <input [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'"
             [(ngModel)]="currentValue" type="range" min="0" max="{{value}}" />

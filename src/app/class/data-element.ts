@@ -7,11 +7,12 @@ export class DataElement extends ObjectNode {
   @SyncVar() name: string;
   @SyncVar() type: string;
   @SyncVar() currentValue: number | string;
+  @SyncVar() check: number | string;
 
   get isNumberResource(): boolean { return this.type != null && this.type === 'numberResource'; }
   get isNote(): boolean { return this.type != null && this.type === 'note'; }
 
-  public static create(name: string, value: number | string = '', attributes: Attributes = {}, identifier: string = ''): DataElement {
+  public static create(name: string, value: number | string = '', attributes: Attributes = {},check: number | string = 0, identifier: string = ''): DataElement {
     let dataElement: DataElement;
     if (identifier && 0 < identifier.length) {
       dataElement = new DataElement(identifier);
@@ -21,6 +22,7 @@ export class DataElement extends ObjectNode {
     dataElement.attributes = attributes;
     dataElement.name = name;
     dataElement.value = value;
+    dataElement.check = check;
     dataElement.initialize();
 
     return dataElement;
