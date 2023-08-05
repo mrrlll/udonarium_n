@@ -1,19 +1,20 @@
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { ObjectStore } from './core/synchronize-object/object-store';
-import { ImageFile } from './core/file-storage/image-file';
-import { ImageStorage } from './core/file-storage/image-storage';
 
-import { EventSystem, Network } from './core/system';
+import { EventSystem } from './core/system';
+import { StringUtil } from './core/system/util/string-util';
 
 @SyncObject('image-tag')
 export class ImageTag extends ObjectNode {
   @SyncVar() imageIdentifier: string = '';
   @SyncVar() tag: string = '';
+  @SyncVar() hide: boolean = false;
 
   get words(): string[] {
-    if (this.tag == null) this.tag = '';
+    if (this.tag == null || this.tag.trim() == '') this.tag = '';
     if (this.tag.trim() === '') return [];
+    this.tag = StringUtil.toHalfWidth(this.tag).toLowerCase();
     return this.tag.trim().split(/\s+/);
   }
 
@@ -21,39 +22,45 @@ export class ImageTag extends ObjectNode {
   containsWords(words: string[], isOr: boolean): boolean
   containsWords(words: any, isOr=true): boolean {
     if (typeof words === 'string') words = words.trim().split(/\s+/);
+    if (words.length == 0) return false;
     words = words.concat();
-    let temp = this.words;
+    //let temp = this.words;
     if (isOr) {
       for (const word of words) {
-        if (temp.includes(word)) return true;
+        //if (temp.includes(StringUtil.toHalfWidth(word).toLowerCase())) return true;
+        if (` ${this.tag} `.indexOf(` ${StringUtil.toHalfWidth(word).toLowerCase()} `) >= 0) return true;
       }
       return false;
     } else {
-      if (words.length == 0) return false;
       for (const word of words) {
-        if (!temp.includes(word)) return false;
+        //if (!temp.includes(StringUtil.toHalfWidth(word).toLowerCase())) return false;
+        if (` ${this.tag} `.indexOf(` ${StringUtil.toHalfWidth(word).toLowerCase()} `) < 0) return false;
       }
       return true;
     }
   }
 
-  addWords(words: string)
-  addWords(words: string[])
-  addWords(words: any) {
+  addWords(words: string): string[] 
+  addWords(words: string[]): string[] 
+  addWords(words: any): string[] {
     if (typeof words === 'string') words = words.trim().split(/\s+/);
     words = words.concat();
-    words.push(...this.words);
-    this.tag = Array.from(new Set(words)).sort().join(' ');
-    EventSystem.trigger('OPERATE_IMAGE_TAGS', { tag: this.tag });
+    const addingWords = Array.from(new Set<string>(words.map(word => StringUtil.toHalfWidth(word).toLowerCase())));
+    //words.push(...this.words);
+    this.tag = Array.from(new Set(addingWords.concat(this.words))).sort().join(' ');
+    EventSystem.call('OPERATE_IMAGE_TAGS', this.identifier);
+    return addingWords;
   }
 
-  removeWords(words: string)
-  removeWords(words: string[])
-  removeWords(words: any) {
+  removeWords(words: string): string[]
+  removeWords(words: string[]): string[]
+  removeWords(words: any): string[] {
     if (typeof words === 'string') words = words.trim().split(/\s+/);
     words = words.concat();
-    this.tag = this.words.filter(word => !words.includes(word)).sort().join(' ');
-    EventSystem.trigger('OPERATE_IMAGE_TAGS', { tag: this.tag });
+    const delteingWords = Array.from(new Set<string>(words.map(word => StringUtil.toHalfWidth(word).toLowerCase())));
+    this.tag = this.words.filter(word => !delteingWords.includes(StringUtil.toHalfWidth(word).toLowerCase())).sort().join(' ');
+    EventSystem.call('OPERATE_IMAGE_TAGS', this.identifier);
+    return delteingWords;
   }
 
   static get(imageIdentifier: string): ImageTag {

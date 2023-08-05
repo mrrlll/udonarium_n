@@ -1,3 +1,20 @@
+:host {
+  display: block;
+}
+
+.component {
+  position: absolute;
+  max-height: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: visible;
+  color: #444;
+  z-index: 9000;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  cursor: grab;
+}
+
 .drop-zone {
   border: 2px dashed #555;
   -moz-border-radius: 5px;
@@ -22,15 +39,19 @@
   font-size: 0;
   display: inline-block;
   border: 2px solid transparent;
+  margin-right: -2px;
+  cursor: pointer;
 }
 
 .image:hover {
   border: 2px dotted red;
+  transform: scale(1.08);
+  z-index: 150;
+  transition-duration: 60ms;
 }
 
 .image img {
   vertical-align: bottom;
-  transition-duration: 120ms;
 }
 
 .image.selected {
@@ -38,8 +59,12 @@
 }
 
 .selecter .image:not(.selected) img {
-  filter: brightness(50%);
-  opacity: 0.7;
+  filter: saturate(40%) opacity(90%) blur(2px);
+}
+
+.image:hover img {
+  backdrop-filter: blur(1px);
+  filter: none !important;
 }
 
 .badge {
@@ -61,18 +86,14 @@
   bottom: 0;
   background-color: rgba(240, 218, 189, 0.9);
   border-top: 1px dotted #666;
-  z-index: 100;
+  z-index: 200;
 }
 
 .word-tag {
-  font-size: smaller;
   margin-right: 3px;
   display: inline-block;
   color: black;
   font-weight: bolder;
-}
-.word-tag::before {
-  content: '🏷️';
 }
 .word-tag:hover {
   color: red;
@@ -133,5 +154,26 @@
        1px  0px 0px #ffffff,
        0px  1px 0px #ffffff,
       -1px  0px 0px #ffffff,
-       0px -1px 0px #ffffff; 
+       0px -1px 0px #ffffff;
+}
+
+.red-eye {
+  color: darkred;
+  text-shadow: 0px 0px 2px crimson,
+  0px 0px 4px white;
+  font-weight: bolder;
+}
+
+.zoom-button {
+  width: 24px;
+  height: 24px; 
+  border-radius: 100px; 
+  padding: 1px;
+  pointer-events: auto;
+}
+
+.zoom-button > .material-icons {
+  display:inline-block;
+  font-size: 16px;
+  vertical-align: bottom;
 }
