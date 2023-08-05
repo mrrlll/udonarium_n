@@ -234,7 +234,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     this.appCustomService.isViewer.next(this.isViewer);
     this.appCustomService.dataViewer = this.isViewer;
     this.changeGMModeName();
-    if (this.isViewer) {
+    if (!this.isViewer) {
       this.chatMessageService.sendOperationLog('GM＆観戦モードを解除しました。');
     }
     else {
