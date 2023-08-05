@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, NgZone, OnDestroy, OnInit, Input } from '@angular/core';
+import { AfterViewInit, Component, NgZone, OnDestroy, ElementRef, OnInit, Input, ViewChild } from '@angular/core';
 import { GenerateService } from 'service/generate.service';
 import { XmlUtil } from '@udonarium/core/system/util/xml-util';
 import { FileReaderUtil } from '@udonarium/core/file-storage/file-reader-util';
@@ -16,13 +16,16 @@ import { XMLParser, XMLBuilder } from 'fast-xml-parser';
   templateUrl: './game-character-generate-window.component.html',
   styleUrls: ['./game-character-generate-window.component.css']
 })
-export class GameCharacterGenerateWindowComponent {
+export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private generateService: GenerateService,
     private modalService: ModalService,
     private panelService: PanelService,
   ){}
+
+  @ViewChild('charactersheeturlInput', { static: false })
+  charactersheeturlInput!: ElementRef;
 
   charactersheeturl: string = '';
   urlerror: boolean = false;
@@ -36,6 +39,12 @@ export class GameCharacterGenerateWindowComponent {
 
   ngOnInit() {
     Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'キャラ駒生成');
+  }
+  ngAfterViewInit() {
+    this.charactersheeturlInput.nativeElement.focus();
+  }
+  ngOnDestroy() {
+    EventSystem.unregister(this);
   }
 
   get(download_flg){
