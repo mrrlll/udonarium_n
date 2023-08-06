@@ -20,6 +20,7 @@ import { ConfirmationComponent, ConfirmationType } from 'component/confirmation/
 import { AppComponent } from 'src/app/app.component';
 import { ChatMessageService } from 'service/chat-message.service';
 
+import { AppConfigCustomService } from 'service/app-config-custom.service';
 @Component({
   selector: 'file-selector',
   templateUrl: './file-selecter.component.html',
@@ -40,6 +41,7 @@ import { ChatMessageService } from 'service/chat-message.service';
   ]
 })
 export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
+  @Input() isViewer: boolean;
   @Input() isAllowedEmpty: boolean = false;
   @Input() currentImageIdentifires: string[] = [] 
   _searchNoTagImage = true;
@@ -104,7 +106,8 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
     private changeDetector: ChangeDetectorRef,
     private panelService: PanelService,
     private modalService: ModalService,
-    private chatMessageService: ChatMessageService
+    private chatMessageService: ChatMessageService,
+    private appCustomService: AppConfigCustomService
   ) {
     this.isAllowedEmpty = this.modalService.option && this.modalService.option.isAllowedEmpty ? true : false;
     if (this.modalService.option && this.modalService.option.currentImageIdentifires) {
@@ -113,6 +116,8 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
+    this.isViewer = this.appCustomService.dataViewer;
+    this.isShowHideImages = this.isViewer;
     Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'ファイル一覧');
     this.searchWords = this.allImagesOwnWords;
     //FileStorageComponent.sortOrder = [null].concat(this.searchWords);

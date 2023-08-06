@@ -21,6 +21,8 @@ import { ConfirmationComponent, ConfirmationType } from 'component/confirmation/
 import { AppComponent } from 'src/app/app.component';
 import { ChatMessageService } from 'service/chat-message.service';
 
+import { AppConfigCustomService } from 'service/app-config-custom.service';
+
 
 @Component({
   selector: 'file-storage',
@@ -54,6 +56,7 @@ import { ChatMessageService } from 'service/chat-message.service';
   ]
 })
 export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
+  @Input() isViewer: boolean;
   panelId;
   private _searchNoTagImage = true;
   serchCondIsOr = true;
@@ -118,7 +121,8 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     private changeDetector: ChangeDetectorRef,
     private panelService: PanelService,
     private modalService: ModalService,
-    private chatMessageService: ChatMessageService
+    private chatMessageService: ChatMessageService,
+    private appCustomService: AppConfigCustomService
   ) { }
 
   @Input() isViewAblePdf: boolean = true;
@@ -145,6 +149,8 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   ngOnInit() {
+    this.isViewer = this.appCustomService.dataViewer;
+    this.isShowHideImages = this.isViewer;
     this.searchWords = this.allImagesOwnWords;
     this.panelId = UUID.generateUuid();
     Promise.resolve().then(() => {
