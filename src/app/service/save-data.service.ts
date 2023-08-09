@@ -15,6 +15,8 @@ import { Config } from '@udonarium/config';
 import * as Beautify from 'vkbeautify';
 
 import { ImageTagList } from '@udonarium/image-tag-list';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
+import * as saveAs from 'file-saver';
 
 type UpdateCallback = (percent: number) => void;
 
@@ -109,9 +111,12 @@ export class SaveDataService {
     for (let i = 0; i < imageElements.length; i++) {
       let identifier = imageElements[i].innerHTML;
       images[identifier] = ImageStorage.instance.get(identifier);
+
+      let shadowIdentifier = imageElements[i].getAttribute('currentValue');
+      if (shadowIdentifier) images[shadowIdentifier] = ImageStorage.instance.get(shadowIdentifier);
     }
 
-    imageElements = xmlElement.ownerDocument.querySelectorAll('*[imageIdentifier], *[backgroundImageIdentifier]');
+    imageElements = xmlElement.ownerDocument.querySelectorAll('*[imageIdentifier], *[toImageIdentifier], *[backgroundImageIdentifier]');
 
     for (let i = 0; i < imageElements.length; i++) {
       let identifier = imageElements[i].getAttribute('imageIdentifier');
@@ -122,11 +127,10 @@ export class SaveDataService {
     }
     for (let identifier in images) {
       let image = images[identifier];
-      if (image && image.state === ImageState.COMPLETE) {
+      // if (image && image.state === ImageState.COMPLETE) {
         // files.push(new File([image.blob], image.identifier + '.' + MimeType.extension(image.blob.type), { type: image.blob.type }));
-        if (image) {
-          files.push(image);
-        }
+      if (image) {
+        files.push(image);
       }
     }
     return files;
