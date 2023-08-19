@@ -1,13 +1,9 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
-import { ImageFile, ImageState } from '@udonarium/core/file-storage/image-file';
-import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
-import { EventSystem, Network } from '@udonarium/core/system';
-import { kdf } from 'crypto-js';
+import { ImageFile } from '@udonarium/core/file-storage/image-file';
+import { EventSystem } from '@udonarium/core/system';
 import { ModalService } from 'service/modal.service';
-
-import axios from 'axios'
 
 import { PanelOption, PanelService } from 'service/panel.service';
 import { UnsplashsearchComponent } from 'component/unsplashsearch/unsplashsearch.component';
@@ -18,7 +14,6 @@ import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { UUID } from '@udonarium/core/system/util/uuid';
 import { ConfirmationComponent, ConfirmationType } from 'component/confirmation/confirmation.component';
-import { AppComponent } from 'src/app/app.component';
 import { ChatMessageService } from 'service/chat-message.service';
 
 import { AppConfigCustomService } from 'service/app-config-custom.service';
@@ -76,7 +71,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.selectedImageFiles = this.selectedImageFiles.filter(image => searchResultImageIdentifiers.includes(image.identifier));
     return this.isSort ? ImageTagList.sortImagesByWords(searchResultImages, FileStorageComponent.sortOrder) : searchResultImages;
   }
-  
+
   get searchNoTagImage(): boolean {
     return this._searchNoTagImage;
   }
@@ -287,7 +282,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   setectedImagesToHidden(toHidden: boolean) {
     this.modalService.open(ConfirmationComponent, {
-      title: toHidden ? '非表示に設定' : '非表示設定を解除', 
+      title: toHidden ? '非表示に設定' : '非表示設定を解除',
       text: `画像${ toHidden ? 'を非表示に設定' : 'の非表示設定を解除'}しますか？`,
       help: toHidden ? '選択した画像を非表示に設定します。\nこれは「意図せずにネタバレを見てしまう」ことなどを防ぐものであり、他者から完全に隠すものではありません。' : '選択した画像の非表示設定を解除します。',
       type: ConfirmationType.OK_CANCEL,
@@ -306,7 +301,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.addingTagWord == null || this.addingTagWord.trim() == '') return;
     const words = this.addingTagWord.trim().split(/\s+/);
     this.modalService.open(ConfirmationComponent, {
-      title: '画像にタグを追加', 
+      title: '画像にタグを追加',
       text: `画像にタグを追加しますか？`,
       helpHtml: '選択した画像に ' + words.map(word => `<b class="word-tag">${ StringUtil.escapeHtml(word) }</b>`).join(' ') + ' を追加します。',
       type: ConfirmationType.OK_CANCEL,
@@ -333,7 +328,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   removeTagWord(word: string) {
     this.modalService.open(ConfirmationComponent, {
-      title: '画像からタグを削除', 
+      title: '画像からタグを削除',
       text: `画像からタグを削除しますか？`,
       helpHtml: `選択した画像から <b class="word-tag">${ StringUtil.escapeHtml(word) }</b> を削除します。`,
       type: ConfirmationType.OK_CANCEL,
