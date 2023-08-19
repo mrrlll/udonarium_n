@@ -158,50 +158,6 @@ export class FileArchiver {
   }
 
   private readFileContents(file: File) {
-    let json = {
-      "text-note": {
-        "data": {
-          "data": {
-            "data": [
-              {
-                "data": {
-                  "#text": 4,
-                  "@_name": "width"
-                },
-              },
-              {
-                "data": {
-                  "#text": 3,
-                  "@_name": "height"
-                },
-              },
-              {
-                "data": {
-                  "#text": 5,
-                  "@_name": "fontsize"
-                },
-              },
-              {
-                "data": {
-                  "#text": "共有メモ",
-                  "@_name": "title"
-                },
-              },
-              {
-                "data": {
-                  "#text": "aaaa",
-                  "@_type": "note",
-                  "@_name": "text"
-                },
-              },
-            ],
-            "@_location.name": "common"
-          },
-          "@_location.name": "text-note"
-        },
-        "@_location.name": "table"
-      }
-    }
     const xb = new XMLBuilder({
       ignoreAttributes: false,
       textNodeName: "#text",
@@ -212,8 +168,43 @@ export class FileArchiver {
     const reader = new FileReader();
     reader.onload = (event: any) => {
       const fileContents = event.target.result;
-      console.log(fileContents);
+      // console.log(fileContents);
+      let json = {
+        "text-note": {
+          "data": {
+            "data": {
+              "data": [
+                {
+                  "#text": 10,
+                  "@_name": "width"
+                },
+                {
+                  "#text": 3,
+                  "@_name": "height"
+                },
+                {
+                  "#text": 5,
+                  "@_name": "fontsize"
+                },
+                {
+                  "#text": `${file.name}`,
+                  "@_name": "title"
+                },
+                {
+                  "#text": `${fileContents}`,
+                  "@_type": "note",
+                  "@_name": "text"
+                },
+              ],
+              "@_name": "common",
+            },
+            "@_name": "text-note"
+          },
+          "@_location.name": "table"
+        },
+      }
       const xmlContent = xb.build(json);
+      console.log(xmlContent)
       let xmlElement = XmlUtil.xml2element(xmlContent);
       if (xmlElement) EventSystem.trigger('XML_LOADED', { xmlElement: xmlElement });
     };

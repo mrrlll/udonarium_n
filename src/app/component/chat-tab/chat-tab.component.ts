@@ -153,6 +153,22 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     },
     {
       from: 'System',
+      timestamp: 1692430200000,
+      imageIdentifier: '',
+      tag: '',
+      name: 'アップデート',
+      text: 'テーブルの複製機能を実装。\nテーブル設定ウインドウに複製ボタンが追加されています。ボタンを押すと現在のテーブルが複製されます。'
+    },
+    {
+      from: 'System',
+      timestamp: 1692430200000,
+      imageIdentifier: '',
+      tag: '',
+      name: 'アップデート',
+      text: 'txtをアップロードで共有メモを作成するようにした。\nサイズは手動で合わせてください。'
+    },
+    {
+      from: 'System',
       timestamp: now,
       imageIdentifier: '',
       tag: '',
