@@ -168,4 +168,9 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
       this.selectedTable.backgroundImageIdentifier = value;
     });
   }
+
+  cloneGameTable() {
+    let xmlString = ObjectSerializer.instance.toXml(this.selectedTable);
+    return ObjectSerializer.instance.parseXml(xmlString);
+  }
 }
