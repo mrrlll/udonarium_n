@@ -11,6 +11,8 @@ import { ImageFile } from './image-file';
 import { ImageStorage } from './image-storage';
 import { MimeType } from './mime-type';
 
+import { XMLParser, XMLBuilder } from 'fast-xml-parser';
+
 type MetaData = { percent: number; currentFile: string };
 type UpdateCallback = (metadata: MetaData) => void;
 
@@ -140,13 +142,82 @@ export class FileArchiver {
   }
 
   private async handleText(file: File): Promise<void> {
-    if (file.type.indexOf('text/') < 0) return;
-    try {
-      let xmlElement: Element = XmlUtil.xml2element(await FileReaderUtil.readAsTextAsync(file));
-      if (xmlElement) EventSystem.trigger('XML_LOADED', { xmlElement: xmlElement });
-    } catch (reason) {
-      console.warn(reason);
+    if (file.type.indexOf('text/xml') === 0){
+      try {
+        let xmlElement: Element = XmlUtil.xml2element(await FileReaderUtil.readAsTextAsync(file));
+        if (xmlElement) EventSystem.trigger('XML_LOADED', { xmlElement: xmlElement });
+      } catch (reason) {
+        console.warn(reason);
+      }
     }
+    if (file.type.indexOf('text/plain') === 0){
+      if (file) {
+        this.readFileContents(file);
+      }
+    }
+  }
+
+  private readFileContents(file: File) {
+    let json = {
+      "text-note": {
+        "data": {
+          "data": {
+            "data": [
+              {
+                "data": {
+                  "#text": 4,
+                  "@_name": "width"
+                },
+              },
+              {
+                "data": {
+                  "#text": 3,
+                  "@_name": "height"
+                },
+              },
+              {
+                "data": {
+                  "#text": 5,
+                  "@_name": "fontsize"
+                },
+              },
+              {
+                "data": {
+                  "#text": "共有メモ",
+                  "@_name": "title"
+                },
+              },
+              {
+                "data": {
+                  "#text": "aaaa",
+                  "@_type": "note",
+                  "@_name": "text"
+                },
+              },
+            ],
+            "@_location.name": "common"
+          },
+          "@_location.name": "text-note"
+        },
+        "@_location.name": "table"
+      }
+    }
+    const xb = new XMLBuilder({
+      ignoreAttributes: false,
+      textNodeName: "#text",
+      attributeNamePrefix: "@_",
+      format: true,
+      cdataPropName: "__cdata",
+    });
+    const reader = new FileReader();
+    reader.onload = (event: any) => {
+      const fileContents = event.target.result;
+      console.log(fileContents);
+      const xmlContent = xb.build(json);
+      let xmlElement = XmlUtil.xml2element(xmlContent);
+      if (xmlElement) EventSystem.trigger('XML_LOADED', { xmlElement: xmlElement });
+    };
+    reader.readAsText(file);
   }
 
   private async handlePdf(file: File): Promise<ImageFile> {
