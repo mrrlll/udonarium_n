@@ -7,8 +7,8 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { ImageFile, ImageState } from '@udonarium/core/file-storage/image-file';
-import { EventSystem, Network } from '@udonarium/core/system';
+import { ImageFile } from '@udonarium/core/file-storage/image-file';
+import { EventSystem } from '@udonarium/core/system';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 
@@ -17,7 +17,6 @@ import { ImageTagList } from '@udonarium/image-tag-list';
 import { trigger, transition, animate, keyframes, style } from '@angular/animations';
 import { FileStorageComponent } from 'component/file-storage/file-storage.component';
 import { ConfirmationComponent, ConfirmationType } from 'component/confirmation/confirmation.component';
-import { AppComponent } from 'src/app/app.component';
 import { ChatMessageService } from 'service/chat-message.service';
 
 import { AppConfigCustomService } from 'service/app-config-custom.service';
@@ -43,17 +42,17 @@ import { AppConfigCustomService } from 'service/app-config-custom.service';
 export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() isViewer: boolean;
   @Input() isAllowedEmpty: boolean = false;
-  @Input() currentImageIdentifires: string[] = [] 
+  @Input() currentImageIdentifires: string[] = []
   _searchNoTagImage = true;
   serchCondIsOr = true;
   addingTagWord = '';
   searchWords: string[] = [];
-  
+
   isSort = true;
   //sortOrder: string[] = [];
 
   isShowHideImages = false;
-  
+
   get images(): ImageFile[] {
     const searchResultImages = ImageTagList.searchImages(this.searchWords, (this.searchNoTagImage && this.countAllImagesHasWord(null) > 0), this.serchCondIsOr, this.isShowHideImages);
     return this.isSort ? ImageTagList.sortImagesByWords(searchResultImages, FileStorageComponent.sortOrder).sort((a, b) => {
@@ -70,7 +69,7 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }) : searchResultImages;
   }
-  
+
   get empty(): ImageFile { return ImageFile.Empty; }
 
   get searchNoTagImage(): boolean {
@@ -94,7 +93,7 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!this.searchWords.includes(word)) {
         return false;
       }
-    } 
+    }
     return true;
   }
 
@@ -197,7 +196,7 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
     //console.log(imageTag ? imageTag.words : []);
     return imageTag ? imageTag.words : [];
   }
-  
+
   getHidden(image: ImageFile): boolean {
     const imageTag = ImageTag.get(image.identifier);
     return imageTag ? imageTag.hide : false;
@@ -214,7 +213,7 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
       $event.preventDefault();
       this.modalService.open(ConfirmationComponent, {
-        title: '非表示設定の画像を表示', 
+        title: '非表示設定の画像を表示',
         text: '非表示設定の画像を表示しますか？',
         help: 'ネタバレなどにご注意ください。',
         type: ConfirmationType.OK_CANCEL,
