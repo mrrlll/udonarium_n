@@ -214,7 +214,7 @@ export class ImageFile {
       image.onabort = image.onerror = () => {
         reject();
       };
-      image.src = './assets/images/pdf.png';
+      image.src = 'assets/images/pdf.png';
     });
   }
 

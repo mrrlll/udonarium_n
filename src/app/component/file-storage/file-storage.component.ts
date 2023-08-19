@@ -3,6 +3,7 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, I
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { EventSystem } from '@udonarium/core/system';
+import { kdf } from 'crypto-js';
 import { ModalService } from 'service/modal.service';
 
 import { PanelOption, PanelService } from 'service/panel.service';
@@ -17,6 +18,7 @@ import { ConfirmationComponent, ConfirmationType } from 'component/confirmation/
 import { ChatMessageService } from 'service/chat-message.service';
 
 import { AppConfigCustomService } from 'service/app-config-custom.service';
+
 
 
 @Component({
@@ -158,15 +160,15 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
     EventSystem.register(this)
-    .on('SYNCHRONIZE_FILE_LIST', event => {
+    .on('SYNCHRONIZE_FILE_LIST', (event) => {
       if (event.isSendFromSelf) {
         this.changeDetector.markForCheck();
       }
     })
-    .on('OPERATE_IMAGE_TAGS', event => {
+    .on('OPERATE_IMAGE_TAGS', (event) => {
       this.changeDetector.markForCheck();
     })
-    .on('CHANGE_SORT_ORDER', event => {
+    .on('CHANGE_SORT_ORDER', (event) => {
       if (event.isSendFromSelf) this.changeDetector.markForCheck();
     });
   }
@@ -227,6 +229,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onSelectedFile(file: ImageFile) {
+    if (file.url.length <= 0) return;
     if (this.selected(file)) {
       this.selectedImageFiles = this.selectedImageFiles.filter(imageFile => imageFile.identifier !== file.identifier);
     } else {
