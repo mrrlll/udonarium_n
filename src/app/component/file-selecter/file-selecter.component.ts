@@ -41,6 +41,7 @@ import { AppConfigCustomService } from 'service/app-config-custom.service';
 })
 export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() isViewer: boolean;
+  @Input() isViewAblePdf: boolean = false;
   @Input() isAllowedEmpty: boolean = false;
   @Input() currentImageIdentifires: string[] = []
   _searchNoTagImage = true;
@@ -68,6 +69,26 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
         return 0;
       }
     }) : searchResultImages;
+  }
+
+  isViewFile(file: ImageFile): boolean {
+    if (!this.isViewAblePdf && file?.blob?.type.match(/pdf/)) {
+      return false;
+    }
+    return true;
+  }
+
+  getFileUrl(file: ImageFile): string {
+    if (file.url.length <= 0) {
+      return 'assets/images/loading.gif';
+    }
+
+    if (file?.blob?.type.match(/pdf/)) {
+      console.log(file.name);
+      return file.thumbnail.url;
+    }
+
+    return file.url;
   }
 
   get empty(): ImageFile { return ImageFile.Empty; }
@@ -112,12 +133,15 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.modalService.option && this.modalService.option.currentImageIdentifires) {
       this.currentImageIdentifires = this.modalService.option.currentImageIdentifires;
     }
+    if (this.modalService.option?.isViewAblePdf) {
+      this.isViewAblePdf = true;
+    }
   }
 
   ngOnInit() {
     this.isViewer = this.appCustomService.dataViewer;
     this.isShowHideImages = this.isViewer;
-    Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'ファイル一覧');
+    Promise.resolve().then(() => (this.modalService.title = this.panelService.title = 'ファイル一覧'));
     this.searchWords = this.allImagesOwnWords;
     //FileStorageComponent.sortOrder = [null].concat(this.searchWords);
     // 非表示も含めた数
@@ -229,6 +253,7 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onSelectedFile(file: ImageFile) {
+    if (file.url.length <= 0) return;
     // 今のところGameCharacterGeneratorComponentでしか使ってない？
     //EventSystem.call('SELECT_FILE', { fileIdentifier: file.identifier }, Network.peerId);
     this.modalService.resolve(file.identifier);
