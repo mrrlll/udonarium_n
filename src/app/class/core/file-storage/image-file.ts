@@ -97,7 +97,13 @@ export class ImageFile {
     imageFile.context.url = window.URL.createObjectURL(imageFile.context.blob);
 
     try {
-      imageFile.context.thumbnail = await ImageFile.createThumbnailAsync(imageFile.context);
+      if (imageFile.blob.type.match(/pdf/)) {
+        // pdfの処理
+        imageFile.context.thumbnail = await ImageFile.createPdfThumbnailAsync();
+      } else {
+        imageFile.context.thumbnail = await ImageFile.createThumbnailAsync(imageFile.context);
+        if (imageFile.context.name != null) imageFile.context.name = imageFile.context.identifier;
+      }
     } catch (e) {
       throw e;
     }
@@ -180,6 +186,35 @@ export class ImageFile {
         reject();
       }
       image.src = context.url;
+    });
+  }
+
+  private static createPdfThumbnailAsync(): Promise<ThumbnailContext> {
+    return new Promise((resolve, reject) => {
+      let image: HTMLImageElement = new Image();
+      image.onload = (event) => {
+        let scale: number = Math.min(128 / Math.max(image.width, image.height), 1.0);
+        let dstWidth = image.width * scale;
+        let dstHeight = image.height * scale;
+        let canvas: HTMLCanvasElement = document.createElement('canvas');
+        let render: CanvasRenderingContext2D = canvas.getContext('2d');
+        canvas.width = image.width;
+        canvas.height = image.height;
+        render.drawImage(image, 0, 0);
+        CanvasUtil.resize(canvas, dstWidth, dstHeight, true);
+        canvas.toBlob((blob) => {
+          let thumbnail: ThumbnailContext = {
+            type: blob.type,
+            blob: blob,
+            url: window.URL.createObjectURL(blob),
+          };
+          resolve(thumbnail);
+        }, 'image/png');
+      };
+      image.onabort = image.onerror = () => {
+        reject();
+      };
+      image.src = './assets/images/pdf.png';
     });
   }
 

@@ -25,7 +25,7 @@ export class FileArchiver {
 
   private maxImageSize = 2 * MEGA_BYTE;
   private maxAudioeSize = 10 * MEGA_BYTE;
-  private maxPdfSize = 10 * MEGA_BYTE;
+  private maxPdfSize = 100 * MEGA_BYTE;
 
   private callbackOnDragEnter;
   private callbackOnDragOver;
@@ -152,7 +152,7 @@ export class FileArchiver {
   private async handlePdf(file: File): Promise<ImageFile> {
     if (file.type.indexOf('application/pdf') < 0) return;
     if (this.maxPdfSize < file.size) {
-      alert('ファイルサイズが10Mb以上のものはアップロードできません');
+      alert('ファイルサイズが100Mb以上のものはアップロードできません');
       return;
     }
     console.log(file.name + ' type:' + file.type);
