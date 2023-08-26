@@ -314,7 +314,7 @@ export class AudioPlayer {
     return cache;
   }
 
-  resumeAudioContext() {
+  static resumeAudioContext() {
     AudioPlayer.audioContext.resume();
     let callback = () => {
       AudioPlayer.audioContext.resume();
