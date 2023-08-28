@@ -75,7 +75,13 @@
       </div>
     </div>
   </div>
+  <!-- <div *ngFor="let context of networkService.peerContexts">
+    <div>
+      <button (click)="addFilter(context.PeerId)">{{findPeerName(context.peerId)}}</button>
+    </div>
+  </div> -->
 </div>
+
 
 <hr *ngIf="selectedPanel" />
 <div *ngIf="selectedPanel">

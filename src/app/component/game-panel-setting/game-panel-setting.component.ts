@@ -5,6 +5,8 @@ import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-seri
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { GamePanel } from '@udonarium/game-panel';
+import { PeerCursor } from '@udonarium/peer-cursor';
+import { PeerContext } from '@udonarium/core/system/network/peer-context';
 
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { GamePanelViewerComponent } from 'component/game-panel-viewer/game-panel-viewer.component';
@@ -20,6 +22,7 @@ import { PanelService } from 'service/panel.service';
 export class GamePanelSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   minSize: number = 1;
   maxSize: number = 2000;
+  networkService = Network;
 
   get panelBackgroundImage(): ImageFile {
     return this.imageService.getEmptyOr(this.selectedPanel ? this.selectedPanel.imageIdentifier : null);
@@ -181,5 +184,18 @@ export class GamePanelSettingComponent implements OnInit, OnDestroy, AfterViewIn
       if (!this.selectedPanel || !value) return;
       this.selectedPanel.backgroundImageIdentifier = value;
     });
+  }
+
+  findPeerName(peerId: string) {
+    const peerCursor = PeerCursor.findByPeerId(peerId);
+    return peerCursor ? peerCursor.name : '';
+  }
+
+  addFilter(peerId: string) {
+    console.log(peerId)
+    const peerCursor = this.findPeerName(peerId);
+    console.log(peerCursor);
+    console.log(this.selectedPanel.nicknameFillter)
+    this.selectedPanel.nicknameFillter += peerCursor;
   }
 }
