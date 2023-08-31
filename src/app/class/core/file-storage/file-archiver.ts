@@ -25,7 +25,7 @@ export class FileArchiver {
     return FileArchiver._instance;
   }
 
-  private maxImageSize = 2 * MEGA_BYTE;
+  private maxImageSize = 10 * MEGA_BYTE;
   private maxAudioeSize = 10 * MEGA_BYTE;
   private maxPdfSize = 100 * MEGA_BYTE;
 
