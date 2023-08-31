@@ -18,6 +18,8 @@ export class Card extends TabletopObject {
   @SyncVar() owners: Array<string> = [];
   @SyncVar() zindex: number = 0;
   @SyncVar() isLocked: boolean = false;
+  @SyncVar() isHide: boolean = false;
+  @SyncVar() isRotate: boolean = true;
 
   get isVisibleOnTable(): boolean { return this.location.name === 'table' && (!this.parentIsAssigned || this.parentIsDestroyed); }
 
@@ -49,6 +51,22 @@ export class Card extends TabletopObject {
   faceDown() {
     this.state = CardState.BACK;
     this.owners = [];
+  }
+
+  rotateOn() {
+    this.isRotate = true;
+  }
+
+  rotateOff() {
+    this.isRotate = false;
+  }
+
+  hideOn() {
+    this.isHide = true;
+  }
+
+  hideOff() {
+    this.isHide = false;
   }
 
   toTopmost() {

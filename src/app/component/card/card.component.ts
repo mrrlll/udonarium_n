@@ -61,6 +61,12 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   get hasOwner(): boolean { return this.card.hasOwner; }
   get ownerName(): string { return this.card.ownerName; }
 
+  get isRotate(): boolean { return this.card.isRotate; }
+  set isRotate(isRotate: boolean) { this.card.isRotate = isRotate; }
+
+  get isHide(): boolean { return this.card.isHide; }
+  set isHide(isHide: boolean) { this.card.isHide = isHide; }
+
   get imageFile(): ImageFile { return this.imageService.getSkeletonOr(this.card.imageFile); }
   get frontImage(): ImageFile { return this.imageService.getSkeletonOr(this.card.frontImage); }
   get backImage(): ImageFile { return this.imageService.getSkeletonOr(this.card.backImage); }
@@ -287,8 +293,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
             this.card.faceDown();
             this.owners = [Network.peerContext.userId];
           }
-        }
-        : {name : null, enabled: false}
+        }: {name : null, enabled: false}
       ),
       ContextMenuSeparator,
       {
@@ -316,6 +321,32 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
           SoundEffect.play(PresetSound.sweep);
         }
       },
+      ContextMenuSeparator,
+      (this.isRotate
+        ? {
+          name: '回転をオフ', action: () => {
+            this.card.rotateOff();
+          }
+        }: {
+          name : '回転をオン', action: () => {
+            this.card.rotateOn();
+        }
+      }
+    ),
+    (this.isGM && this.isHide
+      ? {
+        name: '表示する', action: () => {
+          this.card.hideOff();
+        }
+      }: {name : null, enabled: false}
+    ),
+    (this.isGM && !this.isHide
+      ? {
+        name: '非表示にする', action: () => {
+          this.card.hideOn();
+        }
+      }: {name : null, enabled: false}
+    ),
     ], this.isVisible ? this.name : 'カード');
   }
 
