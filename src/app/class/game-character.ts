@@ -37,6 +37,8 @@ export class GameCharacter extends TabletopObject {
 
   @SyncVar() owner: string = '';
 
+  @SyncVar() isHide: boolean = false;
+
   _selectedTachieNum: number = 0;
 
   get selectedTachieNum(): number {
@@ -568,4 +570,11 @@ export class GameCharacter extends TabletopObject {
     return text;
   }
 
+  hideOn() {
+    this.isHide = true;
+  }
+
+  hideOff() {
+    this.isHide = false;
+  }
 }

@@ -233,3 +233,14 @@
 .component:hover .material-icons, .component:active .material-icons {
   display: inline;
 }
+
+.isHide {
+  /* background-color:blue; */
+  filter: invert(100%);
+  display:inline-block;
+}
+
+.isHide img{
+  opacity: 0.5;
+  display:block;
+}

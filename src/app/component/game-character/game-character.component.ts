@@ -67,6 +67,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   set roll(roll: number) { this.gameCharacter.roll = roll; }
   get isAltitudeIndicate(): boolean { return this.gameCharacter.isAltitudeIndicate; }
   set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameCharacter.isAltitudeIndicate = isAltitudeIndicate; }
+  get isHide(): boolean { return this.gameCharacter.isHide; }
+  set isHide(isHide: boolean) { this.gameCharacter.isHide = isHide; }
 
 
   gridSize: number = 50;
@@ -168,6 +170,20 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
           SoundEffect.play(PresetSound.piecePut);
         }
       },
+      (this.isGM && this.isHide
+        ? {
+          name: '表示する', action: () => {
+            this.gameCharacter.hideOff();
+          }
+        }: {name : null, enabled: false}
+      ),
+      (this.isGM && !this.isHide
+        ? {
+          name: '非表示にする', action: () => {
+            this.gameCharacter.hideOn();
+          }
+        }: {name : null, enabled: false}
+      ),
     ], this.name);
   }
 
