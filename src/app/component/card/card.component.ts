@@ -447,6 +447,28 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
     return value < min ? min : value;
   }
 
+  vertical() {
+    if (!this.card.isVisible || this.card.rotate == 0) return; 
+    this.card.rotate = 0;
+    SoundEffect.play(PresetSound.cardPut);
+  }
+
+  horizontal() {
+    if (!this.card.isVisible || this.card.rotate == 90) return; 
+    this.card.rotate = 90;
+    SoundEffect.play(PresetSound.cardPut);
+  }
+
+  turnRight() {
+    this.card.rotate += 45;
+    SoundEffect.play(PresetSound.cardPut);
+  }
+
+  turnLeft() {
+    this.card.rotate -= 45;
+    SoundEffect.play(PresetSound.cardPut);
+  }
+
   private showDetail(gameObject: Card) {
     EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: gameObject.identifier, className: gameObject.aliasName });
     let coordinate = this.pointerDeviceService.pointers[0];
