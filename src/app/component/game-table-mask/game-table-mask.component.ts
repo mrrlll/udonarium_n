@@ -42,6 +42,8 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
   get imageFile(): ImageFile { return this.gameTableMask.imageFile; }
   get isLock(): boolean { return this.gameTableMask.isLock; }
   set isLock(isLock: boolean) { this.gameTableMask.isLock = isLock; }
+  get maskborder(): boolean { return this.gameTableMask.maskborder; }
+  set maskborder(maskborder: boolean) { this.gameTableMask.maskborder = maskborder; }
 
   gridSize: number = 50;
 
@@ -118,6 +120,17 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
     let menuPosition = this.pointerDeviceService.pointers[0];
     let objectPosition = this.coordinateService.calcTabletopLocalCoordinate();
     this.contextMenuService.open(menuPosition, [
+      (this.maskborder
+        ? {
+          name: 'ボーターを非表示', action: () => {
+            this.maskborder = false;
+          }
+        }: {
+          name: 'ボーターを表示', action: () => {
+            this.maskborder = true;
+          }
+        }
+      ),
       (this.isLock
         ? {
           name: '固定解除', action: () => {
