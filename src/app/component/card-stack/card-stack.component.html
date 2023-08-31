@@ -6,7 +6,7 @@
       (@shuffle.start)="animationShuffleStarted($event)" (@shuffle.done)="animationShuffleDone($event)"
       class="card-image chrome-smooth-image-trick"
       [ngStyle]="{'transform': 'rotateZ(' + topCard.rotate +'deg)'}" [src]="imageFile.url | safe: 'resourceUrl'">
-    <ng-container *ngIf="!isIconHidden">
+    <ng-container *ngIf="!isIconHidden && isRotate">
       <div class="rotate-grab of-left-top">
         <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
       </div>
@@ -36,8 +36,8 @@
       (@shuffle.start)="animationShuffleStarted($event)" (@shuffle.done)="animationShuffleDone($event)"
       class="card-image chrome-smooth-image-trick"
       [ngStyle]="{'transform': 'rotateZ(' + topCard.rotate +'deg)'}" [src]="imageFile.url | safe: 'resourceUrl'">
-    <ng-container *ngIf="!isIconHidden">
-      <div class="rotate-grab of-left-top">
+    <ng-container *ngIf="!isIconHidden && isRotate">
+      <div class="rotate-grab of-left-top ">
         <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
       </div>
       <div class="rotate-grab of-left-bottom">
