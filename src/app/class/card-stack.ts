@@ -15,6 +15,8 @@ export class CardStack extends TabletopObject {
   @SyncVar() owner: string = '';
   @SyncVar() isShowTotal: boolean = true;
   @SyncVar() isLocked: boolean = false;
+  @SyncVar() isHide: boolean = false;
+  @SyncVar() isRotate: boolean = true;
 
   get name(): string { return this.getCommonValue('name', ''); }
   get ownerName(): string {
@@ -87,6 +89,22 @@ export class CardStack extends TabletopObject {
       this.topCard.faceDown();
       this.setSamePositionFor(this.topCard);
     }
+  }
+
+  rotateOn() {
+    this.isRotate = true;
+  }
+
+  rotateOff() {
+    this.isRotate = false;
+  }
+
+  hideOn() {
+    this.isHide = true;
+  }
+
+  hideOff() {
+    this.isHide = false;
   }
 
   faceUpAll() {

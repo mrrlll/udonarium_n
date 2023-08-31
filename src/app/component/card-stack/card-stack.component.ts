@@ -24,10 +24,12 @@ import { GameCharacterSheetComponent } from 'component/game-character-sheet/game
 import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
+import { AppConfigCustomService } from 'service/app-config-custom.service';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { ImageService } from 'service/image.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'card-stack',
@@ -52,6 +54,11 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() cardStack: CardStack = null;
   @Input() is3D: boolean = false;
+
+  // GMフラグ
+  obs: Observable<boolean>;
+  subs: Subscription;
+  isGM: boolean;
 
   get name(): string { return this.cardStack.name; }
   get rotate(): number { return this.cardStack.rotate; }
@@ -79,6 +86,12 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
   get isLocked(): boolean { return this.cardStack ? this.cardStack.isLocked : false; }
   set isLocked(isLocked: boolean) { if (this.cardStack) this.cardStack.isLocked = isLocked; }
 
+  get isRotate(): boolean { return this.cardStack.isRotate; }
+  set isRotate(isRotate: boolean) { this.cardStack.isRotate = isRotate; }
+
+  get isHide(): boolean { return this.cardStack.isHide; }
+  set isHide(isHide: boolean) { this.cardStack.isHide = isHide; }
+
   gridSize: number = 50;
 
   movableOption: MovableOption = {};
@@ -96,10 +109,19 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
     private elementRef: ElementRef<HTMLElement>,
     private changeDetector: ChangeDetectorRef,
     private imageService: ImageService,
-    private pointerDeviceService: PointerDeviceService
+    private pointerDeviceService: PointerDeviceService,
+    private appCustomService: AppConfigCustomService
   ) { }
 
   ngOnInit() {
+    //GMフラグ管理
+    this.obs = this.appCustomService.isViewer$;
+    this.subs = this.obs.subscribe((flg) => {
+      this.isGM = flg;
+      // 同期をする
+      this.changeDetector.markForCheck();
+    });
+    this.isGM = this.appCustomService.dataViewer;
     EventSystem.register(this)
       .on('SHUFFLE_CARD_STACK', -1000, event => {
         if (event.data.identifier === this.cardStack.identifier) {
@@ -147,6 +169,9 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    if (this.subs) {
+      this.subs.unsubscribe();
+    }
     this.input.destroy();
     EventSystem.unregister(this);
   }
@@ -205,7 +230,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
     let distance = (this.doubleClickPoint.x - this.input.pointer.x) ** 2 + (this.doubleClickPoint.y - this.input.pointer.y) ** 2;
     if (distance < 10 ** 2) {
       console.log('onDoubleClick !!!!');
-      if (this.drawCard() != null) {
+      if (this.drawCard() != null && !this.isHide) {
         SoundEffect.play(PresetSound.cardDraw);
       }
     }
@@ -242,18 +267,18 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
         ? {
           name: '☑ 固定', action: () => {
             this.isLocked = false;
-            SoundEffect.play(PresetSound.unlock);
+            if (!this.isHide) SoundEffect.play(PresetSound.unlock);
           }
         } : {
           name: '☐ 固定', action: () => {
             this.isLocked = true;
-            SoundEffect.play(PresetSound.lock);
+            if (!this.isHide) SoundEffect.play(PresetSound.lock);
           }
         }),
       ContextMenuSeparator,
       {
         name: '１枚引く', action: () => {
-          if (this.drawCard() != null) {
+          if (this.drawCard() != null && !this.isHide) {
             SoundEffect.play(PresetSound.cardDraw);
           }
         }
@@ -262,39 +287,39 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
       {
         name: '一番上を表にする', action: () => {
           this.cardStack.faceUp();
-          SoundEffect.play(PresetSound.cardDraw);
+          if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
         }
       },
       {
         name: '一番上を裏にする', action: () => {
           this.cardStack.faceDown();
-          SoundEffect.play(PresetSound.cardDraw);
+          if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
         }
       },
       ContextMenuSeparator,
       {
         name: 'すべて表にする', action: () => {
           this.cardStack.faceUpAll();
-          SoundEffect.play(PresetSound.cardDraw);
+          if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
         }
       },
       {
         name: 'すべて裏にする', action: () => {
           this.cardStack.faceDownAll();
-          SoundEffect.play(PresetSound.cardDraw);
+          if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
         }
       },
       {
         name: 'すべて正位置にする', action: () => {
           this.cardStack.uprightAll();
-          SoundEffect.play(PresetSound.cardDraw);
+          if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
         }
       },
       ContextMenuSeparator,
       {
         name: 'シャッフル', action: () => {
           this.cardStack.shuffle();
-          SoundEffect.play(PresetSound.cardShuffle);
+          if (!this.isHide) SoundEffect.play(PresetSound.cardShuffle);
           EventSystem.call('SHUFFLE_CARD_STACK', { identifier: this.cardStack.identifier });
         }
       },
@@ -309,13 +334,13 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
       {
         name: '山札を人数分に分割する', action: () => {
           this.splitStack(Network.peerIds.length);
-          SoundEffect.play(PresetSound.cardDraw);
+          if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
         }
       },
       {
         name: '山札を崩す', action: () => {
           this.breakStack();
-          SoundEffect.play(PresetSound.cardShuffle);
+          if (!this.isHide) SoundEffect.play(PresetSound.cardShuffle);
         }
       },
       ContextMenuSeparator,
@@ -328,30 +353,59 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
           cloneObject.owner = '';
           cloneObject.isLocked = false;
           cloneObject.toTopmost();
-          SoundEffect.play(PresetSound.cardPut);
+          if (!this.isHide) SoundEffect.play(PresetSound.cardPut);
         }
       },
       {
         name: '山札を削除する', action: () => {
           this.cardStack.setLocation('graveyard');
           this.cardStack.destroy();
-          SoundEffect.play(PresetSound.sweep);
+          if (!this.isHide) SoundEffect.play(PresetSound.sweep);
         }
       },
+      ContextMenuSeparator,
+      (this.isRotate
+        ? {
+          name: '回転をオフ', action: () => {
+            this.cardStack.rotateOff();
+          }
+        }: {
+          name : '回転をオン', action: () => {
+            this.cardStack.rotateOn();
+        }
+      }
+    ),
+    (this.isGM && this.isHide
+      ? {
+        name: '表示する', action: () => {
+          this.cardStack.hideOff();
+        }
+      }: {name : null, enabled: false}
+    ),
+    (this.isGM && !this.isHide
+      ? {
+        name: '非表示にする', action: () => {
+          this.cardStack.hideOn();
+        }
+      }: {name : null, enabled: false}
+    ),
     ], this.name);
   }
 
   onMove() {
-    SoundEffect.play(PresetSound.cardPick);
+    if (!this.isHide) SoundEffect.play(PresetSound.cardPick);
   }
 
   onMoved() {
-    SoundEffect.play(PresetSound.cardPut);
+    if (!this.isHide) SoundEffect.play(PresetSound.cardPut);
     this.ngZone.run(() => this.dispatchCardDropEvent());
   }
 
   private drawCard(): Card {
     let card = this.cardStack.drawCard();
+    if (this.isHide) {
+      card.isHide = this.isHide;
+    }
     if (card) {
       this.cardStack.update(); // todo
       card.location.x += 100 + (Math.random() * 50);

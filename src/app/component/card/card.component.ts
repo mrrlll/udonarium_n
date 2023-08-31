@@ -243,7 +243,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.hasOwner && !this.isHand) return;
       this.state = this.isVisible && !this.isHand ? CardState.BACK : CardState.FRONT;
       this.owners = [];
-      SoundEffect.play(PresetSound.cardDraw);
+      if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
     }
   }
 
@@ -275,12 +275,12 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
         ? {
           name: '☑ 固定', action: () => {
             this.isLocked = false;
-            SoundEffect.play(PresetSound.unlock);
+            if (!this.isHide) SoundEffect.play(PresetSound.unlock);
           }
         } : {
           name: '☐ 固定', action: () => {
             this.isLocked = true;
-            SoundEffect.play(PresetSound.lock);
+            if (!this.isHide) SoundEffect.play(PresetSound.lock);
           }
         }),
       ContextMenuSeparator,
@@ -288,13 +288,13 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
         ? {
           name: '表にする', action: () => {
             this.card.faceUp();
-            SoundEffect.play(PresetSound.cardDraw);
+            if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
           },
         }
         : {
           name: '裏にする', action: () => {
             this.card.faceDown();
-            SoundEffect.play(PresetSound.cardDraw);
+            if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
           },
         }
       ),
@@ -302,12 +302,12 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
         ? {
           name: '見るのをやめる', action: () => {
             this.owners = this.owners.filter(owner => owner !== Network.peerContext.userId);
-            SoundEffect.play(PresetSound.cardDraw);
+            if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
           }
         }
         : {
           name: '自分だけで見る', action: () => {
-            SoundEffect.play(PresetSound.cardDraw);
+            if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
             this.card.faceDown();
             this.owners = [Network.peerContext.userId];
           }
@@ -315,7 +315,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
       (!this.isHand && this.hasOwner
         ? {
           name: '自分も見る', action: () => {
-            SoundEffect.play(PresetSound.cardDraw);
+            if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
             let newOwners = this.owners.concat(Network.peerContext.userId);
             this.card.faceDown();
             this.owners = newOwners;
@@ -326,7 +326,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
       (this.isHand && this.card.owners.length >= 2
         ? {
           name: 'やっぱり自分だけで見る', action: () => {
-            SoundEffect.play(PresetSound.cardDraw);
+            if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
             this.card.faceDown();
             this.owners = [Network.peerContext.userId];
           }
@@ -336,7 +336,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
       {
         name: '重なったカードで山札を作る', action: () => {
           this.createStack();
-          SoundEffect.play(PresetSound.cardPut);
+          if (!this.isHide) SoundEffect.play(PresetSound.cardPut);
         }
       },
 
@@ -349,13 +349,13 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
           cloneObject.location.y += this.gridSize;
           cloneObject.toTopmost();
           cloneObject.isLocked = false;
-          SoundEffect.play(PresetSound.cardPut);
+          if (!this.isHide) SoundEffect.play(PresetSound.cardPut);
         }
       },
       {
         name: '削除する', action: () => {
           this.card.destroy();
-          SoundEffect.play(PresetSound.sweep);
+          if (!this.isHide) SoundEffect.play(PresetSound.sweep);
         }
       },
       ContextMenuSeparator,
@@ -389,11 +389,11 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onMove() {
     this.input.cancel();
-    SoundEffect.play(PresetSound.cardPick);
+    if (!this.isHide) SoundEffect.play(PresetSound.cardPick);
   }
 
   onMoved() {
-    SoundEffect.play(PresetSound.cardPut);
+    if (!this.isHide) SoundEffect.play(PresetSound.cardPut);
     this.ngZone.run(() => this.dispatchCardDropEvent());
   }
 
@@ -450,23 +450,23 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   vertical() {
     if (!this.card.isVisible || this.card.rotate == 0) return; 
     this.card.rotate = 0;
-    SoundEffect.play(PresetSound.cardPut);
+    if (!this.isHide) SoundEffect.play(PresetSound.cardPut);
   }
 
   horizontal() {
     if (!this.card.isVisible || this.card.rotate == 90) return; 
     this.card.rotate = 90;
-    SoundEffect.play(PresetSound.cardPut);
+    if (!this.isHide) SoundEffect.play(PresetSound.cardPut);
   }
 
   turnRight() {
     this.card.rotate += 45;
-    SoundEffect.play(PresetSound.cardPut);
+    if (!this.isHide) SoundEffect.play(PresetSound.cardPut);
   }
 
   turnLeft() {
     this.card.rotate -= 45;
-    SoundEffect.play(PresetSound.cardPut);
+    if (!this.isHide) SoundEffect.play(PresetSound.cardPut);
   }
 
   private showDetail(gameObject: Card) {
