@@ -328,7 +328,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
     setTimeout(() => {
       this.panelService.open(PeerMenuComponent, { width: 500, height: 550, left: 100 });
-      this.panelService.open(CardsListWindowComponent, { width: 500, height: 550, left: 100 });
       //this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 100, top: 450 });
       this.panelService.open(TimerMenuComponent, { width: 180, height: 90, left: 1500, top: 10, className: 'timer-menu-panel' });
     }, 0);
@@ -411,8 +410,12 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         component = GameObjectInventoryComponent;
         break;
       case 'GamePanelSettingComponent':
-        component = GamePanelSettingComponent ;
+        component = GamePanelSettingComponent;
         option = { width: 600, height: 440, left: 100 };
+        break;
+      case 'CardsListWindowComponent':
+        component = CardsListWindowComponent;
+        option = { width: 500, height: 550, left: 100 };
         break;
       // タイマーメニュー(特殊処理)
       case 'TimerMenuComponent':
@@ -471,7 +474,13 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         action: () => {
           this.open("game-character-generate")
         }
-      }])
+      },
+      { name: `カード一覧(WIP) *GMのみ`,
+        action: () => {
+          if(this.isGM) this.open("CardsListWindowComponent")
+        }
+      },
+    ])
   }
 
   handleFileSelect(event: Event) {
