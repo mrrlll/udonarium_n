@@ -161,4 +161,16 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
   deleteImageElement() {
     if( this.gameDataElement.parent.children[0] != this.gameDataElement)    this.gameDataElement.destroy();
   };
+
+  get isCommonValue(): boolean {
+    if (this.gameDataElement) {
+      return this.isTagLocked && (this.gameDataElement.name === 'size'
+        || this.gameDataElement.name === 'width'
+        || this.gameDataElement.name === 'height'
+        || this.gameDataElement.name === 'depth'
+        || this.gameDataElement.name === 'fontsize'
+        || this.gameDataElement.name === 'altitude');
+    }
+    return false;
+  }
 };
