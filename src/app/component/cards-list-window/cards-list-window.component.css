@@ -9,3 +9,16 @@
 .small-font {
   font-size: 12px;
 }
+
+.backimage {
+  width: 100px;
+}
+
+.frontimage {
+  width: 100px;
+}
+
+/* class="card-image backimage"とclass="card-image frontimage"とclass="card-ishide"を横並びに */
+.card-image {
+  display: inline-block;
+}
