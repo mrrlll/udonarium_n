@@ -87,6 +87,7 @@ import { GamePanelStoreComponent } from './component/game-panel-store/game-panel
 import { UnsplashsearchComponent } from 'component/unsplashsearch/unsplashsearch.component';
 import { UnsplashService } from 'service/unsplash.service';
 import { GameCharacterGenerateWindowComponent } from './component/game-character-generate-window/game-character-generate-window.component';
+import { CardsListWindowComponent } from './component/cards-list-window/cards-list-window.component';
 
 @NgModule({
   declarations: [
@@ -157,6 +158,7 @@ import { GameCharacterGenerateWindowComponent } from './component/game-character
     GamePanelStoreComponent,
     UnsplashsearchComponent,
     GameCharacterGenerateWindowComponent,
+    CardsListWindowComponent,
   ],
   imports: [
     BrowserModule,

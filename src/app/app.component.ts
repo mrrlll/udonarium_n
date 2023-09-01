@@ -28,6 +28,7 @@ import { CutInListComponent } from 'component/cut-in-list/cut-in-list.component'
 import { TimerBot } from '@udonarium/timer-bot';
 import { SeBox } from '@udonarium/SeBox';
 
+import { CardsListWindowComponent } from 'component/cards-list-window/cards-list-window.component';
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
 import { FileStorageComponent } from 'component/file-storage/file-storage.component';
@@ -327,6 +328,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
     setTimeout(() => {
       this.panelService.open(PeerMenuComponent, { width: 500, height: 550, left: 100 });
+      this.panelService.open(CardsListWindowComponent, { width: 500, height: 550, left: 100 });
       //this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 100, top: 450 });
       this.panelService.open(TimerMenuComponent, { width: 180, height: 90, left: 1500, top: 10, className: 'timer-menu-panel' });
     }, 0);

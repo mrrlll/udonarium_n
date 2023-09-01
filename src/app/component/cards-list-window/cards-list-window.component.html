@@ -1,0 +1,17 @@
+<div class="cards-list-window">
+  <div *ngIf="getCards().length < 1">盤面にカードがありません</div>
+  <div *ngFor="let card of getCards(); trackBy: trackByCard">
+    <div class="card" [ngClass]="{ 'selected': selectedIdentifier === card.identifier }">
+      <div class="card-name">{{card.name}}</div>
+      <div class="card-tags-box">
+        <div class="table-cell image-box">
+          <img class="card-image backimage" *ngIf="card.backImage.url" [src]="card.backImage.url | safe: 'resourceUrl'" />
+          <img class="card-image frontimage" *ngIf="card.frontImage.url" [src]="card.frontImage.url | safe: 'resourceUrl'" />
+          <!-- {{card.isHide} ? '非表示' : '表示'} -->
+          <div class="card-ishide">
+            <input type="checkbox" [(ngModel)]="card.isHide" (onClick)="toggleChangeIsHide(card)" />
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

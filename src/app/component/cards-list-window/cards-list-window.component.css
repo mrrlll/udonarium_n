@@ -1,0 +1,11 @@
+:host {
+  display: block;
+}
+
+.large-font {
+  font-size: 64px;
+}
+
+.small-font {
+  font-size: 12px;
+}
