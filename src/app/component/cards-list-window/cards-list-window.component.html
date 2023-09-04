@@ -1,8 +1,8 @@
 <div class="cards-list-window">
   <div class="header" style="display: flex;">
     <input type="text" [(ngModel)]="searchText" (ngModelChange)="updateFilteredCards()" placeholder="カードを検索" />
-    <input type="checkbox" [(ngModel)]="isHideOnlyShow" (change)="toggleHideOnlyShow()" />非表示のカードのみ
-    <button (click)="test()">テスト</button>
+    <input type="checkbox" [(ngModel)]="isHideOnlyShow" (click)="toggleHideOnlyShow()" />非表示のカードのみ
+    <!-- <button (click)="test()">テスト</button> -->
   </div>
   <hr>
   <div class="cards" *ngFor="let card of cards; trackBy: trackByCard">
@@ -12,9 +12,9 @@
         <div class="table-cell image-box" style="display: flex;">
           <img class="card-image backimage" *ngIf="card.backImage?.url" [src]="card.backImage?.url | safe: 'resourceUrl'" />
           <img class="card-image frontimage" *ngIf="card.frontImage?.url" [src]="card.frontImage?.url | safe: 'resourceUrl'" />
-          <div class="card-ishide">
-            ■GMにのみ表示<input type="checkbox" [(ngModel)]="card.isHide" (onClick)="toggleChangeIsHide(card)" />
-          </div>
+        </div>
+        <div class="card-ishide">
+          <input type="checkbox" [(ngModel)]="card.isHide" (onClick)="toggleChangeIsHide(card)" />■非表示にする(GMには表示されます)<br>
         </div>
         <hr>
       </div>

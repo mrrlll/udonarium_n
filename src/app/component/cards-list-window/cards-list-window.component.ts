@@ -47,19 +47,11 @@ export class CardsListWindowComponent implements OnInit{
     }
 
     toggleChangeIsHide(card: Card) {
-      if (card.isHide){
-        card.isHide = false;
-      } else if (!card.isHide){
-        card.isHide = true;
-      }
+      card.isHide = !card.isHide;
     }
 
     toggleHideOnlyShow() {
-      if (this.isHideOnlyShow){
-        this.isHideOnlyShow = false;
-      } else if (!this.isHideOnlyShow){
-        this.isHideOnlyShow = true;
-      }
+      this.isHideOnlyShow = !this.isHideOnlyShow;
       this.updateFilteredCards();
     }
 
