@@ -1,16 +1,23 @@
 <div class="cards-list-window">
-  <div *ngIf="getCards().length < 1">盤面にカードがありません</div>
-  <div *ngFor="let card of getCards(); trackBy: trackByCard">
-    <div class="card" [ngClass]="{ 'selected': selectedIdentifier === card.identifier }">
-      <div class="card-name">{{card.name}}</div>
+  <div class="header" style="display: flex;">
+    <input type="text" [(ngModel)]="searchText" (ngModelChange)="updateFilteredCards()" placeholder="カードを検索" />
+    <input type="checkbox" [(ngModel)]="isHideOnlyShow" (change)="toggleHideOnlyShow()" />非表示のカードのみ
+    <button (click)="test()">テスト</button>
+  </div>
+  <hr>
+  <div class="cards" *ngFor="let card of cards; trackBy: trackByCard">
+    <div *ngIf="card" class="card" [ngClass]="{ 'selected': selectedIdentifier === card.identifier }">
+      <div class="card-name" style="font-weight: bold;">{{card.name}}</div>
       <div class="card-tags-box">
         <div class="table-cell image-box" style="display: flex;">
-          <img class="card-image backimage" *ngIf="card.backImage.url" [src]="card.backImage.url | safe: 'resourceUrl'" />
-          <img class="card-image frontimage" *ngIf="card.frontImage.url" [src]="card.frontImage.url | safe: 'resourceUrl'" />
+          <img class="card-image backimage" *ngIf="card.backImage?.url" [src]="card.backImage?.url | safe: 'resourceUrl'" />
+          <img class="card-image frontimage" *ngIf="card.frontImage?.url" [src]="card.frontImage?.url | safe: 'resourceUrl'" />
           <div class="card-ishide">
             ■GMにのみ表示<input type="checkbox" [(ngModel)]="card.isHide" (onClick)="toggleChangeIsHide(card)" />
           </div>
         </div>
+        <hr>
       </div>
     </div>
+  </div>
 </div>

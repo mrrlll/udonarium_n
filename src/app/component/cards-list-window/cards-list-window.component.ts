@@ -1,9 +1,8 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { EventSystem, Network } from '@udonarium/core/system';
-import { GameObject } from '@udonarium/core/synchronize-object/game-object';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { PanelOption, PanelService } from 'service/panel.service';
-import { ContextMenuAction, ContextMenuService, ContextMenuSeparator } from 'service/context-menu.service';
+import { PanelService } from 'service/panel.service';
+import { ContextMenuService } from 'service/context-menu.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { Card } from '@udonarium/card';
 
@@ -13,10 +12,14 @@ import { Card } from '@udonarium/card';
   templateUrl: './cards-list-window.component.html',
   styleUrls: ['./cards-list-window.component.css']
 })
-export class CardsListWindowComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CardsListWindowComponent implements OnInit{
+
+  searchText: string = '';
+  cards: Card[] = [];
+  isHideOnlyShow: boolean = false;
+
 
   constructor(
-    private changeDetector: ChangeDetectorRef,
     private panelService: PanelService,
     private contextMenuService: ContextMenuService,
     private pointerDeviceService: PointerDeviceService
@@ -24,24 +27,22 @@ export class CardsListWindowComponent implements OnInit, AfterViewInit, OnDestro
 
     ngOnInit(): void {
       Promise.resolve().then(() => this.panelService.title = 'カードリスト');
-      // EventSystem.register(this)
+      this.updateFilteredCards();
+      EventSystem.register(this)
+      .on('DELETE_GAME_OBJECT', event => {
+        this.updateFilteredCards();
+      })
+      .on('UPDATE_GAME_OBJECT', event => {
+        this.updateFilteredCards();
+      });
     }
 
-    ngAfterViewInit() {
-
+    private getCards(): Card[] {
+      this.cards = ObjectStore.instance.getObjects(Card);
+      return this.cards;
     }
 
-    ngOnDestroy() {
-      // EventSystem.unregister(this);
-    }
-
-    getCards(): Card[] {
-      let cards: Card[] = [];
-      cards = ObjectStore.instance.getObjects(Card);
-      return cards;
-    }
-
-    trackByCard(index: number, card: Card) {
+    trackByCard(index: number, card: Card){
       return card ? card.identifier : index;
     }
 
@@ -51,5 +52,36 @@ export class CardsListWindowComponent implements OnInit, AfterViewInit, OnDestro
       } else if (!card.isHide){
         card.isHide = true;
       }
+    }
+
+    toggleHideOnlyShow() {
+      if (this.isHideOnlyShow){
+        this.isHideOnlyShow = false;
+      } else if (!this.isHideOnlyShow){
+        this.isHideOnlyShow = true;
+      }
+      this.updateFilteredCards();
+    }
+
+    updateFilteredCards() {
+      // ルームに存在するカードを取得
+      this.cards = this.getCards();
+
+      // 検索ワードが空の場合は全てのカードを表示
+      if (!this.searchText) {
+        // 非表示のカードのみ表示する場合の絞り込み
+        if (this.isHideOnlyShow) this.cards = this.cards.filter(card => card.isHide);
+      } else {
+        // 非表示のカードのみ表示する場合の絞り込み
+        if (this.isHideOnlyShow) this.cards = this.cards.filter(card => card.isHide);
+
+        // 検索ワードが入力されている場合は検索ワードにマッチするカードのみ表示
+        this.cards = this.cards.filter(card => card.name.indexOf(this.searchText) !== -1);
+      }
+    }
+
+    test() {
+      this.cards = this.getCards();
+      if(this.cards) console.log(this.cards);
     }
 }
