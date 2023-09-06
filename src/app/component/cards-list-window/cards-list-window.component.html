@@ -1,23 +1,28 @@
 <div class="cards-list-window">
   <div class="header" style="display: flex;">
     <input type="text" [(ngModel)]="searchText" (ngModelChange)="updateFilteredCards()" placeholder="カードを検索" />
-    <input type="checkbox" [(ngModel)]="isHideOnlyShow" (click)="toggleHideOnlyShow()" />非表示のカードのみ
+    <input type="checkbox" id="HideOnlyShow" [(ngModel)]="isHideOnlyShow" (click)="toggleHideOnlyShow()" />
+    <label for="HideOnlyShow">非表示のカードのみ</label>
     <!-- <button (click)="test()">テスト</button> -->
   </div>
   <hr>
-  <div class="cards" *ngFor="let card of cards; trackBy: trackByCard">
+  <ng-container class="cards" *ngFor="let card of cards; trackBy: trackByCard">
     <div *ngIf="card" class="card" [ngClass]="{ 'selected': selectedIdentifier === card.identifier }">
-      <div class="card-name" style="font-weight: bold;">{{card.name}}</div>
+      <ng-container class="card-name" style="font-weight: bold;">
+        <span>{{card.name}}</span>
+      </ng-container>
       <div class="card-tags-box">
-        <div class="table-cell image-box" style="display: flex;">
+        <ng-container class="table-cell image-box" style="display: flex;">
           <img class="card-image backimage" *ngIf="card.backImage?.url" [src]="card.backImage?.url | safe: 'resourceUrl'" />
           <img class="card-image frontimage" *ngIf="card.frontImage?.url" [src]="card.frontImage?.url | safe: 'resourceUrl'" />
-        </div>
+        </ng-container>
         <div class="card-ishide">
-          <input type="checkbox" [(ngModel)]="card.isHide" (onClick)="toggleChangeIsHide(card)" />■非表示にする(GMには表示されます)<br>
+          <input type="checkbox" id="Hide" [(ngModel)]="card.isHide" (click)="toggleChangeIsHide(card)" />
+          <label for="Hide">■非表示にする(GMには表示されます)</label>
+          <br>
         </div>
         <hr>
       </div>
     </div>
-  </div>
+  </ng-container>
 </div>
