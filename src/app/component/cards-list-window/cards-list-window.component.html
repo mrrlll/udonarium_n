@@ -7,9 +7,9 @@
   <hr>
   <ng-container class="cards" *ngFor="let card of cards; trackBy: trackByCard">
     <div *ngIf="card" class="card" [ngClass]="{ 'selected': selectedIdentifier === card.identifier }">
-      <ng-container class="card-name" style="font-weight: bold;">
+      <ng-container class="card-name" style="font-weight: bold; display: flex;">
         <button (click)="showDetail(card)">編集画面</button>
-        <span>{{card.name}}</span>
+        <span style="padding-left: 2%; font-weight: bold;">{{card.name}}</span>
       </ng-container>
       <div class="card-tags-box">
         <ng-container class="table-cell image-box" style="display: flex;">
@@ -18,7 +18,7 @@
         </ng-container>
         <div class="card-ishide">
           <input type="checkbox" id="Hide" [(ngModel)]="card.isHide" (click)="toggleChangeIsHide(card)" />
-          <label for="Hide">■非表示にする(GMには表示されます)</label>
+          <label for="Hide">非表示にする(GMには表示されます)</label>
           <br>
         </div>
         <hr>

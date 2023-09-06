@@ -415,7 +415,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
       case 'CardsListWindowComponent':
         component = CardsListWindowComponent;
-        option = { width: 500, height: 550, left: 100 };
+        option = { width: 380, height: 550, left: 100 };
         break;
       // タイマーメニュー(特殊処理)
       case 'TimerMenuComponent':
