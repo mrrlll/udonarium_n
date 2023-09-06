@@ -45,3 +45,5 @@ src/assets/config.yaml
 .vscode
 
 .angular
+
+after.sh
