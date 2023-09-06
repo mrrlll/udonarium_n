@@ -3,12 +3,12 @@
     <input type="text" [(ngModel)]="searchText" (ngModelChange)="updateFilteredCards()" placeholder="カードを検索" />
     <input type="checkbox" id="HideOnlyShow" [(ngModel)]="isHideOnlyShow" (click)="toggleHideOnlyShow()" />
     <label for="HideOnlyShow">非表示のカードのみ</label>
-    <!-- <button (click)="test()">テスト</button> -->
   </div>
   <hr>
   <ng-container class="cards" *ngFor="let card of cards; trackBy: trackByCard">
     <div *ngIf="card" class="card" [ngClass]="{ 'selected': selectedIdentifier === card.identifier }">
       <ng-container class="card-name" style="font-weight: bold;">
+        <button (click)="showDetail(card)">編集画面</button>
         <span>{{card.name}}</span>
       </ng-container>
       <div class="card-tags-box">

@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { PanelService } from 'service/panel.service';
+import { PanelService, PanelOption } from 'service/panel.service';
 import { ContextMenuService } from 'service/context-menu.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { Card } from '@udonarium/card';
+import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 
 
 @Component({
@@ -70,6 +71,18 @@ export class CardsListWindowComponent implements OnInit{
         // 検索ワードが入力されている場合は検索ワードにマッチするカードのみ表示
         this.cards = this.cards.filter(card => card.name.indexOf(this.searchText) !== -1);
       }
+    }
+
+    showDetail(gameObject: Card) {
+      let coordinate = {
+        x: this.panelService.left,
+        y: this.panelService.top
+      };
+      let title = 'カード設定';
+      if (gameObject.name.length) title += ' - ' + gameObject.name;
+      let option: PanelOption = { title: title, left: coordinate.x + 10, top: coordinate.y + 20, width: 600, height: 600 };
+      let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
+      component.tabletopObject = gameObject;
     }
 
     test() {
