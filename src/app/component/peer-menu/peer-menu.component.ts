@@ -166,6 +166,11 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
       .on('OPEN_NETWORK', event => {
         this.ngZone.run(() => { });
       });
+
+      // 自動GMモード　テストの時用に使用
+      // setTimeout(() => {
+      //   this.autoGMMode();
+      // }, 1000);
   }
 
   ngOnDestroy() {
@@ -205,6 +210,13 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     if (context.isRoom) return;
     ObjectStore.instance.clearDeleteHistory();
     Network.connect(context.peerId);
+  }
+
+  autoGMMode() {
+    if (this.networkService.peerContexts.length === 0) {
+      this.isViewer = true;
+      this.output();
+    }
   }
 
   showLobby() {
