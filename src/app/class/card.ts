@@ -24,6 +24,7 @@ export class Card extends TabletopObject {
   get isVisibleOnTable(): boolean { return this.location.name === 'table' && (!this.parentIsAssigned || this.parentIsDestroyed); }
 
   get name(): string { return this.getCommonValue('name', ''); }
+  set name(name: string) { this.setCommonValue('name', name); }
   get size(): number { return this.getCommonValue('size', 2); }
   set size(size: number) { this.setCommonValue('size', size); }
   get frontImage(): ImageFile { return this.getImageFile('front'); }

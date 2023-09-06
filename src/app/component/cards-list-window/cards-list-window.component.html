@@ -9,7 +9,8 @@
     <div *ngIf="card" class="card" [ngClass]="{ 'selected': selectedIdentifier === card.identifier }">
       <ng-container class="card-name" style="font-weight: bold; display: flex;">
         <button (click)="showDetail(card)">編集画面</button>
-        <span style="padding-left: 2%; font-weight: bold;">{{card.name}}</span>
+        <!-- <span style="padding-left: 2%; font-weight: bold;">{{card.name}}</span> -->
+        <input type="text" [(ngModel)]="card.name">
       </ng-container>
       <div class="card-tags-box">
         <ng-container class="table-cell image-box" style="display: flex;">
