@@ -168,9 +168,11 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
       });
 
       // 自動GMモード　テストの時用に使用
-      setTimeout(() => {
-        this.autoGMMode();
-      }, 1000);
+      if(location.href.match(/localhost/) || location.href.match(/192.168/)) {
+        setTimeout(() => {
+          this.autoGMMode();
+        }, 1000);
+      }
   }
 
   ngOnDestroy() {

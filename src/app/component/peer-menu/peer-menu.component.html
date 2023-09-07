@@ -1,5 +1,4 @@
 <div *ngIf="myPeer">
-  <button (click)="changeIcon()">プレイヤーアイコン変更</button>
   <div style="display: flex; align-items: flex-end;">
     <div *ngIf="myPeer.image" class="image cover" [style.background-image]="'url(' + myPeer.image.url + ')' | safe: 'style' "
       (click)="changeIcon()" style="cursor: pointer">
@@ -16,10 +15,10 @@
     </div>
   </div>
   <hr/>
-  <span>あなたのニックネーム：<input [(ngModel)]="myPeer.name"  placeholder="ニックネーム" /></span>
+  <span>ニックネーム：<input [(ngModel)]="myPeer.name"  placeholder="ニックネーム" /></span>
 </div>
 <div>
-  <span>あなたのID：<input id="userId" [(ngModel)]="networkService.peerContext.userId" *ngIf="networkService.isOpen" readonly />
+  <span>ID：<input id="userId" [(ngModel)]="networkService.peerContext.userId" *ngIf="networkService.isOpen" readonly />
     <span *ngIf="!networkService.isOpen" style="font-weight: bold;">???</span>
     <button *ngIf="networkService.isOpen" (click)="getUrl()" id="geturlbtn">接続URL取得</button>
   </span>
