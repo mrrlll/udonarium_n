@@ -119,9 +119,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   showtoast: boolean = true;
 
-  // 一個前のチャット
-  beforeChat: ChatMessage = null;
-
   get menuHeight(): number {
     if (this.isGM) return MENU_LENGTH * 50 + 85;
     return this.roomSetting.getMenuHeight();
@@ -310,25 +307,32 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       })
       .on('MESSAGE_ADDED', event => {
         let message = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
-        this.beforeChat = message;
 
         if (message.timestamp < Date.now() - 3000) return;
         if (!this.showtoast) return;
         if (message.isSecret) return;
-        if (message.isSendFromSelf) return;
-        if (message.isSystem) return;
 
         if (message.from === "System-BCDice") {
-          let name = message.name;
-          let text = message.text;
-          let toastText = name + '\n' + text;
-          if(text.includes("失敗")) {
-            this.toastService.showError(toastText, 'ダイスロール　失敗！')
-          } else if (message.text.includes("成功")){
-            this.toastService.showSuccess(toastText, 'ダイスロール　成功！');
-          } else {
-            this.toastService.showSuccess(toastText, 'ダイスロール！');
+          let name: string = message.name;
+          let text: string = message.text;
+          const index: number = name.indexOf(":");
+          if (index !== -1) {
+            name = name.slice(index+1);
           }
+
+          text = text.replace(/\r?\n/g, '<hr>');
+
+          if(text.includes("失敗")) {
+            this.toastService.showError(text, name);
+            return;
+          }
+          if (message.text.includes("成功")){
+            this.toastService.showSuccess(text, name);
+            return;
+          }
+
+          this.toastService.showSuccess(text, name);
+          return;
         }
       });
 
@@ -360,7 +364,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           this.modalLayerViewContainerRef;
 
     setTimeout(() => {
-      this.panelService.open(PeerMenuComponent, { width: 500, height: 550, left: 100 });
+      this.panelService.open(PeerMenuComponent, { width: 450, height: 550, left: 100 });
       //this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 100, top: 450 });
       this.panelService.open(TimerMenuComponent, { width: 180, height: 90, left: 1500, top: 10, className: 'timer-menu-panel' });
     }, 0);
@@ -508,10 +512,13 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           this.open("game-character-generate")
         }
       },
-      { name: `カード一覧(WIP) *GMのみ`,
+      this.isGM
+      ? { name: `カード一覧`,
         action: () => {
           if(this.isGM) this.open("CardsListWindowComponent")
         }
+      }: {
+        name: null, enabled: false
       },
       this.showtoast
       ? {
