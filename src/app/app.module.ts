@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { ToastrModule } from 'ngx-toastr';
 import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BadgeComponent } from 'component/badge/badge.component';
@@ -171,6 +172,14 @@ import { CardsListWindowComponent } from './component/cards-list-window/cards-li
     PdfViewerModule,
     HttpClientModule,
     HttpClientJsonpModule,
+    ToastrModule.forRoot({
+      closeButton: true,
+      enableHtml: true,
+      newestOnTop: true,
+      progressBar: true,
+      progressAnimation: 'decreasing',
+      positionClass: 'toast-bottom-right',
+    }),
   ],
   providers: [
     AppConfigService,

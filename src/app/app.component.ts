@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, NgZone, OnDestroy, ViewChild, OnInit, ViewContainerRef, Input } from '@angular/core';
 import { NgSelectConfig } from '@ng-select/ng-select';
+import { ChatMessage } from '@udonarium/chat-message';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { Config } from '@udonarium/config';
 import { AudioPlayer } from '@udonarium/core/file-storage/audio-player';
@@ -68,6 +69,8 @@ import { ImageTag } from '@udonarium/image-tag';
 import * as localForage from 'localforage';
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 
+import { ToastService } from 'service/toast.service';
+
 const MENU_LENGTH: number = 12;
 
 
@@ -100,6 +103,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   private openPanelCount: number = 0;
   isSaveing: boolean = false;
   progresPercent: number = 0;
+  networkService = Network;
 
   static imageUrl = '';
   get imageUrl(): string {
@@ -112,6 +116,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   obs: Observable<boolean>;
   subs: Subscription;
   isGM: boolean = false;
+
+  showtoast: boolean = true;
+
+  // 一個前のチャット
+  beforeChat: ChatMessage = null;
 
   get menuHeight(): number {
     if (this.isGM) return MENU_LENGTH * 50 + 85;
@@ -130,7 +139,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private saveDataService: SaveDataService,
     private ngSelectConfig: NgSelectConfig,
     private ngZone: NgZone,
-    private appCustomService: AppConfigCustomService
+    private appCustomService: AppConfigCustomService,
+    private toastService: ToastService,
   ) {
 
     this.ngZone.runOutsideAngular(() => {
@@ -297,6 +307,29 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       })
       .on('DISCONNECT_PEER', event => {
         this.lazyNgZoneUpdate(event.isSendFromSelf);
+      })
+      .on('MESSAGE_ADDED', event => {
+        let message = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
+        this.beforeChat = message;
+
+        if (message.timestamp < Date.now() - 3000) return;
+        if (!this.showtoast) return;
+        if (message.isSecret) return;
+        if (message.isSendFromSelf) return;
+        if (message.isSystem) return;
+
+        if (message.from === "System-BCDice") {
+          let name = message.name;
+          let text = message.text;
+          let toastText = name + '\n' + text;
+          if(text.includes("失敗")) {
+            this.toastService.showError(toastText, 'ダイスロール　失敗！')
+          } else if (message.text.includes("成功")){
+            this.toastService.showSuccess(toastText, 'ダイスロール　成功！');
+          } else {
+            this.toastService.showSuccess(toastText, 'ダイスロール！');
+          }
+        }
       });
 
     // GMフラグ管理
@@ -478,6 +511,18 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       { name: `カード一覧(WIP) *GMのみ`,
         action: () => {
           if(this.isGM) this.open("CardsListWindowComponent")
+        }
+      },
+      this.showtoast
+      ? {
+        name: `トースト通知をオフにする`,
+        action: () => {
+          this.showtoast = false;
+        }
+      } : {
+        name: `トースト通知をオンにする`,
+        action: () => {
+          this.showtoast = true;
         }
       },
     ])
