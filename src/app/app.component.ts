@@ -71,7 +71,7 @@ import { animate, keyframes, style, transition, trigger } from '@angular/animati
 
 import { ToastService } from 'service/toast.service';
 
-const MENU_LENGTH: number = 12;
+const MENU_LENGTH: number = 13;
 
 
 @Component({
@@ -120,7 +120,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   showtoast: boolean = true;
 
   get menuHeight(): number {
-    if (this.isGM) return MENU_LENGTH * 50 + 85;
+    if (this.isGM) return MENU_LENGTH * 50 + 130;
     return this.roomSetting.getMenuHeight();
   }
 
@@ -499,7 +499,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     }, 500);
   }
 
-  utilitymenu(event: Event){
+  utilityMenu(event: Event){
     const button = <HTMLElement>event.target;
     const clientRect = button.getBoundingClientRect();
     const position = {
@@ -520,19 +520,31 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       }: {
         name: null, enabled: false
       },
-      this.showtoast
-      ? {
-        name: `トースト通知をオフにする`,
-        action: () => {
-          this.showtoast = false;
-        }
-      } : {
-        name: `トースト通知をオンにする`,
-        action: () => {
-          this.showtoast = true;
-        }
-      },
     ])
+  }
+
+  personalSettings(event : Event) {
+    const button = <HTMLElement>event.target;
+    const clientRect = button.getBoundingClientRect();
+    const position = {
+      x: window.pageXOffset + clientRect.left + (this.isHorizontal ? 0 : button.clientWidth * 0.9),
+      y: window.pageYOffset + clientRect.top + (this.isHorizontal ? button.clientHeight * 0.9 : 0)
+    };
+    this.contextMenuService.open(position, [
+      this.showtoast
+        ? {
+          name: `トースト通知をオフにする`,
+          action: () => {
+            this.showtoast = false;
+          }
+        } : {
+          name: `トースト通知をオンにする`,
+          action: () => {
+            this.showtoast = true;
+          }
+        },
+      ]
+    )
   }
 
   handleFileSelect(event: Event) {
