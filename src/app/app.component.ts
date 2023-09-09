@@ -120,7 +120,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   showtoast: boolean = true;
 
   get menuHeight(): number {
-    if (this.isGM) return MENU_LENGTH * 50 + 130;
+    if (this.isGM) return MENU_LENGTH * 50 + 85;
     return this.roomSetting.getMenuHeight();
   }
 
