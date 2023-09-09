@@ -221,3 +221,16 @@ body {
   margin-left: 1px;
   vertical-align: text-bottom;
 }
+
+.toast-title {
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.toast-message {
+  font-size: 12px;
+}
+
+.toast-container .ngx-toastr {
+  width: 400px;
+}
