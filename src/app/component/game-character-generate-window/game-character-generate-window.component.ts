@@ -34,7 +34,7 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
 
   charadata: any = null;
 
-  supportSystem: string[] = ["tiw"];
+  supportSystem: string[] = ["tiw", "skynauts2"];
 
 
   ngOnInit() {
@@ -65,11 +65,12 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       this.urlerror = true;
       return;
     }
+
     // 生成に対応しているシステムかチェック
-    if (this.supportSystem.some(item => item !== system)){
+    if (!this.supportSystem.includes(system)) {
       this.supporterror = true;
       return;
-    };
+    }
 
     this.generateService.get(URL).subscribe( (entry) => {
       this.charadata = entry;
@@ -93,8 +94,174 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       case "tiw":
         this.appspot_kemono(charadata, download_flg);
         break;
+      case "skynauts2":
+        this.appspot_skynauts2(charadata, download_flg);
     }
   }
+
+  appspot_skynauts2(charadata, download_flg){
+    let skynauts2sheet = null;
+    skynauts2sheet = {
+      "character": {
+        "data": {
+          "data": [
+            {
+              "data": {
+                "#text": "testCharacter_4_image",
+                "@_type": "image",
+                "@_name": "imageIdentifier"
+              },
+              "@_name": "image"
+            },
+            {
+              "data": [
+                {
+                    "#text": "名前",
+                    "@_name": "name"
+                },
+                {
+                    "#text": 2,
+                    "@_name": "size"
+                }
+              ],
+              "@_name": "common"
+            },
+            {
+              "data": [
+                {
+                  "data": [
+                    {
+                      "#text": 20,
+                      "@_type": "numberResource",
+                      "@_currentValue": "10",
+                      "@_name": "生命点"
+                    },
+                    {
+                      "#text": 1,
+                      "@_type": "numberResource",
+                      "@_currentValue": "0",
+                      "@_name": "PC1"
+                    },
+                    {
+                      "#text": 1,
+                      "@_type": "numberResource",
+                      "@_currentValue": "0",
+                      "@_name": "PC2"
+                    },
+                    {
+                      "#text": 1,
+                      "@_type": "numberResource",
+                      "@_currentValue": "0",
+                      "@_name": "PC3"
+                    },
+                    {
+                      "#text": 1,
+                      "@_type": "numberResource",
+                      "@_currentValue": "0",
+                      "@_name": "PC4"
+                    },
+                  ],
+                  "@_name": "リソース"
+                },
+                {
+                  "data": [
+                    {
+                      "#text": "",
+                      "@_name": "移動力"
+                    },
+                    {
+                      "#text": "－",
+                      "@_name": "技術"
+                    },
+                    {
+                      "#text": "－",
+                      "@_name": "感覚"
+                    },
+                    {
+                      "#text": "－",
+                      "@_name": "教養"
+                    },
+                    {
+                      "#text": "－",
+                      "@_name": "身体"
+                    },
+                  ],
+                  "@_name": "能力値"
+                },
+                {
+                  "data": [
+
+                  ],
+                  "@_name": "スキル"
+                },
+                {
+                  "data": [
+                    {
+                      "#text": "性別・年齢・設定など",
+                      "@_name": "キャラクター設定",
+                      "@_type": "note",
+                    },
+                  ],
+                  "@_name": "キャラクター情報"
+                },
+                {
+                  "data": [
+                    {
+                      "#text": "",
+                      "@_name": "ICON",
+                      "@_type": "numberResource",
+                      "@_currentValue": "0"
+                    },
+                  ],
+                  "@_name": "コマ画像"
+                },
+              ],
+              "@_name": "detail"
+            }
+          ],
+          "@_name": "character"
+        },
+        "chat-palette": {
+          "#text": "1d12\nKC\nKA{移動}  判定:移動\nKA{格闘}  判定:格闘\nKA{射撃}  判定:射撃\nKA{製作}  判定:製作\nKA{察知}  判定:察知\nKA{自制}  判定:自制\n1d12+{移動}  先制値決定:移動\n1d12+{察知}  先制値決定:察知\n1d12+{自制}  先制値決定:自制\nKA10-{負傷}  復帰判定\nFT 大失敗表",
+          "@_dicebot": "KemonoNoMori"
+        },
+        "@_location.name": "table"
+      }
+    };
+
+    let name = charadata.base.name;
+    let ability = {
+      "body": null,
+      "culture": null,
+      "sense": null,
+      "technic": null,
+    };
+
+    const abilityTypes = ["body", "culture", "sense", "technic"];
+    for (const type of abilityTypes) {
+      const value = charadata.ability[type].value;
+      switch (value) {
+        case "good":
+          ability[type] = "○";
+          break;
+        case "week":
+          ability[type] = "×";
+          break;
+        default:
+          ability[type] = "－";
+          break;
+      }
+    }
+
+    skynauts2sheet.character.data.data[1].data[0]["#text"] = name;
+
+    let summary = `<?xml version="1.0" encoding="UTF-8"?>
+    <summary-setting sortTag="name" sortOrder="ASC" dataTag="移動力　生命点　探空士スキル 技術　感覚　教養　身体　PC1　PC2　PC3　PC4　キズナ４"></summary-setting>
+    `
+
+    this.generateKoma(name, skynauts2sheet, summary, download_flg);
+  }
+
   appspot_kemono(charadata, download_flg){
     let kemonosheet = null;
     kemonosheet = {
@@ -480,7 +647,10 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
     let summary = `<?xml version="1.0" encoding="UTF-8"?>
     <summary-setting sortTag="name" sortOrder="ASC" dataTag="開始条件　展開 耐久度　余裕　食事　水分　予算　威力　軽減値 特性①　特性② 　特殊効果　異形　獸憑き　状態異常 　移動　格闘　射撃　製作　察知　自制　 貌力　装備 武器　防具　小道具　持ち物 ICON"></summary-setting>
     `
+    this.generateKoma(handlename, kemonosheet, summary, download_flg);
+  };
 
+  generateKoma(name, sheetdata, summary, download_flg){
     const xb = new XMLBuilder({
       ignoreAttributes: false,
       textNodeName: "#text",
@@ -489,7 +659,7 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       cdataPropName: "__cdata",
     });
 
-    const xmlContent = xb.build(kemonosheet);
+    const xmlContent = xb.build(sheetdata);
     // console.log(xmlContent)
 
     switch(download_flg){
@@ -501,15 +671,15 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
         break;
       case true:
         const zip = new JSZip();
-        zip.file(`${handlename}.xml`, xmlContent);
+        zip.file(`${name}.xml`, xmlContent);
         zip.file('summary.xml', summary);
         zip.generateAsync({ type: 'blob' }).then((blob) => {
           const downloadLink = document.createElement('a');
           downloadLink.href = URL.createObjectURL(blob);
-          downloadLink.download = `${handlename}.zip`;
+          downloadLink.download = `${name}.zip`;
           downloadLink.click();
         });
         break;
     };
-  };
+  }
 }
