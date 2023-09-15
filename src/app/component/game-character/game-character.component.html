@@ -1,4 +1,4 @@
-<div *ngIf="!isHide" class="component is-3d is-grab is-pointer-events-none" [style.width.px]="size * gridSize"
+<div *ngIf="!isStealth" class="component is-3d is-grab is-pointer-events-none" [style.width.px]="size * gridSize"
   [style.height.px]="size * gridSize" appMovable [movable.option]="movableOption" (movable.ondragstart)="onMove()"
   (movable.ondragend)="onMoved()">
   <div class="component-content is-3d" [@bounceInOut]="'in'">
@@ -39,7 +39,7 @@
   </div>
 </div>
 
-<div *ngIf="isHide && isGM" class="component is-3d is-grab is-pointer-events-none" [style.width.px]="size * gridSize"
+<div *ngIf="isStealth && isGM" class="component is-3d is-grab is-pointer-events-none" [style.width.px]="size * gridSize"
   [style.height.px]="size * gridSize" appMovable [movable.option]="movableOption" (movable.ondragstart)="onMove()"
   (movable.ondragend)="onMoved()">
   <div class="component-content is-3d" [@bounceInOut]="'in'">
@@ -64,7 +64,7 @@
                 <div class="has-length-limit">{{name}}</div>
               </div>
             </ng-container>
-            <img class="image chrome-smooth-image-trick isHide" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'">
+            <img class="image chrome-smooth-image-trick isStealth" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'">
             <div class="rotate-grab rotate-grab-icon of-top"
               [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
               <i class="material-icons">autorenew</i>

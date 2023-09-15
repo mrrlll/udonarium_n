@@ -67,8 +67,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   set roll(roll: number) { this.gameCharacter.roll = roll; }
   get isAltitudeIndicate(): boolean { return this.gameCharacter.isAltitudeIndicate; }
   set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameCharacter.isAltitudeIndicate = isAltitudeIndicate; }
-  get isHide(): boolean { return this.gameCharacter.isHide; }
-  set isHide(isHide: boolean) { this.gameCharacter.isHide = isHide; }
+  get isStealth(): boolean { return this.gameCharacter.isStealth; }
+  set isStealth(isStealth: boolean) { this.gameCharacter.isStealth = this.isStealth; }
 
 
   gridSize: number = 50;
@@ -170,16 +170,16 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
           SoundEffect.play(PresetSound.piecePut);
         }
       },
-      (this.isGM && this.isHide
+      (this.isGM && this.isStealth
         ? {
-          name: '表示する', action: () => {
+          name: 'ステルスモードを無効', action: () => {
             this.gameCharacter.hideOff();
           }
         }: {name : null, enabled: false}
       ),
-      (this.isGM && !this.isHide
+      (this.isGM && !this.isStealth
         ? {
-          name: '非表示にする', action: () => {
+          name: 'ステルスモードを有効', action: () => {
             this.gameCharacter.hideOn();
           }
         }: {name : null, enabled: false}

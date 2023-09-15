@@ -234,13 +234,13 @@
   display: inline;
 }
 
-.isHide {
+.isStealth {
   /* background-color:blue; */
   filter: invert(100%);
   display:inline-block;
 }
 
-.isHide img{
+.isStealth img{
   opacity: 0.5;
   display:block;
 }
