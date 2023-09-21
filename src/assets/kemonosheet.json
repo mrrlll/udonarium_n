@@ -1,0 +1,188 @@
+{
+  "character": {
+    "data": {
+      "data": [
+        {
+          "data": {
+            "#text": "testCharacter_4_image",
+            "@_type": "image",
+            "@_name": "imageIdentifier"
+          },
+          "@_name": "image"
+        },
+        {
+          "data": [
+            {
+                "#text": "仮名",
+                "@_name": "name"
+            },
+            {
+                "#text": 3,
+                "@_name": "size"
+            }
+          ],
+          "@_name": "common"
+        },
+        {
+          "data": [
+            {
+              "data": [
+                {
+                  "#text": 10,
+                  "@_type": "numberResource",
+                  "@_currentValue": "10",
+                  "@_name": "余裕"
+                },
+                {
+                  "#text": 24,
+                  "@_type": "numberResource",
+                  "@_currentValue": "",
+                  "@_name": "食事"
+                },
+                {
+                  "#text": 24,
+                  "@_type": "numberResource",
+                  "@_currentValue": "",
+                  "@_name": "水分"
+                },
+                {
+                  "#text": 2,
+                  "@_type": "",
+                  "@_currentValue": 2,
+                  "@_name": "予算"
+                },
+                {
+                  "#text": "特性名",
+                  "@_name": "特性①",
+                  "@_type": "check"
+                },
+                {
+                  "#text": "特性名",
+                  "@_name": "特性②",
+                  "@_type": "check"
+                },
+                {
+                  "#text": 0,
+                  "@_name": "獸憑き",
+                  "@_type": ""
+                },
+                {
+                  "#text": "",
+                  "@_name": "状態異常"
+                }
+              ],
+              "@_name": "リソース"
+            },
+            {
+              "data": [
+                {
+                  "#text": "本名:\n性別:　年齢:\n仮面:\n貌力:\n雰囲気:\n動機:",
+                  "@_type": "note",
+                  "@_name": "設定"
+                },
+                {
+                  "#text": 3,
+                  "@_name": "貌力の強度",
+                  "@_type": ""
+                },
+                {
+                  "#text": "「」(威力:)(特殊効果:)",
+                  "@_type": "",
+                  "@_name": "武器"
+                },
+                {
+                  "#text": "「」(軽減値:)(特殊効果:)",
+                  "@_name": "防具"
+                },
+                {
+                  "#text": "「」(特殊効果:)",
+                  "@_name": "小道具１"
+                },
+                {
+                  "#text": "「」(特殊効果:)",
+                  "@_name": "小道具２"
+                },
+                {
+                  "#text": "1.\n2.\n3.\n4.\n5.\n6.\n7.\n8.",
+                  "@_name": "持ち物",
+                  "@_type": "note"
+                }
+              ],
+              "@_name": "情報"
+            },
+            {
+              "data": [
+                {
+                  "#text": 7,
+                  "@_name": "移動"
+                },
+                {
+                  "#text": 7,
+                  "@_name": "格闘"
+                },
+                {
+                  "#text": 7,
+                  "@_name": "射撃"
+                },
+                {
+                  "#text": 7,
+                  "@_name": "製作"
+                },
+                {
+                  "#text": 7,
+                  "@_name": "察知"
+                },
+                {
+                  "#text": 7,
+                  "@_name": "自制"
+                }
+              ],
+              "@_name": "能力"
+            },
+            {
+              "data": [
+                {
+                  "#text": 5,
+                  "@_name": "日常",
+                  "@_type": "numberResource",
+                  "@_currentValue": "5"
+                },
+                {
+                  "#text": 5,
+                  "@_name": "日常",
+                  "@_type": "numberResource",
+                  "@_currentValue": "2"
+                },
+                {
+                  "#text": 5,
+                  "@_name": "日常",
+                  "@_type": "numberResource",
+                  "@_currentValue": "5"
+                }
+              ],
+              "@_name": "絆"
+            },
+            {
+              "data": [
+                {
+                  "#text": "",
+                  "@_name": "ICON",
+                  "@_type": "numberResource",
+                  "@_currentValue": "0"
+                }
+              ],
+              "@_name": "コマ画像"
+            }
+            ],
+            "@_name": "detail"
+        }
+      ],
+      "@_name": "character"
+    },
+    "chat-palette": {
+      "#text": "1d12\nKC\nKA{移動}  判定:移動\nKA{格闘}  判定:格闘\nKA{射撃}  判定:射撃\nKA{製作}  判定:製作\nKA{察知}  判定:察知\nKA{自制}  判定:自制\n1d12+{移動}  先制値決定:移動\n1d12+{察知}  先制値決定:察知\n1d12+{自制}  先制値決定:自制\nKA10-{負傷}  復帰判定\nFT 大失敗表",
+      "@_dicebot": "KemonoNoMori"
+    },
+    "@_location.name": "table"
+  }
+}
