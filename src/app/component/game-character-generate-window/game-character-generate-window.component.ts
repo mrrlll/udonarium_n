@@ -267,12 +267,12 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
     let kemonosheet = null;
     this.http.get('assets/kemonosheet.json').subscribe(data => {
       kemonosheet = data;
-      let handlename = charadata.base.handlename;
+      const handlename: string = charadata.base.handlename;
 
       /// 使用する特性を確認 ///
-      let talent = charadata.base.talent
+      const talent: any = charadata.base.talent
       const useTalent = [];
-      let anyChecked = false;
+      let anyChecked: boolean = false;
       for (let i = 1; i <= 6; i++) {
         const nameKey = `name${i}`;
         const useKey = `use${i}`;
@@ -290,12 +290,12 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       /// キャラノート ///
       let character_note: string = "";
       let facepower: string = "";
-      let truename: string = charadata.base.name;
-      let sex: string = charadata.base.sex;
-      let age: string = charadata.base.age;
-      let face: string = charadata.base.face;
-      let atmosphere: string = charadata.base.atmosphere;
-      let motivation: string = charadata.base.motivation;
+      const truename: string = charadata.base.name;
+      const sex: string = charadata.base.sex;
+      const age: string = charadata.base.age;
+      const face: string = charadata.base.face;
+      const atmosphere: string = charadata.base.atmosphere;
+      const motivation: string = charadata.base.motivation;
 
       for (let val of charadata.facepower){
         facepower += `${val.name} `;
