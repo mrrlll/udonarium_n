@@ -43,20 +43,18 @@ export class DiceBot extends GameObject {
         let text: string = StringUtil.toHalfWidth(chatMessage.text).trim();
         let gameType: string = chatMessage.tag;
 
-        // コマンド
-        // "/"からはじまる文字列はコマンドとして処理する
-        if (text.indexOf('/') === 0) {
-          try {
-            let regArray = /^\/(\w+)(\s+(.*))?/ig.exec(text);
-            let command: string = regArray[1];
-            let arg: string = regArray[3];
-            let commandResult = await DiceBot.chatCommandAsync(command, arg, gameType);
-            if (!commandResult.result) return;
-            this.sendChatCommandResultMessage(commandResult, chatMessage);
-          } catch (e) {
-            console.error(e);
+        if (text.startsWith('/')) {
+          const [_, command, arg] = /^\/(\w+)\s*(.*)/i.exec(text) || [];
+          if (command) {
+            try {
+              const commandResult = await DiceBot.chatCommandAsync(command, arg, gameType);
+              if (commandResult.result) {
+                this.sendChatCommandResultMessage(commandResult, chatMessage);
+              }
+            } catch (e) {
+              console.error(e);
+            }
           }
-          return;
         }
 
         try {
