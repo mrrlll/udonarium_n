@@ -46,33 +46,25 @@ export class DiceBot extends GameObject {
         if (text.startsWith('/')) {
           const [_, command, arg] = /^\/(\w+)\s*(.*)/i.exec(text) || [];
           if (command) {
-            try {
-              const commandResult = await DiceBot.chatCommandAsync(command, arg, gameType);
-              if (commandResult.result) {
-                this.sendChatCommandResultMessage(commandResult, chatMessage);
-              }
-            } catch (e) {
-              console.error(e);
+            const commandResult = await DiceBot.chatCommandAsync(command, arg, gameType);
+            if (commandResult.result) {
+              this.sendChatCommandResultMessage(commandResult, chatMessage);
             }
           }
         }
 
-        try {
-          let regArray = /^((\d+)?\s+)?(.*)?/ig.exec(text);
-          let repeat: number = (regArray[2] != null) ? Number(regArray[2]) : 1;
-          let rollText: string = (regArray[3] != null) ? regArray[3] : text;
-          if (!rollText || repeat < 1) return;
-          // 繰り返しコマンドに変換
-          if (repeat > 1) {
-            rollText = `x${repeat} ${rollText}`
-          }
-
-          let rollResult = await DiceBot.diceRollAsync(rollText, gameType);
-          if (!rollResult.result) return;
-          this.sendResultMessage(rollResult, chatMessage);
-        } catch (e) {
-          console.error(e);
+        let regArray = /^((\d+)?\s+)?(.*)?/ig.exec(text);
+        let repeat: number = (regArray[2] != null) ? Number(regArray[2]) : 1;
+        let rollText: string = (regArray[3] != null) ? regArray[3] : text;
+        if (!rollText || repeat < 1) return;
+        // 繰り返しコマンドに変換
+        if (repeat > 1) {
+          rollText = `x${repeat} ${rollText}`
         }
+
+        let rollResult = await DiceBot.diceRollAsync(rollText, gameType);
+        if (!rollResult.result) return;
+        this.sendResultMessage(rollResult, chatMessage);
         return;
       });
   }
@@ -142,12 +134,23 @@ export class DiceBot extends GameObject {
   }
 
   static async chatCommandAsync(command: string, arg: string, gameType: string): Promise<ChatCommandResult> {
-    const empty: ChatCommandResult = { id: gameType, command: command, arg: arg, result: '', isSecret: false };
     switch (command) {
       case 'test':
+        console.log(command)
         return { id: gameType, command: command, arg: arg, result: 'test', isSecret: false };
+      case 'cutin':
+      case 'c':
+      case 'youtube':
+      case 'y':
+        return { id: gameType, command: command, arg: arg, result: null, isSecret: false };
+      case 'help':
+      case 'h':
+        return { id: gameType, command: command, arg: arg, result: null, isSecret: false };
+      case 'table':
+      case 't':
+        return { id: gameType, command: command, arg: arg, result: null, isSecret: false };
       default:
-        break;
+        return { id: gameType, command: command, arg: arg, result: null, isSecret: false };
     }
   }
 
