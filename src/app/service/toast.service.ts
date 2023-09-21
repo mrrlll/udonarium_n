@@ -15,4 +15,12 @@ export class ToastService {
   showError(message: string, title: string) {
     this.toastr.error(message, title, {progressAnimation: 'increasing', closeButton: true});
   }
+
+  showInfo(message: string, title: string) {
+    this.toastr.info(message, title, {progressAnimation: 'increasing', closeButton: true});
+  }
+
+  showWarning(message: string, title: string) {
+    this.toastr.warning(message, title, {progressAnimation: 'increasing', closeButton: true});
+  }
 }

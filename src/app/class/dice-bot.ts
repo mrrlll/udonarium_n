@@ -17,6 +17,14 @@ interface DiceRollResult {
   isSecret: boolean;
 }
 
+interface ChatCommandResult {
+  id: string;
+  arg: string;
+  command: string;
+  result: string;
+  isSecret: boolean;
+}
+
 @SyncObject('dice-bot')
 export class DiceBot extends GameObject {
   private static loader: BCDiceLoader;
@@ -34,6 +42,22 @@ export class DiceBot extends GameObject {
 
         let text: string = StringUtil.toHalfWidth(chatMessage.text).trim();
         let gameType: string = chatMessage.tag;
+
+        // コマンド
+        // "/"からはじまる文字列はコマンドとして処理する
+        if (text.indexOf('/') === 0) {
+          try {
+            let regArray = /^\/(\w+)(\s+(.*))?/ig.exec(text);
+            let command: string = regArray[1];
+            let arg: string = regArray[3];
+            let commandResult = await DiceBot.chatCommandAsync(command, arg, gameType);
+            if (!commandResult.result) return;
+            this.sendChatCommandResultMessage(commandResult, chatMessage);
+          } catch (e) {
+            console.error(e);
+          }
+          return;
+        }
 
         try {
           let regArray = /^((\d+)?\s+)?(.*)?/ig.exec(text);
@@ -89,6 +113,46 @@ export class DiceBot extends GameObject {
     let chatTab = ObjectStore.instance.get<ChatTab>(originalMessage.tabIdentifier);
     if (chatTab) chatTab.addMessage(diceBotMessage);
   }
+
+  private sendChatCommandResultMessage(chatCommandResult: ChatCommandResult, originalMessage: ChatMessage) {
+    let id: string = chatCommandResult.id;
+    let result: string = chatCommandResult.result;
+    let isSecret: boolean = chatCommandResult.isSecret;
+
+    if (result.length < 1) return;
+
+    let diceBotMessage: ChatMessageContext = {
+      identifier: '',
+      tabIdentifier: originalMessage.tabIdentifier,
+      originFrom: originalMessage.from,
+      from: 'ChatCommand',
+      timestamp: originalMessage.timestamp + 1,
+      imageIdentifier: '',
+      tag: `system chatCommand`,
+      name: `ChatCommand : ${originalMessage.name}${isSecret ? ' (Secret)' : ''}`,
+      text: result
+    };
+
+    if (originalMessage.to != null && 0 < originalMessage.to.length) {
+      diceBotMessage.to = originalMessage.to;
+      if (originalMessage.to.indexOf(originalMessage.from) < 0) {
+        diceBotMessage.to += ' ' + originalMessage.from;
+      }
+    }
+    let chatTab = ObjectStore.instance.get<ChatTab>(originalMessage.tabIdentifier);
+    if (chatTab) chatTab.addMessage(diceBotMessage);
+  }
+
+  static async chatCommandAsync(command: string, arg: string, gameType: string): Promise<ChatCommandResult> {
+    const empty: ChatCommandResult = { id: gameType, command: command, arg: arg, result: '', isSecret: false };
+    switch (command) {
+      case 'test':
+        return { id: gameType, command: command, arg: arg, result: 'test', isSecret: false };
+      default:
+        break;
+    }
+  }
+
 
   static async diceRollAsync(message: string, gameType: string): Promise<DiceRollResult> {
     const empty: DiceRollResult = { id: gameType, result: '', isSecret: false };
