@@ -44,7 +44,7 @@ export class TimerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     EventSystem.unregister(this);
   }
 
-  openTimerModal = (e) => {
+  openTimerModal = (e: Event) => {
     this.clickedAnime(e);
     EventSystem.call('TIMER_STOP', null);
     this.modalService.open<number>(TimerModalComponent).then((value) => {
@@ -56,12 +56,12 @@ export class TimerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   };
 
-  startTime = (e) => {
+  startTime = (e: Event) => {
     this.clickedAnime(e);
     this.timerBot.startTime();
   };
 
-  stopTime = (e) => {
+  stopTime = (e: Event) => {
     this.clickedAnime(e);
     EventSystem.call('TIMER_STOP', null);
   };

@@ -1,5 +1,5 @@
 <div>
-  <!-- <div class="area">
+  <div class="area">
     <span class="area-title">簡易設定</span>
     <div class="timer-quick-button-area">
       <div class="quick-button" (click)="setTime(300)">
@@ -26,10 +26,18 @@
         <label>30<span>分</span></label>
         <i class="material-icons">access_alarm</i>
       </div>
+      <div class="quick-button" (click)="addTime(60)">
+        <label>+1<span>分</span></label>
+        <i class="material-icons">access_alarm</i>
+      </div>
+      <div class="quick-button" (click)="addTime(300)">
+        <label>+5<span>分</span></label>
+        <i class="material-icons">access_alarm</i>
+      </div>
     </div>
-  </div> -->
-  <!-- <div class="area mt"> -->
-  <!-- <span class="area-title">詳細設定</span> -->
+  </div>
+  <div class="area mt">
+  <span class="area-title">詳細設定</span>
   <div class="timer-input">
     <div class="input-div-wrap">
       <div class="input-div-timer-time">
