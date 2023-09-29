@@ -46,6 +46,6 @@ src/assets/config.yaml
 
 .angular
 
-after.sh
+build.sh
 
 bun.lockb
