@@ -20,7 +20,7 @@
     "@angular/platform-browser": "^16.2.8",
     "@angular/platform-browser-dynamic": "^16.2.8",
     "@angular/router": "^16.2.8",
-    "@angular/youtube-player": "^16.1.6",
+    "@angular/youtube-player": "^16.2.7",
     "@ng-select/ng-select": "^11.1.1",
     "autolinker": "^4.0.0",
     "axios": "^1.3.4",
