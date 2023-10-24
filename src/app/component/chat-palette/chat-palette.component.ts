@@ -3,6 +3,7 @@ import { ChatPalette } from '@udonarium/chat-palette';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { DiceBot } from '@udonarium/dice-bot';
 import { GameCharacter } from '@udonarium/game-character';
 import { PeerCursor } from '@udonarium/peer-cursor';
@@ -40,6 +41,8 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
 
   isEdit: boolean = false;
   editPalette: string = '';
+
+  filterText: string = '';
 
   private doubleClickTimer: NodeJS.Timer = null;
 
@@ -123,5 +126,11 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     } else {
       this.palette.setPalette(this.editPalette);
     }
+  }
+
+  filter(value: string): boolean {
+    console.log(this.filterText)
+    if (this.filterText == null || this.filterText.trim() == '') return true;
+    return StringUtil.toHalfWidth(value.replace(/[―ー—‐]/g, '-')).replace(/[\r\n\s]+/, ' ').trim().indexOf(StringUtil.toHalfWidth(this.filterText.replace(/[―ー—‐]/g, '-')).replace(/[\r\n\s]+/, ' ').trim()) >= 0;
   }
 }

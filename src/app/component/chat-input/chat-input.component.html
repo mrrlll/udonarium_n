@@ -29,7 +29,7 @@
     <div>
       <form>
         <textarea class="chat-input" placeholder="Enterで送信  Shift+Enterで改行" [(ngModel)]="text"
-          [ngModelOptions]="{standalone: true}" (input)="onInput()" (keydown.enter)="sendChat($event)"
+          [ngModelOptions]="{standalone: true}" (input)="onInput()" (keydown.enter)="sendChat($event)" (focus)="isFilterTextUpdate = true" (blur)="isFilterTextUpdate = false"
           #textArea></textarea>
         <button type="submit" (click)="sendChat(null)">SEND</button>
       </form>
