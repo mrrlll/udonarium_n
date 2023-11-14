@@ -1,0 +1,127 @@
+{
+  "character": {
+    "data": {
+      "data": [
+        {
+          "data": {
+            "#text": "testCharacter_4_image",
+            "@_type": "image",
+            "@_name": "imageIdentifier"
+          },
+          "@_name": "image"
+        },
+        {
+          "data": [
+            {
+                "#text": "名前",
+                "@_name": "name"
+            },
+            {
+                "#text": 2,
+                "@_name": "size"
+            }
+          ],
+          "@_name": "common"
+        },
+        {
+          "data": [
+            {
+              "data": [
+                {
+                  "#text": 20,
+                  "@_type": "numberResource",
+                  "@_currentValue": "10",
+                  "@_name": "生命点"
+                },
+                {
+                  "#text": "仲間のキャラクター名",
+                  "@_type": "check",
+                  "@_name": "キズナ①"
+                }
+              ],
+              "@_name": "リソース"
+            },
+            {
+              "data": [
+                {
+                  "#text": "",
+                  "@_name": "移動力"
+                },
+                {
+                  "#text": "－",
+                  "@_name": "技術"
+                },
+                {
+                  "#text": "－",
+                  "@_name": "感覚"
+                },
+                {
+                  "#text": "－",
+                  "@_name": "教養"
+                },
+                {
+                  "#text": "－",
+                  "@_name": "身体"
+                }
+              ],
+              "@_name": "能力値"
+            },
+            {
+              "data": [
+                {
+                    "@_type": "check",
+                    "@_name": "フナ酔い"
+                },
+                {
+                  "@_type": "check",
+                  "@_name": "風邪"
+                },
+                {
+                  "@_type": "check",
+                  "@_name": "二日酔い"
+                },
+                {
+                  "@_type": "check",
+                  "@_name": "ケガ"
+                },
+                {
+                  "@_type": "check",
+                  "@_name": "フィーバー"
+                }
+              ],
+              "@_name": "デバフ"
+            },
+            {
+              "data": [
+                {
+                  "#text": "性別・年齢・設定など",
+                  "@_name": "キャラクター設定",
+                  "@_type": "note"
+                }
+              ],
+              "@_name": "キャラクター情報"
+            },
+            {
+              "data": [
+                {
+                  "#text": "",
+                  "@_name": "ICON",
+                  "@_type": "numberResource",
+                  "@_currentValue": "0"
+                }
+              ],
+              "@_name": "コマ画像"
+            }
+          ],
+          "@_name": "detail"
+        }
+      ],
+      "@_name": "character"
+    },
+    "chat-palette": {
+      "#text": "",
+      "@_dicebot": "SkynautsBouken"
+    },
+    "@_location.name": "table"
+  }
+}

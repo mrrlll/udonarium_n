@@ -11,6 +11,8 @@ import { ModalService } from 'service/modal.service';
 
 import { XMLParser, XMLBuilder } from 'fast-xml-parser';
 import { HttpClient } from '@angular/common/http';
+import { checkPrime } from 'crypto';
+import { availableParallelism } from 'os';
 
 @Component({
   selector: 'app-game-character-generate-window',
@@ -102,165 +104,109 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
 
   appspot_skynauts2(charadata, download_flg){
     let skynauts2sheet = null;
-    skynauts2sheet = {
-      "character": {
-        "data": {
-          "data": [
-            {
-              "data": {
-                "#text": "testCharacter_4_image",
-                "@_type": "image",
-                "@_name": "imageIdentifier"
-              },
-              "@_name": "image"
-            },
-            {
-              "data": [
-                {
-                    "#text": "名前",
-                    "@_name": "name"
-                },
-                {
-                    "#text": 2,
-                    "@_name": "size"
-                }
-              ],
-              "@_name": "common"
-            },
-            {
-              "data": [
-                {
-                  "data": [
-                    {
-                      "#text": 20,
-                      "@_type": "numberResource",
-                      "@_currentValue": "10",
-                      "@_name": "生命点"
-                    },
-                    {
-                      "#text": 1,
-                      "@_type": "numberResource",
-                      "@_currentValue": "0",
-                      "@_name": "PC1"
-                    },
-                    {
-                      "#text": 1,
-                      "@_type": "numberResource",
-                      "@_currentValue": "0",
-                      "@_name": "PC2"
-                    },
-                    {
-                      "#text": 1,
-                      "@_type": "numberResource",
-                      "@_currentValue": "0",
-                      "@_name": "PC3"
-                    },
-                    {
-                      "#text": 1,
-                      "@_type": "numberResource",
-                      "@_currentValue": "0",
-                      "@_name": "PC4"
-                    },
-                  ],
-                  "@_name": "リソース"
-                },
-                {
-                  "data": [
-                    {
-                      "#text": "",
-                      "@_name": "移動力"
-                    },
-                    {
-                      "#text": "－",
-                      "@_name": "技術"
-                    },
-                    {
-                      "#text": "－",
-                      "@_name": "感覚"
-                    },
-                    {
-                      "#text": "－",
-                      "@_name": "教養"
-                    },
-                    {
-                      "#text": "－",
-                      "@_name": "身体"
-                    },
-                  ],
-                  "@_name": "能力値"
-                },
-                {
-                  "data": [
+    this.http.get('assets/skynauts2sheet.json').subscribe(data => {
+      skynauts2sheet = data;
 
-                  ],
-                  "@_name": "スキル"
-                },
-                {
-                  "data": [
-                    {
-                      "#text": "性別・年齢・設定など",
-                      "@_name": "キャラクター設定",
-                      "@_type": "note",
-                    },
-                  ],
-                  "@_name": "キャラクター情報"
-                },
-                {
-                  "data": [
-                    {
-                      "#text": "",
-                      "@_name": "ICON",
-                      "@_type": "numberResource",
-                      "@_currentValue": "0"
-                    },
-                  ],
-                  "@_name": "コマ画像"
-                },
-              ],
-              "@_name": "detail"
-            }
-          ],
-          "@_name": "character"
-        },
-        "chat-palette": {
-          "#text": "1d12\nKC\nKA{移動}  判定:移動\nKA{格闘}  判定:格闘\nKA{射撃}  判定:射撃\nKA{製作}  判定:製作\nKA{察知}  判定:察知\nKA{自制}  判定:自制\n1d12+{移動}  先制値決定:移動\n1d12+{察知}  先制値決定:察知\n1d12+{自制}  先制値決定:自制\nKA10-{負傷}  復帰判定\nFT 大失敗表",
-          "@_dicebot": "KemonoNoMori"
-        },
-        "@_location.name": "table"
+      let name = charadata['base']['name'];
+      let move = charadata['base']['move'];
+      let ability = {
+        "body": null,
+        "culture": null,
+        "sense": null,
+        "technic": null,
+      };
+      let relations: String[] = [];
+      let count: number = 1;
+      let countnumber = {
+        "1": "①",
+        "2": "②",
+        "3": "③",
+        "4": "④",
+        "5": "⑤",
+        "6": "⑥",
+        "7": "⑦",
+        "8": "⑧",
+        "9": "⑨",
+        "10": "⑩",
+      };
+
+      for (let relation of charadata['relation']){
+        let name = relation['name'];
+        data = {
+          "#text": name,
+          "@_type": "check",
+          "@_name": `キズナ${countnumber[count]}`
+        }
+        skynauts2sheet['character']['data']['data'][2]['data'][0]['data'].push(data);
+        count++;
+      };
+      // もしcharadata['relation']が0人ならば、キズナ①を追加する
+      if (charadata['relation'].length === 0) {
+        data = {
+          "#text": "仲間のキャラクター名",
+          "@_type": "check",
+          "@_name": `キズナ①`
+        };
+        skynauts2sheet['character']['data']['data'][2]['data'][0]['data'].push(data);
       }
-    };
 
-    let name = charadata.base.name;
-    let ability = {
-      "body": null,
-      "culture": null,
-      "sense": null,
-      "technic": null,
-    };
-
-    const abilityTypes = ["body", "culture", "sense", "technic"];
-    for (const type of abilityTypes) {
-      const value = charadata.ability[type].value;
-      switch (value) {
-        case "good":
-          ability[type] = "○";
-          break;
-        case "week":
-          ability[type] = "×";
-          break;
-        default:
-          ability[type] = "－";
-          break;
+      const abilityTypes = ["body", "culture", "sense", "technic"];
+      for (const type of abilityTypes) {
+        const value = charadata.ability[type].value;
+        switch (value) {
+          case "good":
+            ability[type] = "得意";
+            break;
+          case "week":
+            ability[type] = "苦手";
+            break;
+          default:
+            ability[type] = "－";
+            break;
+        }
       }
+      skynauts2sheet['character']['data']['data'][2]['data'][1]['data'][0]['#text'] = move;
+      skynauts2sheet['character']['data']['data'][2]['data'][1]['data'][1]['#text'] = ability.technic;
+      skynauts2sheet['character']['data']['data'][2]['data'][1]['data'][2]['#text'] = ability.sense;
+      skynauts2sheet['character']['data']['data'][2]['data'][1]['data'][3]['#text'] = ability.culture;
+      skynauts2sheet['character']['data']['data'][2]['data'][1]['data'][4]['#text'] = ability.body;
+      skynauts2sheet.character.data.data[1].data[0]["#text"] = name;
+
+      let chatpalatte: null|String = "";
+      chatpalatte += this.skynautsChatPaletteS(ability.technic, "「技術」判定");
+      chatpalatte += this.skynautsChatPaletteS(ability.sense, "「感覚」判定");
+      chatpalatte += this.skynautsChatPaletteS(ability.culture, "「教養」判定");
+      chatpalatte += this.skynautsChatPaletteS(ability.body, "「身体」判定");
+      chatpalatte += this.skynautsChatPaletteD(ability.technic, ability.culture, "修理判定", "「技術」+「教養」");
+      chatpalatte += this.skynautsChatPaletteD(ability.sense, ability.culture, "操舵判定", "「感覚」+「教養」");
+      chatpalatte += this.skynautsChatPaletteD(ability.body, ability.technic, "白兵判定/侵入判定", "「身体」+「技術」");
+      chatpalatte += this.skynautsChatPaletteD(ability.body, ability.sense, "偵察判定/大揺れ判定", "「身体」+「感覚」");
+      chatpalatte += this.skynautsChatPaletteD(ability.body, ability.culture, "消火判定", "「身体」+「教養」");
+      chatpalatte += this.skynautsChatPaletteD(ability.technic, ability.sense, "砲撃判定", "「技術」+「感覚」");
+      chatpalatte = `${chatpalatte}D/3 ダメージチェック\nNV 航行表\nNEN 航行イベント(航行系)\nNEE 航行イベント(遭遇系)\nNEO 航行イベント(船内系)\nNEH 航行イベント(困難系)\nNEL 航行イベント(長旅系)\nFT ファンブル表\n`;
+      skynauts2sheet['character']['chat-palette']['#text'] = chatpalatte;
+      let summary = `<?xml version="1.0" encoding="UTF-8"?>
+      <summary-setting sortTag="name" sortOrder="ASC" dataTag="移動力　生命点　技術　感覚　教養　身体　キズナ①　キズナ②　キズナ③　キズナ④　キズナ⑤　キズナ⑥　キズナ⑦　キズナ⑧　キズナ⑨　キズナ⑩　デバフ"></summary-setting>
+      `
+
+      this.generateKoma(name, skynauts2sheet, summary, download_flg);
+    });
+  }
+
+  skynautsChatPaletteS(ability, actionDescription) {
+    if (ability === "得意") {
+      return `3SN7#1 ${actionDescription}　[得意]\n`;
+    } else {
+      return `2SN7#1 ${actionDescription}\n`;
     }
+  }
 
-    skynauts2sheet.character.data.data[1].data[0]["#text"] = name;
-
-    let summary = `<?xml version="1.0" encoding="UTF-8"?>
-    <summary-setting sortTag="name" sortOrder="ASC" dataTag="移動力　生命点　探空士スキル 技術　感覚　教養　身体　PC1　PC2　PC3　PC4　キズナ４"></summary-setting>
-    `
-
-    this.generateKoma(name, skynauts2sheet, summary, download_flg);
+  skynautsChatPaletteD(ability1, ability2, actionName, actionDescription) {
+    if (ability1 === "得意" || ability2 === "得意") {
+      return `3SN7#1 ${actionName}　${actionDescription}　[得意]\n`;
+    } else {
+      return `2SN7#1 ${actionName}　${actionDescription}\n`;
+    }
   }
 
   appspot_kemono(charadata, download_flg){

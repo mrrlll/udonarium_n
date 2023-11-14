@@ -17,6 +17,7 @@ export class GenerateService {
     switch (site){
       case "character-sheets.appspot.com":
         URL = `https://${site}/${system}/display?ajax=1&key=${key}`;
+        console.log(URL)
         return this.http.jsonp<any>(URL, 'callback');
     }
   }

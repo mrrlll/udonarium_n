@@ -470,7 +470,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         return;
       case 'game-character-generate':
         component = GameCharacterGenerateWindowComponent;
-        option = { width: 600, height: 180, left: 100, };
+        option = { width: 600, height: 140, left: 100, };
         break;
     }
     if (component) {
