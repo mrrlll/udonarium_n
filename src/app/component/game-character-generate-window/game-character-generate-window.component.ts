@@ -186,7 +186,7 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       chatpalatte = `${chatpalatte}D/3 ダメージチェック\nNV 航行表\nNEN 航行イベント(航行系)\nNEE 航行イベント(遭遇系)\nNEO 航行イベント(船内系)\nNEH 航行イベント(困難系)\nNEL 航行イベント(長旅系)\nFT ファンブル表\n`;
       skynauts2sheet['character']['chat-palette']['#text'] = chatpalatte;
       let summary = `<?xml version="1.0" encoding="UTF-8"?>
-      <summary-setting sortTag="name" sortOrder="ASC" dataTag="移動力　生命点　技術　感覚　教養　身体　キズナ①　キズナ②　キズナ③　キズナ④　キズナ⑤　キズナ⑥　キズナ⑦　キズナ⑧　キズナ⑨　キズナ⑩　デバフ"></summary-setting>
+      <summary-setting sortTag="name" sortOrder="ASC" dataTag="生命点　移動力　技術　感覚　教養　身体　キズナ①　キズナ②　キズナ③　キズナ④　キズナ⑤　キズナ⑥　キズナ⑦　キズナ⑧　キズナ⑨　キズナ⑩　デバフ"></summary-setting>
       `
 
       this.generateKoma(name, skynauts2sheet, summary, download_flg);
@@ -196,14 +196,22 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
   skynautsChatPaletteS(ability, actionDescription) {
     if (ability === "得意") {
       return `3SN7#1 ${actionDescription}　[得意]\n`;
+    } else if(ability === "苦手") {
+      return `2SN7#2 ${actionDescription}　[苦手]\n`;
     } else {
       return `2SN7#1 ${actionDescription}\n`;
     }
   }
 
   skynautsChatPaletteD(ability1, ability2, actionName, actionDescription) {
-    if (ability1 === "得意" || ability2 === "得意") {
-      return `3SN7#1 ${actionName}　${actionDescription}　[得意]\n`;
+    if (ability1 === "得意" && ability2 === "得意") {
+      return `4SN7#1 ${actionName}　${actionDescription}　[得意][得意]\n`;
+    } else if (ability1 === "得意" && ability2 === "苦手") {
+      return `3SN7#2 ${actionName}　${actionDescription}　[得意][苦手]\n`;
+    } else if (ability1 === "苦手" && ability2 === "得意") {
+      return `3SN7#2 ${actionName}　${actionDescription}　[苦手][得意]\n`;
+    } else if (ability1 === "苦手" && ability2 === "苦手") {
+      return `2SN7#3 ${actionName}　${actionDescription}　[苦手][苦手]\n`;
     } else {
       return `2SN7#1 ${actionName}　${actionDescription}\n`;
     }
