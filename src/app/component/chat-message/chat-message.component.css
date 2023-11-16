@@ -69,8 +69,26 @@
 
 .dicebot-message .msg-text {
   /*color:#22F;*/
+  color:#11F;
 }
 
 .direct-message.dicebot-message .msg-text {
-  /*color:#CCF;*/
+  color:#CCF;
+}
+
+.dicebot-message .msg-text.is-success {
+  color:#06f;
+}
+.dicebot-message .msg-text.is-failure {
+  color:#F00;
+}
+.direct-message.dicebot-message .msg-text.is-success {
+  color:#adF;
+}
+.direct-message.dicebot-message .msg-text.is-failure {
+  color:#F66;
+}
+
+.dicebot-message {
+  border-left: 4px transparent;
 }

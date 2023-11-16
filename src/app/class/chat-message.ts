@@ -98,7 +98,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get isFumble(): boolean { return this.isDicebot && -1 < this.tags.indexOf('fumble'); }
   get isGMMode(): boolean{ return PeerCursor.myCursor ? PeerCursor.myCursor.isGMMode : false; }
   get isOperationLog(): boolean { return -1 < this.tags.indexOf('opelog') ? true : false; }
-  
+
   private locale = 'en-US';
 
   logFragment(logForamt: number, tabName: string=null, dateFormat='HH:mm', noImage=true) {
@@ -112,7 +112,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   logFragmentText(tabName: string=null, dateFormat='HH:mm'): string {
     tabName = (!tabName || tabName.trim() == '') ? '' : `[${ tabName }] `;
     const dateStr = (dateFormat == '') ? '' : formatDate(new Date(this.timestamp), dateFormat, this.locale) + '：';
-    const lastUpdateStr = !this.isEdited ? '' : 
+    const lastUpdateStr = !this.isEdited ? '' :
       (dateFormat == '') ? ' (編集済)' : ` (編集済 ${ formatDate(new Date(this.lastUpdate), dateFormat, this.locale) })`;
     let text = StringUtil.rubyToText(this.text);
     if (this.isDicebot) text = text.replace(/###(.+?)###/g, '*$1').replace(/\~\~\~(.+?)\~\~\~/g, '~$1');
@@ -135,7 +135,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
     const tabNameHtml = (!tabName || tabName.trim() == '') ? '' : `<span class="tab-name">${ StringUtil.escapeHtml(tabName) }</span> `;
     const date = new Date(this.timestamp);
     const dateHtml = (dateFormat == '') ? '' : `<time datetime="${ date.toISOString() }">${ StringUtil.escapeHtml(formatDate(date, dateFormat, this.locale)) }</time>：`;
-    const nameHtml = `<span${growClass}${colorStyle}>${StringUtil.escapeHtml(this.name)}</span>` 
+    const nameHtml = `<span${growClass}${colorStyle}>${StringUtil.escapeHtml(this.name)}</span>`
       + (this.toColor ? ` ➡ <span${growClass}${toColorStyle}>${StringUtil.escapeHtml(this.toName)}</span>` : '');
 
     let messageClassNames = ['message'];
@@ -145,21 +145,19 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
     if (this.isOperationLog) messageClassNames.push('operation-log');
 
     let messageTextClassNames = ['msg-text'];
-    if (!this.isSecret || this.isSendFromSelf) {
-      if (this.isSuccess) messageTextClassNames.push('is-success');
-      if (this.isFailure) messageTextClassNames.push('is-failure');
-      if (this.isCritical) messageTextClassNames.push('is-critical');
-      if (this.isFumble) messageTextClassNames.push('is-fumble');
-    }
+    if (this.isSuccess) messageTextClassNames.push('is-success');
+    if (this.isFailure) messageTextClassNames.push('is-failure');
+    if (this.isCritical) messageTextClassNames.push('is-critical');
+    if (this.isFumble) messageTextClassNames.push('is-fumble');
 
-    let textAutoLinkedHtml = (this.isSecret && !this.isSendFromSelf) ? '<s>（シークレットダイス）</s>' 
+    let textAutoLinkedHtml = (this.isSecret && !this.isSendFromSelf) ? '<s>（シークレットダイス）</s>'
       : Autolinker.link(this.isOperationLog ? StringUtil.escapeHtml(this.text) : StringUtil.rubyToHtml(StringUtil.escapeHtml(this.text)), {
-        urls: {schemeMatches: true, tldMatches: false}, 
-        truncate: {length: 96, location: 'end'}, 
-        decodePercentEncoding: false, 
-        stripPrefix: false, 
-        stripTrailingSlash: false, 
-        email: false, 
+        urls: {schemeMatches: true, tldMatches: false},
+        truncate: {length: 96, location: 'end'},
+        decodePercentEncoding: false,
+        stripPrefix: false,
+        stripTrailingSlash: false,
+        email: false,
         phone: false,
         className: 'outer-link',
         replaceFn : function(m) {
@@ -177,7 +175,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
           lastUpdateHtml = `<span class="is-edited"><b>編集済</b> <time datetime="${ lastUpdate.toISOString() }">${ StringUtil.escapeHtml(formatDate(lastUpdate, dateFormat, this.locale)) }</time></span>`;
         }
       }
-      
+
       if (textAutoLinkedHtml.lastIndexOf('\n') == textAutoLinkedHtml.length - 1 && !lastUpdateHtml) {
         // 最終行の調整
         textAutoLinkedHtml += "\n";

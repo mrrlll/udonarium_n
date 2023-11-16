@@ -75,7 +75,7 @@ export class ChatMessageService {
     return Math.floor(this.timeOffset + (performance.now() - this.performanceOffset));
   }
 
-  sendMessage(chatTab: ChatTab, text: string, gameType: string, sendFrom: string, sendTo?: string): ChatMessage {
+  sendMessage(chatTab: ChatTab, text: string, gameType: string, sendFrom: string, sendTo?: string, color? :string): ChatMessage {
     let chatMessage: ChatMessageContext = {
       from: Network.peerContext.userId,
       to: this.findId(sendTo),
@@ -84,6 +84,7 @@ export class ChatMessageService {
       timestamp: this.calcTimeStamp(chatTab),
       tag: gameType,
       text: text,
+      color: color,
     };
 
     return chatTab.addMessage(chatMessage);

@@ -15,6 +15,10 @@ interface DiceRollResult {
   id: string;
   result: string;
   isSecret: boolean;
+  isSuccess?: boolean;
+  isFailure?: boolean;
+  isCritical?: boolean;
+  isFumble?: boolean;
 }
 
 interface ChatCommandResult {
@@ -64,6 +68,7 @@ export class DiceBot extends GameObject {
 
         let rollResult = await DiceBot.diceRollAsync(rollText, gameType);
         if (!rollResult.result) return;
+        console.log(rollResult)
         this.sendResultMessage(rollResult, chatMessage);
         return;
       });
@@ -79,8 +84,18 @@ export class DiceBot extends GameObject {
     let id: string = rollResult.id.split(':')[0];
     let result: string = rollResult.result;
     let isSecret: boolean = rollResult.isSecret;
+    const isSuccess: boolean = rollResult.isSuccess;
+    const isFailure: boolean = rollResult.isFailure;
+    const isCritical: boolean = rollResult.isCritical;
+    const isFumble: boolean = rollResult.isFumble;
 
     if (result.length < 1) return;
+
+    let tag = 'system';
+    if (isSuccess) tag += ' success';
+    if (isFailure) tag += ' failure';
+    if (isCritical) tag += ' critical';
+    if (isFumble) tag += ' fumble';
 
     let diceBotMessage: ChatMessageContext = {
       identifier: '',
@@ -88,10 +103,11 @@ export class DiceBot extends GameObject {
       originFrom: originalMessage.from,
       from: 'System-BCDice',
       timestamp: originalMessage.timestamp + 1,
-      imageIdentifier: '',
-      tag: `system dicebot${isSecret ? ' secret' : ''}`,
+      imageIdentifier: 'dice',
+      tag: `${isSecret ? ' secret ' : ''}${tag}`,
       name: `${id} : ${originalMessage.name}${isSecret ? ' (Secret)' : ''}`,
-      text: result
+      text: `${result}`,
+      color: originalMessage.color,
     };
 
     if (originalMessage.to != null && 0 < originalMessage.to.length) {
@@ -169,6 +185,10 @@ export class DiceBot extends GameObject {
           id: gameSystem.ID,
           result: result.text.replace(/\n?(#\d+)\n/ig, '$1 '), // 繰り返しダイスロールは改行表示を短縮する
           isSecret: result.secret,
+          isSuccess: result.success,
+          isFailure: result.failure,
+          isCritical: result.critical,
+          isFumble: result.fumble
         };
       }
     } catch (e) {

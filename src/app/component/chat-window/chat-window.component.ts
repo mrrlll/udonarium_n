@@ -114,9 +114,16 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     component.selectedTab = this.chatTab;
   }
 
-  sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string }) {
+  sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string, color?: string}) {
     if (this.chatTab) {
-      this.chatMessageService.sendMessage(this.chatTab, value.text, value.gameType, value.sendFrom, value.sendTo);
+      this.chatMessageService.sendMessage(
+        this.chatTab,
+        value.text,
+        value.gameType,
+        value.sendFrom,
+        value.sendTo,
+        value.color,
+        );
     }
   }
 

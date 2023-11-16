@@ -174,6 +174,11 @@ export class TabletopActionService {
     let testFile: ImageFile = null;
     let fileContext: ImageContext = null;
 
+    fileContext = ImageFile.createEmpty('dice').toContext();
+    fileContext.url = './assets/images/dice.gif';
+    testFile = ImageStorage.instance.add(fileContext);
+    ImageTag.create(testFile.identifier).tag = '*default ダイス';
+
     testCharacter = new GameCharacter('testCharacter_1');
     fileContext = ImageFile.createEmpty('testCharacter_1_image').toContext();
     fileContext.url = './assets/images/mon_052.gif';
