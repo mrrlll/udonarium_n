@@ -232,11 +232,13 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
     Array.prototype.push.apply(menuActions, this.tabletopActionService.makeDefaultContextMenuActions(objectPosition));
     menuActions.push(ContextMenuSeparator);
-    menuActions.push({
-      name: 'テーブル設定', action: () => {
-        this.modalService.open(GameTableSettingComponent);
+    menuActions.push(
+      {
+        name: 'テーブル設定', action: () => {
+          this.modalService.open(GameTableSettingComponent);
+        }
       }
-    });
+    );
     this.contextMenuService.open(menuPosition, menuActions, this.currentTable.name);
   }
 

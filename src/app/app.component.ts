@@ -42,6 +42,7 @@ import { ModalComponent } from 'component/modal/modal.component';
 import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
 import { TextViewComponent } from 'component/text-view/text-view.component';
 import { UIPanelComponent } from 'component/ui-panel/ui-panel.component';
+import { GameTableMaskInventoryComponent } from 'component/game-table-mask-inventory/game-table-mask-inventory.component';
 import { AppConfig, AppConfigService } from 'service/app-config.service';
 import { ChatMessageService } from 'service/chat-message.service';
 import { ContextMenuService } from 'service/context-menu.service';
@@ -454,6 +455,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         component = CardsListWindowComponent;
         option = { width: 380, height: 550, left: 100 };
         break;
+      case 'GameTableMaskInventoryComponent':
+        component = GameTableMaskInventoryComponent;
+        option = { width: 450, height: 550, left: 100 };
+        break;
       // タイマーメニュー(特殊処理)
       case 'TimerMenuComponent':
         component = TimerMenuComponent;
@@ -516,6 +521,14 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       ? { name: `カード一覧`,
         action: () => {
           if(this.isGM) this.open("CardsListWindowComponent")
+        }
+      }: {
+        name: null, enabled: false
+      },
+      this.isGM
+      ? { name: `マスクインベントリ(WIP)`,
+        action: () => {
+          if(this.isGM) this.open("GameTableMaskInventoryComponent")
         }
       }: {
         name: null, enabled: false

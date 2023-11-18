@@ -216,13 +216,6 @@ export class GameCharacter extends TabletopObject {
   get isHideIn(): boolean { return !!this.owner; }
   get isVisible(): boolean { return !this.owner || Network.peerContext.userId === this.owner; }
 
-  static get isStealthMode(): boolean {
-    for (const character of ObjectStore.instance.getObjects(GameCharacter)) {
-      if (character.isHideIn && character.isVisible && character.location.name === 'table') return true;
-    }
-    return false;
-  }
-
   createTestGameDataElement(name: string, size: number, imageIdentifier: string) {
     this.createDataElements();
 

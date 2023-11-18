@@ -6,14 +6,21 @@ import { TabletopObject } from './tabletop-object';
 export class GameTableMask extends TabletopObject {
   @SyncVar() isLock: boolean = false;
   @SyncVar() maskborder: boolean = true;
+  @SyncVar() isHide: boolean = false;
+  @SyncVar() gameTableId: string = '';
 
   get name(): string { return this.getCommonValue('name', ''); }
+  set name(name: string) { this.setCommonValue('name', name); }
   get width(): number { return this.getCommonValue('width', 1); }
   get height(): number { return this.getCommonValue('height', 1); }
   get opacity(): number {
     let element = this.getElement('opacity', this.commonDataElement);
     let num = element ? <number>element.currentValue / <number>element.value : 1;
     return Number.isNaN(num) ? 1 : num;
+  }
+
+  toInventory(gameTableMask: GameTableMask){
+    gameTableMask.isHide = !gameTableMask.isHide;
   }
 
   static create(name: string, width: number, height: number, opacity: number, identifier?: string): GameTableMask {

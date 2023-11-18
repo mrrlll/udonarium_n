@@ -24,6 +24,9 @@ import { CoordinateService } from 'service/coordinate.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopActionService } from 'service/tabletop-action.service';
+import { TabletopService } from 'service/tabletop.service';
+import { TableSelecter } from '@udonarium/table-selecter';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'game-table-mask',
@@ -35,6 +38,11 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
   @Input() gameTableMask: GameTableMask = null;
   @Input() is3D: boolean = false;
 
+  // GMフラグ
+  obs: Observable<boolean>;
+  subs: Subscription;
+  isGM: boolean;
+
   get name(): string { return this.gameTableMask.name; }
   get width(): number { return this.adjustMinBounds(this.gameTableMask.width); }
   get height(): number { return this.adjustMinBounds(this.gameTableMask.height); }
@@ -44,8 +52,13 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
   set isLock(isLock: boolean) { this.gameTableMask.isLock = isLock; }
   get maskborder(): boolean { return this.gameTableMask.maskborder; }
   set maskborder(maskborder: boolean) { this.gameTableMask.maskborder = maskborder; }
+  get isHide(): boolean { return this.gameTableMask.isHide; }
+  set isHide(isHide: boolean) { this.gameTableMask.isHide = isHide; }
+  get gameTableId(): string { return this.gameTableMask.gameTableId; }
+  get tableMasks(): GameTableMask[] { return this.tabletopService.tableMasks; }
 
   gridSize: number = 50;
+  masks: GameTableMask[] = [];
 
   movableOption: MovableOption = {};
 
@@ -59,6 +72,7 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
     private pointerDeviceService: PointerDeviceService,
+    private tabletopService: TabletopService,
     private coordinateService: CoordinateService,
   ) { }
 
@@ -154,9 +168,16 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
           cloneObject.location.x += this.gridSize;
           cloneObject.location.y += this.gridSize;
           cloneObject.isLock = false;
+          cloneObject.gameTableId = TableSelecter.instance.viewTable.identifier;
           if (this.gameTableMask.parent) this.gameTableMask.parent.appendChild(cloneObject);
           SoundEffect.play(PresetSound.cardPut);
         }
+      },
+      {
+        name: 'インベントリにしまう', action: () => {
+          this.gameTableMask.toInventory(this.gameTableMask);
+          SoundEffect.play(PresetSound.sweep);
+        },
       },
       {
         name: '削除する', action: () => {
@@ -175,6 +196,14 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
 
   onMoved() {
     SoundEffect.play(PresetSound.cardPut);
+  }
+
+  addTable() {
+    let tableMasks: GameTableMask[] = this.tabletopService.tableMasks;
+    // masksの中からgameTableIdが無いものに現在のテーブルのidentifierを代入
+    tableMasks.forEach(mask => {
+      mask.gameTableId = TableSelecter.instance.viewTable.identifier;
+    });
   }
 
   private adjustMinBounds(value: number, min: number = 0): number {

@@ -17,6 +17,7 @@ import { ContextMenuAction } from './context-menu.service';
 import { PointerCoordinate } from './pointer-device.service';
 
 import { ImageTag } from '@udonarium/image-tag';
+import { table } from 'console';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,7 @@ export class TabletopActionService {
     tableMask.location.x = position.x - 25;
     tableMask.location.y = position.y - 25;
     tableMask.posZ = position.z;
+    tableMask.gameTableId = viewTable.identifier;
 
     viewTable.appendChild(tableMask);
     return tableMask;

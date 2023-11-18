@@ -1,0 +1,32 @@
+<div class="flex-container">
+  <div class="sticky-container">
+    <div style="display: flex; flex-direction: column;">
+      <select style="width: 10em;" size="10" [(ngModel)]="selectedTable" (change)="selectGameTable($event.target.value)">
+        <option *ngFor="let gameTable of getGameTables()" [value]="gameTable.identifier">{{gameTable.name}}</option>
+      </select>
+      <input type="button" (click)="viewAll()" value="すべて表示">
+    </div>
+  </div>
+  <div class="flex-item">
+    <ng-container class="masks" *ngFor="let mask of masks; trackBy: trackByMask">
+      <div *ngIf="mask" class="mask" [ngClass]="{ 'selected': selectedIdentifier === mask.identifier }">
+        <ng-container class="mask-name" style="font-weight: bold; display: flex;">
+          <button (click)="showDetail(mask)">編集画面</button>
+          <input type="text" [(ngModel)]="mask.name">
+        </ng-container>
+        <div class="mask-tags-box">
+          <ng-container class="table-cell image-box" style="display: flex;">
+            <img class="mask-image" *ngIf="mask.imageFile?.url" [src]="mask.imageFile?.url | safe: 'resourceUrl'" />
+          </ng-container>
+          <div class="mask-ishide">
+            <input *ngIf="mask.isHide" type="button" id="Hide" (click)="toggleChangeIsHide(mask)" value="出す">
+            <input *ngIf="!mask.isHide" type="button" id="Hide" (click)="toggleChangeIsHide(mask)" value="しまう">
+            <br>
+          </div>
+          <hr>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
