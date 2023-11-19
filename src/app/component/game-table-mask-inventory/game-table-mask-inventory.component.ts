@@ -32,9 +32,9 @@ export class GameTableMaskInventoryComponent implements OnInit, OnDestroy, After
     .on('DELETE_GAME_OBJECT', event => {
       this.updateFilteredMasks(this.selectedTable);
     })
-    .on('UPDATE_GAME_OBJECT', event => {
-      this.updateFilteredMasks(this.selectedTable);
-    });
+    // .on('UPDATE_GAME_OBJECT', event => {
+    //   this.updateFilteredMasks(this.selectedTable);
+    // });
   }
 
   ngAfterViewInit() { }
@@ -66,6 +66,7 @@ export class GameTableMaskInventoryComponent implements OnInit, OnDestroy, After
 
   toggleChangeIsHide(mask: GameTableMask) {
     mask.isHide = !mask.isHide;
+    this.updateFilteredMasks(this.selectedTable);
   }
 
   toggleHideOnlyShow() {
@@ -101,10 +102,4 @@ export class GameTableMaskInventoryComponent implements OnInit, OnDestroy, After
   viewAll() {
     this.updateFilteredMasks();
   }
-
-
-  test(mask: GameTableMask) {
-    console.log(mask.gameTableId);
-  }
-
 }

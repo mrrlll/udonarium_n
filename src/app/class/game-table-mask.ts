@@ -7,7 +7,6 @@ export class GameTableMask extends TabletopObject {
   @SyncVar() isLock: boolean = false;
   @SyncVar() maskborder: boolean = true;
   @SyncVar() isHide: boolean = false;
-  @SyncVar() gameTableId: string = '';
 
   get name(): string { return this.getCommonValue('name', ''); }
   set name(name: string) { this.setCommonValue('name', name); }

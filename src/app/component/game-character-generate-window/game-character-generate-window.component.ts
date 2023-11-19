@@ -109,6 +109,7 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
 
       let name = charadata['base']['name'];
       let move = charadata['base']['move'];
+      let hp = charadata['hitpoint']['max'];
       let ability = {
         "body": null,
         "culture": null,
@@ -130,24 +131,25 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
         "10": "⑩",
       };
 
-      for (let relation of charadata['relation']){
-        let name = relation['name'];
-        data = {
-          "#text": name,
-          "@_type": "check",
-          "@_name": `キズナ${countnumber[count]}`
-        }
-        skynauts2sheet['character']['data']['data'][2]['data'][0]['data'].push(data);
-        count++;
-      };
-      // もしcharadata['relation']が0人ならば、キズナ①を追加する
-      if (charadata['relation'].length === 0) {
+      // もしcharadata['relation']の１つ目のnameがnullならば、キズナ①を追加
+      if (charadata['relation'][0]['name'] === null) {
         data = {
           "#text": "仲間のキャラクター名",
           "@_type": "check",
           "@_name": `キズナ①`
         };
         skynauts2sheet['character']['data']['data'][2]['data'][0]['data'].push(data);
+      } else {
+        for (let relation of charadata['relation']){
+          let name = relation['name'];
+          data = {
+            "#text": name,
+            "@_type": "check",
+            "@_name": `キズナ${countnumber[count]}`
+          }
+          skynauts2sheet['character']['data']['data'][2]['data'][0]['data'].push(data);
+          count++;
+        };
       }
 
       const abilityTypes = ["body", "culture", "sense", "technic"];
@@ -166,6 +168,7 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
         }
       }
       skynauts2sheet['character']['data']['data'][2]['data'][1]['data'][0]['#text'] = move;
+      skynauts2sheet['character']['data']['data'][2]['data'][0]['data'][0]['@_currentValue'] = hp;
       skynauts2sheet['character']['data']['data'][2]['data'][1]['data'][1]['#text'] = ability.technic;
       skynauts2sheet['character']['data']['data'][2]['data'][1]['data'][2]['#text'] = ability.sense;
       skynauts2sheet['character']['data']['data'][2]['data'][1]['data'][3]['#text'] = ability.culture;
@@ -194,27 +197,38 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
   }
 
   skynautsChatPaletteS(ability, actionDescription) {
-    if (ability === "得意") {
-      return `3SN7#1 ${actionDescription}　[得意]\n`;
-    } else if(ability === "苦手") {
-      return `2SN7#2 ${actionDescription}　[苦手]\n`;
-    } else {
-      return `2SN7#1 ${actionDescription}\n`;
-    }
+    let ability_good: boolean = false;
+    let ability_bad: boolean = false;
+    let dice: number = 2;
+    let fumble: number = 1;
+
+    // abilityに得意があるかどうかを判定
+    if (ability === "得意") dice++;
+    if (ability === "苦手") fumble++;
+
+    return `${dice}SN7#${fumble} ${actionDescription}${ability_good ? "　[得意]" : ""}${ability_bad ? "　[苦手]" : ""}\n`;
   }
 
   skynautsChatPaletteD(ability1, ability2, actionName, actionDescription) {
-    if (ability1 === "得意" && ability2 === "得意") {
-      return `4SN7#1 ${actionName}　${actionDescription}　[得意][得意]\n`;
-    } else if (ability1 === "得意" && ability2 === "苦手") {
-      return `3SN7#2 ${actionName}　${actionDescription}　[得意][苦手]\n`;
-    } else if (ability1 === "苦手" && ability2 === "得意") {
-      return `3SN7#2 ${actionName}　${actionDescription}　[苦手][得意]\n`;
-    } else if (ability1 === "苦手" && ability2 === "苦手") {
-      return `2SN7#3 ${actionName}　${actionDescription}　[苦手][苦手]\n`;
-    } else {
-      return `2SN7#1 ${actionName}　${actionDescription}\n`;
-    }
+    let ability1_text: string = "";
+    let ability2_text: string = "";
+    let dice: number = 2;
+    let fumble: number = 1;
+
+    // ability1と2に得意があるかどうかを判定
+    if (ability1 === "得意" || ability2 === "得意") dice++;
+    if (ability1 === "苦手" || ability2 === "苦手") fumble++;
+
+    // ability1が得意な場合[得意]、苦手な場合は[苦手]を追加
+    if (ability1 === "得意") ability1_text = "　[得意]";
+    if (ability1 === "苦手") ability1_text = "　[苦手]";
+
+    // ability2が得意な場合[得意]、苦手な場合は[苦手]を追加
+    if (ability2 === "得意") ability2_text = "　[得意]";
+    if (ability2 === "苦手") ability2_text = "　[苦手]";
+
+    // ability1と2に得意があるかどうかを判定
+    return `${dice}SN7#${fumble} ${actionName}　${actionDescription}${ability1_text}${ability2_text}\n`;
   }
 
   appspot_kemono(charadata, download_flg){

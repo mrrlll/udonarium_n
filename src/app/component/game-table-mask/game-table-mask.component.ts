@@ -25,7 +25,6 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopActionService } from 'service/tabletop-action.service';
 import { TabletopService } from 'service/tabletop.service';
-import { TableSelecter } from '@udonarium/table-selecter';
 import { Observable, Subscription } from 'rxjs';
 
 @Component({
@@ -54,7 +53,6 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
   set maskborder(maskborder: boolean) { this.gameTableMask.maskborder = maskborder; }
   get isHide(): boolean { return this.gameTableMask.isHide; }
   set isHide(isHide: boolean) { this.gameTableMask.isHide = isHide; }
-  get gameTableId(): string { return this.gameTableMask.gameTableId; }
   get tableMasks(): GameTableMask[] { return this.tabletopService.tableMasks; }
 
   gridSize: number = 50;
@@ -168,7 +166,6 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
           cloneObject.location.x += this.gridSize;
           cloneObject.location.y += this.gridSize;
           cloneObject.isLock = false;
-          cloneObject.gameTableId = TableSelecter.instance.viewTable.identifier;
           if (this.gameTableMask.parent) this.gameTableMask.parent.appendChild(cloneObject);
           SoundEffect.play(PresetSound.cardPut);
         }
@@ -196,14 +193,6 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
 
   onMoved() {
     SoundEffect.play(PresetSound.cardPut);
-  }
-
-  addTable() {
-    let tableMasks: GameTableMask[] = this.tabletopService.tableMasks;
-    // masksの中からgameTableIdが無いものに現在のテーブルのidentifierを代入
-    tableMasks.forEach(mask => {
-      mask.gameTableId = TableSelecter.instance.viewTable.identifier;
-    });
   }
 
   private adjustMinBounds(value: number, min: number = 0): number {
