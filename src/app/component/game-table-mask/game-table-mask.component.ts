@@ -116,7 +116,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
 
     // TODO:もっと良い方法考える
     if (this.isLock) {
-      EventSystem.trigger('DRAG_LOCKED_OBJECT', {});
+      EventSystem.trigger('DRAG_LOCKED_OBJECT', { srcEvent: e });
     }
   }
 
