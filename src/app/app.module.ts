@@ -8,7 +8,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BadgeComponent } from 'component/badge/badge.component';
 import { CardStackListComponent } from 'component/card-stack-list/card-stack-list.component';
 import { CardStackListComponentEx } from 'component/card-stack-list-ex/card-stack-list-ex.component';
-import { CardStackListImageComponent } from 'component/card-stack-list-img/card-stack-list-img.component';
 
 import { CardStackComponent } from 'component/card-stack/card-stack.component';
 import { CardComponent } from 'component/card/card.component';
@@ -28,7 +27,6 @@ import { ContextMenuComponent } from 'component/context-menu/context-menu.compon
 import { DiceSymbolComponent } from 'component/dice-symbol/dice-symbol.component';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { FileStorageComponent } from 'component/file-storage/file-storage.component';
-import { GameCharacterGeneratorComponent } from 'component/game-character-generator/game-character-generator.component';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { GameCharacterComponent } from 'component/game-character/game-character.component';
 import { GameDataElementComponent } from 'component/game-data-element/game-data-element.component';
@@ -99,7 +97,6 @@ import { GameTableMaskInventoryComponent } from './component/game-table-mask-inv
     CardStackComponent,
     CardStackListComponent,
     CardStackListComponentEx,
-//    CardStackListImageComponent,
     ChatMessageComponent,
     ChatPaletteComponent,
     ChatTabComponent,
@@ -115,7 +112,6 @@ import { GameTableMaskInventoryComponent } from './component/game-table-mask-inv
 
     FileSelecterComponent,
     FileStorageComponent,
-    GameCharacterGeneratorComponent,
     GameCharacterSheetComponent,
     GameCharacterComponent,
     GameDataElementComponent,
