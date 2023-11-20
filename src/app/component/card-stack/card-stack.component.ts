@@ -8,6 +8,7 @@ import {
   HostListener,
   Input,
   NgZone,
+  OnChanges,
   OnDestroy,
   OnInit,
 } from '@angular/core';
@@ -51,7 +52,7 @@ import { Observable, Subscription } from 'rxjs';
     ])
   ]
 })
-export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
   @Input() cardStack: CardStack = null;
   @Input() is3D: boolean = false;
 
@@ -122,6 +123,10 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
       this.changeDetector.markForCheck();
     });
     this.isGM = this.appCustomService.dataViewer;
+  }
+
+  ngOnChanges(): void {
+    EventSystem.unregister(this);
     EventSystem.register(this)
       .on('SHUFFLE_CARD_STACK', -1000, event => {
         if (event.data.identifier === this.cardStack.identifier) {
@@ -129,17 +134,17 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
           this.changeDetector.markForCheck();
         }
       })
-      .on('UPDATE_GAME_OBJECT', -1000, event => {
-        let object = ObjectStore.instance.get(event.data.identifier);
-        if (!this.cardStack || !object) return;
-        if ((this.cardStack === object)
-          || (object instanceof ObjectNode && this.cardStack.contains(object))
-          || (object instanceof PeerCursor && object.userId === this.cardStack.owner)) {
+      .on(`UPDATE_GAME_OBJECT/aliasName/${PeerCursor.aliasName}`, event => {
+        let object = ObjectStore.instance.get<PeerCursor>(event.data.identifier);
+        if (this.cardStack && object && object.userId === this.cardStack.owner) {
           this.changeDetector.markForCheck();
         }
       })
-      .on('CARD_STACK_DECREASED', event => {
-        if (event.data.cardStackIdentifier === this.cardStack.identifier && this.cardStack) this.changeDetector.markForCheck();
+      .on(`UPDATE_GAME_OBJECT/identifier/${this.cardStack?.identifier}`, event => {
+        this.changeDetector.markForCheck();
+      })
+      .on(`UPDATE_OBJECT_CHILDREN/identifier/${this.cardStack?.identifier}`, event => {
+        this.changeDetector.markForCheck();
       })
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();

@@ -6,11 +6,10 @@ import {
   Component,
   ElementRef,
   Input,
+  OnChanges,
   OnDestroy,
   ViewChild,
 } from '@angular/core';
-import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
-import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
 import { TabletopObject } from '@udonarium/tabletop-object';
@@ -41,7 +40,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
     ])
   ]
 })
-export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
+export class OverviewPanelComponent implements OnChanges, AfterViewInit, OnDestroy {
   @ViewChild('draggablePanel', { static: true }) draggablePanel: ElementRef<HTMLElement>;
   @Input() tabletopObject: TabletopObject = null;
 
@@ -85,18 +84,13 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
     this.isGM = this.appCustomService.dataViewer;
   }
 
-  ngAfterViewInit() {
-    this.initPanelPosition();
-    setTimeout(() => {
-      this.adjustPositionRoot();
-    }, 16);
+  ngOnChanges(): void {
     EventSystem.register(this)
-      .on('UPDATE_GAME_OBJECT', -1000, event => {
-        let object = ObjectStore.instance.get(event.data.identifier);
-        if (!this.tabletopObject || !object || !(object instanceof ObjectNode)) return;
-        if (this.tabletopObject === object || this.tabletopObject.contains(object)) {
-          this.changeDetector.markForCheck();
-        }
+      .on(`UPDATE_GAME_OBJECT/identifier/${this.tabletopObject?.identifier}`, event => {
+        this.changeDetector.markForCheck();
+      })
+      .on(`UPDATE_OBJECT_CHILDREN/identifier/${this.tabletopObject?.identifier}`, event => {
+        this.changeDetector.markForCheck();
       })
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
@@ -104,6 +98,13 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
       });
+  }
+
+  ngAfterViewInit() {
+    this.initPanelPosition();
+    setTimeout(() => {
+      this.adjustPositionRoot();
+    }, 16);
   }
 
   ngOnDestroy() {

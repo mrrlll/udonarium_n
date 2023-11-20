@@ -7,6 +7,7 @@ import {
   HostListener,
   Input,
   NgZone,
+  OnChanges,
   OnDestroy,
   OnInit,
 } from '@angular/core';
@@ -73,7 +74,7 @@ import { TabletopService } from 'service/tabletop.service';
     ])
   ]
 })
-export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
+export class CardComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
   @Input() card: Card = null;
   @Input() is3D: boolean = false;
 
@@ -145,14 +146,22 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
       this.changeDetector.markForCheck();
     });
     this.isGM = this.appCustomService.dataViewer;
+  }
 
+  ngOnChanges(): void {
+    EventSystem.unregister(this);
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!this.card || !object) return;
-        if ((this.card === object)
-          || (object instanceof ObjectNode && this.card.contains(object))
-          || (object instanceof PeerCursor && this.card.owners.includes(object.userId))) {
+        if ((this.card === object) || (object instanceof ObjectNode && this.card.contains(object)) || (object instanceof PeerCursor && this.card.owners.includes(object.userId))) {
+          this.changeDetector.markForCheck();
+        }
+      })
+      .on(`UPDATE_GAME_OBJECT/aliasName/${PeerCursor.aliasName}`, event => {
+        let object = ObjectStore.instance.get(event.data.identifier);
+        if (!this.card || !object) return;
+        if ((this.card === object) || (object instanceof ObjectNode && this.card.contains(object)) || (object instanceof PeerCursor && this.card.owners.includes(object.userId))) {
           this.changeDetector.markForCheck();
         }
       })
