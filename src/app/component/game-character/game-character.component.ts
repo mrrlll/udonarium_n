@@ -1,6 +1,5 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -46,7 +45,7 @@ import { Observable, Subscription } from 'rxjs';
     ])
   ]
 })
-export class GameCharacterComponent implements OnChanges, OnDestroy, AfterViewInit {
+export class GameCharacterComponent implements OnChanges, OnDestroy {
   @Input() gameCharacter: GameCharacter = null;
   @Input() is3D: boolean = false;
   @Input() tabletopObject: TabletopObject = null;
@@ -114,8 +113,6 @@ export class GameCharacterComponent implements OnChanges, OnDestroy, AfterViewIn
     });
     this.isGM = this.appCustomService.dataViewer;
   }
-
-  ngAfterViewInit() { }
 
   ngOnDestroy() {
     EventSystem.unregister(this);

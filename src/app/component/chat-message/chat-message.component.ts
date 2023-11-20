@@ -1,5 +1,5 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 
 import { ChatMessage } from '@udonarium/chat-message';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
@@ -39,7 +39,7 @@ import Autolinker from 'autolinker';
   changeDetection: ChangeDetectionStrategy.Default
 })
 
-export class ChatMessageComponent implements OnInit, AfterViewInit {
+export class ChatMessageComponent implements OnInit {
   @Input() chatMessage: ChatMessage;
   @Input() compact: boolean = false;
   @Input() simpleDispFlagTime: boolean = false;
@@ -63,9 +63,6 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
     if (file) this.imageFile = file;
     let time = this.chatMessageService.getTime();
     if (time - 10 * 1000 < this.chatMessage.timestamp) this.animeState = 'active';
-  }
-
-  ngAfterViewInit() {
   }
 
   get isMine(): boolean {
@@ -138,12 +135,12 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
     str = StringUtil.escapeHtml(str);
     if (ruby) str = StringUtil.rubyToHtml(str);
     return Autolinker.link(this.lastNewLineAdjust(str), {
-      urls: {schemeMatches: true, tldMatches: false}, 
-      truncate: {length: 48, location: 'end'}, 
-      decodePercentEncoding: shorten, 
-      stripPrefix: shorten, 
-      stripTrailingSlash: shorten, 
-      email: false, 
+      urls: {schemeMatches: true, tldMatches: false},
+      truncate: {length: 48, location: 'end'},
+      decodePercentEncoding: shorten,
+      stripPrefix: shorten,
+      stripTrailingSlash: shorten,
+      email: false,
       phone: false,
       replaceFn : function(m) {
         if (m.getType() == 'url' && StringUtil.validUrl(m.getAnchorHref())) {

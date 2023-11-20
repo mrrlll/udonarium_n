@@ -1,5 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output, OnDestroy, OnInit } from '@angular/core';
-import GameSystemClass from 'bcdice/lib/game_system';
+import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
@@ -14,7 +13,6 @@ import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
 import { Config } from '@udonarium/config';
-import { BatchService } from 'service/batch.service';
 import { DiceBot } from '@udonarium/dice-bot';
 
 @Component({
@@ -22,7 +20,7 @@ import { DiceBot } from '@udonarium/dice-bot';
   templateUrl: './game-table-setting.component.html',
   styleUrls: ['./game-table-setting.component.css']
 })
-export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewInit {
+export class GameTableSettingComponent implements OnInit, OnDestroy {
   minSize: number = 1;
   maxSize: number = 100;
 
@@ -115,8 +113,6 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
         }
       });
   }
-
-  ngAfterViewInit() { }
 
   ngOnDestroy() {
     EventSystem.unregister(this);

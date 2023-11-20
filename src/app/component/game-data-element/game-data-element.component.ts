@@ -1,13 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
@@ -22,7 +13,7 @@ import { DataElement } from '@udonarium/data-element';
   styleUrls: ['./game-data-element.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GameDataElementComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
+export class GameDataElementComponent implements OnInit, OnChanges, OnDestroy {
   @Input() gameDataElement: DataElement = null;
   @Input() isEdit: boolean = false;
   @Input() isTagLocked: boolean = false;
@@ -75,10 +66,6 @@ export class GameDataElementComponent implements OnInit, OnChanges, OnDestroy, A
 
   ngOnDestroy() {
     EventSystem.unregister(this);
-  }
-
-  ngAfterViewInit() {
-
   }
 
   addElement() {
