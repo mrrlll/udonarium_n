@@ -278,7 +278,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           let context = PeerContext.create(id);
           if (context.isRoom) return;
           ObjectStore.instance.clearDeleteHistory();
-          Network.connect(context.peerId);
+          Network.connect(context);
         }
       })
       .on('NETWORK_ERROR', event => {
