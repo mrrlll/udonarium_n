@@ -3,6 +3,7 @@ import { AfterViewInit, Component, NgZone, OnDestroy, OnInit, Input } from '@ang
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
 import { EventSystem, Network } from '@udonarium/core/system';
+import { PeerSessionGrade } from '@udonarium/core/system/network/peer-session-state';
 import { PeerCursor } from '@udonarium/peer-cursor';
 
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
@@ -26,6 +27,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   gameRoomService = ObjectStore.instance;
   help: string = '';
   isPasswordVisible = false;
+  private interval: NodeJS.Timer;
 
   @Input() isViewer: boolean = false;
 
@@ -166,6 +168,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
       .on('OPEN_NETWORK', event => {
         this.ngZone.run(() => { });
       });
+    this.interval = setInterval(() => { }, 1000);
 
     // 自動GMモード　テストの時用に使用
     if(location.href.match(/localhost/) || location.href.match(/192.168/)) {
@@ -177,6 +180,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     EventSystem.unregister(this);
+    clearInterval(this.interval);
   }
 
   changeIcon() {
@@ -227,6 +231,10 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   togglePasswordVisibility() {
     this.isPasswordVisible = !this.isPasswordVisible;
+  }
+
+  stringFromSessionGrade(grade: PeerSessionGrade): string {
+    return PeerSessionGrade[grade] ?? PeerSessionGrade[PeerSessionGrade.UNSPECIFIED];
   }
 
   findUserId(peerId: string) {

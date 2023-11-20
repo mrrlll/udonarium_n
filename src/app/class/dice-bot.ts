@@ -224,7 +224,7 @@ export class DiceBot extends GameObject {
       DiceBot.loader = new (await import(
         /* webpackChunkName: "lib/bcdice/bcdice-loader" */
         './bcdice/bcdice-loader')
-      ).default();
+      ).default;
       DiceBot.diceBotInfos = DiceBot.loader.listAvailableGameSystems()
         .sort((a, b) => {
           if (a.sortKey < b.sortKey) return -1;
