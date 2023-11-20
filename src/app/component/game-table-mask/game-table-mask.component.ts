@@ -185,6 +185,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
   }
 
   onMove() {
+    this.contextMenuService.close();
     SoundEffect.play(PresetSound.cardPick);
   }
 

@@ -398,6 +398,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
   }
 
   onMove() {
+    this.contextMenuService.close();
     if (!this.isHide) SoundEffect.play(PresetSound.cardPick);
   }
 
