@@ -133,12 +133,7 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
 
       // もしcharadata['relation']の１つ目のnameがnullならば、キズナ①を追加
       if (charadata['relation'][0]['name'] === null) {
-        data = {
-          "#text": "仲間のキャラクター名",
-          "@_type": "check",
-          "@_name": `キズナ①`
-        };
-        skynauts2sheet['character']['data']['data'][2]['data'][0]['data'].push(data);
+        charadata['relation'][0]['name'] = `仲間のキャラクター名`;
       } else {
         for (let relation of charadata['relation']){
           let name = relation['name'];
@@ -147,7 +142,7 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
             "@_type": "check",
             "@_name": `キズナ${countnumber[count]}`
           }
-          skynauts2sheet['character']['data']['data'][2]['data'][0]['data'].push(data);
+          skynauts2sheet['character']['data']['data'][2]['data'][0]['data'][0+count] = data;
           count++;
         };
       }
@@ -169,6 +164,7 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       }
       skynauts2sheet['character']['data']['data'][2]['data'][1]['data'][0]['#text'] = move;
       skynauts2sheet['character']['data']['data'][2]['data'][0]['data'][0]['@_currentValue'] = hp;
+      skynauts2sheet['character']['data']['data'][2]['data'][0]['data'][0]['#text'] = hp;
       skynauts2sheet['character']['data']['data'][2]['data'][1]['data'][1]['#text'] = ability.technic;
       skynauts2sheet['character']['data']['data'][2]['data'][1]['data'][2]['#text'] = ability.sense;
       skynauts2sheet['character']['data']['data'][2]['data'][1]['data'][3]['#text'] = ability.culture;
