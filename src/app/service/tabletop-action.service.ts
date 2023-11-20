@@ -17,7 +17,6 @@ import { ContextMenuAction } from './context-menu.service';
 import { PointerCoordinate } from './pointer-device.service';
 
 import { ImageTag } from '@udonarium/image-tag';
-import { table } from 'console';
 
 @Injectable({
   providedIn: 'root'
