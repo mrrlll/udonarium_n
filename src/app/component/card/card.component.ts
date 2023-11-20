@@ -301,7 +301,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
       (this.isHand
         ? {
           name: '見るのをやめる', action: () => {
-            this.owners = this.owners.filter(owner => owner !== Network.peerContext.userId);
+            this.owners = this.owners.filter(owner => owner !== Network.peer.userId);
             if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
           }
         }
@@ -309,14 +309,14 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
           name: '自分だけで見る', action: () => {
             if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
             this.card.faceDown();
-            this.owners = [Network.peerContext.userId];
+            this.owners = [Network.peer.userId];
           }
         }),
       (!this.isHand && this.hasOwner
         ? {
           name: '自分も見る', action: () => {
             if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
-            let newOwners = this.owners.concat(Network.peerContext.userId);
+            let newOwners = this.owners.concat(Network.peer.userId);
             this.card.faceDown();
             this.owners = newOwners;
           }
@@ -328,7 +328,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
           name: 'やっぱり自分だけで見る', action: () => {
             if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
             this.card.faceDown();
-            this.owners = [Network.peerContext.userId];
+            this.owners = [Network.peer.userId];
           }
         }: {name : null, enabled: false}
       ),
@@ -448,13 +448,13 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   vertical() {
-    if (!this.card.isVisible || this.card.rotate == 0) return; 
+    if (!this.card.isVisible || this.card.rotate == 0) return;
     this.card.rotate = 0;
     if (!this.isHide) SoundEffect.play(PresetSound.cardPut);
   }
 
   horizontal() {
-    if (!this.card.isVisible || this.card.rotate == 90) return; 
+    if (!this.card.isVisible || this.card.rotate == 90) return;
     this.card.rotate = 90;
     if (!this.isHide) SoundEffect.play(PresetSound.cardPut);
   }

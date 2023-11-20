@@ -77,7 +77,7 @@ export class ChatMessageService {
 
   sendMessage(chatTab: ChatTab, text: string, gameType: string, sendFrom: string, sendTo?: string, color? :string): ChatMessage {
     let chatMessage: ChatMessageContext = {
-      from: Network.peerContext.userId,
+      from: Network.peer.userId,
       to: this.findId(sendTo),
       name: this.makeMessageName(sendFrom, sendTo),
       imageIdentifier: this.findImageIdentifier(sendFrom),
@@ -94,7 +94,7 @@ export class ChatMessageService {
     for (const chatTab of this.chatTabs) {
       if (chatTab.recieveOperationLogLevel < logLevel) continue;
       let chatMessage: ChatMessageContext = {
-        from: Network.peerContext.userId,
+        from: Network.peer.userId,
         //to: ChatMessageService.findId(PeerCursor.myCursor.userId),
         //to: this.findId(sendTo),
         name: PeerCursor.myCursor.name,

@@ -208,14 +208,14 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     this.targetUserId = '';
     if (targetUserId.length < 1) return;
     this.help = '';
-    let context = PeerContext.create(targetUserId);
-    if (context.isRoom) return;
+    let peer = PeerContext.create(targetUserId);
+    if (peer.isRoom) return;
     ObjectStore.instance.clearDeleteHistory();
-    Network.connect(context);
+    Network.connect(peer);
   }
 
   autoGMMode() {
-    if (this.networkService.peerContexts.length === 0) {
+    if (this.networkService.peers.length === 0) {
       this.isViewer = true;
       this.output();
     }
@@ -259,7 +259,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   getUrl = () => {
     const url = new URL(window.location.href);
     url.searchParams.delete('id');
-    url.searchParams.append('id', this.networkService.peerContext.userId);
+    url.searchParams.append('id', this.networkService.peer.userId);
     navigator.clipboard.writeText(url.href);
 
     document.getElementById('geturlbtn').textContent = "コピーしました";

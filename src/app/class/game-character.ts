@@ -214,7 +214,7 @@ export class GameCharacter extends TabletopObject {
   }
 
   get isHideIn(): boolean { return !!this.owner; }
-  get isVisible(): boolean { return !this.owner || Network.peerContext.userId === this.owner; }
+  get isVisible(): boolean { return !this.owner || Network.peer.userId === this.owner; }
 
   createTestGameDataElement(name: string, size: number, imageIdentifier: string) {
     this.createDataElements();

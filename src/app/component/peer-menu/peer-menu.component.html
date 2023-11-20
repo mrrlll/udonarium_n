@@ -19,7 +19,7 @@
   <span>ニックネーム：<input [(ngModel)]="myPeer.name"  placeholder="ニックネーム" /></span>
 </div>
 <div>
-  <span>ID：<input id="userId" [(ngModel)]="networkService.peerContext.userId" *ngIf="networkService.isOpen" readonly />
+  <span>あなたのID：<span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peer.userId}}</span>
     <span *ngIf="!networkService.isOpen" style="font-weight: bold;">???</span>
     <button *ngIf="networkService.isOpen" (click)="getUrl()" id="geturlbtn">接続URL取得</button>
   </span>
@@ -79,15 +79,15 @@
   </label>
 </div>
 <!--<div>host ID:{{networkService.hostPeerID}}</div>-->
-<ng-container *ngIf="networkService.peerContext.isRoom">
+<ng-container *ngIf="networkService.peer.isRoom">
   <hr/>
   <div>
-    <span>ルーム名：<span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peerContext.roomName}}/{{networkService.peerContext.roomId}}</span></span>
+    <span>ルーム名：<span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peer.roomName}}/{{networkService.peer.roomId}}</span></span>
   </div>
   <div>
     <span>パスワード：<span
-      *ngIf="networkService.peerContext.hasPassword">
-        <span *ngIf="networkService.isOpen" style="font-weight: bold;">{{isPasswordVisible ? networkService.peerContext.password : '●●●●●●●●'}}</span>
+      *ngIf="networkService.peer.hasPassword">
+        <span *ngIf="networkService.isOpen" style="font-weight: bold;">{{isPasswordVisible ? networkService.peer.password : '●●●●●●●●'}}</span>
         <button style="padding: 2px; margin-left: 1.0em; font-size: 1.0em;" (click)="togglePasswordVisibility()">
           <span class="material-icons" style="font-size: 1.0em; vertical-align: text-bottom;">{{isPasswordVisible ? 'visibility' : 'visibility_off'}}</span>
         </button>
@@ -96,17 +96,17 @@
   </div>
 </ng-container>
 <hr/>
-<div *ngFor="let context of networkService.peerContexts">
+<div *ngFor="let peer of networkService.peers">
   <div>
-    <span *ngIf="!context.isOpen">[接続中]</span>
-    <span>他の参加者：{{findUserId(context.peerId)}} [{{findPeerName(context.peerId)}}]</span>
+    <span *ngIf="!peer.isOpen">[接続中]</span>
+    <span>他の参加者：{{findUserId(peer.peerId)}} [{{findPeerName(peer.peerId)}}]</span>
   </div>
 </div>
 <div>
-  <ng-container *ngIf="!networkService.peerContext.isRoom">
+  <ng-container *ngIf="!networkService.peer.isRoom">
     <input [(ngModel)]="targetUserId" placeholder="接続したい相手のID" name="targetUserId" />
     <button (click)="connectPeer()" [disabled]="!networkService.isOpen">プライベート接続</button><br>
   </ng-container>
-  <button *ngIf="networkService.peerContexts.length < 1" (click)="showLobby()" [disabled]="!networkService.isOpen">ロビー（ルーム一覧）を表示</button>
+  <button *ngIf="networkService.peers.length < 1" (click)="showLobby()" [disabled]="!networkService.isOpen">ロビー（ルーム一覧）を表示</button>
 </div>
 <div><span style="font-size: 12px;">{{help}}</span></div>

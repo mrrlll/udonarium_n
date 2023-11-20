@@ -40,7 +40,7 @@ export class Card extends TabletopObject {
   }
 
   get hasOwner(): boolean { return 0 < this.owners.length; }
-  get isHand(): boolean { return this.owners.includes(Network.peerContext.userId); }
+  get isHand(): boolean { return this.owners.includes(Network.peer.userId); }
   get isFront(): boolean { return this.state === CardState.FRONT; }
   get isVisible(): boolean { return this.isHand || this.isFront; }
 

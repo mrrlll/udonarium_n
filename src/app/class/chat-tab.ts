@@ -256,8 +256,8 @@ export class ChatTab extends ObjectNode implements InnerXml {
   }
 
   logHtml( ): string {
-    
-    let head : string =     
+
+    let head : string =
     "<?xml version='1.0' encoding='UTF-8'?>"+'\n'+
     "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>"+'\n'+
     "<html xmlns='http://www.w3.org/1999/xhtml' lang='ja'>"+'\n'+
@@ -278,7 +278,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
     for (let mess of this.chatMessages ) {
       let to = mess.to;
       let from = mess.from;
-      let myId = Network.peerContext.userId; // 1.13.xとのmargeで修正
+      let myId = Network.peer.userId; // 1.13.xとのmargeで修正
       console.log( 'from:' + mess.from
                   + ' To:' + mess.to + 'myId:' + myId);
       if ( to ){

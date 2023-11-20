@@ -266,8 +266,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       })
       .on('OPEN_NETWORK', event => {
         console.log('OPEN_NETWORK', event.data.peerId);
-        PeerCursor.myCursor.peerId = Network.peerContext.peerId;
-        PeerCursor.myCursor.userId = Network.peerContext.userId;
+        PeerCursor.myCursor.peerId = Network.peer.peerId;
+        PeerCursor.myCursor.userId = Network.peer.userId;
 
         // 接続
         const url = new URL(window.location.href);
@@ -491,8 +491,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isSaveing = true;
     this.progresPercent = 0;
 
-    let roomName = Network.peerContext && 0 < Network.peerContext.roomName.length
-      ? Network.peerContext.roomName
+    let roomName = 0 < Network.peer.roomName.length
+      ? Network.peer.roomName
       : 'ルームデータ';
     await this.saveDataService.saveRoomAsync(roomName, percent => {
       this.progresPercent = percent;
