@@ -412,7 +412,6 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
       card.isHide = this.isHide;
     }
     if (card) {
-      this.cardStack.update(); // todo
       card.location.x += 100 + (Math.random() * 50);
       card.location.y += 25 + (Math.random() * 50);
       card.setLocation(this.cardStack.location.name);
