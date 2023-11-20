@@ -43,6 +43,7 @@ export class TabletopActionService {
     tableMask.posZ = position.z;
 
     viewTable.appendChild(tableMask);
+    EventSystem.call('CREATE_GAME_OBJECT', tableMask);
     return tableMask;
   }
 
