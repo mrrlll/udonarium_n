@@ -43,7 +43,7 @@ export class TabletopActionService {
     tableMask.posZ = position.z;
 
     viewTable.appendChild(tableMask);
-    EventSystem.call('CREATE_GAME_OBJECT', tableMask);
+    EventSystem.call('CREATE_MASK_OBJECT', tableMask);
     return tableMask;
   }
 
@@ -151,6 +151,7 @@ export class TabletopActionService {
     card.location.x = position.x - 25;
     card.location.y = position.y - 25;
     card.posZ = position.z;
+    EventSystem.call('CREATE_CARD_OBJECT', card);
     return card;
   }
 

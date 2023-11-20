@@ -33,7 +33,7 @@ export class CardsListWindowComponent implements OnInit{
       .on('DELETE_GAME_OBJECT', event => {
         this.updateFilteredCards();
       })
-      .on('UPDATE_GAME_OBJECT', event => {
+      .on('CREATE_CARD_OBJECT', event => {
         this.updateFilteredCards();
       });
     }
@@ -49,6 +49,7 @@ export class CardsListWindowComponent implements OnInit{
 
     toggleChangeIsHide(card: Card) {
       card.isHide = !card.isHide;
+      this.updateFilteredCards();
     }
 
     toggleHideOnlyShow() {
@@ -83,10 +84,5 @@ export class CardsListWindowComponent implements OnInit{
       let option: PanelOption = { title: title, left: coordinate.x + 10, top: coordinate.y + 20, width: 600, height: 600 };
       let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
       component.tabletopObject = gameObject;
-    }
-
-    test() {
-      this.cards = this.getCards();
-      if(this.cards) console.log(this.cards);
     }
 }

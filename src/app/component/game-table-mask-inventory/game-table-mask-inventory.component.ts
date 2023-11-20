@@ -32,7 +32,7 @@ export class GameTableMaskInventoryComponent implements OnInit, OnDestroy, After
     .on('DELETE_GAME_OBJECT', event => {
       this.updateFilteredMasks(this.selectedTable);
     })
-    .on('CREATE_GAME_OBJECT', event => {
+    .on('CREATE_MASK_OBJECT', event => {
       this.updateFilteredMasks(this.selectedTable);
     });
   }
