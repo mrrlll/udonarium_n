@@ -38,6 +38,8 @@
   user-select: none;
   -moz-user-drag: none;
   -webkit-user-drag: none;
+
+  backface-visibility: hidden;
 }
 
 .component-content {
@@ -125,11 +127,11 @@
 
 .is-black-mask {
   filter: brightness(0);
- }
+}
 
- .is-harf-black-mask {
+.is-harf-black-mask {
   filter: brightness(0.5);
- }
+}
 
 .name-tag {
   box-sizing: border-box;
