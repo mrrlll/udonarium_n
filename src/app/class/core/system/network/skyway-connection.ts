@@ -337,18 +337,18 @@ export class SkyWayConnection implements Connection {
   private onData(conn: SkyWayDataConnection, container: DataContainer) {
     if (container.peers && 0 < container.peers.length) this.onUpdatePeerList(conn, container);
     if (0 < container.ttl) this.onRelay(conn, container);
-    if (!this.callback.onData) return;
-    let byteLength = container.data.byteLength;
-    this.bandwidthUsage += byteLength;
-    this.inboundQueue = this.inboundQueue.then(() => new Promise<void>((resolve, reject) => {
-      setZeroTimeout(async () => {
-        if (!this.callback.onData) return;
-        let data = container.isCompressed ? await decompressAsync(container.data) : container.data;
-        this.callback.onData(conn.remoteId, MessagePack.decode(data));
-        this.bandwidthUsage -= byteLength;
-        return resolve();
-      });
-    }));
+    if (this.callback.onData) {
+      let byteLength = container.data.byteLength;
+      this.bandwidthUsage += byteLength;
+      this.inboundQueue = this.inboundQueue.then(() => new Promise<void>((resolve, reject) => {
+        setZeroTimeout(async () => {
+          let data = container.isCompressed ? await decompressAsync(container.data) : container.data;
+          this.callback.onData(conn.remoteId, MessagePack.decode(data));
+          this.bandwidthUsage -= byteLength;
+          return resolve();
+        });
+      }));
+    }
   }
 
   private onRelay(conn: SkyWayDataConnection, container: DataContainer) {
