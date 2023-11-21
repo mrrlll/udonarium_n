@@ -148,7 +148,6 @@ export class MovableDirective implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   dispose() {
-    this.unregister();
     EventSystem.unregister(this);
     this.batchService.remove(this);
   }
