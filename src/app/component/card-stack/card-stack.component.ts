@@ -378,18 +378,18 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
   }
 
   private makeSelectionContextMenu(): ContextMenuAction[] {
+    if (this.selectionService.objects.length < 1) return [];
+
     let actions: ContextMenuAction[] = [];
     let subActions: ContextMenuAction[] = [];
 
-    if (this.selectionService.objects.length) {
-      let size = this.cardStack.topCard?.size ?? 2;
-      let objectPosition = {
-        x: this.cardStack.location.x + (size * this.gridSize) / 2,
-        y: this.cardStack.location.y + (size * this.gridSize) / 2,
-        z: this.cardStack.posZ
-      };
-      actions.push({ name: 'ここに集める', action: () => this.selectionService.congregate(objectPosition) });
-    }
+    let size = this.cardStack.topCard?.size ?? 2;
+    let objectPosition = {
+      x: this.cardStack.location.x + (size * this.gridSize) / 2,
+      y: this.cardStack.location.y + (size * this.gridSize) / 2,
+      z: this.cardStack.posZ
+    };
+    actions.push({ name: 'ここに集める', action: () => this.selectionService.congregate(objectPosition) });
 
     if (this.isSelected) {
       let selectedCardStacks = () => this.selectionService.objects.filter(object => object.aliasName === this.cardStack.aliasName) as CardStack[];
@@ -448,9 +448,8 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
         }
       );
     }
-    if (this.selectionService.objects.length) {
-      actions.push(ContextMenuSeparator);
-    }
+
+    actions.push(ContextMenuSeparator);
     return actions;
   }
 

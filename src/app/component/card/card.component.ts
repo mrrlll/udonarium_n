@@ -346,16 +346,16 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
   }
 
   private makeSelectionContextMenu(): ContextMenuAction[] {
+    if (this.selectionService.objects.length < 1) return [];
+
     let actions: ContextMenuAction[] = [];
 
-    if (this.selectionService.objects.length) {
-      let objectPosition = {
-        x: this.card.location.x + (this.card.size * this.gridSize) / 2,
-        y: this.card.location.y + (this.card.size * this.gridSize) / 2,
-        z: this.card.posZ
-      };
-      actions.push({ name: 'ここに集める', action: () => this.selectionService.congregate(objectPosition) });
-    }
+    let objectPosition = {
+      x: this.card.location.x + (this.card.size * this.gridSize) / 2,
+      y: this.card.location.y + (this.card.size * this.gridSize) / 2,
+      z: this.card.posZ
+    };
+    actions.push({ name: 'ここに集める', action: () => this.selectionService.congregate(objectPosition) });
 
     if (this.isSelected) {
       let selectedCards = () => this.selectionService.objects.filter(object => object.aliasName === this.card.aliasName) as Card[];
@@ -422,9 +422,8 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
         name: '選択したカード', action: null, subActions: subActions
       });
     }
-    if (this.selectionService.objects.length) {
-      actions.push(ContextMenuSeparator);
-    }
+
+    actions.push(ContextMenuSeparator);
     return actions;
   }
 
