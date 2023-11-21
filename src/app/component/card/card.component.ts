@@ -21,7 +21,7 @@ import { EventSystem, Network } from '@udonarium/core/system';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
-import { InputHandler } from 'directive/input-handler';
+import { ObjectInteractGesture } from 'component/game-table/object-interact-gesture';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
 import { Observable, Subscription } from 'rxjs';
@@ -125,10 +125,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
   movableOption: MovableOption = {};
   rotableOption: RotableOption = {};
 
-  private doubleClickTimer: NodeJS.Timer = null;
-  private doubleClickPoint = { x: 0, y: 0 };
-
-  private input: InputHandler = null;
+  private interactGesture: ObjectInteractGesture = null;
 
   constructor(
     private ngZone: NgZone,
@@ -196,16 +193,18 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
 
   ngAfterViewInit() {
     this.ngZone.runOutsideAngular(() => {
-      this.input = new InputHandler(this.elementRef.nativeElement);
+      this.interactGesture = new ObjectInteractGesture(this.elementRef.nativeElement);
     });
-    this.input.onStart = e => this.ngZone.run(() => this.onInputStart(e));
+
+    this.interactGesture.onstart = this.onInputStart.bind(this);
+    this.interactGesture.oninteract = this.onDoubleClick.bind(this);
   }
 
   ngOnDestroy() {
     if (this.subs) {
       this.subs.unsubscribe();
     }
-    this.input.destroy();
+    this.interactGesture.destroy();
     EventSystem.unregister(this);
   }
 
@@ -231,38 +230,13 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
     }
   }
 
-  startDoubleClickTimer(e) {
-    if (!this.doubleClickTimer) {
-      this.stopDoubleClickTimer();
-      this.doubleClickTimer = setTimeout(() => this.stopDoubleClickTimer(), e.touches ? 500 : 300);
-      this.doubleClickPoint = this.input.pointer;
-      return;
-    }
-
-    if (e.touches) {
-      this.input.onEnd = this.onDoubleClick.bind(this);
-    } else {
-      this.onDoubleClick();
-    }
-  }
-
-  stopDoubleClickTimer() {
-    clearTimeout(this.doubleClickTimer);
-    this.doubleClickTimer = null;
-    this.input.onEnd = null;
-  }
-
   onDoubleClick() {
-    if (this.isLocked) return;
-    this.stopDoubleClickTimer();
-    let distance = (this.doubleClickPoint.x - this.input.pointer.x) ** 2 + (this.doubleClickPoint.y - this.input.pointer.y) ** 2;
-    if (distance < 10 ** 2) {
-      console.log('onDoubleClick !!!!');
-      if (this.hasOwner && !this.isHand) return;
+    if (!this.isHand) return;
+    this.ngZone.run(() => {
       this.state = this.isVisible && !this.isHand ? CardState.BACK : CardState.FRONT;
       this.owners = [];
       if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
-    }
+    });
   }
 
   @HostListener('dragstart', ['$event'])
@@ -272,10 +246,10 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
   }
 
   onInputStart(e: MouseEvent | TouchEvent) {
-    if (e instanceof MouseEvent && (e.button !== 0 || e.ctrlKey || e.shiftKey)) return;
-    this.startDoubleClickTimer(e);
-    this.card.toTopmost();
-    this.startIconHiddenTimer();
+    this.ngZone.run(() => {
+      this.card.toTopmost();
+      this.startIconHiddenTimer();
+    });
 
     // TODO:もっと良い方法考える
     if (this.isLocked) {
@@ -298,7 +272,6 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
   }
 
   onMove() {
-    this.input.cancel();
     this.contextMenuService.close();
     if (!this.isHide) SoundEffect.play(PresetSound.cardPick);
   }
