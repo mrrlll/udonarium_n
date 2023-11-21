@@ -73,7 +73,7 @@ export class UIPanelComponent implements OnInit {
 
   private timerCheckWindowSize = null;
 
-  get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging; }
+  get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging || this.pointerDeviceService.isTablePickGesture; }
 
   constructor(
     public panelService: PanelService,
@@ -96,7 +96,7 @@ export class UIPanelComponent implements OnInit {
 
     let panel = this.draggablePanel.nativeElement
     console.log('chkeWindowMinSize:' + panel.style.width + ' H:' + panel.style.height);
-    
+
     const nowW = parseInt(panel.style.width);
     const nowH = parseInt(panel.style.height);
     if (nowW < cutIn.minSizeWidth(true)){
@@ -111,7 +111,7 @@ export class UIPanelComponent implements OnInit {
     const winW = window.innerWidth;
     const winH = window.innerHeight;
 
-    const offsetL: number = panel.offsetLeft; 
+    const offsetL: number = panel.offsetLeft;
     const offsetT: number = panel.offsetTop;
 
     const overR = offsetL + cutIn.minSizeWidth(true) - winW;
