@@ -142,61 +142,6 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
     menuActions = menuActions.concat(this.makeContextMenu());
 
     this.contextMenuService.open(menuPosition, menuActions, this.name);
-    // let objectPosition = this.coordinateService.calcTabletopLocalCoordinate();
-    // this.contextMenuService.open(menuPosition, [
-    //   (this.maskborder
-    //     ? {
-    //       name: 'ボーターを非表示', action: () => {
-    //         this.maskborder = false;
-    //       }
-    //     }: {
-    //       name: 'ボーターを表示', action: () => {
-    //         this.maskborder = true;
-    //       }
-    //     }
-    //   ),
-    //   (this.isLock
-    //     ? {
-    //       name: '固定解除', action: () => {
-    //         this.isLock = false;
-    //         SoundEffect.play(PresetSound.unlock);
-    //       }
-    //     }
-    //     : {
-    //       name: '固定する', action: () => {
-    //         this.isLock = true;
-    //         SoundEffect.play(PresetSound.lock);
-    //       }
-    //     }
-    //   ),
-    //   ContextMenuSeparator,
-    //   { name: 'マップマスクを編集', action: () => { this.showDetail(this.gameTableMask); } },
-    //   {
-    //     name: 'コピーを作る', action: () => {
-    //       let cloneObject = this.gameTableMask.clone();
-    //       console.log('コピー', cloneObject);
-    //       cloneObject.location.x += this.gridSize;
-    //       cloneObject.location.y += this.gridSize;
-    //       cloneObject.isLock = false;
-    //       if (this.gameTableMask.parent) this.gameTableMask.parent.appendChild(cloneObject);
-    //       SoundEffect.play(PresetSound.cardPut);
-    //     }
-    //   },
-    //   {
-    //     name: 'インベントリにしまう', action: () => {
-    //       this.gameTableMask.toInventory(this.gameTableMask);
-    //       SoundEffect.play(PresetSound.sweep);
-    //     },
-    //   },
-    //   {
-    //     name: '削除する', action: () => {
-    //       this.gameTableMask.destroy();
-    //       SoundEffect.play(PresetSound.sweep);
-    //     }
-    //   },
-    //   ContextMenuSeparator,
-    //   { name: 'オブジェクト作成', action: null, subActions: this.tabletopActionService.makeDefaultContextMenuActions(objectPosition) }
-    // ], this.name);
   }
 
   onMove() {
@@ -246,7 +191,6 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
         name: 'すべてのコピーを作る', action: () => {
           selectedGameTableMasks().forEach(gameTableMask => {
             let cloneObject = gameTableMask.clone();
-            console.log('コピー', cloneObject);
             cloneObject.location.x += this.gridSize;
             cloneObject.location.y += this.gridSize;
             cloneObject.isLock = false;
@@ -318,7 +262,6 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
     actions.push({
       name: 'コピーを作る', action: () => {
         let cloneObject = this.gameTableMask.clone();
-        console.log('コピー', cloneObject);
         cloneObject.location.x += this.gridSize;
         cloneObject.location.y += this.gridSize;
         cloneObject.isLock = false;
