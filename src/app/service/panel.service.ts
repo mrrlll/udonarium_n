@@ -1,5 +1,4 @@
-import { ComponentFactoryResolver, ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
-import { ChatTab } from '@udonarium/chat-tab';
+import { ComponentFactoryResolver, ComponentRef, Injectable, OnChanges, ViewContainerRef } from '@angular/core';import { ChatTab } from '@udonarium/chat-tab';
 import { CardStack } from '@udonarium/card-stack';
 
 declare var Type: FunctionConstructor;
@@ -78,7 +77,21 @@ export class PanelService {
     }
     panelComponentRef.onDestroy(() => {
       childPanelService.panelComponentRef = null;
+      panelComponentRef = null;
     });
+
+    bodyComponentRef.onDestroy(() => {
+      bodyComponentRef = null;
+    });
+
+    let panelOnChanges = panelComponentRef.instance as OnChanges;
+    let bodyOnChanges = bodyComponentRef.instance as OnChanges;
+    if (panelOnChanges?.ngOnChanges != null || bodyOnChanges?.ngOnChanges != null) {
+      queueMicrotask(() => {
+        if (bodyComponentRef) bodyOnChanges?.ngOnChanges({});
+        if (panelComponentRef) panelOnChanges?.ngOnChanges({});
+      });
+    }
 
     return <T>bodyComponentRef.instance;
   }
