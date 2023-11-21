@@ -19,6 +19,7 @@ import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { SelectionState, TabletopSelectionService } from 'service/tabletop-selection.service';
 import { TabletopObject } from '@udonarium/tabletop-object';
 import { AppConfigCustomService } from 'service/app-config-custom.service';
 import { Observable, Subscription } from 'rxjs';
@@ -67,6 +68,10 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   get isStealth(): boolean { return this.gameCharacter.isStealth; }
   set isStealth(isStealth: boolean) { this.gameCharacter.isStealth = this.isStealth; }
 
+  get selectionState(): SelectionState { return this.selectionService.state(this.gameCharacter); }
+  get isSelected(): boolean { return this.selectionState !== SelectionState.NONE; }
+  get isMagnetic(): boolean { return this.selectionState === SelectionState.MAGNETIC; }
+
 
   gridSize: number = 50;
 
@@ -78,6 +83,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     private contextMenuService: ContextMenuService,
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
+    private selectionService: TabletopSelectionService,
     private pointerDeviceService: PointerDeviceService,
     private appCustomService: AppConfigCustomService
   ) { }
@@ -95,6 +101,9 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
         this.changeDetector.markForCheck();
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
+        this.changeDetector.markForCheck();
+      })
+      .on(`UPDATE_SELECTION/identifier/${this.gameCharacter?.identifier}`, event => {
         this.changeDetector.markForCheck();
       });
     this.movableOption = {

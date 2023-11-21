@@ -23,6 +23,7 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopActionService } from 'service/tabletop-action.service';
 import { TabletopService } from 'service/tabletop.service';
+import { SelectionState, TabletopSelectionService } from 'service/tabletop-selection.service';
 import { Observable, Subscription } from 'rxjs';
 
 @Component({
@@ -53,6 +54,10 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
   set isHide(isHide: boolean) { this.gameTableMask.isHide = isHide; }
   get tableMasks(): GameTableMask[] { return this.tabletopService.tableMasks; }
 
+  get selectionState(): SelectionState { return this.selectionService.state(this.gameTableMask); }
+  get isSelected(): boolean { return this.selectionState !== SelectionState.NONE; }
+  get isMagnetic(): boolean { return this.selectionState === SelectionState.MAGNETIC; }
+
   gridSize: number = 50;
   masks: GameTableMask[] = [];
 
@@ -67,6 +72,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
     private elementRef: ElementRef<HTMLElement>,
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
+    private selectionService: TabletopSelectionService,
     private pointerDeviceService: PointerDeviceService,
     private tabletopService: TabletopService,
     private coordinateService: CoordinateService,
@@ -84,6 +90,9 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
         this.changeDetector.markForCheck();
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
+        this.changeDetector.markForCheck();
+      })
+      .on(`UPDATE_SELECTION/identifier/${this.gameTableMask?.identifier}`, event => {
         this.changeDetector.markForCheck();
       });
     this.movableOption = {

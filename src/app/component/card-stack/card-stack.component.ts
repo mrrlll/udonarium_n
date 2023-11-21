@@ -30,6 +30,7 @@ import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.s
 import { ImageService } from 'service/image.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { SelectionState, TabletopSelectionService } from 'service/tabletop-selection.service';
 import { Observable, Subscription } from 'rxjs';
 
 @Component({
@@ -79,6 +80,10 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
   get topCard(): Card { return this.cardStack.topCard; }
   get imageFile(): ImageFile { return this.imageService.getSkeletonOr(this.cardStack.imageFile); }
 
+  get selectionState(): SelectionState { return this.selectionService.state(this.cardStack); }
+  get isSelected(): boolean { return this.selectionState !== SelectionState.NONE; }
+  get isMagnetic(): boolean { return this.selectionState === SelectionState.MAGNETIC; }
+
   animeState: string = 'inactive';
 
   private iconHiddenTimer: NodeJS.Timer = null;
@@ -109,6 +114,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
     private panelService: PanelService,
     private elementRef: ElementRef<HTMLElement>,
     private changeDetector: ChangeDetectorRef,
+    private selectionService: TabletopSelectionService,
     private imageService: ImageService,
     private pointerDeviceService: PointerDeviceService,
     private appCustomService: AppConfigCustomService
@@ -150,6 +156,9 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
         this.changeDetector.markForCheck();
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
+        this.changeDetector.markForCheck();
+      })
+      .on(`UPDATE_SELECTION/identifier/${this.cardStack?.identifier}`, event => {
         this.changeDetector.markForCheck();
       })
       .on('DISCONNECT_PEER', event => {
