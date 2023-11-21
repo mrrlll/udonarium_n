@@ -82,20 +82,12 @@ export class CardStack extends TabletopObject {
     }
   }
 
-  rotateOn() {
-    this.isRotate = true;
+  toggleRotate() {
+    this.isRotate = !this.isRotate;
   }
 
-  rotateOff() {
-    this.isRotate = false;
-  }
-
-  hideOn() {
-    this.isHide = true;
-  }
-
-  hideOff() {
-    this.isHide = false;
+  toggleHide() {
+    this.isHide = !this.isHide;
   }
 
   faceUpAll() {

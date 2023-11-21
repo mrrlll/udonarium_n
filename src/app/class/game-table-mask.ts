@@ -22,6 +22,10 @@ export class GameTableMask extends TabletopObject {
     gameTableMask.isHide = !gameTableMask.isHide;
   }
 
+  toggleLock() {
+    this.isLock = !this.isLock;
+  }
+
   static create(name: string, width: number, height: number, opacity: number, identifier?: string): GameTableMask {
     let object: GameTableMask = null;
 

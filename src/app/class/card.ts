@@ -54,20 +54,12 @@ export class Card extends TabletopObject {
     this.owners = [];
   }
 
-  rotateOn() {
-    this.isRotate = true;
+  toggleHide() {
+    this.isHide = !this.isHide;
   }
 
-  rotateOff() {
-    this.isRotate = false;
-  }
-
-  hideOn() {
-    this.isHide = true;
-  }
-
-  hideOff() {
-    this.isHide = false;
+  toggleRotate() {
+    this.isRotate = !this.isRotate;
   }
 
   toTopmost() {

@@ -26,7 +26,7 @@ import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
 import { Observable, Subscription } from 'rxjs';
 import { AppConfigCustomService } from 'service/app-config-custom.service';
-import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
+import { ContextMenuAction, ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { ImageService } from 'service/image.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
@@ -289,121 +289,12 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
     e.preventDefault();
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
     let position = this.pointerDeviceService.pointers[0];
-    this.contextMenuService.open(position, [
-      (this.isLocked
-        ? {
-          name: '☑ 固定', action: () => {
-            this.isLocked = false;
-            if (!this.isHide) SoundEffect.play(PresetSound.unlock);
-          }
-        } : {
-          name: '☐ 固定', action: () => {
-            this.isLocked = true;
-            if (!this.isHide) SoundEffect.play(PresetSound.lock);
-          }
-        }),
-      ContextMenuSeparator,
-      (!this.isVisible || this.isHand
-        ? {
-          name: '表にする', action: () => {
-            this.card.faceUp();
-            if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
-          },
-        }
-        : {
-          name: '裏にする', action: () => {
-            this.card.faceDown();
-            if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
-          },
-        }
-      ),
-      (this.isHand
-        ? {
-          name: '見るのをやめる', action: () => {
-            this.owners = this.owners.filter(owner => owner !== Network.peer.userId);
-            if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
-          }
-        }
-        : {
-          name: '自分だけで見る', action: () => {
-            if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
-            this.card.faceDown();
-            this.owners = [Network.peer.userId];
-          }
-        }),
-      (!this.isHand && this.hasOwner
-        ? {
-          name: '自分も見る', action: () => {
-            if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
-            let newOwners = this.owners.concat(Network.peer.userId);
-            this.card.faceDown();
-            this.owners = newOwners;
-          }
-        }
-        : {name : null, enabled: false}
-      ),
-      (this.isHand && this.card.owners.length >= 2
-        ? {
-          name: 'やっぱり自分だけで見る', action: () => {
-            if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
-            this.card.faceDown();
-            this.owners = [Network.peer.userId];
-          }
-        }: {name : null, enabled: false}
-      ),
-      ContextMenuSeparator,
-      {
-        name: '重なったカードで山札を作る', action: () => {
-          this.createStack();
-          if (!this.isHide) SoundEffect.play(PresetSound.cardPut);
-        }
-      },
 
-      ContextMenuSeparator,
-      { name: 'カードを編集', action: () => { this.showDetail(this.card); } },
-      {
-        name: 'コピーを作る', action: () => {
-          let cloneObject = this.card.clone();
-          cloneObject.location.x += this.gridSize;
-          cloneObject.location.y += this.gridSize;
-          cloneObject.toTopmost();
-          cloneObject.isLocked = false;
-          if (!this.isHide) SoundEffect.play(PresetSound.cardPut);
-        }
-      },
-      {
-        name: '削除する', action: () => {
-          this.card.destroy();
-          if (!this.isHide) SoundEffect.play(PresetSound.sweep);
-        }
-      },
-      ContextMenuSeparator,
-      (this.isRotate
-        ? {
-          name: '回転をオフ', action: () => {
-            this.card.rotateOff();
-          }
-        }: {
-          name : '回転をオン', action: () => {
-            this.card.rotateOn();
-        }
-      }
-    ),
-    (this.isGM && this.isHide
-      ? {
-        name: '表示する', action: () => {
-          this.card.hideOff();
-        }
-      }: {name : null, enabled: false}
-    ),
-    (this.isGM && !this.isHide
-      ? {
-        name: '非表示にする', action: () => {
-          this.card.hideOn();
-        }
-      }: {name : null, enabled: false}
-    ),
-    ], this.isVisible ? this.name : 'カード');
+    let menuActions: ContextMenuAction[] = [];
+    menuActions = menuActions.concat(this.makeSelectionContextMenu());
+    menuActions = menuActions.concat(this.makeContextMenu());
+
+    this.contextMenuService.open(position, menuActions, this.isVisible ? this.name : 'カード');
   }
 
   onMove() {
@@ -452,6 +343,168 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
     for (let i = 0; i < children.length; i++) {
       children[i].dispatchEvent(event);
     }
+  }
+
+  private makeSelectionContextMenu(): ContextMenuAction[] {
+    let actions: ContextMenuAction[] = [];
+
+    if (this.selectionService.objects.length) {
+      let objectPosition = {
+        x: this.card.location.x + (this.card.size * this.gridSize) / 2,
+        y: this.card.location.y + (this.card.size * this.gridSize) / 2,
+        z: this.card.posZ
+      };
+      actions.push({ name: 'ここに集める', action: () => this.selectionService.congregate(objectPosition) });
+    }
+
+    if (this.isSelected) {
+      let selectedCards = () => this.selectionService.objects.filter(object => object.aliasName === this.card.aliasName) as Card[];
+      let subActions: ContextMenuAction[] = [];
+      subActions.push({
+        name: 'すべて表にする', action: () => {
+          selectedCards().forEach(card => card.faceUp());
+          SoundEffect.play(PresetSound.cardDraw);
+        }
+      });
+      subActions.push({
+        name: 'すべて裏にする', action: () => {
+          selectedCards().forEach(card => card.faceDown());
+          SoundEffect.play(PresetSound.cardDraw);
+        }
+      });
+      subActions.push({
+        name: 'すべて自分だけで見る', action: () => {
+          selectedCards().forEach(card => {
+            card.faceDown();
+            card.owners = [Network.peer.userId];
+          });
+          SoundEffect.play(PresetSound.cardDraw);
+        }
+      });
+      subActions.push({
+        name: 'すべて自分も見る', action: () => {
+          selectedCards().forEach(card => {
+            let newOwners = card.owners.concat(Network.peer.userId);
+            card.faceDown();
+            card.owners = newOwners;
+          });
+          SoundEffect.play(PresetSound.cardDraw);
+        }
+      });
+      subActions.push({
+        name: 'すべて見るのをやめる', action: () => {
+          selectedCards().forEach(card => card.owners = []);
+          SoundEffect.play(PresetSound.cardDraw);
+        }
+      });
+      subActions.push(ContextMenuSeparator);
+      subActions.push({
+        name: this.isRotate ? '回転をオフ' : '回転をオン', action: () => {
+          selectedCards().forEach(card => card.toggleRotate());
+        }
+      });
+      // すべてカードを表示/非表示
+      if(this.isGM){
+        subActions.push({
+          name: this.isHide ? 'すべて表示する' : 'すべて非表示にする', action: () => {
+            selectedCards().forEach(card => card.toggleHide());
+          }
+        });
+      }
+      subActions.push(ContextMenuSeparator);
+      subActions.push({
+        name: 'すべて削除する', action: () => {
+          selectedCards().forEach(card => card.destroy());
+          SoundEffect.play(PresetSound.sweep);
+        }
+      });
+      actions.push({
+        name: '選択したカード', action: null, subActions: subActions
+      });
+    }
+    if (this.selectionService.objects.length) {
+      actions.push(ContextMenuSeparator);
+    }
+    return actions;
+  }
+
+  private makeContextMenu(): ContextMenuAction[] {
+    let actions: ContextMenuAction[] = [];
+
+    actions.push(!this.isVisible || this.isHand
+      ? {
+        name: '表にする', action: () => {
+          this.card.faceUp();
+          SoundEffect.play(PresetSound.cardDraw);
+        }
+      }
+      : {
+        name: '裏にする', action: () => {
+          this.card.faceDown();
+          SoundEffect.play(PresetSound.cardDraw);
+        }
+      });
+    actions.push(this.isHand
+      ? {
+        name: '見るのをやめる', action: () => {
+          this.owners = this.owners.filter(owner => owner !== Network.peer.userId);
+          SoundEffect.play(PresetSound.cardDraw);
+        }
+      }
+      : {
+        name: '自分だけで見る', action: () => {
+          if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
+          this.card.faceDown();
+          this.owners = [Network.peer.userId];
+        }
+      });
+    actions.push(!this.isHand && this.hasOwner
+      ? {
+        name: '自分も見る', action: () => {
+          if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
+          let newOwners = this.owners.concat(Network.peer.userId);
+          this.card.faceDown();
+          this.owners = newOwners;
+        }
+      }
+      : { name: null, enabled: false }
+    );
+    actions.push(ContextMenuSeparator);
+    actions.push({
+      name: '重なったカードで山札を作る', action: () => {
+        this.createStack();
+        SoundEffect.play(PresetSound.cardPut);
+      }
+    });
+    actions.push(ContextMenuSeparator);
+    actions.push({ name: 'カードを編集', action: () => { this.showDetail(this.card); } });
+    actions.push({
+      name: 'コピーを作る', action: () => {
+        let cloneObject = this.card.clone();
+        cloneObject.location.x += this.gridSize;
+        cloneObject.location.y += this.gridSize;
+        cloneObject.toTopmost();
+        SoundEffect.play(PresetSound.cardPut);
+      }
+    });
+    actions.push({
+      name: '削除する', action: () => {
+        this.card.destroy();
+        SoundEffect.play(PresetSound.sweep);
+      }
+    });
+    actions.push(ContextMenuSeparator);
+    actions.push({
+      name: this.isRotate ? '回転をオフ' : '回転をオン', action: () => {
+        this.card.toggleRotate();
+      }
+    });
+    actions.push({
+      name: this.isGM && this.isHide ? '表示する' : '非表示にする', action: () => {
+        this.card.toggleHide();
+      }
+    });
+    return actions;
   }
 
   private startIconHiddenTimer() {

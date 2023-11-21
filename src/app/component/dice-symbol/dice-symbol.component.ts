@@ -60,7 +60,7 @@ import { SelectionState, TabletopSelectionService } from 'service/tabletop-selec
     ])
   ]
 })
-export class DiceSymbolComponent implements AfterViewInit, OnDestroy, OnChanges {
+export class DiceSymbolComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() diceSymbol: DiceSymbol = null;
   @Input() is3D: boolean = false;
 
@@ -116,7 +116,7 @@ export class DiceSymbolComponent implements AfterViewInit, OnDestroy, OnChanges 
 
   ngOnChanges(): void {
     EventSystem.register(this)
-      .on('ROLL_DICE_SYMBOL', -1000, event => {
+      .on('ROLL_DICE_SYMBOL', event => {
         if (event.data.identifier === this.diceSymbol.identifier) {
           this.ngZone.run(() => {
             this.animeState = 'inactive';
@@ -140,7 +140,7 @@ export class DiceSymbolComponent implements AfterViewInit, OnDestroy, OnChanges 
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
       })
-      .on('UPDATE_FILE_RESOURE', -1000, event => {
+      .on('UPDATE_FILE_RESOURE', event => {
         this.changeDetector.markForCheck();
       })
       .on(`UPDATE_SELECTION/identifier/${this.diceSymbol?.identifier}`, event => {
@@ -228,6 +228,67 @@ export class DiceSymbolComponent implements AfterViewInit, OnDestroy, OnChanges 
 
     let actions: ContextMenuAction[] = [];
 
+    actions = actions.concat(this.makeSelectionContextMenu());
+    actions = actions.concat(this.makeContextMenu());
+
+    this.contextMenuService.open(position, actions, this.name);
+  }
+
+  private makeSelectionContextMenu(): ContextMenuAction[] {
+    let actions: ContextMenuAction[] = [];
+
+    if (this.selectionService.objects.length) {
+      let objectPosition = {
+        x: this.diceSymbol.location.x + (this.diceSymbol.size * this.gridSize) / 2,
+        y: this.diceSymbol.location.y + (this.diceSymbol.size * this.gridSize) / 2,
+        z: this.diceSymbol.posZ
+      };
+      actions.push({ name: 'ここに集める', action: () => this.selectionService.congregate(objectPosition) });
+    }
+
+    if (this.isSelected) {
+      let selectedDiceSymbols = () => this.selectionService.objects.filter(object => object.aliasName === this.diceSymbol.aliasName) as DiceSymbol[];
+      actions.push(
+        {
+          name: '選択したダイス', action: null, subActions: [
+            {
+              name: 'すべて振る', action: () => {
+                let needsSound = false;
+                selectedDiceSymbols().forEach(diceSymbol => {
+                  if (diceSymbol.isVisible) {
+                    needsSound = true;
+                    EventSystem.call('ROLL_DICE_SYMBOL', { identifier: diceSymbol.identifier });
+                    diceSymbol.diceRoll();
+                  }
+                });
+                if (needsSound) SoundEffect.play(PresetSound.diceRoll1);
+              }
+            },
+            {
+              name: 'すべて公開', action: () => {
+                selectedDiceSymbols().forEach(diceSymbol => diceSymbol.owner = '');
+                SoundEffect.play(PresetSound.unlock);
+              }
+            },
+            {
+              name: 'すべて自分だけ見る', action: () => {
+                selectedDiceSymbols().forEach(diceSymbol => diceSymbol.owner = Network.peer.userId);
+                SoundEffect.play(PresetSound.lock);
+              }
+            },
+          ]
+        }
+      );
+    }
+    if (this.selectionService.objects.length) {
+      actions.push(ContextMenuSeparator);
+    }
+    return actions;
+  }
+
+  private makeContextMenu(): ContextMenuAction[] {
+    let actions: ContextMenuAction[] = [];
+
     if (this.isVisible) {
       actions.push({
         name: 'ダイスを振る', action: () => {
@@ -235,7 +296,7 @@ export class DiceSymbolComponent implements AfterViewInit, OnDestroy, OnChanges 
         }
       });
     }
-    actions.push(ContextMenuSeparator);
+    if (actions.length) actions.push(ContextMenuSeparator);
     if (this.isMine || this.hasOwner) {
       actions.push({
         name: 'ダイスを公開', action: () => {
@@ -284,7 +345,7 @@ export class DiceSymbolComponent implements AfterViewInit, OnDestroy, OnChanges 
         SoundEffect.play(PresetSound.sweep);
       }
     });
-    this.contextMenuService.open(position, actions, this.name);
+    return actions;
   }
 
   onMove() {

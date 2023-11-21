@@ -25,7 +25,7 @@ import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
 import { AppConfigCustomService } from 'service/app-config-custom.service';
-import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
+import { ContextMenuAction, ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { ImageService } from 'service/image.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
@@ -275,134 +275,12 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
 
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
     let position = this.pointerDeviceService.pointers[0];
-    this.contextMenuService.open(position, [
-      (this.isLocked
-        ? {
-          name: '☑ 固定', action: () => {
-            this.isLocked = false;
-            if (!this.isHide) SoundEffect.play(PresetSound.unlock);
-          }
-        } : {
-          name: '☐ 固定', action: () => {
-            this.isLocked = true;
-            if (!this.isHide) SoundEffect.play(PresetSound.lock);
-          }
-        }),
-      ContextMenuSeparator,
-      {
-        name: '１枚引く', action: () => {
-          if (this.drawCard() != null && !this.isHide) {
-            SoundEffect.play(PresetSound.cardDraw);
-          }
-        }
-      },
-      ContextMenuSeparator,
-      {
-        name: '一番上を表にする', action: () => {
-          this.cardStack.faceUp();
-          if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
-        }
-      },
-      {
-        name: '一番上を裏にする', action: () => {
-          this.cardStack.faceDown();
-          if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
-        }
-      },
-      ContextMenuSeparator,
-      {
-        name: 'すべて表にする', action: () => {
-          this.cardStack.faceUpAll();
-          if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
-        }
-      },
-      {
-        name: 'すべて裏にする', action: () => {
-          this.cardStack.faceDownAll();
-          if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
-        }
-      },
-      {
-        name: 'すべて正位置にする', action: () => {
-          this.cardStack.uprightAll();
-          if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
-        }
-      },
-      ContextMenuSeparator,
-      {
-        name: 'シャッフル', action: () => {
-          this.cardStack.shuffle();
-          if (!this.isHide) SoundEffect.play(PresetSound.cardShuffle);
-          EventSystem.call('SHUFFLE_CARD_STACK', { identifier: this.cardStack.identifier });
-        }
-      },
-      { name: 'カード一覧', action: () => { this.showStackList(this.cardStack); } },
-      ContextMenuSeparator,
-      (this.isShowTotal
-        ? { name: '枚数を非表示にする', action: () => { this.cardStack.isShowTotal = false; } }
-        : { name: '枚数を表示する', action: () => { this.cardStack.isShowTotal = true; } }
-      ),
-      { name: 'カードサイズを揃える', action: () => { if (this.cardStack.topCard) this.cardStack.unifyCardsSize(this.cardStack.topCard.size); } },
-      ContextMenuSeparator,
-      {
-        name: '山札を人数分に分割する', action: () => {
-          this.splitStack(Network.peerIds.length + 1);
-          if (!this.isHide) SoundEffect.play(PresetSound.cardDraw);
-        }
-      },
-      {
-        name: '山札を崩す', action: () => {
-          this.breakStack();
-          if (!this.isHide) SoundEffect.play(PresetSound.cardShuffle);
-        }
-      },
-      ContextMenuSeparator,
-      { name: '詳細を表示', action: () => { this.showDetail(this.cardStack); } },
-      {
-        name: 'コピーを作る', action: () => {
-          let cloneObject = this.cardStack.clone();
-          cloneObject.location.x += this.gridSize;
-          cloneObject.location.y += this.gridSize;
-          cloneObject.owner = '';
-          cloneObject.isLocked = false;
-          cloneObject.toTopmost();
-          if (!this.isHide) SoundEffect.play(PresetSound.cardPut);
-        }
-      },
-      {
-        name: '山札を削除する', action: () => {
-          this.cardStack.setLocation('graveyard');
-          this.cardStack.destroy();
-          if (!this.isHide) SoundEffect.play(PresetSound.sweep);
-        }
-      },
-      ContextMenuSeparator,
-      (this.isRotate
-        ? {
-          name: '回転をオフ', action: () => {
-            this.cardStack.rotateOff();
-          }
-        }: {
-          name : '回転をオン', action: () => {
-            this.cardStack.rotateOn();
-        }
-      }
-    ),
-    (this.isGM && this.isHide
-      ? {
-        name: '表示する', action: () => {
-          this.cardStack.hideOff();
-        }
-      }: {name : null, enabled: false}
-    ),
-    (this.isGM && !this.isHide
-      ? {
-        name: '非表示にする', action: () => {
-          this.cardStack.hideOn();
-        }
-      }: {name : null, enabled: false}
-    ),
-    ], this.name);
+
+    let menuActions: ContextMenuAction[] = [];
+    menuActions = menuActions.concat(this.makeSelectionContextMenu());
+    menuActions = menuActions.concat(this.makeContextMenu());
+
+    this.contextMenuService.open(position, menuActions, this.name);
   }
 
   onMove() {
@@ -497,6 +375,194 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
     for (let i = 0; i < children.length; i++) {
       children[i].dispatchEvent(event);
     }
+  }
+
+  private makeSelectionContextMenu(): ContextMenuAction[] {
+    let actions: ContextMenuAction[] = [];
+    let subActions: ContextMenuAction[] = [];
+
+    if (this.selectionService.objects.length) {
+      let size = this.cardStack.topCard?.size ?? 2;
+      let objectPosition = {
+        x: this.cardStack.location.x + (size * this.gridSize) / 2,
+        y: this.cardStack.location.y + (size * this.gridSize) / 2,
+        z: this.cardStack.posZ
+      };
+      actions.push({ name: 'ここに集める', action: () => this.selectionService.congregate(objectPosition) });
+    }
+
+    if (this.isSelected) {
+      let selectedCardStacks = () => this.selectionService.objects.filter(object => object.aliasName === this.cardStack.aliasName) as CardStack[];
+      subActions.push({
+        name: 'すべて表にする', action: () => {
+          selectedCardStacks().forEach(cardStack => cardStack.faceUpAll());
+          SoundEffect.play(PresetSound.cardDraw);
+        }
+      });
+      subActions.push({
+        name: 'すべて裏にする', action: () => {
+          selectedCardStacks().forEach(cardStack => cardStack.faceDownAll());
+          SoundEffect.play(PresetSound.cardDraw);
+        }
+      });
+      subActions.push({
+        name: 'すべて正位置にする', action: () => {
+          selectedCardStacks().forEach(cardStack => cardStack.uprightAll());
+          SoundEffect.play(PresetSound.cardDraw);
+        }
+      });
+      subActions.push(ContextMenuSeparator);
+      subActions.push({
+        name: 'すべてシャッフル', action: () => {
+          SoundEffect.play(PresetSound.cardShuffle);
+          selectedCardStacks().forEach(cardStack => {
+            cardStack.shuffle();
+            EventSystem.call('SHUFFLE_CARD_STACK', { identifier: cardStack.identifier });
+          });
+        }
+      });
+      subActions.push(ContextMenuSeparator);
+      subActions.push({
+        name: this.isRotate ? 'すべて回転をオフにする' : 'すべて回転をオンにする', action: () => {
+          selectedCardStacks().forEach(cardStack => cardStack.toggleRotate());
+        }
+      });
+      if(this.isGM){
+        subActions.push({
+          name: this.isHide ? 'すべて表示する' : 'すべて非表示にする', action: () => {
+            selectedCardStacks().forEach(cardStack => cardStack.toggleHide());
+          }
+        });
+      }
+      subActions.push(ContextMenuSeparator);
+      subActions.push({
+        name: 'すべて削除する', action: () => {
+          selectedCardStacks().forEach(cardStack => {
+            cardStack.destroy();
+          });
+        }
+      });
+      actions.push(
+        {
+          name: '選択した山札', action: null, subActions: subActions
+        }
+      );
+    }
+    if (this.selectionService.objects.length) {
+      actions.push(ContextMenuSeparator);
+    }
+    return actions;
+  }
+
+  private makeContextMenu(): ContextMenuAction[] {
+    let actions: ContextMenuAction[] = [];
+
+    actions.push({
+      name: this.isLocked ? '☑ 固定' : '☐ 固定',
+      action: () => {
+        this.isLocked = !this.isLocked;
+        if (!this.isHide) SoundEffect.play(this.isLocked ? PresetSound.lock : PresetSound.unlock);
+      }
+    });
+    actions.push(ContextMenuSeparator);
+    actions.push({
+      name: '１枚引く', action: () => {
+        if (this.drawCard() != null) {
+          SoundEffect.play(PresetSound.cardDraw);
+        }
+      }
+    });
+    actions.push(ContextMenuSeparator);
+    actions.push({
+      name: '一番上を表にする', action: () => {
+        this.cardStack.faceUp();
+        SoundEffect.play(PresetSound.cardDraw);
+      }
+    });
+    actions.push({
+      name: '一番上を裏にする', action: () => {
+        this.cardStack.faceDown();
+        SoundEffect.play(PresetSound.cardDraw);
+      }
+    });
+    actions.push(ContextMenuSeparator);
+    actions.push({
+      name: 'すべて表にする', action: () => {
+        this.cardStack.faceUpAll();
+        SoundEffect.play(PresetSound.cardDraw);
+      }
+    });
+    actions.push({
+      name: 'すべて裏にする', action: () => {
+        this.cardStack.faceDownAll();
+        SoundEffect.play(PresetSound.cardDraw);
+      }
+    });
+    actions.push({
+      name: 'すべて正位置にする', action: () => {
+        this.cardStack.uprightAll();
+        SoundEffect.play(PresetSound.cardDraw);
+      }
+    });
+    actions.push(ContextMenuSeparator);
+    actions.push({
+      name: 'シャッフル', action: () => {
+        this.cardStack.shuffle();
+        SoundEffect.play(PresetSound.cardShuffle);
+        EventSystem.call('SHUFFLE_CARD_STACK', { identifier: this.cardStack.identifier });
+      }
+    });
+    actions.push({ name: 'カード一覧', action: () => { this.showStackList(this.cardStack); } });
+    actions.push(ContextMenuSeparator);
+    actions.push((this.isShowTotal
+      ? { name: '枚数を非表示にする', action: () => { this.cardStack.isShowTotal = false; } }
+      : { name: '枚数を表示する', action: () => { this.cardStack.isShowTotal = true; } }
+    ));
+    actions.push({ name: 'カードサイズを揃える', action: () => { if (this.cardStack.topCard) this.cardStack.unifyCardsSize(this.cardStack.topCard.size); } });
+    actions.push(ContextMenuSeparator);
+    actions.push({
+      name: '山札を人数分に分割する', action: () => {
+        this.splitStack(Network.peerIds.length + 1);
+        SoundEffect.play(PresetSound.cardDraw);
+      }
+    });
+    actions.push({
+      name: '山札を崩す', action: () => {
+        this.breakStack();
+        SoundEffect.play(PresetSound.cardShuffle);
+      }
+    });
+    actions.push(ContextMenuSeparator);
+    actions.push({ name: '詳細を表示', action: () => { this.showDetail(this.cardStack); } });
+    actions.push({
+      name: 'コピーを作る', action: () => {
+        let cloneObject = this.cardStack.clone();
+        cloneObject.location.x += this.gridSize;
+        cloneObject.location.y += this.gridSize;
+        cloneObject.owner = '';
+        cloneObject.toTopmost();
+        SoundEffect.play(PresetSound.cardPut);
+      }
+    });
+    actions.push({
+      name: '山札を削除する', action: () => {
+        this.cardStack.setLocation('graveyard');
+        this.cardStack.destroy();
+        SoundEffect.play(PresetSound.sweep);
+      }
+    });
+    actions.push(ContextMenuSeparator);
+    actions.push({
+      name: this.isRotate ? '回転をオフ' : '回転をオン', action: () => {
+        this.cardStack.toggleRotate();
+      }
+    });
+    actions.push({
+      name: this.isGM && this.isHide ? '表示する' : '非表示にする', action: () => {
+        this.cardStack.toggleHide();
+      }
+    })
+    return actions;
   }
 
   private showDetail(gameObject: CardStack) {
