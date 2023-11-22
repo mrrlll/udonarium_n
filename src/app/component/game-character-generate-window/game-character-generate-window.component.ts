@@ -32,7 +32,7 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
   supporterror: boolean = false;
   keyerror: boolean = false;
 
-  charadata: any = null;
+  charadata: JSON = null;
 
   supportSystem: string[] = ["tiw", "skynauts2"];
 
