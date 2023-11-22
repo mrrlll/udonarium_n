@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, NgZone, OnDestroy, ElementRef, OnInit, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { GenerateService } from 'service/generate.service';
 import { XmlUtil } from '@udonarium/core/system/util/xml-util';
 import { EventSystem } from '@udonarium/core/system';
@@ -15,7 +15,7 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './game-character-generate-window.component.html',
   styleUrls: ['./game-character-generate-window.component.css']
 })
-export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewInit, OnDestroy {
+export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewInit {
 
   constructor(
     private generateService: GenerateService,
@@ -41,9 +41,6 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
   }
   ngAfterViewInit() {
     this.charactersheeturlInput.nativeElement.focus();
-  }
-  ngOnDestroy() {
-    EventSystem.unregister(this);
   }
 
   get(download_flg){
