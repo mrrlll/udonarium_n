@@ -17,6 +17,7 @@ import { CardStack } from '@udonarium/card-stack';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
+import { MathUtil } from '@udonarium/core/system/util/math-util';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { CardStackListComponent } from 'component/card-stack-list/card-stack-list.component';
@@ -69,7 +70,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
   get isEmpty(): boolean { return this.cardStack.isEmpty; }
   get size(): number {
     let card = this.cardStack.topCard;
-    return (card ? card.size : 2);
+    return card ? MathUtil.clampMin(card.size) : 2;
   }
 
   get hasOwner(): boolean { return this.cardStack.hasOwner; }

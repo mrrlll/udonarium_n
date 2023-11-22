@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { EventSystem, Network } from '@udonarium/core/system';
+import { MathUtil } from '@udonarium/core/system/util/math-util';
 import { GameCharacter } from '@udonarium/game-character';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.component';
@@ -57,7 +58,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   isGM: boolean;
 
   get name(): string { return this.gameCharacter.name; }
-  get size(): number { return this.adjustMinBounds(this.gameCharacter.size); }
+  get size(): number { return MathUtil.clampMin(this.gameCharacter.size); }
   get imageFile(): ImageFile { return this.gameCharacter.imageFile; }
   get rotate(): number { return this.gameCharacter.rotate; }
   set rotate(rotate: number) { this.gameCharacter.rotate = rotate; }
@@ -152,53 +153,6 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     menuActions = menuActions.concat(this.makeSelectionContextMenu());
     menuActions = menuActions.concat(this.makeContextMenu());
     this.contextMenuService.open(position, menuActions, this.name);
-    // this.contextMenuService.open(position, [
-    //   { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } },
-    //   { name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } },
-    //   ContextMenuSeparator,
-    //   {
-    //     name: '共有イベントリに移動', action: () => {
-    //       this.gameCharacter.setLocation('common');
-    //       SoundEffect.play(PresetSound.piecePut);
-    //     }
-    //   },
-    //   {
-    //     name: '個人イベントリに移動', action: () => {
-    //       this.gameCharacter.setLocation(Network.peerId);
-    //       SoundEffect.play(PresetSound.piecePut);
-    //     }
-    //   },
-    //   {
-    //     name: '墓場に移動', action: () => {
-    //       this.gameCharacter.setLocation('graveyard');
-    //       SoundEffect.play(PresetSound.sweep);
-    //     }
-    //   },
-    //   ContextMenuSeparator,
-    //   {
-    //     name: 'コピーを作る', action: () => {
-    //       let cloneObject = this.gameCharacter.clone();
-    //       cloneObject.location.x += this.gridSize;
-    //       cloneObject.location.y += this.gridSize;
-    //       cloneObject.update();
-    //       SoundEffect.play(PresetSound.piecePut);
-    //     }
-    //   },
-    //   (this.isGM && this.isStealth
-    //     ? {
-    //       name: 'ステルスモードを無効', action: () => {
-    //         this.gameCharacter.hideOff();
-    //       }
-    //     }: {name : null, enabled: false}
-    //   ),
-    //   (this.isGM && !this.isStealth
-    //     ? {
-    //       name: 'ステルスモードを有効', action: () => {
-    //         this.gameCharacter.hideOn();
-    //       }
-    //     }: {name : null, enabled: false}
-    //   ),
-    // ], this.name);
   }
 
   onMove() {
@@ -317,10 +271,6 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
       }
     });
     return actions;
-  }
-
-  private adjustMinBounds(value: number, min: number = 0): number {
-    return value < min ? min : value;
   }
 
   private showDetail(gameObject: GameCharacter) {

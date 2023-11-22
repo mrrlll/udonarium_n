@@ -18,6 +18,7 @@ import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
+import { MathUtil } from '@udonarium/core/system/util/math-util';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
@@ -92,7 +93,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
   get owners(): Array<string> { return this.card.owners; }
   set owners(owners: Array<string>) { this.card.owners = owners; }
   get zindex(): number { return this.card.zindex; }
-  get size(): number { return this.adjustMinBounds(this.card.size); }
+  get size(): number { return MathUtil.clampMin(this.card.size); }
 
   get isHand(): boolean { return this.card.isHand; }
   get isFront(): boolean { return this.card.isFront; }
@@ -485,32 +486,6 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
       this.changeDetector.markForCheck();
     }, 300);
     this.changeDetector.markForCheck();
-  }
-
-  private adjustMinBounds(value: number, min: number = 0): number {
-    return value < min ? min : value;
-  }
-
-  vertical() {
-    if (!this.card.isVisible || this.card.rotate == 0) return;
-    this.card.rotate = 0;
-    if (!this.isHide) SoundEffect.play(PresetSound.cardPut);
-  }
-
-  horizontal() {
-    if (!this.card.isVisible || this.card.rotate == 90) return;
-    this.card.rotate = 90;
-    if (!this.isHide) SoundEffect.play(PresetSound.cardPut);
-  }
-
-  turnRight() {
-    this.card.rotate += 45;
-    if (!this.isHide) SoundEffect.play(PresetSound.cardPut);
-  }
-
-  turnLeft() {
-    this.card.rotate -= 45;
-    if (!this.isHide) SoundEffect.play(PresetSound.cardPut);
   }
 
   private showDetail(gameObject: Card) {
