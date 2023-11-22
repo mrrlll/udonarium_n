@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { GenerateService } from 'service/generate.service';
 import { XmlUtil } from '@udonarium/core/system/util/xml-util';
 import { EventSystem } from '@udonarium/core/system';
@@ -9,13 +9,14 @@ import { ModalService } from 'service/modal.service';
 
 import { XMLBuilder } from 'fast-xml-parser';
 import { HttpClient } from '@angular/common/http';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-game-character-generate-window',
   templateUrl: './game-character-generate-window.component.html',
   styleUrls: ['./game-character-generate-window.component.css']
 })
-export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewInit {
+export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private generateService: GenerateService,
@@ -23,6 +24,8 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
     private panelService: PanelService,
     private http: HttpClient,
   ){}
+
+  private subscription: Subscription;
 
   @ViewChild('charactersheeturlInput', { static: false })
   charactersheeturlInput!: ElementRef;
@@ -32,15 +35,18 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
   supporterror: boolean = false;
   keyerror: boolean = false;
 
-  charadata: JSON = null;
-
   supportSystem: string[] = ["tiw", "skynauts2"];
 
   ngOnInit() {
     Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'キャラ駒生成');
   }
+
   ngAfterViewInit() {
     this.charactersheeturlInput.nativeElement.focus();
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   get(download_flg){
@@ -68,9 +74,9 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       return;
     }
 
-    this.generateService.get(URL).subscribe( (entry) => {
-      this.charadata = entry;
-      this.generate(this.charadata, system, site, download_flg);
+    this.subscription = this.generateService.get(URL).subscribe( (entry) => {
+      let charadata = entry;
+      this.generate(charadata, system, site, download_flg);
     }, (error) => {
       console.log(error);
       this.keyerror = true;
