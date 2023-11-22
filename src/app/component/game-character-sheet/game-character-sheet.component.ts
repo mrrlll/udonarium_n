@@ -10,6 +10,8 @@ import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
 
+import { GameCharacter } from '@udonarium/game-character';
+
 @Component({
   selector: 'game-character-sheet',
   templateUrl: './game-character-sheet.component.html',
@@ -117,5 +119,19 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy {
       if (!element) return;
       element.value = value;
     });
+  }
+
+  chkKomaSize( height ){
+    let character = <GameCharacter>this.tabletopObject;
+    if( height < 50 )
+      height = 50 ;
+    if( height > 750 )
+      height = 750 ;
+    character.komaImageHeignt = height;
+  }
+
+  clickImageFlag(){
+    let character = <GameCharacter>this.tabletopObject;
+    character.specifyKomaImageFlag = !character.specifyKomaImageFlag;
   }
 }

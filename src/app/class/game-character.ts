@@ -7,10 +7,7 @@ import { DataElement } from './data-element';
 import { TabletopObject } from './tabletop-object';
 import { UUID } from '@udonarium/core/system/util/uuid';
 
-//import { GameObjectInventoryService } from 'service/game-object-inventory.service';
-import { StandList } from './stand-list';
 import { Network } from './core/system';
-import { PeerCursor } from './peer-cursor';
 import { ObjectStore } from './core/synchronize-object/object-store';
 
 @SyncObject('character')
@@ -128,31 +125,11 @@ export class GameCharacter extends TabletopObject {
 
     this.addBuffDataElement();
 
-    let istachie = this.detailDataElement.getElementsByName('立ち絵位置');
-    if( istachie.length == 0 ){
-      let testElement: DataElement = DataElement.create('立ち絵位置', '', {}, '立ち絵位置' + this.identifier);
-      this.detailDataElement.appendChild(testElement);
-      testElement.appendChild(DataElement.create('POS', 11, { 'type': 'numberResource', 'currentValue': '0' }, 'POS_' + this.identifier));
-    }
-
     let iconNum = this.detailDataElement.getElementsByName('コマ画像');
     if( iconNum.length == 0 ){
       let elementKoma: DataElement = DataElement.create('コマ画像', '', {}, 'コマ画像' + this.identifier);
       this.detailDataElement.appendChild(elementKoma);
 
-      //コマ画像作成時は立ち絵の次に差し込み
-      let tachies = this.detailDataElement.getElementsByName('立ち絵位置');
-      if( tachies.length != 0 ){
-        let parentElement = tachies[0].parent;
-        let index: number = parentElement.children.indexOf(tachies[0]);
-        console.log("立ち絵の次に差し込み INdex" + index);
-        if (index < parentElement.children.length - 1) {
-          let nextElement = parentElement.children[index + 1];
-          console.log("立ち絵の次に差し込み nextElement" + nextElement);
-
-          parentElement.insertBefore(elementKoma, nextElement);
-        }
-      }
       elementKoma.appendChild(DataElement.create(
         'ICON',
         this.imageDataElement.children.length - 1,
