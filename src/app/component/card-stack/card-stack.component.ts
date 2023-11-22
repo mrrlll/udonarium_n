@@ -10,7 +10,7 @@ import {
   NgZone,
   OnChanges,
   OnDestroy,
-  OnInit,
+  OnInit
 } from '@angular/core';
 import { Card } from '@udonarium/card';
 import { CardStack } from '@udonarium/card-stack';

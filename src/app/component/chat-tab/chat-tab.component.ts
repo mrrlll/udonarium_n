@@ -12,7 +12,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 
 import { ChatMessage, ChatMessageContext } from '@udonarium/chat-message';
