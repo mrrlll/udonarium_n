@@ -33,10 +33,10 @@
     <option value="{{networkService.peerId}}">個人インベントリ</option>
     <option value="graveyard">墓地</option>
   </select>
-  <label for="isHideCheck">　GMにのみパネルを表示する</label>
+  <label for="isHideCheck" style="user-select: none;">　GMにのみパネルを表示する</label>
   <input type="checkbox" [(ngModel)]="tabletopObject.isHide" id="isHideCheck"/>
   <div class="extra-setting" style="width:50%;display:table-cell;">
-    <label for="specifyKomaImageFlag">コマ画像の高さを指定</label>
+    <label for="specifyKomaImageFlag" style="user-select: none;">コマ画像の高さを指定</label>
     <input type="checkbox" id="specifyKomaImageFlag" [(ngModel)]="tabletopObject.specifyKomaImageFlag" name="specifyKomaImageFlag" (click)="clickImageFlag()">
     <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 1 +';' | safe: 'style'" min="50" max="750" [(ngModel)]="tabletopObject.komaImageHeignt"  [disabled]="!tabletopObject.specifyKomaImageFlag"/>
     <input class="is-caret" [(ngModel)]="tabletopObject.komaImageHeignt"  [disabled]="!tabletopObject.specifyKomaImageFlag" type="number" style="width:12em;" min="50" max="750" name="popWidth" (change)="chkKomaSize($event.target.value)" style="color: #555;"/>
