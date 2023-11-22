@@ -9,7 +9,7 @@
       </select> -->
       <ng-container *ngIf="!isImage">
         <ng-container *ngTemplateOutlet="editButtons"></ng-container>
-        <select (change)="setElementType($event.target.value)" [ngModel]="gameDataElement.type">
+        <select (change)="setElementType($event.target.value)" [ngModel]="gameDataElement.type ?? ''">
           <option value="">通常</option>
           <option value="simpleNumber">数値</option>
           <option value="check">通常(チェックボックス付)</option>
