@@ -1,18 +1,14 @@
 import { AfterViewInit, Component, NgZone, OnDestroy, ElementRef, OnInit, Input, ViewChild } from '@angular/core';
 import { GenerateService } from 'service/generate.service';
 import { XmlUtil } from '@udonarium/core/system/util/xml-util';
-import { FileReaderUtil } from '@udonarium/core/file-storage/file-reader-util';
 import { EventSystem } from '@udonarium/core/system';
 import * as JSZip from 'jszip';
 
-
-import { PanelOption, PanelService } from 'service/panel.service';
+import { PanelService } from 'service/panel.service';
 import { ModalService } from 'service/modal.service';
 
-import { XMLParser, XMLBuilder } from 'fast-xml-parser';
+import { XMLBuilder } from 'fast-xml-parser';
 import { HttpClient } from '@angular/common/http';
-import { checkPrime } from 'crypto';
-import { availableParallelism } from 'os';
 
 @Component({
   selector: 'app-game-character-generate-window',
