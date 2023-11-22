@@ -270,6 +270,21 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
         SoundEffect.play(PresetSound.piecePut);
       }
     });
+    actions.push(ContextMenuSeparator);
+    // ステルスモードのオンオフ
+    if(this.isGM && this.isStealth){
+      actions.push({
+        name: 'ステルスモードを無効', action: () => {
+          this.gameCharacter.hideOff();
+        }
+      });
+    }else if(this.isGM && !this.isStealth){
+      actions.push({
+        name: 'ステルスモードを有効', action: () => {
+          this.gameCharacter.hideOn();
+        }
+      });
+    }
     return actions;
   }
 
