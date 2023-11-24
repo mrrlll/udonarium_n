@@ -7,7 +7,6 @@ import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BadgeComponent } from 'component/badge/badge.component';
 import { CardStackListComponent } from 'component/card-stack-list/card-stack-list.component';
-import { CardStackListComponentEx } from 'component/card-stack-list-ex/card-stack-list-ex.component';
 
 import { CardStackComponent } from 'component/card-stack/card-stack.component';
 import { CardComponent } from 'component/card/card.component';
@@ -96,7 +95,6 @@ import { GameTableMaskInventoryComponent } from './component/game-table-mask-inv
     CardComponent,
     CardStackComponent,
     CardStackListComponent,
-    CardStackListComponentEx,
     ChatMessageComponent,
     ChatPaletteComponent,
     ChatTabComponent,
