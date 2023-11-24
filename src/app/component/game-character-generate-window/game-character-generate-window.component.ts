@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { GenerateService } from 'service/generate.service';
 import { XmlUtil } from '@udonarium/core/system/util/xml-util';
 import { EventSystem } from '@udonarium/core/system';
@@ -9,14 +9,13 @@ import { ModalService } from 'service/modal.service';
 
 import { XMLBuilder } from 'fast-xml-parser';
 import { HttpClient } from '@angular/common/http';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-game-character-generate-window',
   templateUrl: './game-character-generate-window.component.html',
   styleUrls: ['./game-character-generate-window.component.css']
 })
-export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewInit, OnDestroy {
+export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewInit {
 
   constructor(
     private generateService: GenerateService,
@@ -25,97 +24,68 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
     private http: HttpClient,
   ){}
 
-  private subscription: Subscription;
-
   @ViewChild('charactersheeturlInput', { static: false })
   charactersheeturlInput!: ElementRef;
 
-  charactersheeturl: string = '';
-  urlerror: boolean = false;
-  supporterror: boolean = false;
-  keyerror: boolean = false;
-
-  supportSystem: string[] = ["tiw", "skynauts2"];
+  characterSheetUrl: string = '';
+  isUnsupportedSiteSystem: boolean = false;
+  isKeyNotFound: boolean = false;
 
   ngOnInit() {
     Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'キャラ駒生成');
   }
 
   ngAfterViewInit() {
+    // URL入力欄にフォーカス
     this.charactersheeturlInput.nativeElement.focus();
   }
 
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
+  generate(){
+    this.isUnsupportedSiteSystem = false;
+    this.isKeyNotFound = false;
 
-  get(download_flg){
-    // エラーフラグをリセット
-    this.urlerror = false;
-    this.supporterror = false;
-    this.keyerror = false;
+    const supportSiteSystems = {
+      "character-sheets.appspot.com": {
+        "tiw": this.appspot_kemono,
+        "skynauts2": this.appspot_skynauts2
+      }
+    };
 
-    var URL = this.charactersheeturl;
-    const regexp = /^(https?):\/\/[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\/[^\s]*)?$/;
+    var URL = this.characterSheetUrl;
+    let site: string = ""
+    let system: string = ""
 
-    const data = URL.split("/");
-    const site: string = data[2];
-    const system: string = data[3];
 
-    // URL形式かチェック
-    if (!regexp.test(URL)) {
-      this.urlerror = true;
+    if (!supportSiteSystems[this.characterSheetUrl.split("/")[2]]) {
+      this.isUnsupportedSiteSystem = true;
       return;
+    } else {
+      site = URL.split("/")[2];
+      system = URL.split("/")[3];
+
+      if (!supportSiteSystems[site][system]) {
+        this.isUnsupportedSiteSystem = true;
+        return;
+      }
     }
 
-    // 生成に対応しているシステムかチェック
-    if (!this.supportSystem.includes(system)) {
-      this.supporterror = true;
-      return;
-    }
-
-    this.subscription = this.generateService.get(URL).subscribe( (entry) => {
-      let charadata = entry;
-      this.generate(charadata, system, site, download_flg);
+    this.generateService.get(URL).subscribe( (data) => {
+      let charadata = data;
+      const generateFunc = supportSiteSystems[site][system];
+      if (generateFunc) {
+        generateFunc.call(this, charadata);
+      }
     }, (error) => {
-      console.log(error);
-      this.keyerror = true;
+      this.isKeyNotFound = true;
     });
   }
 
-  generate(charadata, system, site, download_flg){
-    switch (site){
-      case "character-sheets.appspot.com":
-        this.csappspotgenerate(charadata, system, download_flg);
-        break;
-    }
-  }
-
-  csappspotgenerate(charadata, system, download_flg){
-    switch (system){
-      case "tiw":
-        this.appspot_kemono(charadata, download_flg);
-        break;
-      case "skynauts2":
-        this.appspot_skynauts2(charadata, download_flg);
-    }
-  }
-
-  appspot_skynauts2(charadata, download_flg){
+  appspot_skynauts2(charadata){
     let skynauts2sheet = null;
     this.http.get('assets/skynauts2sheet.json').subscribe(data => {
       skynauts2sheet = data;
 
-      let name = charadata['base']['name'];
-      let move = charadata['base']['move'];
-      let hp = charadata['hitpoint']['max'];
-      let ability = {
-        "body": null,
-        "culture": null,
-        "sense": null,
-        "technic": null,
-      };
-      let relations: String[] = [];
+      let ability = { "body": null, "culture": null, "sense": null, "technic": null };
       let count: number = 1;
       let countnumber = {
         "1": "①",
@@ -161,14 +131,14 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
             break;
         }
       }
-      skynauts2sheet['character']['data']['data'][2]['data'][1]['data'][0]['#text'] = move;
-      skynauts2sheet['character']['data']['data'][2]['data'][0]['data'][0]['@_currentValue'] = hp;
-      skynauts2sheet['character']['data']['data'][2]['data'][0]['data'][0]['#text'] = hp;
+      skynauts2sheet['character']['data']['data'][2]['data'][1]['data'][0]['#text'] = charadata['base']['move'];
+      skynauts2sheet['character']['data']['data'][2]['data'][0]['data'][0]['@_currentValue'] = charadata['hitpoint']['max'];
+      skynauts2sheet['character']['data']['data'][2]['data'][0]['data'][0]['#text'] = charadata['hitpoint']['max'];
       skynauts2sheet['character']['data']['data'][2]['data'][1]['data'][1]['#text'] = ability.technic;
       skynauts2sheet['character']['data']['data'][2]['data'][1]['data'][2]['#text'] = ability.sense;
       skynauts2sheet['character']['data']['data'][2]['data'][1]['data'][3]['#text'] = ability.culture;
       skynauts2sheet['character']['data']['data'][2]['data'][1]['data'][4]['#text'] = ability.body;
-      skynauts2sheet.character.data.data[1].data[0]["#text"] = name;
+      skynauts2sheet.character.data.data[1].data[0]["#text"] = charadata['base']['name'];
 
       let chatpalatte: null|String = "";
       chatpalatte += this.skynautsChatPaletteS(ability.technic, "「技術」判定");
@@ -187,7 +157,8 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       <summary-setting sortTag="name" sortOrder="ASC" dataTag="生命点　移動力　技術　感覚　教養　身体　キズナ①　キズナ②　キズナ③　キズナ④　キズナ⑤　キズナ⑥　キズナ⑦　キズナ⑧　キズナ⑨　キズナ⑩　デバフ"></summary-setting>
       `
 
-      this.generateKoma(name, skynauts2sheet, summary, download_flg);
+      this.generateKoma(skynauts2sheet, summary);
+      return;
     });
   }
 
@@ -226,13 +197,12 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
     return `${dice}SN7#${fumble} ${actionName}　${actionDescription}${ability1_text}${ability2_text}\n`;
   }
 
-  appspot_kemono(charadata, download_flg){
+  appspot_kemono(charadata){
     let kemonosheet = null;
     this.http.get('assets/kemonosheet.json').subscribe(data => {
       kemonosheet = data;
       const handlename: string = charadata.base.handlename;
 
-      /// 使用する特性を確認 ///
       const talent: any = charadata.base.talent
       const useTalent = [];
       let anyChecked: boolean = false;
@@ -248,9 +218,7 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       if (!anyChecked) {
         useTalent.push(talent.name1, talent.name2);
       }
-      /// ここまで ///
 
-      /// キャラノート ///
       let character_note: string = "";
       let facepower: string = "";
       const truename: string = charadata.base.name;
@@ -270,14 +238,12 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
 貌力:${facepower}
 雰囲気:${atmosphere}
 動機:${motivation}`;
-      /// ここまで ///
 
       let debuff = "";
       if (charadata.status.bad.value !== null){
         debuff = charadata.status.bad.value;
       };
 
-      /// 装備中の武器を取得 ///
       let weapons = charadata.weapons;
 
       let weaponName: string | null = null;
@@ -302,13 +268,11 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
           } else {
             weaponExplain = weapon.explain;
           }
-          break; // 一つ取り出した時点で処理を終了
+          break;
         };
       };
       equipmentWeapon = `「${weaponName}」(威力:${weaponDamage})(特殊効果:${weaponExplain})`;
-      /// ここまで ///
 
-      /// 装備中の防具を取得 ///
       let armors = charadata.armors;
 
       let armorName: string | null = null;
@@ -326,13 +290,11 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
           } else {
             armorExplain = armor.explain;
           }
-          break; // 一つ取り出した時点で処理を終了
+          break;
         }
       }
       equipmentArmor = `「${armorName}」(軽減値:${armorMitigation})(特殊効果:${armorExplain})`;
-      /// ここまで ///
 
-      /// 装備中の小道具を取得 ///
       let accessories = charadata.accessories;
       const equipmentAccessories: { name: string; explain: string | null }[] = [];
       for (const accessory of accessories) {
@@ -345,11 +307,10 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
             explain: accessory.explain,
           });
           if (equipmentAccessories.length >= 2) {
-            break; // 最大２つ取得したらループを終了
+            break;
           }
         }
       };
-      /// ここまで ///
 
       // 仮名
       kemonosheet.character.data.data[1].data[0]["#text"] = handlename;
@@ -423,11 +384,12 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       let summary = `<?xml version="1.0" encoding="UTF-8"?>
       <summary-setting sortTag="name" sortOrder="ASC" dataTag="開始条件　展開 耐久度　余裕　食事　水分　予算　威力　軽減値 特性①　特性② 　特殊効果　異形　獸憑き　状態異常 　移動　格闘　射撃　製作　察知　自制　 貌力　装備 武器　防具　小道具　持ち物 ICON"></summary-setting>
       `
-      this.generateKoma(handlename, kemonosheet, summary, download_flg);
+      this.generateKoma(kemonosheet, summary);
+      return;
     });
   };
 
-  generateKoma(name, sheetdata, summary, download_flg){
+  generateKoma(sheetdata, summary){
     const xb = new XMLBuilder({
       ignoreAttributes: false,
       textNodeName: "#text",
@@ -437,26 +399,12 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
     });
 
     const xmlContent = xb.build(sheetdata);
-    // console.log(xmlContent)
 
-    switch(download_flg){
-      case false:
-        let xmlElement: Element = XmlUtil.xml2element(summary);
-        if (xmlElement) EventSystem.trigger('XML_LOADED', { xmlElement: xmlElement });
-        xmlElement = XmlUtil.xml2element(xmlContent);
-        if (xmlElement) EventSystem.trigger('XML_LOADED', { xmlElement: xmlElement });
-        break;
-      case true:
-        const zip = new JSZip();
-        zip.file(`${name}.xml`, xmlContent);
-        zip.file('summary.xml', summary);
-        zip.generateAsync({ type: 'blob' }).then((blob) => {
-          const downloadLink = document.createElement('a');
-          downloadLink.href = URL.createObjectURL(blob);
-          downloadLink.download = `${name}.zip`;
-          downloadLink.click();
-        });
-        break;
-    };
-  }
+    let xmlElement: Element = XmlUtil.xml2element(summary);
+    if (xmlElement) EventSystem.trigger('XML_LOADED', { xmlElement: xmlElement });
+    xmlElement = XmlUtil.xml2element(xmlContent);
+    if (xmlElement) EventSystem.trigger('XML_LOADED', { xmlElement: xmlElement });
+
+    return;
+  };
 }
