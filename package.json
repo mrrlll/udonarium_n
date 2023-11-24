@@ -43,7 +43,6 @@
     "rxjs": "~7.8.1",
     "tslib": "^2.5.0",
     "vkbeautify": "^0.99.3",
-    "TypeScript": "npm:typescript@~5.1.6",
     "zone.js": "~0.13.0",
     "@babel/traverse": "^7.22.7"
   },
