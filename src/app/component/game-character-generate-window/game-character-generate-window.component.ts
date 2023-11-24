@@ -139,18 +139,8 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       skynauts2sheet['character']['data']['data'][2]['data'][1]['data'][4]['#text'] = ability.body;
       skynauts2sheet.character.data.data[1].data[0]["#text"] = charadata['base']['name'];
 
-      let chatpalatte: null|String = "";
-      chatpalatte += this.skynautsChatPaletteS(ability.technic, "「技術」判定");
-      chatpalatte += this.skynautsChatPaletteS(ability.sense, "「感覚」判定");
-      chatpalatte += this.skynautsChatPaletteS(ability.culture, "「教養」判定");
-      chatpalatte += this.skynautsChatPaletteS(ability.body, "「身体」判定");
-      chatpalatte += this.skynautsChatPaletteD(ability.technic, ability.culture, "修理判定", "「技術」+「教養」");
-      chatpalatte += this.skynautsChatPaletteD(ability.sense, ability.culture, "操舵判定", "「感覚」+「教養」");
-      chatpalatte += this.skynautsChatPaletteD(ability.body, ability.technic, "白兵判定/侵入判定", "「身体」+「技術」");
-      chatpalatte += this.skynautsChatPaletteD(ability.body, ability.sense, "偵察判定/大揺れ判定", "「身体」+「感覚」");
-      chatpalatte += this.skynautsChatPaletteD(ability.body, ability.culture, "消火判定", "「身体」+「教養」");
-      chatpalatte += this.skynautsChatPaletteD(ability.technic, ability.sense, "砲撃判定", "「技術」+「感覚」");
-      chatpalatte = `${chatpalatte}D/3 ダメージチェック\nNV 航行表\nNEN 航行イベント(航行系)\nNEE 航行イベント(遭遇系)\nNEO 航行イベント(船内系)\nNEH 航行イベント(困難系)\nNEL 航行イベント(長旅系)\nFT ファンブル表\n`;
+      let chatpalatte = this.skynautsChatPaletteGen(ability);
+
       skynauts2sheet['character']['chat-palette']['#text'] = chatpalatte;
       let summary = `<?xml version="1.0" encoding="UTF-8"?>
       <summary-setting sortTag="name" sortOrder="ASC" dataTag="生命点　移動力　技術　感覚　教養　身体　キズナ①　キズナ②　キズナ③　キズナ④　キズナ⑤　キズナ⑥　キズナ⑦　キズナ⑧　キズナ⑨　キズナ⑩　デバフ"></summary-setting>
@@ -159,6 +149,23 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       this.generateKoma(skynauts2sheet, summary);
       return;
     });
+  }
+
+  skynautsChatPaletteGen(ability): String {
+    let chatpalatte: null|String = "";
+    chatpalatte += this.skynautsChatPaletteS(ability.technic, "「技術」判定");
+    chatpalatte += this.skynautsChatPaletteS(ability.sense, "「感覚」判定");
+    chatpalatte += this.skynautsChatPaletteS(ability.culture, "「教養」判定");
+    chatpalatte += this.skynautsChatPaletteS(ability.body, "「身体」判定");
+    chatpalatte += this.skynautsChatPaletteD(ability.technic, ability.culture, "修理判定", "「技術」+「教養」");
+    chatpalatte += this.skynautsChatPaletteD(ability.sense, ability.culture, "操舵判定", "「感覚」+「教養」");
+    chatpalatte += this.skynautsChatPaletteD(ability.body, ability.technic, "白兵判定/侵入判定", "「身体」+「技術」");
+    chatpalatte += this.skynautsChatPaletteD(ability.body, ability.sense, "偵察判定/大揺れ判定", "「身体」+「感覚」");
+    chatpalatte += this.skynautsChatPaletteD(ability.body, ability.culture, "消火判定", "「身体」+「教養」");
+    chatpalatte += this.skynautsChatPaletteD(ability.technic, ability.sense, "砲撃判定", "「技術」+「感覚」");
+    chatpalatte += `${chatpalatte}D/3 ダメージチェック\nNV 航行表\nNEN 航行イベント(航行系)\nNEE 航行イベント(遭遇系)\nNEO 航行イベント(船内系)\nNEH 航行イベント(困難系)\nNEL 航行イベント(長旅系)\nFT ファンブル表\n`;
+
+    return chatpalatte;
   }
 
   skynautsChatPaletteS(ability, actionDescription) {
@@ -175,24 +182,24 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
   }
 
   skynautsChatPaletteD(ability1, ability2, actionName, actionDescription) {
-    let ability1_text: string = "";
-    let ability2_text: string = "";
     let dice: number = 2;
     let fumble: number = 1;
 
-    // ability1と2に得意があるかどうかを判定
-    if (ability1 === "得意" || ability2 === "得意") dice++;
-    if (ability1 === "苦手" || ability2 === "苦手") fumble++;
+    const checkAbility = (ability) => {
+        let text = "";
+        if (ability === "得意") {
+            dice++;
+            text = "　[得意]";
+        } else if (ability === "苦手") {
+            fumble++;
+            text = "　[苦手]";
+        }
+        return text;
+    }
 
-    // ability1が得意な場合[得意]、苦手な場合は[苦手]を追加
-    if (ability1 === "得意") ability1_text = "　[得意]";
-    if (ability1 === "苦手") ability1_text = "　[苦手]";
+    const ability1_text = checkAbility(ability1);
+    const ability2_text = checkAbility(ability2);
 
-    // ability2が得意な場合[得意]、苦手な場合は[苦手]を追加
-    if (ability2 === "得意") ability2_text = "　[得意]";
-    if (ability2 === "苦手") ability2_text = "　[苦手]";
-
-    // ability1と2に得意があるかどうかを判定
     return `${dice}SN7#${fumble} ${actionName}　${actionDescription}${ability1_text}${ability2_text}\n`;
   }
 
