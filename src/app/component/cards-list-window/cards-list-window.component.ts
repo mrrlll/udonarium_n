@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { EventSystem, Network } from '@udonarium/core/system';
+import { EventSystem } from '@udonarium/core/system';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { PanelService, PanelOption } from 'service/panel.service';
 import { ContextMenuService } from 'service/context-menu.service';

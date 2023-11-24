@@ -13,7 +13,6 @@ import { EventSystem } from '@udonarium/core/system';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 
-import { COMPOSITION_BUFFER_MODE } from '@angular/forms'
 import Autolinker from 'autolinker';
 
 @Component({
@@ -75,7 +74,6 @@ export class ChatMessageComponent implements OnInit {
 
   get isCompact(): boolean {
     return this.compact || this.chatMessage.isOperationLog;
-    //return this.compact || this.chatMessage.isOperationLog || this.chatMessage.isDicebot;
   }
 
   discloseMessage() {
