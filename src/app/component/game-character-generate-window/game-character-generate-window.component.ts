@@ -2,7 +2,6 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
 import { GenerateService } from 'service/generate.service';
 import { XmlUtil } from '@udonarium/core/system/util/xml-util';
 import { EventSystem } from '@udonarium/core/system';
-import * as JSZip from 'jszip';
 
 import { PanelService } from 'service/panel.service';
 import { ModalService } from 'service/modal.service';
