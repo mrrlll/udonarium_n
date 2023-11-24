@@ -33,7 +33,7 @@ nav ul > li:hover {
 nav ul > li > a {
   height: 128px;
   width: 128px;
-  font-size: 8px;
+  font-size: 10px;
   user-select: none;
 }
 nav ul > li > a > label {
