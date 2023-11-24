@@ -218,7 +218,6 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   }
 
   loadDiceBot(gameType: string) {
-    console.log('onChangeGameType ready');
     DiceBot.getHelpMessage(gameType).then(help => {
       console.log('onChangeGameType done\n' + help);
     });

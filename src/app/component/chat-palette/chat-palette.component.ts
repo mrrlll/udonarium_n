@@ -129,7 +129,6 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   }
 
   filter(value: string): boolean {
-    console.log(this.filterText)
     if (this.filterText == null || this.filterText.trim() == '') return true;
     return StringUtil.toHalfWidth(value.replace(/[―ー—‐]/g, '-')).replace(/[\r\n\s]+/, ' ').trim().indexOf(StringUtil.toHalfWidth(this.filterText.replace(/[―ー—‐]/g, '-')).replace(/[\r\n\s]+/, ' ').trim()) >= 0;
   }

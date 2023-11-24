@@ -29,7 +29,6 @@ export class JukeboxComponent implements OnInit, OnDestroy {
 
   get roomVolume(): number {
     let conf = ObjectStore.instance.get<Config>('Config');
-//    console.log("roomVolume()" + conf +" "+ conf.roomVolume);
     return conf? conf.roomVolume : 1 ;
   }
   set roomVolume(volume: number){

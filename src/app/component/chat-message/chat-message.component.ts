@@ -162,7 +162,6 @@ export class ChatMessageComponent implements OnInit {
   }
 
   onLinkClick($event) {
-    //console.log($event.target.tagName);
     if ($event && $event.target.tagName == 'A') {
       const href = $event.target.getAttribute('href');
       if (!StringUtil.sameOrigin(href)) {

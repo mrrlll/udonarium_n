@@ -77,7 +77,6 @@ export class UIGamePanelComponent implements OnInit {
       this.preWidth = panel.offsetWidth;
       this.preHeight = panel.offsetHeight;
 
-      console.log(this.preLeft + 'px と' + this.preTop);
       this.width = window.innerWidth;
       this.height = window.innerHeight;
 

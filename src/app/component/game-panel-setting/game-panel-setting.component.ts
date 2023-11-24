@@ -105,7 +105,6 @@ export class GamePanelSettingComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   selectGamePanel(identifier: string) {
-    console.log(identifier + 'を選択');
     EventSystem.call('SELECT_GAME_PANEL', { identifier: identifier }, Network.peerId);
     this.selectedPanel = ObjectStore.instance.get<GamePanel>(identifier);
     this.selectedPanelXml = '';
@@ -190,10 +189,7 @@ export class GamePanelSettingComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   addFilter(peerId: string) {
-    console.log(peerId)
     const peerCursor = this.findPeerName(peerId);
-    console.log(peerCursor);
-    console.log(this.selectedPanel.nicknameFillter)
     this.selectedPanel.nicknameFillter += peerCursor;
   }
 }

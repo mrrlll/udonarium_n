@@ -40,8 +40,6 @@ export class UnsplashsearchComponent implements OnInit {
     input.value = '';
   }
   onClick(photo) {
-    console.log(photo)
-    // let file = this.unsplashService.downloadImage(photo);
     this.unsplashService.downloadPhoto(photo.urls.regular, photo.id)
 
   }

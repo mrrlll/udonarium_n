@@ -84,7 +84,6 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     if (file?.blob?.type.match(/pdf/)) {
-      console.log(file.name);
       return file.thumbnail.url;
     }
 
@@ -217,7 +216,6 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getTagWords(image: ImageFile): string[] {
     const imageTag = ImageTag.get(image.identifier);
-    //console.log(imageTag ? imageTag.words : []);
     return imageTag ? imageTag.words : [];
   }
 

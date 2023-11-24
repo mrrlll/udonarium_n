@@ -98,7 +98,6 @@ export class TimerModalComponent implements OnInit, OnDestroy, AfterViewInit {
 
   setInfo = () => {
     const alermElm = './assets/sounds/alerm/alerm.mp3';
-    console.log(alermElm);
     if (alermElm) {
       this.timerBot.alerm = alermElm;
     }

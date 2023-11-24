@@ -51,11 +51,6 @@ export class GameTableMaskInventoryComponent implements OnInit, OnDestroy, After
     return ObjectStore.instance.getObjects(GameTable);
   }
 
-  // selectGameTable(selectedTable: GameTable) {
-  //   console.log(selectedTable.name);
-  //   this.selectedTable = selectedTable;
-  //   this.updateFilteredMasks(this.selectedTable.identifier);
-  // }
   selectGameTable(identifier: string): void {
     this.updateFilteredMasks(this.getGameTables().find(gameTable => gameTable.identifier === identifier).identifier);
   }

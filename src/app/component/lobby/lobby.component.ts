@@ -86,9 +86,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
       return true;
     }
     let onConnect = (peerId) => {
-      console.log('接続成功！', peerId);
       triedPeer.push(peerId);
-      console.log('接続成功 ' + triedPeer.length + '/' + targetPeers.length);
       return onTried();
     }
     let onDisconnect = (peerId) => {
@@ -100,7 +98,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
     EventSystem.register(triedPeer)
       .on('OPEN_NETWORK', event => {
-        console.log('LobbyComponent OPEN_PEER', event.data.peerId);
         EventSystem.unregister(triedPeer);
         ObjectStore.instance.clearDeleteHistory();
         for (let peer of targetPeers) {

@@ -41,28 +41,24 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.roomSetting.peerMenuAuthority;
   }
   set isPeerWindowAble(checkbox: boolean) {
-    console.log("接続情報：", checkbox);
     this.roomSetting.peerMenuAuthority = checkbox;
   }
   get isChatWindowAble(): boolean {
     return this.roomSetting.chatWindowAuthority;
   }
   set isChatWindowAble(checkbox: boolean) {
-    console.log("チャット：", checkbox);
     this.roomSetting.chatWindowAuthority = checkbox;
   }
   get isGameTableSettingAble(): boolean {
     return this.roomSetting.gameTableSettingAuthority;
   }
   set isGameTableSettingAble(checkbox: boolean) {
-    console.log("テーブル設定：", checkbox);
     this.roomSetting.gameTableSettingAuthority = checkbox;
   }
   get isFileStorageAble(): boolean {
     return this.roomSetting.fileStorageAuthority;
   }
   set isFileStorageAble(checkbox: boolean) {
-    console.log("画像：", checkbox);
     this.roomSetting.fileStorageAuthority = checkbox;
   }
 
@@ -70,28 +66,24 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.roomSetting.jukeboxAuthority;
   }
   set isJukeboxAble(checkbox: boolean) {
-    console.log("音楽：", checkbox);
     this.roomSetting.jukeboxAuthority = checkbox;
   }
   get isCutinAble(): boolean {
     return this.roomSetting.cutinAuthority;
   }
   set isCutinAble(checkbox: boolean) {
-    console.log("カットイン：", checkbox);
     this.roomSetting.cutinAuthority = checkbox;
   }
   get isGameObjectInventoryAble(): boolean {
     return this.roomSetting.gameObjectInventoryAuthority;
   }
   set isGameObjectInventoryAble(checkbox: boolean) {
-    console.log("インベントリ：", checkbox);
     this.roomSetting.gameObjectInventoryAuthority = checkbox;
   }
   get isFileSelectAble(): boolean {
     return this.roomSetting.fileSelectAuthority;
   }
   set isFileSelectAble(checkbox: boolean) {
-    console.log("ZIP読込：", checkbox);
     this.roomSetting.fileSelectAuthority = checkbox;
   }
 
@@ -99,7 +91,6 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.roomSetting.fileSaveAuthority;
   }
   set isFileSaveAble(checkbox: boolean) {
-    console.log("保存：", checkbox);
     this.roomSetting.fileSaveAuthority = checkbox;
   }
 
@@ -107,7 +98,6 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.roomSetting.timerAuthority;
   }
   set isTimerAble(checkbox: boolean) {
-    console.log("タイマー：", checkbox);
     this.roomSetting.timerAuthority = checkbox;
   }
 
@@ -116,7 +106,6 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   set isGamePanelSettingAble(checkbox: boolean) {
-    console.log("PDF：", checkbox);
     this.roomSetting.gamePanelSettingAuthority = checkbox;
   }
 

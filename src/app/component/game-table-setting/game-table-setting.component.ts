@@ -31,9 +31,8 @@ export class GameTableSettingComponent implements OnInit, OnDestroy {
   set gameType(gameType: string) { this.config.defaultDiceBot = gameType; }
 // this.gameTypeChange.emit(gameType);
   loadDiceBot(gameType: string) {
-    console.log('changeDiceBot ready');
     DiceBot.getHelpMessage(gameType).then(help => {
-     console.log('onChangeGameType done\n' + help);
+      console.log('onChangeGameType done\n' + help);
     });
   }
 

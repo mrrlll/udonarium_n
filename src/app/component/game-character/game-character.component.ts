@@ -135,7 +135,6 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
 
   @HostListener('dragstart', ['$event'])
   onDragstart(e: any) {
-    console.log('Dragstart Cancel !!!!');
     e.stopPropagation();
     e.preventDefault();
   }
