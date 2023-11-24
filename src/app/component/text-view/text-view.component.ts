@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import Autolinker from 'autolinker';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
@@ -33,12 +33,12 @@ export class TextViewComponent implements OnInit {
 
   htmlEscapeLinking(str, shorten=false): string {
     return Autolinker.link(StringUtil.escapeHtml(str), {
-      urls: {schemeMatches: true, tldMatches: false}, 
-      truncate: {length: 96, location: 'end'}, 
-      decodePercentEncoding: shorten, 
-      stripPrefix: shorten, 
-      stripTrailingSlash: shorten, 
-      email: false, 
+      urls: {schemeMatches: true, tldMatches: false},
+      truncate: {length: 96, location: 'end'},
+      decodePercentEncoding: shorten,
+      stripPrefix: shorten,
+      stripTrailingSlash: shorten,
+      email: false,
       phone: false,
       replaceFn : function(m) {
         if (m.getType() == 'url' && StringUtil.validUrl(m.getAnchorHref())) {

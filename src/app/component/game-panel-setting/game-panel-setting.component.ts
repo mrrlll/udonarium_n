@@ -6,10 +6,8 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { GamePanel } from '@udonarium/game-panel';
 import { PeerCursor } from '@udonarium/peer-cursor';
-import { PeerContext } from '@udonarium/core/system/network/peer-context';
 
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
-import { GamePanelViewerComponent } from 'component/game-panel-viewer/game-panel-viewer.component';
 import { ImageService } from 'service/image.service';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';

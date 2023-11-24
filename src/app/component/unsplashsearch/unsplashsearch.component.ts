@@ -1,5 +1,5 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { PanelOption, PanelService } from 'service/panel.service';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { PanelService } from 'service/panel.service';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
 import { EventSystem, Network } from '@udonarium/core/system';
@@ -14,7 +14,9 @@ import { UnsplashService } from 'service/unsplash.service';
 export class UnsplashsearchComponent implements OnInit {
   searchTerm: String
   photos: any[] = [];
-  constructor(private changeDetector: ChangeDetectorRef, private panelService: PanelService, private unsplashService: UnsplashService) {}
+  constructor(
+    private unsplashService: UnsplashService
+    ) {}
   ngOnInit() {
   }
 

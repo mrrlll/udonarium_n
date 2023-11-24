@@ -1,28 +1,19 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef , Input, NgZone, OnDestroy, OnInit , ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit , ViewChild } from '@angular/core';
 import { AudioFile } from '@udonarium/core/file-storage/audio-file';
 import { YouTubePlayer } from '@angular/youtube-player';
-import { AudioPlayer, VolumeType } from '@udonarium/core/file-storage/audio-player';
+import { AudioPlayer } from '@udonarium/core/file-storage/audio-player';
 import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
-import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
 
 import { ModalService } from 'service/modal.service';
-import { PanelOption, PanelService } from 'service/panel.service';
+import { PanelService } from 'service/panel.service';
 
-import { ImageFile } from '@udonarium/core/file-storage/image-file';
-import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
-import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { EventSystem, Network } from '@udonarium/core/system';
+import { EventSystem } from '@udonarium/core/system';
 import { CutIn } from '@udonarium/cut-in';
 import { CutInLauncher } from '@udonarium/cut-in-launcher';
 
 import { Jukebox } from '@udonarium/Jukebox';
 import { Config } from '@udonarium/config';
-
-import { animate, keyframes, style, transition, trigger } from '@angular/animations';
-
-import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
-
 
 @Component({
   selector: 'app-cut-in-window',
@@ -94,9 +85,7 @@ export class CutInWindowComponent implements AfterViewInit, OnInit, OnDestroy {
 
 
   constructor(
-    private modalService: ModalService,
     private panelService: PanelService,
-    private changeDetectionRef: ChangeDetectorRef,
     private ngZone: NgZone
   ) { }
 

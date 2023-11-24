@@ -9,7 +9,7 @@ import {
 
 import { EventSystem } from '@udonarium/core/system';
 import { PanelService } from 'service/panel.service';
-import { AlermSound, TimerBot } from '@udonarium/timer-bot';
+import { TimerBot } from '@udonarium/timer-bot';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { ModalService } from 'service/modal.service';
 import { AudioFile } from '@udonarium/core/file-storage/audio-file';
