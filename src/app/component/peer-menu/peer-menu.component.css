@@ -76,7 +76,7 @@
   display: inline-block;
   position: relative;
   width: auto;
-  font-size: 0.03em;
+  font-size: 0.8em;
 }
 
 .checkbox label::after {
