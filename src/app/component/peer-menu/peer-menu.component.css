@@ -76,6 +76,7 @@
   display: inline-block;
   position: relative;
   width: auto;
+  user-select: none;
   font-size: 0.8em;
 }
 
