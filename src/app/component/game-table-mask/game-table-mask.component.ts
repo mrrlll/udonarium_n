@@ -25,6 +25,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopActionService } from 'service/tabletop-action.service';
 import { TabletopService } from 'service/tabletop.service';
 import { SelectionState, TabletopSelectionService } from 'service/tabletop-selection.service';
+import { AppConfigCustomService } from 'service/app-config-custom.service';
 import { Observable, Subscription } from 'rxjs';
 
 @Component({
@@ -77,6 +78,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
     private pointerDeviceService: PointerDeviceService,
     private tabletopService: TabletopService,
     private coordinateService: CoordinateService,
+    private appCustomService: AppConfigCustomService
   ) { }
 
   ngOnChanges(): void {
@@ -101,6 +103,14 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
       transformCssOffset: 'translateZ(0.15px)',
       colideLayers: ['terrain']
     };
+    //GMフラグ管理
+    this.obs = this.appCustomService.isViewer$;
+    this.subs = this.obs.subscribe((flg) => {
+      this.isGM = flg;
+      // 同期をする
+      this.changeDetector.markForCheck();
+    });
+    this.isGM = this.appCustomService.dataViewer;
   }
 
   ngAfterViewInit() {
@@ -200,7 +210,8 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
           SoundEffect.play(PresetSound.cardPut);
         }
       });
-      if(this.isGM){
+      if(this.isGM) {
+        console.log('isGM')
         subActions.push(ContextMenuSeparator);
         subActions.push({
           name: 'すべてインベントリにしまう', action: () => {
@@ -216,6 +227,9 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
           SoundEffect.play(PresetSound.sweep);
         }
       });
+      // this.isGMがtrueの時だけ表示する
+      // すべてインベントリにしまう
+
 
       actions.push(
         {
