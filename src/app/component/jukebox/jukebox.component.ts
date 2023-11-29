@@ -44,6 +44,9 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     this.jukebox.volume = volume;
     AudioPlayer.volume = volume * this.roomVolume;
     EventSystem.trigger('CHANGE_JUKEBOX_VOLUME', null);
+    if (window.localStorage) {
+      localStorage.setItem(AudioPlayer.MAIN_VOLUME_LOCAL_STORAGE_KEY, volume.toString());
+    }
   }
 
   get auditionVolume(): number {
@@ -51,8 +54,11 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   }
   set auditionVolume(auditionVolume: number) {
     this.jukebox.auditionVolume = auditionVolume;
-    AudioPlayer.auditionVolume = auditionVolume * this.roomVolume;
+    AudioPlayer.auditionVolume = auditionVolume * this.auditionVolume;
     EventSystem.trigger('CHANGE_JUKEBOX_VOLUME', null);
+    if (window.localStorage) {
+      localStorage.setItem(AudioPlayer.AUDITION_VOLUME_LOCAL_STORAGE_KEY, auditionVolume.toString());
+    }
   }
 
   get seVolume(): number {
@@ -60,6 +66,10 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   }
   set seVolume(seVolume: number) {
     AudioPlayer.seVolume = seVolume;
+    EventSystem.trigger('CHANGE_JUKEBOX_VOLUME', null);
+    if (window.localStorage) {
+      localStorage.setItem(AudioPlayer.SE_VOLUME_LOCAL_STORAGE_KEY, seVolume.toString());
+    }
   }
 
   get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }

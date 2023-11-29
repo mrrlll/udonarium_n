@@ -69,6 +69,7 @@ import { ImageTag } from '@udonarium/image-tag';
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 
 import { ToastService } from 'service/toast.service';
+import * as localForage from 'localforage';
 
 const MENU_LENGTH: number = 13;
 
@@ -195,6 +196,20 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     fileContext.url = './assets/images/ic_account_circle_black_24dp_2x.png';
     let noneIconImage = ImageStorage.instance.add(fileContext);
     ImageTag.create(noneIconImage.identifier).tag = '*default アイコン';
+
+    try {
+      localForage.getItem(AudioPlayer.MAIN_VOLUME_LOCAL_STORAGE_KEY).then(volume => {
+        if (typeof volume === 'number' && 0 <= volume && volume <= 1) AudioPlayer.volume = volume;
+      });
+      localForage.getItem(AudioPlayer.AUDITION_VOLUME_LOCAL_STORAGE_KEY).then(volume => {
+        if (typeof volume === 'number' && 0 <= volume && volume <= 1) AudioPlayer.auditionVolume = volume;
+      });
+      localForage.getItem(AudioPlayer.SE_VOLUME_LOCAL_STORAGE_KEY).then(volume => {
+        if (typeof volume === 'number' && 0 <= volume && volume <= 1) AudioPlayer.seVolume = volume;
+      });
+    } catch(e) {
+      console.log(e);
+    }
 
     AudioPlayer.resumeAudioContext();
     PresetSound.dicePick = AudioStorage.instance.add('./assets/sounds/soundeffect-lab/shoulder-touch1.mp3').identifier;

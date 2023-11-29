@@ -17,6 +17,14 @@ declare global {
 type AudioCache = { url: string, blob: Blob };
 
 export class AudioPlayer {
+
+  // 視聴音量
+  static readonly AUDITION_VOLUME_LOCAL_STORAGE_KEY = 'udonanaumu-audio-player-audition-volume-local-storage';
+  // BGM音量
+  static readonly MAIN_VOLUME_LOCAL_STORAGE_KEY = 'udonanaumu-audio-player-main-volume-local-storage';
+  // SE音量
+  static readonly SE_VOLUME_LOCAL_STORAGE_KEY = 'udonanaumu-audio-player-se-volume-local-storage';
+
   private static _audioContext: AudioContext
   static get audioContext(): AudioContext {
     if (!AudioPlayer._audioContext)
