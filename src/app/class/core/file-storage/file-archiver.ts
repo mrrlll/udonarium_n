@@ -11,7 +11,7 @@ import { ImageFile } from './image-file';
 import { ImageStorage } from './image-storage';
 import { MimeType } from './mime-type';
 
-import { XMLParser, XMLBuilder } from 'fast-xml-parser';
+import { XMLBuilder } from 'fast-xml-parser';
 
 type MetaData = { percent: number; currentFile: string };
 type UpdateCallback = (metadata: MetaData) => void;
@@ -25,9 +25,9 @@ export class FileArchiver {
     return FileArchiver._instance;
   }
 
-  private maxImageSize = 10 * MEGA_BYTE;
-  private maxAudioeSize = 10 * MEGA_BYTE;
-  private maxPdfSize = 100 * MEGA_BYTE;
+  private maxImageSize = 20 * MEGA_BYTE;
+  private maxAudioeSize = 20 * MEGA_BYTE;
+  private maxPdfSize = 50 * MEGA_BYTE;
 
   private callbackOnDragEnter;
   private callbackOnDragOver;
@@ -88,9 +88,7 @@ export class FileArchiver {
   async load(files: any): Promise<void> {
 
     let loadFiles: File[] = files instanceof FileList ? toArrayOfFileList(files) : files;
-    console.log(files)
     for (let file of loadFiles) {
-      console.log(file.type)
       await this.handleImage(file);
       const filename: string = file.name;
       const pdfFile: ImageFile = await this.handlePdf(file);

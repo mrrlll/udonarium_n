@@ -208,11 +208,6 @@ export class AudioPlayer {
     this.mediaElementSource.disconnect();
   }
 
-  setLoop(loop: boolean) {
-    if (!this.audioElm) return;
-    this.audioElm.loop = loop;
-  }
-
   private getConnectingAudioNode() {
     switch (this.volumeType) {
       case VolumeType.AUDITION:

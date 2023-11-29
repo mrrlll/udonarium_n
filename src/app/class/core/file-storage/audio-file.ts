@@ -141,9 +141,6 @@ export class AudioFile {
       blob: this.context.blob,
       type: this.context.type,
       url: this.context.url,
-      loopStart: this.context.loopStart,
-      loopLength: this.context.loopLength,
-      loopEnd: this.context.loopEnd,
     }
   }
 }

@@ -1,21 +1,12 @@
-import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
-
 import { AudioFile } from './core/file-storage/audio-file';
 import { AudioPlayer } from './core/file-storage/audio-player';
 import { AudioStorage } from './core/file-storage/audio-storage';
 
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
-import { GameObject, ObjectContext } from './core/synchronize-object/game-object';
-import { EventSystem } from './core/system';
+import { GameObject } from './core/synchronize-object/game-object';
 
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
-
-import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
-import { ModalService } from 'service/modal.service';
-
-import { StringUtil } from './core/system/util/string-util';
-
 
 @SyncObject('cut-in')
 export class CutIn extends GameObject {
@@ -180,15 +171,6 @@ export class CutIn extends GameObject {
   get isValidAudio(): boolean {
     return this.audioName.length == 0 || this.audioIdentifier.length == 0 || !!AudioStorage.instance.get(this.audioIdentifier);
   }
-
-/* 保留
-  get postfixes(): string[] {
-    if (this.value == null || (this.value + '').trim() == '') return [];
-    return Array.from(new Set((<string>this.value).split(/[\r\n]+/g).map(row => {
-      return row != null ? row.trimRight() : '';
-    }))).filter(row => row != '');
-  }
-*/
 
   // GameObject Lifecycle
   onStoreAdded() {

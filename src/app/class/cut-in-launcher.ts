@@ -1,19 +1,7 @@
-import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
-
-import { AudioFile } from './core/file-storage/audio-file';
-import { AudioPlayer } from './core/file-storage/audio-player';
-import { AudioStorage } from './core/file-storage/audio-storage';
-
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { GameObject, ObjectContext } from './core/synchronize-object/game-object';
 import { EventSystem } from './core/system';
-
-import { ImageFile } from '@udonarium/core/file-storage/image-file';
-import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-
-import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
-import { ModalService } from 'service/modal.service';
 
 import { CutIn } from './cut-in';
 
