@@ -16,7 +16,7 @@
     </div>
   </div>
   <hr/>
-  <span>ニックネーム：<input [(ngModel)]="myPeer.name"  placeholder="ニックネーム" /></span>
+  <span>ニックネーム：<input [(ngModel)]="myPeerName"  placeholder="ニックネーム" /></span>
 </div>
 <div>
   <span>あなたのID：<span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peer.userId}}</span>

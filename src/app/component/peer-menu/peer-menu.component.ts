@@ -109,6 +109,10 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     this.roomSetting.gamePanelSettingAuthority = checkbox;
   }
 
+  get myPeerName(): string {
+    if (!PeerCursor.myCursor) return null;
+    return PeerCursor.myCursor.name;
+  }
 
   set myPeerName(name: string) {
     if (window.localStorage) {

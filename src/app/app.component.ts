@@ -244,7 +244,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     PeerCursor.createMyCursor();
-    PeerCursor.myCursor.name = 'プレイヤー';
+    if (!PeerCursor.myCursor.name) PeerCursor.myCursor.name = 'プレイヤー';
     PeerCursor.myCursor.imageIdentifier = noneIconImage.identifier;
 
     EventSystem.register(this)
