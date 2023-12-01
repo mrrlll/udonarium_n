@@ -6,6 +6,7 @@ import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 import { EventSystem } from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
+import { RangeArea } from '@udonarium/range';
 
 @Component({
   selector: 'game-data-element, [game-data-element]',
@@ -21,6 +22,8 @@ export class GameDataElementComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() isImage: boolean = false;
   @Input() indexNum: number = 0;
+
+  @Input() descriptionType: string;
 
   private _name: string = '';
   get name(): string { return this._name; }
@@ -157,9 +160,15 @@ export class GameDataElementComponent implements OnInit, OnChanges, OnDestroy {
         || this.gameDataElement.name === 'width'
         || this.gameDataElement.name === 'height'
         || this.gameDataElement.name === 'depth'
+        || this.gameDataElement.name === 'length'
         || this.gameDataElement.name === 'fontsize'
-        || this.gameDataElement.name === 'altitude');
+        || this.gameDataElement.name === 'altitude'
+        || this.gameDataElement.name === 'color');
     }
     return false;
+  }
+
+  get isNotApplicable(): boolean {
+    return this.isCommonValue && this.descriptionType === 'range-not-width' && this.gameDataElement.name === 'width';
   }
 };

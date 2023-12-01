@@ -21,7 +21,11 @@ export interface ContextMenuAction {
   action?: Function,
   enabled?: boolean,
   type?: ContextMenuType,
-  subActions?: ContextMenuAction[]
+  subActions?: ContextMenuAction[],
+  center?: boolean,
+  level?: number,
+  color?: string,
+  colorSample?: boolean,
 }
 
 @Injectable()

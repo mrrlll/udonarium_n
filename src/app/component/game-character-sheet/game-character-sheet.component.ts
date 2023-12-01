@@ -11,6 +11,7 @@ import { PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
 
 import { GameCharacter } from '@udonarium/game-character';
+import { RangeArea } from '@udonarium/range';
 
 @Component({
   selector: 'game-character-sheet',
@@ -88,6 +89,11 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy {
         SoundEffect.play(PresetSound.piecePut);
         break;
     }
+  }
+
+  get descriptionType():string {
+    if (this.tabletopObject instanceof RangeArea && !this.tabletopObject.isApplyWidth) return 'range-not-width';
+    return this.tabletopObject.aliasName;
   }
 
   async saveToXML() {
