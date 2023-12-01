@@ -245,6 +245,22 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
   private makeContextMenu(): ContextMenuAction[] {
     let objectPosition = this.coordinateService.calcTabletopLocalCoordinate();
     let actions: ContextMenuAction[] = [];
+    if(this.isGM) {
+      actions.push(
+        (this.gameTableMask.isTransparentOnGMMode
+          ? {
+            name: '☑GMモード時透過する', action: () => {
+              this.gameTableMask.isTransparentOnGMMode = false;
+            }
+          } : {
+            name: '□GMモード時透過する', action: () => {
+              this.gameTableMask.isTransparentOnGMMode = true;
+            }
+          }
+        )
+      );
+      actions.push(ContextMenuSeparator);
+    };
     actions.push(
       (this.maskborder
         ? {
