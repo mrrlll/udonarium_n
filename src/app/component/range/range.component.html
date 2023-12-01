@@ -8,6 +8,7 @@
         [style.height.px]="gripWidth * 3 * gridSize">
         <div *ngIf="isSelected" class="selected-highlight" [ngClass]="{'is-magnetic': isMagnetic}"></div>
     </div>
+  </div>
     <div class="is-3d" style="position: absolute; pointer-events: none" [style.width.px]="0" [style.height.px]="0" [style.clip-path]="clipPathText">
       <div class="is-3d" style="position: absolute; z-index: 0" [style.top.px]="0" [style.left.px]="( -1 * areaQuadrantSize) * gridSize">
         <canvas class="is-fill is-3d" #gridCanvas></canvas>
