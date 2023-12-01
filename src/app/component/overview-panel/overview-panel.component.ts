@@ -18,6 +18,7 @@ import { Observable, Subscription } from 'rxjs';
 import { AppConfigCustomService } from 'service/app-config-custom.service';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { RangeArea } from '@udonarium/range';
 
 @Component({
   selector: 'overview-panel',
@@ -180,6 +181,15 @@ export class OverviewPanelComponent implements OnChanges, AfterViewInit, OnDestr
 
   chanageImageView(isOpen: boolean) {
     this.isOpenImageView = isOpen;
+  }
+
+  get rangeElms(): DataElement[] {
+    let ret = []
+    if (!this.tabletopObject || !(this.tabletopObject instanceof RangeArea) || !this.tabletopObject.commonDataElement) return ret;
+    if (this.tabletopObject.commonDataElement.getFirstElementByName('length')) ret.push(this.tabletopObject.commonDataElement.getFirstElementByName('length'));
+    if ((this.tabletopObject.type === 'CORN' || this.tabletopObject.type === 'LINE') && this.tabletopObject.commonDataElement.getFirstElementByName('width')) ret.push(this.tabletopObject.commonDataElement.getFirstElementByName('width'));
+    if (this.tabletopObject.commonDataElement.getFirstElementByName('opacity')) ret.push(this.tabletopObject.commonDataElement.getFirstElementByName('opacity'));
+    return ret;
   }
 
   private getInventoryTags(gameObject: TabletopObject): DataElement[] {
