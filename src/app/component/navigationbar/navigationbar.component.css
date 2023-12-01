@@ -1,0 +1,7 @@
+// スクロールバーを非表示
+:host::-webkit-scrollbar{
+  display:none;
+}
+:host {
+  -ms-overflow-style: none;
+}

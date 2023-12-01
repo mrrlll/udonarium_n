@@ -17,6 +17,7 @@ export interface PanelOption {
   isCutIn?: boolean; //この方式でよいか検討のこと
   cutInIdentifier?: string;
   className?: string;
+  isHidetitleBar?: boolean;
 }
 
 @Injectable()
@@ -31,6 +32,7 @@ export class PanelService {
   top: number = 0;
   width: number = 100;
   height: number = 100;
+  titleBar: boolean = true;
   isAbleMinimizeButton: boolean = true;
   isAbleFullScreenButton: boolean = true;
   isAbleCloseButton: boolean = true;
@@ -40,6 +42,7 @@ export class PanelService {
   chatTab: ChatTab = null;
   cardStack: CardStack = null;
   className: string = '';
+  isHideTitleBar: boolean = false;
 
   scrollablePanel: HTMLDivElement = null;
 
@@ -67,6 +70,7 @@ export class PanelService {
       if (option.width) childPanelService.width = option.width;
       if (option.height) childPanelService.height = option.height;
       if (option.className) childPanelService.className = option.className;
+      if (option.isHidetitleBar) childPanelService.isHideTitleBar = option.isHidetitleBar;
     }
     panelComponentRef.onDestroy(() => {
       childPanelService.panelComponentRef = null;

@@ -37,6 +37,7 @@ import { GameCharacterSheetComponent } from 'component/game-character-sheet/game
 import { GameObjectInventoryComponent } from 'component/game-object-inventory/game-object-inventory.component';
 import { GameTableSettingComponent } from 'component/game-table-setting/game-table-setting.component';
 import { JukeboxComponent } from 'component/jukebox/jukebox.component';
+import { NavigationbarComponent } from 'component/navigationbar/navigationbar.component';
 import { ModalComponent } from 'component/modal/modal.component';
 import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
 import { TextViewComponent } from 'component/text-view/text-view.component';
@@ -382,6 +383,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
     setTimeout(() => {
       this.panelService.open(PeerMenuComponent, { width: 450, height: 550, left: 100 });
+      // this.panelService.open(NavigationbarComponent, { width: 1920, height: 40, left: 0, top: 1080, isHidetitleBar: true });
       //this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 100, top: 450 });
       this.panelService.open(TimerMenuComponent, { width: 180, height: 90, left: 1500, top: 10, className: 'timer-menu-panel' });
     }, 0);
