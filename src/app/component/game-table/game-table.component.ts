@@ -78,6 +78,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
   get textNotes(): TextNote[] { return this.tabletopService.textNotes; }
   get diceSymbols(): DiceSymbol[] { return this.tabletopService.diceSymbols; }
   get peerCursors(): PeerCursor[] { return this.tabletopService.peerCursors; }
+  get gridHeight(): number { return this.tabletopService.currentTable.gridHeight; }
 
   constructor(
     private ngZone: NgZone,
