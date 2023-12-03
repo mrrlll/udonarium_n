@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ContextMenuAction, ContextMenuService } from 'service/context-menu.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { TabletopObject } from '@udonarium/tabletop-object';
 
 @Component({
   selector: 'context-menu',
@@ -9,6 +10,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 })
 export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('root', { static: true }) rootElementRef: ElementRef<HTMLElement>;
+  @ViewChild('altitudeSlider', { static: false }) altitudeSlider: ElementRef<HTMLElement>;
 
   @Input() title: string = '';
   @Input() actions: ContextMenuAction[] = [];
@@ -24,6 +26,18 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   private callbackOnOutsideClick = (e) => this.onOutsideClick(e);
 
   get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging || this.pointerDeviceService.isTablePickGesture; }
+  get altitudeHande(): TabletopObject {
+    for (let action of this.actions) {
+      if (action && action.altitudeHande) return action.altitudeHande;
+    }
+    return null;
+  }
+  get isIconsMenu(): boolean {
+    for (let action of this.actions) {
+      if(!action.icon) return false;
+    }
+    return true;
+  }
 
   constructor(
     private elementRef: ElementRef<HTMLElement>,
@@ -92,6 +106,10 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
     panel.style.left = panel.offsetLeft + diffLeft + 'px';
     panel.style.top = panel.offsetTop + diffTop + 'px';
+
+    if (this.altitudeSlider) {
+      this.altitudeSlider.nativeElement.style.height = (panel.clientHeight - 72) + 'px';
+    }
   }
 
   private adjustPositionSub() {

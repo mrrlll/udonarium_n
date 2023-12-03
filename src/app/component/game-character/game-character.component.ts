@@ -248,7 +248,13 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
       : { name: '高度を表示する', action: () => { this.isAltitudeIndicate = true; } }
     );
     if(this.altitude != 0){
-      actions.push({ name: '高度を0にする', action: () => { this.altitude = 0; } });
+      actions.push(
+        {
+          name: '高度を0にする', action: () => {
+            this.altitude = 0;
+          }
+        }
+      )
     }
 
     actions.push(ContextMenuSeparator);
