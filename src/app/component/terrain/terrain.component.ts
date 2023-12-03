@@ -60,11 +60,28 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
   get selectionState(): SelectionState { return this.selectionService.state(this.terrain); }
   get isSelected(): boolean { return this.selectionState !== SelectionState.NONE; }
   get isMagnetic(): boolean { return this.selectionState === SelectionState.MAGNETIC; }
+  get altitude(): number { return this.terrain.altitude; }
+  set altitude(altitude: number) { this.terrain.altitude = altitude; }
+
+  get isAltitudeIndicate(): boolean { return this.terrain.isAltitudeIndicate; }
+  set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.terrain.isAltitudeIndicate = isAltitudeIndicate; }
 
   gridSize: number = 50;
 
+  get terreinAltitude(): number {
+    let ret = this.altitude;
+    if (this.altitude < 0 || !this.isWallExist) ret += this.height;
+    return ret;
+  }
+
+  get isWallExist(): boolean {
+    return this.hasWall && this.wallImage && this.wallImage.url && this.wallImage.url.length > 0;
+  }
+
   movableOption: MovableOption = {};
   rotableOption: RotableOption = {};
+
+  math = Math;
 
   private input: InputHandler = null;
 
@@ -81,6 +98,8 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
     private coordinateService: CoordinateService,
   ) { }
 
+  viewRotateZ = 0;
+
   ngOnChanges(): void {
     EventSystem.unregister(this);
     EventSystem.register(this)
@@ -94,6 +113,10 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
         this.changeDetector.markForCheck();
       })
       .on('UPDATE_FILE_RESOURE', event => {
+        this.changeDetector.markForCheck();
+      })
+      .on<number>('TABLE_VIEW_ROTATE_Z', -1000, event => {
+        this.viewRotateZ = event.data;
         this.changeDetector.markForCheck();
       })
       .on(`UPDATE_SELECTION/identifier/${this.terrain?.identifier}`, event => {
@@ -215,6 +238,16 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
         }
       }));
     actions.push(ContextMenuSeparator);
+    actions.push(
+      this.isAltitudeIndicate
+      ? { name: '高度を表示しない', action: () => { this.isAltitudeIndicate = false; } }
+      : { name: '高度を表示する', action: () => { this.isAltitudeIndicate = true; } }
+    );
+    if(this.altitude != 0){
+      actions.push({ name: '高度を0にする', action: () => { this.altitude = 0; } });
+    }
+
+    actions.push(ContextMenuSeparator);
     actions.push((this.hasWall
       ? {
         name: '壁を非表示', action: () => {
@@ -230,6 +263,12 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
         }
       }));
     actions.push(ContextMenuSeparator);
+    actions.push({
+      name : 'test', action: () => {
+        console.log(this.isWallExist);
+      }
+    }
+    )
     actions.push({ name: '地形設定を編集', action: () => { this.showDetail(this.terrain); } });
     actions.push({
       name: 'コピーを作る', action: () => {

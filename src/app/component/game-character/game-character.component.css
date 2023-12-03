@@ -115,6 +115,8 @@
   left: 0;
   right: 0;
   transform: rotateX(-90deg) translateY(-50%);
+  -webkit-transition: -webkit-transform 132ms ease;
+  transition: transform 132ms ease;
 }
 
 .is-fit-width {
@@ -264,4 +266,18 @@
 .isStealth img{
   opacity: 0.5;
   display:block;
+}
+
+.altitude-indicator {
+  font-size: 10px;
+}
+.total-altitude-indicator, .altitude-indicator {
+  padding-left: 2px;
+  color: black;
+  text-shadow: whitesmoke 0px 0px 3px;
+  backface-visibility: hidden;
+}
+.total-altitude-indicator {
+  font-weight: bolder;
+  font-size: 12px;
 }

@@ -40,14 +40,6 @@ export class TabletopObject extends ObjectNode {
   get commonDataElement(): DataElement { return this.getElement('common'); }
   get detailDataElement(): DataElement { return this.getElement('detail'); }
 
-  get buffDataElement(): DataElement { return this.getElement('buff'); }//リリィにてバフ機能用の追加
-
-
-  addBuffDataElement(){
-    if (!this.buffDataElement){
-      this.rootDataElement.appendChild(DataElement.create('buff', '', {}, 'buff_' + this.identifier));
-    }
-  }
 
   get imageFile(): ImageFile {
     if (!this.imageDataElement) return this._imageFile;
@@ -59,10 +51,10 @@ export class TabletopObject extends ObjectNode {
     return this._imageFile;
   }
 
-  @SyncVar() isAltitudeIndicate: boolean = false;
+  @SyncVar() isAltitudeIndicate: boolean = true;
   get altitude(): number {
     let element = this.getElement('altitude', this.commonDataElement);
-    if (!element && this.commonDataElement) {
+    if (!element) {
       this.commonDataElement.appendChild(DataElement.create('altitude', 0, {}, 'altitude_' + this.identifier));
     }
     let num = element ? +element.value : 0;
@@ -102,7 +94,6 @@ export class TabletopObject extends ObjectNode {
     }
     if (!this.commonDataElement) this.rootDataElement.appendChild(DataElement.create('common', '', {}, 'common_' + this.identifier));
     if (!this.detailDataElement) this.rootDataElement.appendChild(DataElement.create('detail', '', {}, 'detail_' + this.identifier));
-    if (!this.buffDataElement) this.rootDataElement.appendChild(DataElement.create('buff', '', {}, 'buff_' + this.identifier));//entyu
   }
 
   protected getElement(name: string, from: DataElement = this.rootDataElement): DataElement {
