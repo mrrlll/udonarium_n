@@ -8,8 +8,6 @@ export class TextNote extends TabletopObject {
   @SyncVar() rotate: number = 0;
   @SyncVar() zindex: number = 0;
   @SyncVar() password: string = '';
-  @SyncVar() isUpright: boolean = true;
-  @SyncVar() isLocked: boolean = false;
 
   get width(): number { return this.getCommonValue('width', 1); }
   get height(): number { return this.getCommonValue('height', 1); }
@@ -17,6 +15,14 @@ export class TextNote extends TabletopObject {
   get title(): string { return this.getCommonValue('title', ''); }
   get text(): string { return this.getCommonValue('text', ''); }
   set text(text: string) { this.setCommonValue('text', text); }
+  get altitude(): number {
+    let element = this.getElement('altitude', this.commonDataElement);
+    if (!element) {
+      this.commonDataElement.appendChild(DataElement.create('altitude', 0, {}, 'altitude_' + this.identifier));
+    }
+    let num = element ? +element.value : 0;
+    return Number.isNaN(num) ? 0 : num;
+  }
 
   toTopmost() {
     moveToTopmost(this);

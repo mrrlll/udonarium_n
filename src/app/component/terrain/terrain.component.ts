@@ -116,10 +116,8 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
         this.changeDetector.markForCheck();
       })
       .on<number>('TABLE_VIEW_ROTATE_Z', -1000, event => {
-        this.ngZone.run(() => {
-          this.viewRotateZ = event.data;
-          this.changeDetector.markForCheck();
-        });
+        this.viewRotateZ = event.data;
+        this.changeDetector.markForCheck();
       })
       .on(`UPDATE_SELECTION/identifier/${this.terrain?.identifier}`, event => {
         this.changeDetector.markForCheck();
@@ -265,6 +263,12 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
         }
       }));
     actions.push(ContextMenuSeparator);
+    actions.push({
+      name : 'test', action: () => {
+        console.log(this.isWallExist);
+      }
+    }
+    )
     actions.push({ name: '地形設定を編集', action: () => { this.showDetail(this.terrain); } });
     actions.push({
       name: 'コピーを作る', action: () => {
