@@ -80,18 +80,3 @@ ul > li.hasHighlight:hover {
   color: #CCC;
   background-color: rgba(30, 30, 30, 0.8);
 }
-
-input.altitude {
-  writing-mode: bt-lr;
-  appearance: slider-vertical;
-  width: 8px;
-  height: 100%;
-  padding: 3px;
-}
-
-.altitude-view {
-  color: black;
-  vertical-align: top;
-  width: 3em;
-  text-align: right;
-}

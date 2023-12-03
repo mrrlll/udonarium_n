@@ -35,7 +35,6 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() owner: string = '';
 
   @SyncVar() isStealth: boolean = false;
-  @SyncVar() isDropShadow: boolean = true;
 
   _selectedTachieNum: number = 0;
 
@@ -103,6 +102,14 @@ export class GameCharacter extends TabletopObject {
     console.log('TestExec');
 
   }
+  get remoteController(): BuffPalette {
+    for (let child of this.children) {
+      if (child instanceof BuffPalette){
+        return child;
+      }
+    }
+    return null;
+  }
 
   static create(name: string, size: number, imageIdentifier: string ): GameCharacter {
     let gameCharacter: GameCharacter = new GameCharacter();
@@ -112,6 +119,39 @@ export class GameCharacter extends TabletopObject {
     gameCharacter.createTestGameDataElement(name, size, imageIdentifier);
 
     return gameCharacter;
+  }
+
+  addExtendData(){
+
+    this.addBuffDataElement();
+
+    let iconNum = this.detailDataElement.getElementsByName('コマ画像');
+    if( iconNum.length == 0 ){
+      let elementKoma: DataElement = DataElement.create('コマ画像', '', {}, 'コマ画像' + this.identifier);
+      this.detailDataElement.appendChild(elementKoma);
+
+      elementKoma.appendChild(DataElement.create(
+        'ICON',
+        this.imageDataElement.children.length - 1,
+        { 'type': 'numberResource', 'currentValue': 0 },
+        'ICON_' + this.identifier
+      ));
+    }
+
+    let isbuff = this.buffDataElement.getElementsByName('バフ/デバフ');
+    if( isbuff.length == 0 ){
+      let buffElement: DataElement = DataElement.create('バフ/デバフ', '', {}, 'バフ/デバフ' + this.identifier);
+      this.buffDataElement.appendChild(buffElement);
+    }
+    if( this.remoteController == null){
+      let controller: BuffPalette = new BuffPalette('RemotController_' + this.identifier);
+      controller.setPalette(`コントローラ入力例：
+マッスルベアー DB+2 3
+クリティカルレイ A 18
+セイクリッドウェポン 命+1攻+2 18`);
+      controller.initialize();
+      this.appendChild(controller);
+    }
   }
 
   clone() :this {
@@ -158,7 +198,6 @@ export class GameCharacter extends TabletopObject {
 
     let nameElement: DataElement = DataElement.create('name', name, {}, 'name_' + this.identifier);
     let sizeElement: DataElement = DataElement.create('size', size, {}, 'size_' + this.identifier);
-    let altitudeElement: DataElement = DataElement.create('altitude', 0, {}, 'altitude_' + this.identifier);
 
     if (this.imageDataElement.getFirstElementByName('imageIdentifier')) {
       this.imageDataElement.getFirstElementByName('imageIdentifier').value = imageIdentifier;
@@ -171,7 +210,6 @@ export class GameCharacter extends TabletopObject {
 
     this.commonDataElement.appendChild(nameElement);
     this.commonDataElement.appendChild(sizeElement);
-    this.commonDataElement.appendChild(altitudeElement);
 
     this.detailDataElement.appendChild(resourceElement);
     resourceElement.appendChild(hpElement);
@@ -212,12 +250,19 @@ export class GameCharacter extends TabletopObject {
     palette.setPalette(`チャットパレット入力例：
 2d6+1 ダイスロール
 １ｄ２０＋{敏捷}＋｛格闘｝　{name}の格闘！
+
+自己バフ、リソース操作コマンド例：
+&マッスルベアー/筋B+2/3
+:MP-3
+&マッスルベアー/筋B+2/3:MP-3
+
 //敏捷=10+{敏捷A}
 //敏捷A=10
 //格闘＝１`);
     palette.initialize();
     this.appendChild(palette);
 
+    this.addExtendData();
   }
 
 
@@ -231,10 +276,16 @@ export class GameCharacter extends TabletopObject {
       this.imageDataElement.getFirstElementByName('imageIdentifier').value = imageIdentifier;
     }
 
+//    let resourceElement: DataElement = DataElement.create('リソース', '', {}, 'リソース' + this.identifier);
+//    let hpElement: DataElement = DataElement.create('HP', 200, { 'type': 'numberResource', 'currentValue': '200' }, 'HP_' + this.identifier);
+//    let mpElement: DataElement = DataElement.create('MP', 100, { 'type': 'numberResource', 'currentValue': '100' }, 'MP_' + this.identifier);
 
     this.commonDataElement.appendChild(nameElement);
     this.commonDataElement.appendChild(sizeElement);
 
+//    this.detailDataElement.appendChild(resourceElement);
+//    resourceElement.appendChild(hpElement);
+//    resourceElement.appendChild(mpElement);
 
     //TEST
     let testElement: DataElement = DataElement.create('情報', '', {}, '情報' + this.identifier);
@@ -274,6 +325,82 @@ export class GameCharacter extends TabletopObject {
 //格闘＝１`);
     palette.initialize();
     this.appendChild(palette);
+    this.addExtendData();
+  }
+
+  deleteBuff(name: string):boolean{
+    if (this.buffDataElement.children){
+      const dataElm = this.buffDataElement.children[0];
+      const data = (dataElm as DataElement).getFirstElementByName(name);
+      if(!data)return false;
+      data.destroy();
+      return true;
+    }
+    return false;
+  }
+
+  decreaseBuffRound(){
+    if (this.buffDataElement.children){
+      const dataElm = this.buffDataElement.children[0];
+      for (const data  of dataElm.children){
+        let oldNumS = '';
+        let sum: number;
+        oldNumS = (data.value as string);
+        sum = parseInt(oldNumS);
+        sum = sum - 1;
+        data.value = sum;
+      }
+    }
+  }
+
+  increaseBuffRound(){
+    if (this.buffDataElement.children){
+      const dataElm = this.buffDataElement.children[0];
+      for (const data  of dataElm.children){
+        let oldNumS = '';
+        let sum: number;
+        oldNumS = (data.value as string);
+        sum = parseInt(oldNumS);
+        sum = sum + 1;
+        data.value = sum;
+      }
+    }
+  }
+
+  deleteZeroRoundBuff(){
+    if (this.buffDataElement.children){
+      const dataElm = this.buffDataElement.children[0];
+      for (const data  of dataElm.children){
+        let oldNumS = '';
+        let num: number;
+        oldNumS = (data.value as string);
+        num = parseInt(oldNumS);
+        if ( num <= 0){
+        data.destroy();
+        }
+      }
+    }
+  }
+
+  addBuffRound(name: string, _info?: string , _round?: number){
+    let info = '';
+    let round = 3;
+    if(_info ){
+      info = _info;
+    }
+    if(_round != null){
+      round = _round;
+    }
+    if(this.buffDataElement.children){
+      let dataElm = this.buffDataElement.children[0];
+      let data = this.buffDataElement.getFirstElementByName( name );
+      if ( data ){
+        data.value = round;
+        data.currentValue = info;
+      }else{
+        dataElm.appendChild(DataElement.create(name, round , { type: 'numberResource', currentValue: info }, ));
+      }
+    }
   }
 
   chkChangeStatus(name: string, nowOrMax: string): boolean{

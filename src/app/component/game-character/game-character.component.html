@@ -13,8 +13,7 @@
       <div class="pedestal-inner"></div>
       <div *ngIf="isSelected" class="selected-highlight" [ngClass]="{'is-magnetic': isMagnetic}"></div>
       <div class="pedestal-outer"></div>
-      <img class="image" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" style="filter: brightness(0) opacity(0.7) blur(1px)" [ngStyle]="{'transform': 'scaleY(0.6) translateY(-40%) rotateZ(' + roll + 'deg)'}">
-      <div class="upright-transform is-fit-width is-3d" [ngStyle]="{'transform': 'rotateY(90deg) rotateZ(-90deg) rotateY(-90deg) translateY(-50%) translateY(' + (-altitude) * gridSize +'px)'}">
+      <div class="upright-transform is-fit-width is-3d">
         <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
           appRotable [rotable.option]="rollOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
           <div class="rotate-inner is-3d">
@@ -39,12 +38,6 @@
         </div>
       </div>
     </div>
-    <div class="is-3d" *ngIf="altitude <= -0.5 || 0.5 <= altitude" style="display:flex; align-items: center; border-left: 2px dashed black; position: absolute; transform-origin: top left"
-      [style.height.px]="math.abs(altitude * gridSize) - (altitude > 0 ? 0 : size * gridSize + characterImageHeight)"
-      [ngStyle]="{transform: 'translateX(' + (size * gridSize / 2) + 'px) translateY(' + (-size * gridSize / 2) + 'px) rotateX(-90deg) translateY(' + (altitude > 0 ? -altitude * gridSize : 0) + 'px) rotateY(' + (viewRotateZ) + 'deg)'}">
-      <div class="altitude-indicator"><i>{{altitude}}</i></div>
-      <div class="altitude-indicator" style="position: absolute; transform: rotateY(-180deg)"><i>{{altitude}}</i></div>
-    </div>
   </div>
 </div>
 
@@ -63,8 +56,7 @@
           <div class="material-icons of-back">autorenew</div>
         </div>
       </div>
-      <img class="image" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" style="filter: brightness(0) opacity(0.7) blur(1px)" [ngStyle]="{'transform': 'scaleY(0.6) translateY(-40%) rotateZ(' + roll + 'deg)'}">
-      <div class="upright-transform is-fit-width is-3d" [ngStyle]="{'transform': 'rotateY(90deg) rotateZ(-90deg) rotateY(-90deg) translateY(-50%) translateY(' + (-altitude) * gridSize +'px)'}">
+      <div class="upright-transform is-fit-width is-3d">
         <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
           appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
           <div class="rotate-inner is-3d">
@@ -87,23 +79,6 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="is-3d" *ngIf="isAltitudeIndicate && (altitude <= -0.5 || 0.5 <= altitude)"
-      style="display: flex; flex-flow: column nowrap; justify-content: space-between; border-left: 2px dashed black;  transform-origin: top left"
-      [style.height.px]="math.abs(altitude * gridSize) - (altitude > 0 ? 0 : size * gridSize + characterImageHeight)"
-      [ngStyle]="{transform: 'translateX(' + (size * gridSize / 2) + 'px) translateY(' + (-size * gridSize / 2) + 'px) rotateX(-90deg) translateY(' + (altitude > 0 ? -altitude * gridSize : 0) + 'px) rotateY(' + (viewRotateZ) + 'deg)'}">
-      <div [style.visibility]="altitude > 0 ? 'visible' : 'hidden'">
-        <span class="total-altitude-indicator"><i>{{ altitudeTotal }}</i></span>
-        <span class="total-altitude-indicator" style="position: absolute; transform: rotateY(-180deg)"><i>{{ altitudeTotal }}</i></span>
-      </div>
-      <div>
-        <span class="altitude-indicator">{{ altitude }}</span>
-        <span class="altitude-indicator" style="position: absolute; transform: rotateY(-180deg)">{{ altitude }}</span>
-      </div>
-      <div [style.visibility]="altitude < 0 ? 'visible' : 'hidden'">
-        <span class="total-altitude-indicator"><i>{{ altitudeTotal }}</i></span>
-        <span class="total-altitude-indicator" style="position: absolute; transform: rotateY(-180deg)"><i>{{ altitudeTotal }}</i></span>
       </div>
     </div>
   </div>

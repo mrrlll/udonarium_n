@@ -44,7 +44,6 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
   set rotate(rotate: number) { this.textNote.rotate = rotate; }
   get height(): number { return MathUtil.clampMin(this.textNote.height); }
   get width(): number { return MathUtil.clampMin(this.textNote.width); }
-  get altitude(): number { return this.textNote.altitude; }
 
   get isActive(): boolean { return document.activeElement === this.textAreaElementRef.nativeElement; }
 

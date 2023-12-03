@@ -59,8 +59,6 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
 
   get name(): string { return this.gameCharacter.name; }
   get size(): number { return MathUtil.clampMin(this.gameCharacter.size); }
-  get altitude(): number { return this.gameCharacter.altitude; }
-  set altitude(altitude: number) { this.gameCharacter.altitude = altitude; }
   get imageFile(): ImageFile { return this.gameCharacter.imageFile; }
   get rotate(): number { return this.gameCharacter.rotate; }
   set rotate(rotate: number) { this.gameCharacter.rotate = rotate; }
@@ -68,8 +66,6 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   set roll(roll: number) { this.gameCharacter.roll = roll; }
   get isAltitudeIndicate(): boolean { return this.gameCharacter.isAltitudeIndicate; }
   set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameCharacter.isAltitudeIndicate = isAltitudeIndicate; }
-  get isDropShadow(): boolean { return this.gameCharacter.isDropShadow; }
-  set isDropShadow(isDropShadow: boolean) { this.gameCharacter.isDropShadow = isDropShadow; }q
   get isStealth(): boolean { return this.gameCharacter.isStealth; }
   set isStealth(isStealth: boolean) { this.gameCharacter.isStealth = this.isStealth; }
 
@@ -77,12 +73,8 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   get isSelected(): boolean { return this.selectionState !== SelectionState.NONE; }
   get isMagnetic(): boolean { return this.selectionState === SelectionState.MAGNETIC; }
 
-  get altitudeTotal(): number {
-    return +((this.gameCharacter.posZ + (this.altitude * this.gridSize)) / this.gridSize).toFixed(1);
-  }
 
   gridSize: number = 50;
-  math = Math;
 
   movableOption: MovableOption = {};
   rotableOption: RotableOption = {};
@@ -118,7 +110,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     this.movableOption = {
       tabletopObject: this.gameCharacter,
       transformCssOffset: 'translateZ(1.0px)',
-      colideLayers: ['terrain', 'text-note', 'character']
+      colideLayers: ['terrain']
     };
     this.rotableOption = {
       tabletopObject: this.gameCharacter
@@ -232,7 +224,11 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
           }
         });
       }
-      actions.push({ name: '選択したキャラクター', action: null, subActions: subActions });
+      actions.push(
+        {
+          name: '選択したキャラクター', action: null, subActions: subActions
+        }
+      );
     }
 
     actions.push(ContextMenuSeparator);
@@ -242,16 +238,6 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   private makeContextMenu(): ContextMenuAction[] {
     let actions: ContextMenuAction[] = [];
 
-    actions.push(
-      this.isAltitudeIndicate
-      ? { name: '高度を表示しない', action: () => { this.isAltitudeIndicate = false; } }
-      : { name: '高度を表示する', action: () => { this.isAltitudeIndicate = true; } }
-    );
-    if(this.altitude != 0){
-      actions.push({ name: '高度を0にする', action: () => { this.altitude = 0; } });
-    }
-
-    actions.push(ContextMenuSeparator);
     actions.push({ name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } });
     actions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } });
     actions.push(ContextMenuSeparator);
@@ -284,10 +270,19 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
       }
     });
     actions.push(ContextMenuSeparator);
+    // ステルスモードのオンオフ
     if(this.isGM && this.isStealth){
-      actions.push({ name: 'ステルスモードを無効', action: () => { this.gameCharacter.hideOff(); } });
+      actions.push({
+        name: 'ステルスモードを無効', action: () => {
+          this.gameCharacter.hideOff();
+        }
+      });
     }else if(this.isGM && !this.isStealth){
-      actions.push({ name: 'ステルスモードを有効', action: () => { this.gameCharacter.hideOn(); } });
+      actions.push({
+        name: 'ステルスモードを有効', action: () => {
+          this.gameCharacter.hideOn();
+        }
+      });
     }
     return actions;
   }
