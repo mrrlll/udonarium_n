@@ -38,31 +38,6 @@ export class GameCharacter extends TabletopObject {
 
   _selectedTachieNum: number = 0;
 
-  get selectedTachieNum(): number {
-    if( this._selectedTachieNum > ( this.imageDataElement.children.length - 1) ){
-      this._selectedTachieNum = this.imageDataElement.children.length - 1;
-    }
-    if( this._selectedTachieNum < 0 ){
-      this._selectedTachieNum = 0;
-    }
-
-    return this._selectedTachieNum;
-  }
-
-  set selectedTachieNum(num : number){
-    console.log("set selectedTachieNum NUM=" + num +" len" + this.imageDataElement.children.length);
-
-    if( num > ( this.imageDataElement.children.length - 1 ) ){
-      num = this.imageDataElement.children.length - 1;
-    }
-    if( num < 0 ){
-      num = 0;
-    }
-    this._selectedTachieNum = num
-    console.log("set selectedTachieNum" + this._selectedTachieNum);
-
-  }
-
   private getIconNumElement(): DataElement {
     const iconNum = this.detailDataElement.getFirstElementByName('ICON');
     if (!iconNum || !iconNum.isNumberResource) return null;
@@ -88,6 +63,15 @@ export class GameCharacter extends TabletopObject {
 
   get name(): string { return this.getCommonValue('name', ''); }
   get size(): number { return this.getCommonValue('size', 1); }
+
+  get altitude(): number {
+    let element = this.getElement('altitude', this.commonDataElement);
+    if (!element) {
+      this.commonDataElement.appendChild(DataElement.create('altitude', 0, {}, 'altitude_' + this.identifier));
+    }
+    let num = element ? +element.value : 0;
+    return Number.isNaN(num) ? 0 : num;
+  }
 
   get chatPalette(): ChatPalette {
     for (let child of this.children) {
@@ -198,6 +182,7 @@ export class GameCharacter extends TabletopObject {
 
     let nameElement: DataElement = DataElement.create('name', name, {}, 'name_' + this.identifier);
     let sizeElement: DataElement = DataElement.create('size', size, {}, 'size_' + this.identifier);
+    let altitudeElement: DataElement = DataElement.create('altitude', 0, {}, 'altitude_' + this.identifier);
 
     if (this.imageDataElement.getFirstElementByName('imageIdentifier')) {
       this.imageDataElement.getFirstElementByName('imageIdentifier').value = imageIdentifier;
@@ -210,6 +195,7 @@ export class GameCharacter extends TabletopObject {
 
     this.commonDataElement.appendChild(nameElement);
     this.commonDataElement.appendChild(sizeElement);
+    this.commonDataElement.appendChild(altitudeElement);
 
     this.detailDataElement.appendChild(resourceElement);
     resourceElement.appendChild(hpElement);

@@ -59,6 +59,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
 
   get name(): string { return this.gameCharacter.name; }
   get size(): number { return MathUtil.clampMin(this.gameCharacter.size); }
+  get altitude(): number { return this.gameCharacter.altitude; }
   get imageFile(): ImageFile { return this.gameCharacter.imageFile; }
   get rotate(): number { return this.gameCharacter.rotate; }
   set rotate(rotate: number) { this.gameCharacter.rotate = rotate; }
