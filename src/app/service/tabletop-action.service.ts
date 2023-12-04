@@ -18,6 +18,8 @@ import { PointerCoordinate } from './pointer-device.service';
 
 import { ImageTag } from '@udonarium/image-tag';
 import { RangeArea } from '@udonarium/range';
+import { DiceTable } from '@udonarium/dice-table';
+import { DiceTablePalette } from '@udonarium/chat-palette';
 
 @Injectable({
   providedIn: 'root'
@@ -268,6 +270,9 @@ export class TabletopActionService {
     testCharacter.location.y = 13 * 50;
     testCharacter.initialize();
     testCharacter.createTestGameDataElement('キャラクターC', 1, testFile.identifier);
+
+    let diceTable = DiceTable.create();
+    diceTable.name = 'サンプルダイス表';
   }
 
   makeDefaultContextMenuActions(position: PointerCoordinate): ContextMenuAction[] {
