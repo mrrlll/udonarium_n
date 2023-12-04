@@ -53,6 +53,8 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
   get width(): number { return MathUtil.clampMin(this.terrain.width); }
   get depth(): number { return MathUtil.clampMin(this.terrain.depth); }
 
+  get altitude(): number { return this.terrain.altitude; }
+
   get isVisibleFloor(): boolean { return 0 < this.width * this.depth; }
   get isVisibleWallTopBottom(): boolean { return 0 < this.width * this.height; }
   get isVisibleWallLeftRight(): boolean { return 0 < this.depth * this.height; }
