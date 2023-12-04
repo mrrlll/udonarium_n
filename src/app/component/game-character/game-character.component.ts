@@ -91,6 +91,9 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     private appCustomService: AppConfigCustomService
   ) { }
 
+  viewRotateZ = 0;
+  math = Math;
+
   ngOnChanges(): void {
     EventSystem.unregister(this);
     EventSystem.register(this)
