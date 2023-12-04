@@ -85,6 +85,7 @@ export class ChatMessageService {
       tag: gameType,
       text: text,
       color: color,
+      sendFrom: sendFrom //lily
     };
 
     return chatTab.addMessage(chatMessage);

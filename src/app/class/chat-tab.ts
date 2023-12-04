@@ -184,10 +184,6 @@ export class ChatTab extends ObjectNode implements InnerXml {
 
     EventSystem.trigger('RESOURCE_EDIT_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier });
 
-    // 2021年4月実装のえいぷりるコマンド判定
-    EventSystem.trigger('APRIL_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier });
-
-
     this.appendChild(chat);
     return chat;
   }

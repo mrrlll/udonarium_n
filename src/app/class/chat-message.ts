@@ -29,7 +29,7 @@ export interface ChatMessageContext {
 
   imagePos?: number;
   messColor?: string;
-  sendFrom?: string;
+  sendFrom?: string; //lily
 }
 
 @SyncObject('chat')

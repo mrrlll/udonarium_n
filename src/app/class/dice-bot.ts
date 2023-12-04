@@ -12,6 +12,8 @@ import { PromiseQueue } from './core/system/util/promise-queue';
 import { StringUtil } from './core/system/util/string-util';
 import { DiceTable } from './dice-table';
 import { DiceTablePalette } from './chat-palette';
+import { GameCharacter } from './game-character';
+import { DataElement } from './data-element';
 
 interface DiceRollResult {
   id: string;
@@ -21,6 +23,17 @@ interface DiceRollResult {
   isFailure?: boolean;
   isCritical?: boolean;
   isFumble?: boolean;
+}
+
+interface ResourceEdit {
+  target: string;
+  targetHalfWidth: string;
+  operator: string;
+  command: string;
+
+  hitName: string;
+  calcAns: number;
+  detaElm : DataElement;
 }
 
 interface ChatCommandResult {
@@ -143,12 +156,136 @@ export class DiceBot extends GameObject {
         }
         return;
       })
+      .on('RESOURCE_EDIT_MESSAGE', async event => {
+        let chatMessage = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
+        if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) return;
+
+        let text: string = StringUtil.toHalfWidth(chatMessage.text);
+        let gameType: string = chatMessage.tag;
+
+        this.checkResourceEditCommand( chatMessage );
+
+
+        return;
+      })
   }
 
   // GameObject Lifecycle
   onStoreRemoved() {
     super.onStoreRemoved();
     EventSystem.unregister(this);
+  }
+
+  private checkResourceEditCommand( originalMessage: ChatMessage ){
+    let splitText = originalMessage.text.split(/\s/);
+    let result = null;
+
+    let allEditList : ResourceEdit[] = null;
+
+    console.log( "checkResourceEditCommand"+splitText);
+
+    for( let chktxt of splitText ){
+      console.log( "chktxt" + chktxt);
+      if( chktxt.match(/^[:：].+/gi) ){
+        console.log( "checkResourceEditCommand 2");
+
+        result = chktxt.match(/[:：][^:：]+/gi);
+        if( result ){
+          this.resourceEditProcess( result , originalMessage );
+        }
+      }
+    }
+
+  }
+
+  async resourceEditProcess( result: string[] , originalMessage: ChatMessage){
+
+    let object = ObjectStore.instance.get<GameCharacter>(originalMessage.sendFrom);
+    if (object instanceof GameCharacter) {
+      console.log( "object.location.name" + object.location.name );
+    }else{
+      console.log("キャラクタじゃないので操作できません");
+      return;
+    }
+
+    let allEditList : ResourceEdit[] = [];
+    let data : DataElement ;
+    let gameType = originalMessage.tag;
+
+    let oneResourceEdit : ResourceEdit = {
+      target: "",
+      targetHalfWidth: "",
+      operator: "",
+      command: "",
+      hitName: "",
+      calcAns: 0,
+      detaElm : null
+    }
+
+    for( let oneText of result ){
+
+      console.log(oneText);
+      if( ! oneText.match(/[:：]([^-+=－＋＝]+)([-+=－＋＝])(.+)/) ) return ;
+
+      if( oneText.match(/[:：]([^-+=－＋＝]+)([-+=－＋＝])(.+)/) ){
+        oneResourceEdit.target =  RegExp.$1 ;                                     //操作対象検索文字タイプ生値
+        oneResourceEdit.targetHalfWidth = StringUtil.toHalfWidth(RegExp.$1) ;     //操作対象検索文字半角化
+        oneResourceEdit.operator = StringUtil.toHalfWidth(RegExp.$2) ;            //演算符号
+        oneResourceEdit.command = StringUtil.toHalfWidth(RegExp.$3)+"+(1d1-1)";   //操作量　C()とダイスロールが必要な場合分けをしないために+(1d1-1)を付加してダイスロール命令にしている
+
+//        console.log( "円柱chkpoint 01");
+
+        //操作対象検索
+        data =  object.detailDataElement.getFirstElementByName(oneResourceEdit.target);
+        if( data ){
+          oneResourceEdit.hitName = oneResourceEdit.target;
+          oneResourceEdit.detaElm = data;
+        }else{
+          data =  object.detailDataElement.getFirstElementByName(oneResourceEdit.targetHalfWidth);
+          if( data ){
+            oneResourceEdit.hitName = oneResourceEdit.targetHalfWidth;
+            oneResourceEdit.detaElm = data;
+          }else{
+            //検索リソースヒットせず
+            return ;//実行失敗
+          }
+        }
+
+        //ダイスロール及び四則演算
+        try {
+          let rollResult = await DiceBot.diceRollAsync(oneResourceEdit.command, gameType);
+          if (!rollResult.result) return null;
+          console.log("rollResult.result>"+rollResult.result);
+
+          rollResult.result.match(/(\d+)$/); //計算結果だけ格納
+          console.log( "rollResult.result " + rollResult.result + "  calcAns:"+ RegExp.$1);
+
+          oneResourceEdit.calcAns = parseInt(RegExp.$1);
+        } catch (e) {
+          console.error(e);
+        }
+        console.log( "円柱chkpoint 25");
+      }
+      console.log( "target:"+oneResourceEdit.target + " operator:"+oneResourceEdit.operator + " command:" + oneResourceEdit.command + " ans:"+oneResourceEdit.calcAns);
+      allEditList.push( oneResourceEdit );
+    }
+
+    this.eesourceEdit( allEditList , originalMessage);
+    return;
+  }
+
+  private eesourceEdit( allEditList:ResourceEdit[] ,originalMessage: ChatMessage){
+    let text = "";
+    for( let edit of allEditList){
+/*
+      if( edit.detaElm )
+
+
+      edit.hitName + '[' + +'＞' + +'] '
+
+      console.log( "target:"+test.target + " operator:"+test.operator + " command:" + test.command + " ans:"+test.calcAns);
+*/
+    }
   }
 
   private sendResultMessage(rollResult: DiceRollResult, originalMessage: ChatMessage) {
