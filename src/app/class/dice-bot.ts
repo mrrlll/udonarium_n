@@ -198,13 +198,9 @@ export class DiceBot extends GameObject {
 
     let allEditList : ResourceEdit[] = null;
 
-    console.log( "checkResourceEditCommand"+splitText);
-
-    for( let chktxt of splitText ){
-      console.log( "chktxt" + chktxt);
-      if( chktxt.match(/^[:：].+/gi) ){
-        console.log( "checkResourceEditCommand 2");
-
+    for (const chktxt of splitText) {
+      console.log('chktxt' + chktxt);
+      if (chktxt.match(/^[:：].+/gi)) {
         result = chktxt.match(/[:：][^:：]+/gi);
         if( result ){
           this.resourceEditProcess( result , originalMessage );
@@ -216,84 +212,91 @@ export class DiceBot extends GameObject {
 
   async resourceEditProcess( result: string[] , originalMessage: ChatMessage){
 
-    let object = ObjectStore.instance.get<GameCharacter>(originalMessage.sendFrom);
+    const object = ObjectStore.instance.get<GameCharacter>(originalMessage.sendFrom);
     if (object instanceof GameCharacter) {
-      console.log( "object.location.name" + object.location.name );
+      console.log( 'object.location.name' + object.location.name );
     }else{
-      console.log("キャラクタじゃないので操作できません");
+      console.log('キャラクタじゃないので操作できません');
       return;
     }
 
-    let allEditList : ResourceEdit[] = [];
-    let data : DataElement ;
+    const allEditList: ResourceEdit[] = [];
+    let data: DataElement ;
     let gameType = originalMessage.tag;
 
-    for( let oneText of result ){
-      let oneResourceEdit : ResourceEdit = {
-        target: "",
-        targetHalfWidth: "",
-        operator: "",
-        diceResult: "",
-        command: "",
-        isDiceRoll:false,
-        hitName: "",
+
+    for ( const oneText of result ){
+      const oneResourceEdit: ResourceEdit = {
+        target: '',
+        targetHalfWidth: '',
+        operator: '',
+        diceResult: '',
+        command: '',
+        isDiceRoll: false,
+        hitName: '',
         calcAns: 0,
         detaElm : null
+      };
+
+      const replaceText = oneText.replace('：', ':').replace('＋', '+').replace('－', '-').replace('＝', '=');
+
+      console.log('リソース変更：' + replaceText);
+      const resourceEditRegExp = /[:]([^-+=]+)([-+=])(.+)/;
+      const resourceEditResult = replaceText.match(resourceEditRegExp);
+      if (!resourceEditResult) { return ; }
+
+      const reg1: string = resourceEditResult[1];
+      const reg2: string = resourceEditResult[2];
+      const reg3: string = resourceEditResult[3];
+
+      console.log( reg1 + '/' + reg2 + '/' + reg3 );
+
+      oneResourceEdit.target = reg1;                                                         // 操作対象検索文字タイプ生値
+      oneResourceEdit.targetHalfWidth = StringUtil.toHalfWidth(reg1);                        // 操作対象検索文字半角化
+      oneResourceEdit.operator = reg2;                                                       // 演算符号
+      const commandPrefix = reg2 == '-' ? '-' : '';
+      oneResourceEdit.command = commandPrefix + StringUtil.toHalfWidth(reg3) + '+(1d1-1)';   // 操作量C()とダイスロールが必要な場合分けをしないために+(1d1-1)を付加してダイスロール命令にしている
+
+      if (StringUtil.toHalfWidth(reg3).match(/\d[dD]/)) {
+        oneResourceEdit.isDiceRoll = true;
+      } else {
+        oneResourceEdit.isDiceRoll = false;
       }
 
-      let replaceText = oneText.replace("：",":").replace("＋","+").replace("－","-").replace("＝","=");
-
-      if( ! replaceText.match(/[:]([^-+=]+)([-+=])(.+)/) ) return ;
-
-      if( replaceText.match(/[:]([^-+=]+)([-+=])(.+)/) ){
-        let reg1:string = RegExp.$1;
-        let reg2:string = RegExp.$2;
-        let reg3:string = RegExp.$3;
-
-        oneResourceEdit.target =  reg1 ;                                     //操作対象検索文字タイプ生値
-        oneResourceEdit.targetHalfWidth = StringUtil.toHalfWidth(reg1) ;     //操作対象検索文字半角化
-        oneResourceEdit.operator = reg2 ;                                    //演算符号
-        oneResourceEdit.command = StringUtil.toHalfWidth(reg3)+"+(1d1-1)";   //操作量C()とダイスロールが必要な場合分けをしないために+(1d1-1)を付加してダイスロール命令にしている
-
-        if( StringUtil.toHalfWidth(reg3).match(/\d[dD]/) ){
-          oneResourceEdit.isDiceRoll = true;
-        }else{
-          oneResourceEdit.isDiceRoll = false;
-        }
-
-        //操作対象検索
-        data =  object.detailDataElement.getFirstElementByName(oneResourceEdit.target);
-        if( data ){
-          oneResourceEdit.hitName = oneResourceEdit.target;
+      // 操作対象検索
+      data = object.detailDataElement.getFirstElementByName(oneResourceEdit.target);
+      if (data) {
+        oneResourceEdit.hitName = oneResourceEdit.target;
+        oneResourceEdit.detaElm = data;
+      } else {
+        data =  object.detailDataElement.getFirstElementByName(oneResourceEdit.targetHalfWidth);
+        if (data) {
+          oneResourceEdit.hitName = oneResourceEdit.targetHalfWidth;
           oneResourceEdit.detaElm = data;
-        }else{
-          data =  object.detailDataElement.getFirstElementByName(oneResourceEdit.targetHalfWidth);
-          if( data ){
-            oneResourceEdit.hitName = oneResourceEdit.targetHalfWidth;
-            oneResourceEdit.detaElm = data;
-          }else{
-            //検索リソースヒットせず
-            return ;//実行失敗
-          }
+        } else {
+          // 検索リソースヒットせず
+          return ; // 実行失敗
         }
-
-        //ダイスロール及び四則演算
-        try {
-          let rollResult = await DiceBot.diceRollAsync(oneResourceEdit.command, gameType);
-          if (!rollResult.result) return null;
-
-          let splitResult = rollResult.result.split(' ＞ ');
-          oneResourceEdit.diceResult = splitResult[splitResult.length-2].replace(/\+\(1\[1\]\-1\)$/,'');
-
-          rollResult.result.match(/([-+]?\d+)$/); //計算結果だけ格納
-
-          oneResourceEdit.calcAns = parseInt(RegExp.$1);
-        } catch (e) {
-          console.error(e);
-        }
-        console.log( "円柱chkpoint 25");
       }
-      console.log( "target:"+oneResourceEdit.target + " operator:"+oneResourceEdit.operator + " command:" + oneResourceEdit.command + " ans:"+oneResourceEdit.calcAns);
+      console.log('oneResourceEdit.detaElm :V' + oneResourceEdit.detaElm.value + ' cV ' + oneResourceEdit.detaElm.currentValue);
+
+      // ダイスロール及び四則演算
+      try {
+        const rollResult = await DiceBot.diceRollAsync(oneResourceEdit.command, gameType);
+        if (!rollResult.result) { return null; }
+
+        const splitResult = rollResult.result.split(' ＞ ');
+        oneResourceEdit.diceResult = splitResult[splitResult.length - 2].replace(/\+\(1\[1\]\-1\)$/, '');
+
+        const resultMatch = rollResult.result.match(/([-+]?\d+)$/); // 計算結果だけ格納
+        console.log( 'calcAns:' + resultMatch[1]);
+
+        oneResourceEdit.calcAns = parseInt(resultMatch[1]);
+      } catch (e) {
+        console.error(e);
+      }
+      console.log( '円柱chkpoint 25');
+      console.log( 'target:' + oneResourceEdit.target + ' operator:' + oneResourceEdit.operator + ' command:' + oneResourceEdit.command + ' ans:' + oneResourceEdit.calcAns);
       allEditList.push( oneResourceEdit );
     }
 
@@ -301,77 +304,74 @@ export class DiceBot extends GameObject {
     return;
   }
 
-  private resourceEdit( allEditList:ResourceEdit[] ,originalMessage: ChatMessage){
-    let text = "";
-    let oldValueS:string = '';
-    let oldValue:number = 0;
+  private resourceEdit( allEditList: ResourceEdit[] , originalMessage: ChatMessage){
+    let text = '';
+    let oldValueS = '';
+    const oldValue = 0;
 
-    let calc:number = 0;
-    let isDiceRoll:boolean = false;
-    for( let edit of allEditList){
-      if( edit.detaElm.type == 'numberResource' ){
-        oldValueS = <string>edit.detaElm.currentValue ;
+    let calc = 0;
+    let isDiceRoll = false;
+    for ( const edit of allEditList) {
+      if (edit.detaElm.type == 'numberResource') {
+        oldValueS = (edit.detaElm.currentValue as string) ;
 
-        switch( edit.operator ){
-          case '+':
-            calc = parseInt(oldValueS) + edit.calcAns;
-            break;
-          case '-':
-            calc = parseInt(oldValueS) - edit.calcAns;
-            break;
-          case '=':
-            calc = edit.calcAns;
-            break;
+        if (edit.operator == '=') {
+          calc = edit.calcAns;
+        } else {
+          calc = parseInt(oldValueS) + edit.calcAns;
         }
         edit.detaElm.currentValue = calc;
 
-      }
-      if( edit.detaElm.type != 'numberResource' && edit.detaElm.type != 'note' ){
-        oldValueS = <string>edit.detaElm.value ;
+      } else if (edit.detaElm.type != 'note') {
+        oldValueS = (edit.detaElm.value as string) ;
 
-        switch( edit.operator ){
-          case '+':
-            calc = parseInt(oldValueS) + edit.calcAns;
-            break;
-          case '-':
-            calc = parseInt(oldValueS) - edit.calcAns;
-            break;
-          case '=':
-            calc = edit.calcAns;
-            break;
+        if (edit.operator == '=') {
+          calc = edit.calcAns;
+        } else {
+          calc = parseInt(oldValueS) + edit.calcAns;
         }
         edit.detaElm.value = calc;
       }
-      text += edit.hitName + ':' + oldValueS + edit.operator + edit.diceResult +'＞' + calc +'    ';
-      if( edit.isDiceRoll ) isDiceRoll = true;
+      /*
+      let textoperator;
+      if( edit.operator == '='){
+        textoperator = ' ＞ ';
+      }else{
+        textoperator = edit.operator;
+      }
+      */
+      const operatorText = edit.operator == '-' ? '' : edit.operator;
+      text += edit.hitName + ':' + oldValueS + operatorText + edit.diceResult + '＞' + calc + '    ';
+      if ( edit.isDiceRoll ) { isDiceRoll = true; }
     }
-    text = text.replace(/\s\s\s\s$/,'');
+    text = text.replace(/\s\s\s\s$/, '');
 
+    console.log( 'text:' + text);
     let fromText;
     let nameText;
-    if( isDiceRoll ){
+    if ( isDiceRoll ){
       fromText = 'System-BCDice';
       nameText = '<BCDice：' + originalMessage.name + '>';
     }else{
       fromText = 'System';
       nameText = originalMessage.name;
     }
-
-    let resourceMessage: ChatMessageContext = {
+    const resourceMessage: ChatMessageContext = {
       identifier: '',
       tabIdentifier: originalMessage.tabIdentifier,
       originFrom: originalMessage.from,
       from: fromText,
       timestamp: originalMessage.timestamp + 2,
-      imageIdentifier: PeerCursor.myCursor.diceImageIdentifier,
+      imageIdentifier: PeerCursor.myCursor.diceImageIdentifier ,
       tag: 'system',
       name: nameText,
-      text: text,
+      text,
       messColor: originalMessage.messColor
     };
 
-    let chatTab = ObjectStore.instance.get<ChatTab>(originalMessage.tabIdentifier);
-    if (chatTab) chatTab.addMessage(resourceMessage);
+    const chatTab = ObjectStore.instance.get<ChatTab>(originalMessage.tabIdentifier);
+    if (chatTab) { chatTab.addMessage(resourceMessage); }
+
   }
 
   private sendResultMessage(rollResult: DiceRollResult, originalMessage: ChatMessage) {
