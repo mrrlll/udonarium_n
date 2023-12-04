@@ -135,6 +135,22 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  chatTabSwitchRelative(direction: number) {
+    let chatTabs = this.chatMessageService.chatTabs;
+    let index = chatTabs.findIndex((elm) => elm.identifier == this.chatTabidentifier);
+    if (index < 0) { return; }
+
+    let nextIndex: number;
+    if (index == chatTabs.length - 1 && direction == 1) {
+      nextIndex = 0;
+    } else if (index == 0 && direction == -1) {
+      nextIndex = chatTabs.length - 1;
+    } else {
+      nextIndex = index + direction;
+    }
+    this.chatTabidentifier = chatTabs[nextIndex].identifier;
+  }
+
   trackByChatTab(index: number, chatTab: ChatTab) {
     return chatTab.identifier;
   }

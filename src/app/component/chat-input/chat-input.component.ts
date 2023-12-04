@@ -72,6 +72,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   set filterText(filterText: string) { this._filterText = filterText; this.filterTextChange.emit(filterText); }
 
   @Output() chat = new EventEmitter<{ text: string, gameType: string, sendFrom: string, sendTo: string }>();
+  @Output() tabSwitch = new EventEmitter<number>();
 
   get isDirect(): boolean { return this.sendTo != null && this.sendTo.length ? true : false }
   gameHelp: string = '';
@@ -193,6 +194,11 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     }
     this.previousWritingLength = this.text.length;
     this.calcFitHeight();
+  }
+
+  tabSwitchAction(event: KeyboardEvent, direction: number) {
+    if (event) event.preventDefault();
+    this.tabSwitch.emit(direction);
   }
 
   sendChat(event: KeyboardEvent) {

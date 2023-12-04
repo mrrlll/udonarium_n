@@ -139,4 +139,20 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     if (this.filterText == null || this.filterText.trim() == '') return true;
     return StringUtil.toHalfWidth(value.replace(/[―ー—‐]/g, '-')).replace(/[\r\n\s]+/, ' ').trim().indexOf(StringUtil.toHalfWidth(this.filterText.replace(/[―ー—‐]/g, '-')).replace(/[\r\n\s]+/, ' ').trim()) >= 0;
   }
+
+  chatTabSwitchRelative(direction: number) {
+    let chatTabs = this.chatMessageService.chatTabs;
+    let index = chatTabs.findIndex((elm) => elm.identifier == this.chatTabidentifier);
+    if (index < 0) { return; }
+
+    let nextIndex: number;
+    if (index == chatTabs.length - 1 && direction == 1) {
+      nextIndex = 0;
+    } else if (index == 0 && direction == -1) {
+      nextIndex = chatTabs.length - 1;
+    } else {
+      nextIndex = index + direction;
+    }
+    this.chatTabidentifier = chatTabs[nextIndex].identifier;
+  }
 }
