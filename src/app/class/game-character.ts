@@ -530,4 +530,9 @@ export class GameCharacter extends TabletopObject {
   hideOff() {
     this.isStealth = false;
   }
+
+  resetPopSize() {
+    this.overViewWidth = 270;
+    this.overViewMaxHeight = 250;
+  }
 }

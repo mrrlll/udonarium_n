@@ -140,4 +140,28 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy {
     let character = <GameCharacter>this.tabletopObject;
     character.specifyKomaImageFlag = !character.specifyKomaImageFlag;
   }
+
+  resetPopSize(){
+    let character = <GameCharacter>this.tabletopObject;
+    character.overViewMaxHeight = 250;
+    character.overViewWidth = 270;
+  }
+
+  chkPopWidth( width ){
+    let character = <GameCharacter>this.tabletopObject;
+    if( width < 270 )
+      width = 270 ;
+    if( width > 800 )
+      width = 800 ;
+    character.overViewWidth = width;
+  }
+
+  chkPopMaxHeight( maxHeight ){
+    let character = <GameCharacter>this.tabletopObject;
+    if( maxHeight < 250 )
+      maxHeight = 250 ;
+    if( maxHeight > 1000 )
+      maxHeight = 1000 ;
+    character.overViewMaxHeight = maxHeight;
+  }
 }
