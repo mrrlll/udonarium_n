@@ -92,11 +92,14 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     this.updatePanelTitle();
   }
 
+  resizeChatInput() {
+    this.chatInputComponent.kickCalcFitHeight();
+  }
+
   selectPalette(line: string) {
     // this.text = line;
     let multiLine = line.replace(/\\n/g, '\n');
     this.text = multiLine;
-    this.chatInputComponent.kickCalcFitHeight();
   }
 
   clickPalette(line: string) {
@@ -109,7 +112,6 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     } else {
       // this.text = line;
       this.text = multiLine;
-      this.chatInputComponent.kickCalcFitHeight();
       this.doubleClickTimer = setTimeout(() => { this.doubleClickTimer = null }, 400);
     }
   }

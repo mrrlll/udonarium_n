@@ -15,6 +15,8 @@ import { DiceTablePalette } from './chat-palette';
 import { GameCharacter } from './game-character';
 import { DataElement } from './data-element';
 
+import { PeerCursor } from './peer-cursor';
+
 interface DiceRollResult {
   id: string;
   result: string;
@@ -212,22 +214,22 @@ export class DiceBot extends GameObject {
     let data : DataElement ;
     let gameType = originalMessage.tag;
 
-    let oneResourceEdit : ResourceEdit = {
-      target: "",
-      targetHalfWidth: "",
-      operator: "",
-      command: "",
-      hitName: "",
-      calcAns: 0,
-      detaElm : null
-    }
-
     for( let oneText of result ){
+      let oneResourceEdit : ResourceEdit = {
+        target: "",
+        targetHalfWidth: "",
+        operator: "",
+        command: "",
+        hitName: "",
+        calcAns: 0,
+        detaElm : null
+      }
 
-      console.log(oneText);
-      if( ! oneText.match(/[:：]([^-+=－＋＝]+)([-+=－＋＝])(.+)/) ) return ;
+      let replaceText = oneText.replace("：",":").replace("＋","+").replace("－","-").replace("＝","=");
 
-      if( oneText.match(/[:：]([^-+=－＋＝]+)([-+=－＋＝])(.+)/) ){
+      if( ! replaceText.match(/[:]([^-+=]+)([-+=])(.+)/) ) return ;
+
+      if( replaceText.match(/[:]([^-+=]+)([-+=])(.+)/) ){
         oneResourceEdit.target =  RegExp.$1 ;                                     //操作対象検索文字タイプ生値
         oneResourceEdit.targetHalfWidth = StringUtil.toHalfWidth(RegExp.$1) ;     //操作対象検索文字半角化
         oneResourceEdit.operator = StringUtil.toHalfWidth(RegExp.$2) ;            //演算符号
@@ -276,16 +278,61 @@ export class DiceBot extends GameObject {
 
   private resourceEdit( allEditList:ResourceEdit[] ,originalMessage: ChatMessage){
     let text = "";
+    let oldValueS:string = '';
+    let oldValue:number = 0;
+
+    let calc:number = 0;
     for( let edit of allEditList){
-/*
-      if( edit.detaElm )
+      if( edit.detaElm.type == 'numberResource' ){
+        oldValueS = <string>edit.detaElm.currentValue ;
 
+        switch( edit.operator ){
+          case '+':
+            calc = parseInt(oldValueS) + edit.calcAns;
+            break;
+          case '-':
+            calc = parseInt(oldValueS) - edit.calcAns;
+            break;
+          case '=':
+            calc = edit.calcAns;
+            break;
+        }
+        edit.detaElm.currentValue = calc;
 
-      edit.hitName + '[' + +'＞' + +'] '
+      }
+      if( edit.detaElm.type != 'numberResource' && edit.detaElm.type != 'note' ){
+        oldValueS = <string>edit.detaElm.value ;
 
-      console.log( "target:"+test.target + " operator:"+test.operator + " command:" + test.command + " ans:"+test.calcAns);
-*/
+        switch( edit.operator ){
+          case '+':
+            calc = parseInt(oldValueS) + edit.calcAns;
+            break;
+          case '-':
+            calc = parseInt(oldValueS) - edit.calcAns;
+            break;
+          case '=':
+            calc = edit.calcAns;
+            break;
+        }
+        edit.detaElm.value = calc;
+      }
+      text += edit.hitName + '[' + oldValueS +'＞' + calc +'] '
     }
+    let resourceMessage: ChatMessageContext = {
+      identifier: '',
+      tabIdentifier: originalMessage.tabIdentifier,
+      originFrom: originalMessage.from,
+      from: 'System-BCDice',
+      timestamp: originalMessage.timestamp + 2,
+      imageIdentifier: PeerCursor.myCursor.diceImageIdentifier,
+      tag: 'system',
+      name: '<BCDice：' + originalMessage.name + '>',
+      text: text,
+      messColor: originalMessage.messColor
+    };
+
+    let chatTab = ObjectStore.instance.get<ChatTab>(originalMessage.tabIdentifier);
+    if (chatTab) chatTab.addMessage(resourceMessage);
   }
 
   private sendResultMessage(rollResult: DiceRollResult, originalMessage: ChatMessage) {
