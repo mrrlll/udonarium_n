@@ -14,7 +14,7 @@ import { DiceTable } from './dice-table';
 import { DiceTablePalette } from './chat-palette';
 
 interface DiceRollResult {
-  id?: string;
+  id: string;
   result: string;
   isSecret: boolean;
   isSuccess?: boolean;
@@ -107,9 +107,9 @@ export class DiceBot extends GameObject {
           let regArray = /^((\d+)?\s+)?([^\s]*)?/ig.exec(rollTable.dice);
           let repeat: number = (regArray[2] != null) ? Number(regArray[2]) : 1;
           let rollText: string = (regArray[3] != null) ? regArray[3] : text;
-          let finalResult: DiceRollResult = { result: '', isSecret: false };
+          let finalResult: DiceRollResult = { id: 'DiceBot', result: '', isSecret: false };
           for (let i = 0; i < repeat && i < 32; i++) {
-            let rollResult = await DiceBot.diceRollAsync(rollText, gameType);
+            let rollResult = await DiceBot.diceRollAsync(rollText, rollTable.diceTablePalette.dicebot);
             if (rollResult.result.length < 1) break;
 
             finalResult.result += rollResult.result;
@@ -152,7 +152,7 @@ export class DiceBot extends GameObject {
   }
 
   private sendResultMessage(rollResult: DiceRollResult, originalMessage: ChatMessage) {
-    let id: string = rollResult.id ? rollResult.id.split(':')[0] : 'DiceBot';
+    let id: string = rollResult.id.split(':')[0];
     let result: string = rollResult.result;
     let isSecret: boolean = rollResult.isSecret;
     const isSuccess: boolean = rollResult.isSuccess;
