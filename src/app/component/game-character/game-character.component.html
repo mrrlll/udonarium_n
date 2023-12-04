@@ -14,7 +14,7 @@
       <div class="pedestal-inner"></div>
       <div *ngIf="isSelected" class="selected-highlight" [ngClass]="{'is-magnetic': isMagnetic}"></div>
       <div class="pedestal-outer"></div>
-      <!-- <img class="image" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" style="filter: brightness(0) opacity(0.7) blur(1px); transform: scaleY(0.5) translateY(-50%)"> -->
+      <!-- <img class="image" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" style="filter: brightness(0) opacity(0.7) blur(1px)" [ngStyle]="{'transform': 'scaleY(0.5) translateY(-50%) rotateZ(' + roll + 'deg)'}"> -->
       <div class="upright-transform is-fit-width is-3d" [ngStyle]="{'transform': 'rotateY(90deg) rotateZ(-90deg) rotateY(-90deg) translateY(-50%) translateY(' + (-altitude) * gridSize +'px)'}">
         <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
           appRotable [rotable.option]="rollOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
@@ -59,7 +59,7 @@
           <div class="material-icons of-back">autorenew</div>
         </div>
       </div>
-      <!-- <img class="image" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" style="filter: brightness(0) opacity(0.7) blur(1px); transform: scaleY(0.5) translateY(-50%)"> -->
+      <!-- <img class="image" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" style="filter: brightness(0) opacity(0.7) blur(1px)" [ngStyle]="{'transform': 'scaleY(0.5) translateY(-50%) rotateZ(' + roll + 'deg)'}"> -->
       <div class="upright-transform is-fit-width is-3d" [ngStyle]="{'transform': 'rotateY(90deg) rotateZ(-90deg) rotateY(-90deg) translateY(-50%) translateY(' + (-altitude) * gridSize +'px)'}">
         <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
           appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
