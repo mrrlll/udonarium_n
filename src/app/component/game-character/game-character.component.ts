@@ -83,6 +83,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   rotableOption: RotableOption = {};
   rollOption: RotableOption = {};
 
+  private highlightTimerID: number | null;
   private unhighlightTimerID: number | null;
 
   constructor(
@@ -114,13 +115,20 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
         console.log(`recv focus event to ${this.gameCharacter.name}`);if (this.rootElementRef.nativeElement.classList.contains('focused')) {
           window.clearTimeout(this.unhighlightTimerID);
           this.rootElementRef.nativeElement.classList.remove('focused');
-          void this.rootElementRef.nativeElement.offsetWidth;
         }
+        // アニメーション開始のタイマーが既にあってアニメーション開始前（ごくわずかな間）ならば何もしない
+        if (this.highlightTimerID != null) { return; }
+
+        // アニメーション開始処理タイマー
+        this.highlightTimerID = window.setTimeout(() => {
+          this.highlightTimerID = null;
+          this.rootElementRef.nativeElement.classList.add('focused');
+        }, 0);
+        // アニメーション終了処理タイマー
         this.unhighlightTimerID = window.setTimeout(() => {
-          this.rootElementRef.nativeElement.classList.remove('focused');
           this.unhighlightTimerID = null;
+          this.rootElementRef.nativeElement.classList.remove('focused');
         }, 1010);
-        this.rootElementRef.nativeElement.classList.add('focused');
       })
       .on(`UPDATE_SELECTION/identifier/${this.gameCharacter?.identifier}`, event => {
         this.changeDetector.markForCheck();
