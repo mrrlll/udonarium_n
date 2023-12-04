@@ -72,9 +72,13 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
 
   gridSize: number = 50;
 
+  get isWallExist(): boolean {
+    return this.hasWall && this.wallImage && this.wallImage.url && this.wallImage.url.length > 0;
+  }
+
   get terreinAltitude(): number {
     let ret = this.altitude;
-    if (this.altitude < 0 || (!this.hasWall || !this.wallImage.url || !this.wallImage.url.length)) ret += this.height;
+    if (this.altitude < 0 || !this.isWallExist) ret += this.height;
     return ret;
   }
 
