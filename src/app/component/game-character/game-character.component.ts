@@ -68,6 +68,8 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   set roll(roll: number) { this.gameCharacter.roll = roll; }
   get isDropShadow(): boolean { return this.gameCharacter.isDropShadow; }
   set isDropShadow(isDropShadow: boolean) { this.gameCharacter.isDropShadow = isDropShadow; }
+  get isAltitudeIndicate(): boolean { return this.gameCharacter.isAltitudeIndicate; }
+  set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameCharacter.isAltitudeIndicate = isAltitudeIndicate; }
   get isStealth(): boolean { return this.gameCharacter.isStealth; }
   set isStealth(isStealth: boolean) { this.gameCharacter.isStealth = this.isStealth; }
 

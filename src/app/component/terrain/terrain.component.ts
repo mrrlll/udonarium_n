@@ -56,6 +56,9 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
   get altitude(): number { return this.terrain.altitude; }
   set altitude(altitude: number) { this.terrain.altitude = altitude; }
 
+  get isAltitudeIndicate(): boolean { return this.terrain.isAltitudeIndicate; }
+  set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.terrain.isAltitudeIndicate = isAltitudeIndicate; }
+
   get isDropShadow(): boolean { return this.terrain.isDropShadow; }
   set isDropShadow(isDropShadow: boolean) { this.terrain.isDropShadow = isDropShadow; }
 
@@ -69,8 +72,16 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
 
   gridSize: number = 50;
 
+  get terreinAltitude(): number {
+    let ret = this.altitude;
+    if (this.altitude < 0 || !this.hasWall || !this.wallImage.url || !this.wallImage.url.length) ret += this.height;
+    return ret;
+  }
+
   movableOption: MovableOption = {};
   rotableOption: RotableOption = {};
+
+  math = Math;
 
   private input: InputHandler = null;
 
@@ -87,6 +98,8 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
     private coordinateService: CoordinateService,
   ) { }
 
+  viewRotateZ = 0;
+
   ngOnChanges(): void {
     EventSystem.unregister(this);
     EventSystem.register(this)
@@ -100,6 +113,10 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
         this.changeDetector.markForCheck();
       })
       .on('UPDATE_FILE_RESOURE', event => {
+        this.changeDetector.markForCheck();
+      })
+      .on<number>('TABLE_VIEW_ROTATE_Z', -1000, event => {
+        this.viewRotateZ = event.data;
         this.changeDetector.markForCheck();
       })
       .on(`UPDATE_SELECTION/identifier/${this.terrain?.identifier}`, event => {
@@ -235,6 +252,18 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
     );
     actions.push(ContextMenuSeparator);
     actions.push(
+      this.isAltitudeIndicate
+      ? {
+        name: '高度を非表示', action: () => {
+          this.isAltitudeIndicate = false;
+        }
+      } : {
+        name: '高度を表示', action: () => {
+          this.isAltitudeIndicate = true;
+        }
+      }
+    );
+    actions.push(
       this.altitude >= 0
       ?{
         name: '高さを0にする', action: () => {
@@ -248,7 +277,7 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
         },
         altitudeHande: this.terrain
       }
-    )
+    );
     actions.push(ContextMenuSeparator);
     actions.push((this.hasWall
       ? {
