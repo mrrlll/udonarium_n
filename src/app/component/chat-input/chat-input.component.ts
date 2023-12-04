@@ -206,6 +206,10 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
     this.text = '';
     this.previousWritingLength = this.text.length;
+    this.kickCalcFitHeight();
+  }
+
+  kickCalcFitHeight() {
     if (this.calcFitHeightInterval == null) {
       this.calcFitHeightInterval = setTimeout(() => {
         this.calcFitHeightInterval = null;
