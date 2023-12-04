@@ -56,7 +56,7 @@ export class UIPanelComponent implements OnInit {
   get isAbleCloseButton() { return this.panelService.isAbleCloseButton; }
   get isAbleRotateButton() { return this.panelService.isAbleRotateButton; }
   get className() { return this.panelService.className; }
-  get isHideTitleBar() { return this.panelService.isHideTitleBar; }
+  // get isHideTitleBar() { return this.panelService.isHideTitleBar; }
 
   private preLeft: number = 0;
   private preTop: number = 0;
