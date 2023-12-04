@@ -337,6 +337,9 @@ export class RangeComponent implements OnChanges, OnDestroy, AfterViewInit {
     return length;
   }
 
+  get followingCharactor(): GameCharacter { return this.range.followingCharactor; }
+  set followingCharactor(followingCharactor: GameCharacter) { this.range.followingCharactor = followingCharactor; }
+
   gridSize: number = 50;
 
   movableOption: MovableOption = {};
@@ -379,13 +382,23 @@ export class RangeComponent implements OnChanges, OnDestroy, AfterViewInit {
           });
           markForCheck = true;
         }
-        if (object === this.range.followingCharctor || (this.range.followingCharctor && object instanceof ObjectNode && this.range.followingCharctor.contains(object))) {
-          console.log('追従動作');
-          this.ngZone.run(() => {
-            this.range.following();
-            this.setRange();
-          });
-          markForCheck = true;
+        if (this.followingCharactor) {
+          if (object.identifier === this.followingCharactor.identifier) {
+            //console.log('追従動作');
+            this.ngZone.run(() => {
+              this.range.following();
+              this.setRange();
+            });
+            markForCheck = true;
+          } else if (object instanceof ObjectNode) {
+            if (this.followingCharactor.contains(object)) {
+              this.ngZone.run(() => {
+                this.range.following();
+                this.setRange();
+              });
+              markForCheck = true;
+            }
+          }
         }
         if (markForCheck) this.changeDetector.markForCheck();
       })
@@ -587,6 +600,7 @@ export class RangeComponent implements OnChanges, OnDestroy, AfterViewInit {
       {
         name: '削除する', action: () => {
           this.range.destroy();
+          // EventSystem.call('UPDATE_GAME_OBJECT', null);
           SoundEffect.play(PresetSound.sweep);
         }
       }
