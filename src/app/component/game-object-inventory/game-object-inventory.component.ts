@@ -202,7 +202,7 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
 
   private focusToObject(gameObject: GameCharacter) {
     if (gameObject.location.name != "table") { return; }
-    EventSystem.trigger('FOCUS_TO_TABLETOP_OBJECT', gameObject);
+    EventSystem.trigger('FOCUS_TO_TABLETOP_COORDINATE', { x: gameObject.location.x, y: gameObject.location.y });
   }
 
   selectGameObject(gameObject: GameObject) {
