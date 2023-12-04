@@ -55,6 +55,9 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
 
   get altitude(): number { return this.terrain.altitude; }
 
+  get isDropShadow(): boolean { return this.terrain.isDropShadow; }
+  set isDropShadow(isDropShadow: boolean) { this.terrain.isDropShadow = isDropShadow; }
+
   get isVisibleFloor(): boolean { return 0 < this.width * this.depth; }
   get isVisibleWallTopBottom(): boolean { return 0 < this.width * this.height; }
   get isVisibleWallLeftRight(): boolean { return 0 < this.depth * this.height; }
@@ -216,6 +219,19 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
           SoundEffect.play(PresetSound.lock);
         }
       }));
+    actions.push(ContextMenuSeparator);
+    // 影を表示非表示
+    actions.push(this.isDropShadow
+      ? {
+        name: '影を非表示', action: () => {
+          this.isDropShadow = false;
+        }
+      } : {
+        name: '影を表示', action: () => {
+          this.isDropShadow = true;
+        }
+      }
+    );
     actions.push(ContextMenuSeparator);
     actions.push((this.hasWall
       ? {

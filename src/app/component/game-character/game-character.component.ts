@@ -65,8 +65,8 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   set rotate(rotate: number) { this.gameCharacter.rotate = rotate; }
   get roll(): number { return this.gameCharacter.roll; }
   set roll(roll: number) { this.gameCharacter.roll = roll; }
-  get isAltitudeIndicate(): boolean { return this.gameCharacter.isAltitudeIndicate; }
-  set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameCharacter.isAltitudeIndicate = isAltitudeIndicate; }
+  get isDropShadow(): boolean { return this.gameCharacter.isDropShadow; }
+  set isDropShadow(isDropShadow: boolean) { this.gameCharacter.isDropShadow = isDropShadow; }
   get isStealth(): boolean { return this.gameCharacter.isStealth; }
   set isStealth(isStealth: boolean) { this.gameCharacter.isStealth = this.isStealth; }
 
@@ -239,6 +239,19 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   private makeContextMenu(): ContextMenuAction[] {
     let actions: ContextMenuAction[] = [];
 
+    // 影を表示非表示
+    actions.push(this.isDropShadow
+      ? {
+        name: '影を非表示', action: () => {
+          this.isDropShadow = false;
+        }
+      } : {
+        name: '影を表示', action: () => {
+          this.isDropShadow = true;
+        }
+      }
+    );
+    actions.push(ContextMenuSeparator);
     actions.push({ name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } });
     actions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } });
     actions.push(ContextMenuSeparator);
