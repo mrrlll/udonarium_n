@@ -54,6 +54,7 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
   get depth(): number { return MathUtil.clampMin(this.terrain.depth); }
 
   get altitude(): number { return this.terrain.altitude; }
+  set altitude(altitude: number) { this.terrain.altitude = altitude; }
 
   get isDropShadow(): boolean { return this.terrain.isDropShadow; }
   set isDropShadow(isDropShadow: boolean) { this.terrain.isDropShadow = isDropShadow; }
@@ -232,6 +233,22 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
         }
       }
     );
+    actions.push(ContextMenuSeparator);
+    actions.push(
+      this.altitude >= 0
+      ?{
+        name: '高さを0にする', action: () => {
+          this.altitude = 0;
+        },
+        disabled: (this.altitude == 0),
+        altitudeHande: this.terrain
+      }:{
+        name: '高さを0にする', action: () => {
+          this.altitude = 0;
+        },
+        altitudeHande: this.terrain
+      }
+    )
     actions.push(ContextMenuSeparator);
     actions.push((this.hasWall
       ? {

@@ -45,6 +45,7 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
   get height(): number { return MathUtil.clampMin(this.textNote.height); }
   get width(): number { return MathUtil.clampMin(this.textNote.width); }
   get altitude(): number { return this.textNote.altitude; }
+  set altitude(altitude: number) { this.textNote.altitude = altitude; }
 
   get isActive(): boolean { return document.activeElement === this.textAreaElementRef.nativeElement; }
 
@@ -178,6 +179,23 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
 
   private makeContextMenu(): ContextMenuAction[] {
     let actions: ContextMenuAction[] = [];
+
+    actions.push(
+      this.altitude >= 0
+      ?{
+        name: '高さを0にする', action: () => {
+          this.altitude = 0;
+        },
+        disabled: (this.altitude == 0),
+        altitudeHande: this.textNote
+      }:{
+        name: '高さを0にする', action: () => {
+          this.altitude = 0;
+        },
+        altitudeHande: this.textNote
+      }
+    )
+    actions.push(ContextMenuSeparator);
 
     actions.push({ name: 'メモを編集', action: () => { this.showDetail(this.textNote); } });
     actions.push({

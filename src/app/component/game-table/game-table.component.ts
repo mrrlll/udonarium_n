@@ -280,7 +280,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
         name: 'ここに集める', action: () => {
           this.selectionService.congregate(objectPosition);
         },
-        enabled: 0 < this.selectionService.size
+        disabled: 0 < this.selectionService.size
       });
       menuActions.push(ContextMenuSeparator);
     }

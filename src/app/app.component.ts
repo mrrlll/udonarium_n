@@ -535,7 +535,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           if(this.isGM) this.open("CardsListWindowComponent")
         }
       }: {
-        name: null, enabled: false
+        name: null, disabled: true
       },
       this.isGM
       ? { name: `マスクインベントリ(WIP)`,
@@ -543,7 +543,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           if(this.isGM) this.open("GameTableMaskInventoryComponent")
         }
       }: {
-        name: null, enabled: false
+        name: null, disabled: true
       },
     ])
   }

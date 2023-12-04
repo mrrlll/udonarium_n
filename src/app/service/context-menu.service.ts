@@ -1,4 +1,5 @@
 import { ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
+import { TabletopObject } from '@udonarium/tabletop-object';
 
 interface ContextMenuPoint {
   x: number,
@@ -12,16 +13,17 @@ export enum ContextMenuType {
 
 export const ContextMenuSeparator: ContextMenuAction = {
   name: '',
-  enabled: true,
+  disabled: true,
   type: ContextMenuType.SEPARATOR
 }
 
 export interface ContextMenuAction {
   name: string,
   action?: Function,
-  enabled?: boolean,
+  disabled?: boolean,
   type?: ContextMenuType,
-  subActions?: ContextMenuAction[]
+  subActions?: ContextMenuAction[],
+  altitudeHande?: TabletopObject
 }
 
 @Injectable()
@@ -54,7 +56,7 @@ export class ContextMenuService {
 
     childPanelService.panelComponentRef = panelComponentRef;
     if (actions) {
-      childPanelService.actions = actions.filter(act => act.enabled === undefined || act.enabled);
+      childPanelService.actions = actions.filter(act => act.disabled === undefined || act.disabled === false);
     }
     if (position) {
       childPanelService.position.x = position.x;

@@ -439,7 +439,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
           this.owners = newOwners;
         }
       }
-      : { name: null, enabled: false }
+      : { name: null, disabled: true }
     );
     actions.push(ContextMenuSeparator);
     actions.push({

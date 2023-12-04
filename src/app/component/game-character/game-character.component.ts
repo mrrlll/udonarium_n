@@ -60,6 +60,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   get name(): string { return this.gameCharacter.name; }
   get size(): number { return MathUtil.clampMin(this.gameCharacter.size); }
   get altitude(): number { return this.gameCharacter.altitude; }
+  set altitude(altitude: number) { this.gameCharacter.altitude = altitude; }
   get imageFile(): ImageFile { return this.gameCharacter.imageFile; }
   get rotate(): number { return this.gameCharacter.rotate; }
   set rotate(rotate: number) { this.gameCharacter.rotate = rotate; }
@@ -251,6 +252,22 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
         }
       }
     );
+    actions.push(ContextMenuSeparator);
+    actions.push(
+      this.altitude >= 0
+      ?{
+        name: '高さを0にする', action: () => {
+          this.altitude = 0;
+        },
+        disabled: (this.altitude == 0),
+        altitudeHande: this.gameCharacter
+      }:{
+        name: '高さを0にする', action: () => {
+          this.altitude = 0;
+        },
+        altitudeHande: this.gameCharacter
+      }
+    )
     actions.push(ContextMenuSeparator);
     actions.push({ name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } });
     actions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } });
