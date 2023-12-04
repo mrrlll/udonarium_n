@@ -230,12 +230,14 @@ export class DiceBot extends GameObject {
       if( ! replaceText.match(/[:]([^-+=]+)([-+=])(.+)/) ) return ;
 
       if( replaceText.match(/[:]([^-+=]+)([-+=])(.+)/) ){
-        oneResourceEdit.target =  RegExp.$1 ;                                     //操作対象検索文字タイプ生値
-        oneResourceEdit.targetHalfWidth = StringUtil.toHalfWidth(RegExp.$1) ;     //操作対象検索文字半角化
-        oneResourceEdit.operator = StringUtil.toHalfWidth(RegExp.$2) ;            //演算符号
-        oneResourceEdit.command = StringUtil.toHalfWidth(RegExp.$3)+"+(1d1-1)";   //操作量　C()とダイスロールが必要な場合分けをしないために+(1d1-1)を付加してダイスロール命令にしている
+        let reg1:string = RegExp.$1;
+        let reg2:string = RegExp.$2;
+        let reg3:string = RegExp.$3;
 
-//        console.log( "円柱chkpoint 01");
+        oneResourceEdit.target =  reg1 ;                                     //操作対象検索文字タイプ生値
+        oneResourceEdit.targetHalfWidth = StringUtil.toHalfWidth(reg1) ;     //操作対象検索文字半角化
+        oneResourceEdit.operator = reg2 ;                                    //演算符号
+        oneResourceEdit.command = StringUtil.toHalfWidth(reg3)+"+(1d1-1)";   //操作量　C()とダイスロールが必要な場合分けをしないために+(1d1-1)を付加してダイスロール命令にしている
 
         //操作対象検索
         data =  object.detailDataElement.getFirstElementByName(oneResourceEdit.target);
@@ -259,7 +261,7 @@ export class DiceBot extends GameObject {
           if (!rollResult.result) return null;
           console.log("rollResult.result>"+rollResult.result);
 
-          rollResult.result.match(/(\d+)$/); //計算結果だけ格納
+          rollResult.result.match(/([-+]?\d+)$/); //計算結果だけ格納
           console.log( "rollResult.result " + rollResult.result + "  calcAns:"+ RegExp.$1);
 
           oneResourceEdit.calcAns = parseInt(RegExp.$1);
