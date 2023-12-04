@@ -111,7 +111,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     this.movableOption = {
       tabletopObject: this.gameCharacter,
       transformCssOffset: 'translateZ(1.0px)',
-      colideLayers: ['terrain']
+      colideLayers: ['terrain', 'text-note', 'character']
     };
     this.rotableOption = {
       tabletopObject: this.gameCharacter
