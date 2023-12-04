@@ -80,7 +80,7 @@ export class DiceBot extends GameObject {
         if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) return;
 
         let text: string = StringUtil.toHalfWidth(chatMessage.text).trim();
-        let gameType: string = chatMessage.tag;
+        let gameType: string = chatMessage.tags ? chatMessage.tags[0]:'' ;
 
         if (text.startsWith('/')) {
           const [_, command, arg] = /^\/(\w+)\s*(.*)/i.exec(text) || [];
@@ -115,7 +115,7 @@ export class DiceBot extends GameObject {
 
         let text: string = StringUtil.toHalfWidth(chatMessage.text);
         let splitText = text.split(/\s/);
-        let gameType: string = chatMessage.tag;
+        let gameType: string = chatMessage.tags ? chatMessage.tags[0]:'' ;
 
         let diceTable = this.getDiceTables() ;
         if( !diceTable )return;
@@ -177,7 +177,7 @@ export class DiceBot extends GameObject {
         if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) return;
 
         let text: string = StringUtil.toHalfWidth(chatMessage.text);
-        let gameType: string = chatMessage.tag;
+        let gameType: string = chatMessage.tags ? chatMessage.tags[0]:'' ;
 
         this.checkResourceEditCommand( chatMessage );
 
