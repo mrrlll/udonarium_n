@@ -32,6 +32,8 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   isSaveing: boolean = false;
   progresPercent: number = 0;
 
+  allowDeleteLog = false;
+
   get recieveOperationLogLevel(): number { return this.selectedTab.recieveOperationLogLevel; }
   set recieveOperationLogLevel(recieveOperationLogLevel: number) { if (this.isEditable) this.selectedTab.recieveOperationLogLevel = recieveOperationLogLevel; }
 
@@ -94,6 +96,8 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
   deleteLog(){
+    if( !this.allowDeleteLog ) return;
+
     if (!this.isEmpty && this.selectedTab) {
       while( this.selectedTab.children.length > 0)
         this.selectedTab.children[0].destroy();
@@ -105,6 +109,8 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   }
 
   deleteLogALL(){
+    if( !this.allowDeleteLog ) return;
+
     let mess = 'ログをクリアしました'
     let gameType: string = '';
     let sendTo ='';

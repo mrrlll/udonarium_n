@@ -91,7 +91,7 @@
                   <img *ngIf="imageFileUrl" class="sub-image" [src]="imageFileUrl | safe: 'resourceUrl'" [alt]="gameDataElement.value"/>
                 </div>
                 <div class="table-cell-2 sub-table">
-                  <span>立ち絵番号{{indexNum}}: </span>
+                  <span>立ち絵番号{{indexNum}}: </span><br>
                   <button class="tachie-button" (click)="openModal('imageIdentifier', true)" style="font-size:1.0em;">画像変更</button>
                 </div>
               </div>
