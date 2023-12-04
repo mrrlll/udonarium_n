@@ -31,7 +31,9 @@ interface ResourceEdit {
   target: string;
   targetHalfWidth: string;
   operator: string;
+  diceResult: string;
   command: string;
+  isDiceRoll: boolean;
 
   hitName: string;
   calcAns: number;
@@ -219,7 +221,9 @@ export class DiceBot extends GameObject {
         target: "",
         targetHalfWidth: "",
         operator: "",
+        diceResult: "",
         command: "",
+        isDiceRoll:false,
         hitName: "",
         calcAns: 0,
         detaElm : null
@@ -237,7 +241,13 @@ export class DiceBot extends GameObject {
         oneResourceEdit.target =  reg1 ;                                     //操作対象検索文字タイプ生値
         oneResourceEdit.targetHalfWidth = StringUtil.toHalfWidth(reg1) ;     //操作対象検索文字半角化
         oneResourceEdit.operator = reg2 ;                                    //演算符号
-        oneResourceEdit.command = StringUtil.toHalfWidth(reg3)+"+(1d1-1)";   //操作量　C()とダイスロールが必要な場合分けをしないために+(1d1-1)を付加してダイスロール命令にしている
+        oneResourceEdit.command = StringUtil.toHalfWidth(reg3)+"+(1d1-1)";   //操作量C()とダイスロールが必要な場合分けをしないために+(1d1-1)を付加してダイスロール命令にしている
+
+        if( StringUtil.toHalfWidth(reg3).match(/\d[dD]/) ){
+          oneResourceEdit.isDiceRoll = true;
+        }else{
+          oneResourceEdit.isDiceRoll = false;
+        }
 
         //操作対象検索
         data =  object.detailDataElement.getFirstElementByName(oneResourceEdit.target);
@@ -259,10 +269,11 @@ export class DiceBot extends GameObject {
         try {
           let rollResult = await DiceBot.diceRollAsync(oneResourceEdit.command, gameType);
           if (!rollResult.result) return null;
-          console.log("rollResult.result>"+rollResult.result);
+
+          let splitResult = rollResult.result.split(' ＞ ');
+          oneResourceEdit.diceResult = splitResult[splitResult.length-2].replace(/\+\(1\[1\]\-1\)$/,'');
 
           rollResult.result.match(/([-+]?\d+)$/); //計算結果だけ格納
-          console.log( "rollResult.result " + rollResult.result + "  calcAns:"+ RegExp.$1);
 
           oneResourceEdit.calcAns = parseInt(RegExp.$1);
         } catch (e) {
@@ -284,6 +295,7 @@ export class DiceBot extends GameObject {
     let oldValue:number = 0;
 
     let calc:number = 0;
+    let isDiceRoll:boolean = false;
     for( let edit of allEditList){
       if( edit.detaElm.type == 'numberResource' ){
         oldValueS = <string>edit.detaElm.currentValue ;
@@ -318,17 +330,30 @@ export class DiceBot extends GameObject {
         }
         edit.detaElm.value = calc;
       }
-      text += edit.hitName + '[' + oldValueS +'＞' + calc +'] '
+      text += edit.hitName + ':' + oldValueS + edit.operator + edit.diceResult +'＞' + calc +'    ';
+      if( edit.isDiceRoll ) isDiceRoll = true;
     }
+    text = text.replace(/\s\s\s\s$/,'');
+
+    let fromText;
+    let nameText;
+    if( isDiceRoll ){
+      fromText = 'System-BCDice';
+      nameText = '<BCDice：' + originalMessage.name + '>';
+    }else{
+      fromText = 'System';
+      nameText = originalMessage.name;
+    }
+
     let resourceMessage: ChatMessageContext = {
       identifier: '',
       tabIdentifier: originalMessage.tabIdentifier,
       originFrom: originalMessage.from,
-      from: 'System-BCDice',
+      from: fromText,
       timestamp: originalMessage.timestamp + 2,
       imageIdentifier: PeerCursor.myCursor.diceImageIdentifier,
       tag: 'system',
-      name: '<BCDice：' + originalMessage.name + '>',
+      name: nameText,
       text: text,
       messColor: originalMessage.messColor
     };
