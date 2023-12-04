@@ -3,18 +3,11 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { GameCharacter } from '@udonarium/game-character';
 import { DataElement } from './data-element';
 import { TabletopObject } from './tabletop-object';
-import { UUID } from './core/system/util/uuid';
 
 @SyncObject('range')
 export class RangeArea extends TabletopObject {
-  constructor(identifier: string = UUID.generateUuid()) {
-    super(identifier);
-    this.isAltitudeIndicate = true;
-    this.followingCharctorIdentifier = null;
-  }
   @SyncVar() isLock: boolean = false;
   @SyncVar() rotate: number = 0;
-  @SyncVar() followingCharctorIdentifier: string = null;
   @SyncVar() followingCharctor: GameCharacter = null;
   @SyncVar() followingCounterDummy: number = 0; // 追従時再描画用ダミー
 
@@ -59,53 +52,25 @@ export class RangeArea extends TabletopObject {
 
   gridSize: number = 50;
 
-  get followingCharactor(): GameCharacter {
-    if (this.followingCharctorIdentifier) {
-      if (!this.followingCharactorCache || this.followingCharactorCache.identifier !== this.followingCharctorIdentifier) {
-        let object = ObjectStore.instance.get(this.followingCharctorIdentifier);
-        if (object && object instanceof GameCharacter) {
-          this.followingCharactorCache = object;
-        } else {
-          this.followingCharctorIdentifier = null;
-          this.followingCharactorCache = null;
-        }
-      }
-    } else {
-      this.followingCharactorCache = null;
-    }
-    return this.followingCharactorCache;
-  }
-  set followingCharactor(followingCharacter: GameCharacter) {
-    if (!followingCharacter) {
-      this. followingCharactorCache = null;
-      this.followingCharctorIdentifier = null;
-    } else {
-      this.followingCharactorCache = followingCharacter;
-      this.followingCharctorIdentifier = followingCharacter.identifier;
-    }
-  }
-  private followingCharactorCache: GameCharacter = null;
-
   followingCounterDummyCount(){
     this.followingCounterDummy ++;
     if(this.followingCounterDummy >= 50) this.followingCounterDummy = 0;
-    //console.log(this.followingCounterDummy);
+    console.log(this.followingCounterDummy);
   }
 
   following(){
-    if(!this.followingCharactor || this.followingCharactor.isHideIn) {
-      //console.log('追従対象見失い');
-      this.followingCharactor = null;
-      return;
+    let object = <TabletopObject>ObjectStore.instance.get(this.followingCharctor.identifier);
+    if(!object || this.followingCharctor.isHideIn){
+      console.log('追従対象見失い');
+      this.followingCharctor = null;
+      return ;
     }
-    //console.log('following x:'+ object.location.x + ' y:' + object.location.y);
-    this.location.x = this.followingCharactor.location.x + (this.gridSize * this.followingCharactor.size) / 2;
-    this.location.y = this.followingCharactor.location.y + (this.gridSize * this.followingCharactor.size) / 2;
+    console.log('following x:'+ object.location.x + ' y:' + object.location.y);
 
-    if (this.isFollowAltitude) {
-      this.altitude = this.followingCharactor.altitude;
-      this.posZ = this.followingCharactor.posZ;
-    }
+    this.location.x = object.location.x + (this.gridSize * this.followingCharctor.size) / 2;
+    this.location.y = object.location.y + (this.gridSize * this.followingCharctor.size) / 2;
+    this.posZ = this.followingCharctor.posZ;
+    if (this.isFollowAltitude) this.altitude = this.followingCharctor.altitude;
     this.followingCounterDummyCount();
   }
 

@@ -1,10 +1,3 @@
-/*
-Porting from Udonarium Lily
-Copyright (c) 2020 entyu
-
-MIT License
-https://opensource.org/licenses/mit-license.php
-*/
 import { GridType } from '@udonarium/game-table';
 
 type StrokeGridFunc = (w: number, h: number, gridSize: number) => GridPosition;
@@ -308,7 +301,7 @@ export class RangeRender {
     let gcy = 0.0;
 
     let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(setting.gridType, setting.centerX, setting.centerY, setting.areaWidth, setting.areaHeight);
-    //console.log('LINE setting.centerX:'+setting.centerX + 'LINE setting.centerY:'+setting.centerY);
+    // console.log('LINE setting.centerX:'+setting.centerX + 'LINE setting.centerY:'+setting.centerY);
     this.makeBrush(context, gridSize, setting.gridColor);
 
     if(setting.fillType == 0){
@@ -499,7 +492,7 @@ export class RangeRender {
     let gcy = 0.0;
 
     let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(setting.gridType, setting.centerX, setting.centerY, setting.areaWidth, setting.areaHeight);
-    //console.log('LINE setting.centerX:'+setting.centerX + 'LINE setting.centerY:'+setting.centerY);
+    // console.log('LINE setting.centerX:'+setting.centerX + 'LINE setting.centerY:'+setting.centerY);
     this.makeBrush(context, gridSize, setting.gridColor);
 
     if(setting.fillType == 0){
@@ -702,7 +695,7 @@ export class RangeRender {
     let gcy = 0.0;
 
     let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(setting.gridType, setting.centerX, setting.centerY, setting.areaWidth, setting.areaHeight);
-    //console.log('LINE setting.centerX:'+setting.centerX + 'LINE setting.centerY:'+setting.centerY);
+    // console.log('LINE setting.centerX:'+setting.centerX + 'LINE setting.centerY:'+setting.centerY);
     this.makeBrush(context, gridSize, setting.gridColor);
 
     if (setting.fillType == 0) {
@@ -1099,13 +1092,10 @@ export class RangeRender {
   private fillSquare(context: CanvasRenderingContext2D, gx: number, gy: number, gridSize: number) {
     context.beginPath();
     context.fillRect(gx, gy, gridSize, gridSize);
-
-    //this.strokeSquare(context, gx, gy, gridSize);
   }
 
   private strokeSquare(context: CanvasRenderingContext2D, gx: number, gy: number, gridSize: number) {
     context.beginPath();
-    context.strokeStyle = '#55555533'
     context.strokeRect(gx, gy, gridSize, gridSize);
   }
 
