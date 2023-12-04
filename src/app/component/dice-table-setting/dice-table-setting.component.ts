@@ -45,8 +45,9 @@ export class DiceTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
     return null;
   }
 
-
+  isEdit : boolean = false;
   selectedTable: DiceTable = null;
+  editPalette: string = '';
 
 //  get isEmpty(): boolean { return this.tableSelecter ? (this.tableSelecter.viewTable ? false : true) : true; }
   get isEmpty(): boolean { return false }
@@ -100,6 +101,15 @@ export class DiceTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
   delete() {
     if (!this.isEmpty && this.selectedTable) {
       this.selectedTable.destroy();
+    }
+  }
+
+  toggleEditMode(){
+    this.isEdit = this.isEdit ? false : true;
+    if (this.isEdit) {
+      this.editPalette = this.selectedTable.diceTablePalette.value + '';
+    } else {
+      this.selectedTable.diceTablePalette.setPalette(this.editPalette);
     }
   }
 }
