@@ -77,6 +77,9 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   get isSelected(): boolean { return this.selectionState !== SelectionState.NONE; }
   get isMagnetic(): boolean { return this.selectionState === SelectionState.MAGNETIC; }
 
+  get altitudeTotal(): number {
+    return +((this.gameCharacter.posZ + (this.altitude * this.gridSize)) / this.gridSize).toFixed(1);
+  }
 
   gridSize: number = 50;
 
