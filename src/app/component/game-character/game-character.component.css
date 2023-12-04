@@ -265,3 +265,15 @@
   opacity: 0.5;
   display:block;
 }
+
+.component.focused {
+  animation-name: focused;
+  animation-timing-function: ease;
+  animation-duration: 1s;
+}
+
+@keyframes focused {
+  0% { box-shadow: none; }
+  50% { box-shadow: 0px 0px 10px 5px #ff0; }
+  100% { box-shadow: none; }
+}

@@ -3,10 +3,12 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   HostListener,
   Input,
   OnChanges,
-  OnDestroy
+  OnDestroy,
+  ViewChild
 } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { EventSystem, Network } from '@udonarium/core/system';
@@ -51,6 +53,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   @Input() gameCharacter: GameCharacter = null;
   @Input() is3D: boolean = false;
   @Input() tabletopObject: TabletopObject = null;
+  @ViewChild('root') rootElementRef: ElementRef<HTMLElement>;
 
   // GMフラグ
   obs: Observable<boolean>;
@@ -103,6 +106,14 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
+      })
+      .on('FOCUS_TO_TABLETOP_OBJECT', event => {
+        if (this.gameCharacter !== event.data) { return; }
+        console.log(`recv focus event to ${this.gameCharacter.name}`);
+        setTimeout(() => {
+          this.rootElementRef.nativeElement.classList.remove('focused');
+        }, 1010);
+        this.rootElementRef.nativeElement.classList.add('focused');
       })
       .on(`UPDATE_SELECTION/identifier/${this.gameCharacter?.identifier}`, event => {
         this.changeDetector.markForCheck();
