@@ -83,6 +83,7 @@ import { GameCharacterGenerateWindowComponent } from './component/game-character
 import { CardsListWindowComponent } from './component/cards-list-window/cards-list-window.component';
 import { GameTableMaskInventoryComponent } from './component/game-table-mask-inventory/game-table-mask-inventory.component';
 import { RangeComponent } from './component/range/range.component';
+import { DiceTableSettingComponent } from 'component/dice-table-setting/dice-table-setting.component';
 
 @NgModule({
   declarations: [
@@ -98,6 +99,8 @@ import { RangeComponent } from './component/range/range.component';
     ChatWindowComponent,
 
     ContextMenuComponent,
+
+    DiceTableSettingComponent,
 
     FileSelecterComponent,
     FileStorageComponent,

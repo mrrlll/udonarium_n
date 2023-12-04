@@ -102,6 +102,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   private immediateUpdateTimer: NodeJS.Timer = null;
   private lazyUpdateTimer: NodeJS.Timer = null;
   private openPanelCount: number = 0;
+  dispcounter : number = 10 ;//表示更新用ダミー
   isSaveing: boolean = false;
   progresPercent: number = 0;
   networkService = Network;

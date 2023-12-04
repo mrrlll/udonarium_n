@@ -1,4 +1,4 @@
-import { ChatPalette,BuffPalette } from './chat-palette';
+import { ChatPalette } from './chat-palette';
 
 import { ImageFile } from './core/file-storage/image-file';
 import { ImageStorage } from './core/file-storage/image-storage';
@@ -102,14 +102,6 @@ export class GameCharacter extends TabletopObject {
     console.log('TestExec');
 
   }
-  get remoteController(): BuffPalette {
-    for (let child of this.children) {
-      if (child instanceof BuffPalette){
-        return child;
-      }
-    }
-    return null;
-  }
 
   static create(name: string, size: number, imageIdentifier: string ): GameCharacter {
     let gameCharacter: GameCharacter = new GameCharacter();
@@ -142,15 +134,6 @@ export class GameCharacter extends TabletopObject {
     if( isbuff.length == 0 ){
       let buffElement: DataElement = DataElement.create('バフ/デバフ', '', {}, 'バフ/デバフ' + this.identifier);
       this.buffDataElement.appendChild(buffElement);
-    }
-    if( this.remoteController == null){
-      let controller: BuffPalette = new BuffPalette('RemotController_' + this.identifier);
-      controller.setPalette(`コントローラ入力例：
-マッスルベアー DB+2 3
-クリティカルレイ A 18
-セイクリッドウェポン 命+1攻+2 18`);
-      controller.initialize();
-      this.appendChild(controller);
     }
   }
 
