@@ -10,7 +10,6 @@ import { SaveDataService } from 'service/save-data.service';
 
 import { DiceBot } from '@udonarium/dice-bot';
 import { DiceTable } from '@udonarium/dice-table';
-
 import { DiceTablePalette } from '@udonarium/chat-palette';
 
 @Component({
@@ -86,6 +85,9 @@ export class DiceTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
     return !this.isEmpty && this.isSelected && !this.isDeleted;
   }
 
+  isSaveing: boolean = false;
+  progresPercent: number = 0;
+
   constructor(
     private modalService: ModalService,
     private saveDataService: SaveDataService,
@@ -115,9 +117,21 @@ export class DiceTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
     this.selectDiceTable(diceTable.identifier);
   }
 
-  save() {
+  async save() {
     if (!this.selectedTable) return;
-    // this.saveDataService.saveGameObject(this.selectedTable, 'dice_table_' + this.selectedTable.name);
+    this.isSaveing = true;
+    this.progresPercent = 0;
+
+    let fileName: string = 'dice_table_' + this.selectedTable.name;
+
+    await this.saveDataService.saveGameObjectAsync(this.selectedTable, fileName, percent => {
+      this.progresPercent = percent;
+    });
+
+    setTimeout(() => {
+      this.isSaveing = false;
+      this.progresPercent = 0;
+    }, 500);
   }
 
   delete() {
@@ -134,4 +148,5 @@ export class DiceTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
       this.selectedTable.diceTablePalette.setPalette(this.editPalette);
     }
   }
+
 }
