@@ -19,6 +19,8 @@ import { AppConfigCustomService } from 'service/app-config-custom.service';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
+import { GameCharacter } from '@udonarium/game-character';
+
 @Component({
   selector: 'overview-panel',
   templateUrl: './overview-panel.component.html',
@@ -55,6 +57,10 @@ export class OverviewPanelComponent implements OnChanges, AfterViewInit, OnDestr
 
   get imageUrl(): string { return this.tabletopObject && this.tabletopObject.imageFile ? this.tabletopObject.imageFile.url : ''; }
   get hasImage(): boolean { return 0 < this.imageUrl.length; }
+
+  get aura(): number {
+    return this.tabletopObject instanceof GameCharacter ? this.tabletopObject.aura : -1;
+  }
 
   get inventoryDataElms(): DataElement[] { return this.tabletopObject ? this.getInventoryTags(this.tabletopObject) : []; }
   get dataElms(): DataElement[] { return this.tabletopObject && this.tabletopObject.detailDataElement ? this.tabletopObject.detailDataElement.children as DataElement[] : []; }
