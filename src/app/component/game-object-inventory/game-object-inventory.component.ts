@@ -179,8 +179,8 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
           .concat(['ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト']
           .map((color, i) => {
             return {
-              name: `${gameObject.aura == i - 1 ? '◉' : '○'} ${color}`, action: () => {
-                gameObject.aura = i - 1;
+              name: `${gameObject.aura == i ? '◉' : '○'} ${color}`, action: () => {
+                gameObject.aura = i;
                 EventSystem.trigger('UPDATE_INVENTORY', null)
               }
             }
