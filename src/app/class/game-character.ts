@@ -12,6 +12,10 @@ import { ObjectStore } from './core/synchronize-object/object-store';
 
 @SyncObject('character')
 export class GameCharacter extends TabletopObject {
+  constructor() {
+    super();
+    this.isAltitudeIndicate = true;
+  }
   @SyncVar() isLock: boolean = false;
 
   @SyncVar() rotate: number = 0;
