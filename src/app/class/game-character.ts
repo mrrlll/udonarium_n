@@ -21,7 +21,6 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() rotate: number = 0;
   @SyncVar() roll: number = 0;
   @SyncVar() isDropShadow: boolean = false;
-  @SyncVar() aura: number = -1;
 
   @SyncVar() hideInventory: boolean = false;
   @SyncVar() nonTalkFlag: boolean = false;

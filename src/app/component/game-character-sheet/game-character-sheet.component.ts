@@ -1,3 +1,4 @@
+import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { EventSystem, Network } from '@udonarium/core/system';
@@ -18,7 +19,23 @@ import { DiceSymbol } from '@udonarium/dice-symbol';
 @Component({
   selector: 'game-character-sheet',
   templateUrl: './game-character-sheet.component.html',
-  styleUrls: ['./game-character-sheet.component.css']
+  styleUrls: ['./game-character-sheet.component.css'],
+  animations: [
+    trigger('bounceInOut', [
+      transition('void => *', [
+        animate('600ms ease', keyframes([
+          style({ transform: 'scale3d(0, 0, 0)', offset: 0 }),
+          style({ transform: 'scale3d(1.5, 1.5, 1.5)', offset: 0.5 }),
+          style({ transform: 'scale3d(0.75, 0.75, 0.75)', offset: 0.75 }),
+          style({ transform: 'scale3d(1.125, 1.125, 1.125)', offset: 0.875 }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0)', offset: 1.0 })
+        ]))
+      ]),
+      transition('* => void', [
+        animate(100, style({ transform: 'scale3d(0, 0, 0)' }))
+      ])
+    ]),
+  ]
 })
 export class GameCharacterSheetComponent implements OnInit, OnDestroy {
 

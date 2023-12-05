@@ -44,9 +44,16 @@
 </ng-container>
 
 <div *ngIf="tabletopObject" class="flex-container">
-  <div *ngIf="0 < tabletopObject.imageFile?.url.length" class="box main-image-box">
-    <img class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name" (dblclick)="openMainImageModal(tabletopObject)" />
-    <p style="font-size: 15px;">画像をダブルクリックで変更</p>
+  <div @bounceInOut *ngIf="0 < tabletopObject.imageFile?.url.length" class="box main-image-box">
+    <span style="display: inline-block;" class="inverser" [ngClass]="{inverse: tabletopObject.isInverse}">
+      <span class="aura" [ngClass]="{black: tabletopObject.aura == 0, blue: tabletopObject.aura == 1, green: tabletopObject.aura == 2, cyan: tabletopObject.aura == 3, red: tabletopObject.aura == 4, magenta: tabletopObject.aura == 5, yellow: tabletopObject.aura == 6, white: tabletopObject.aura == 7}">
+        <img class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name"
+          [ngClass]="{'black-paint': tabletopObject.isBlackPaint, 'hollow': tabletopObject.isHollow}"
+          (dblclick)="openMainImageModal()"
+          [@switchImage]="tabletopObject.currntImageIndex" />
+        <p style="font-size: 15px;">画像をダブルクリックで変更</p>
+      </span>
+    </span>
   </div>
   <ng-container *ngIf="tabletopObject.commonDataElement">
     <div class="flex-item">
