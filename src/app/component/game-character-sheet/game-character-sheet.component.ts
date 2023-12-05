@@ -11,6 +11,9 @@ import { PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
 
 import { GameCharacter } from '@udonarium/game-character';
+import { CardStack } from '@udonarium/card-stack';
+import { Card } from '@udonarium/card';
+import { DiceSymbol } from '@udonarium/dice-symbol';
 
 @Component({
   selector: 'game-character-sheet',
@@ -133,5 +136,17 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy {
   clickImageFlag(){
     let character = <GameCharacter>this.tabletopObject;
     character.specifyKomaImageFlag = !character.specifyKomaImageFlag;
+  }
+
+  openMainImageModal(tabletopObject: TabletopObject) {
+    if (tabletopObject instanceof CardStack) {
+      return;
+    } else if (tabletopObject instanceof Card) {
+      this.openModal(tabletopObject.isVisible ? 'front' : 'back');
+    } else if (tabletopObject instanceof DiceSymbol) {
+      this.openModal(tabletopObject['face']);
+    } else  {
+      this.openModal('imageIdentifier', true)
+    }
   }
 }
