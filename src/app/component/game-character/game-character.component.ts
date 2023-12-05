@@ -78,6 +78,10 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   set isBlackPaint(isBlackPaint: boolean) { this.gameCharacter.isBlackPaint = isBlackPaint; }
   get aura(): number { return this.gameCharacter.aura; }
   set aura(aura: number) { this.gameCharacter.aura = aura; }
+
+  get isNotRide(): boolean { return this.gameCharacter.isNotRide; }
+  set isNotRide(isNotRide: boolean) { this.gameCharacter.isNotRide = isNotRide; }
+
   get isStealth(): boolean { return this.gameCharacter.isStealth; }
   set isStealth(isStealth: boolean) { this.gameCharacter.isStealth = this.isStealth; }
 
