@@ -101,7 +101,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
     this.movableOption = {
       tabletopObject: this.gameTableMask,
       transformCssOffset: 'translateZ(0.15px)',
-      colideLayers: ['terrain']
+      colideLayers: ['terrain', 'text-note']
     };
     //GMフラグ管理
     this.obs = this.appCustomService.isViewer$;

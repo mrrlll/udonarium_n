@@ -151,7 +151,7 @@ export class DiceSymbolComponent implements OnChanges, AfterViewInit, OnDestroy 
     this.movableOption = {
       tabletopObject: this.diceSymbol,
       transformCssOffset: 'translateZ(1.0px)',
-      colideLayers: ['terrain']
+      colideLayers: ['terrain', 'text-note', 'character']
     };
     this.rotableOption = {
       tabletopObject: this.diceSymbol
