@@ -12,8 +12,8 @@ import { ObjectStore } from './core/synchronize-object/object-store';
 
 @SyncObject('character')
 export class GameCharacter extends TabletopObject {
-  constructor() {
-    super();
+  constructor(identifier: string = UUID.generateUuid()) {
+    super(identifier);
     this.isAltitudeIndicate = true;
   }
   @SyncVar() isLock: boolean = false;
