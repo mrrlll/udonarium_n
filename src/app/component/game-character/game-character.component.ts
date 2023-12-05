@@ -303,7 +303,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
         }
     );
     subActions.push({
-      name: 'オーラ', action: null,
+      name: '　オーラ', action: null,
       subActions: ['なし', 'ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト']
       .map((color, i) => {
         return {

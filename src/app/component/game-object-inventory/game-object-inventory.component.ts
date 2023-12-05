@@ -169,7 +169,7 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
             }
           }),
         {
-          name: 'オーラ', action: null,
+          name: '　オーラ', action: null,
           subActions: ['なし', 'ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト']
           .map((color, i) => {
             return {
