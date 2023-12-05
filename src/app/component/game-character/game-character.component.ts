@@ -258,10 +258,12 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
         ? {
           name: 'コマ画像を反転しない', action: () => {
             this.isInverse = false;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         } : {
           name: 'コマ画像を反転する', action: () => {
             this.isInverse = true;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         }
     );

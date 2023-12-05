@@ -26,7 +26,7 @@
   visibility: hidden;
   height: 0;
   font-size: 1.0em;
-  min-width:1em; 
+  min-width:1em;
   max-width : 12em;
   overflow: hidden;
   padding: 0 2px;
@@ -177,7 +177,7 @@ input[type='range']::-ms-tooltip {
 
   text-align: center;
 
-  margin: 0px; 
+  margin: 0px;
   max-width: 500px;
 
   background-color: rgba(240,218,189, 0.9);
@@ -209,11 +209,11 @@ input[type='range']::-ms-tooltip {
   outline: 0;
   font-size: 0.6em;
   background-color: transparent;
-  color: #444; 
-  
+  color: #444;
+
   box-sizing: border-box;
 
-  margin: 0px; 
+  margin: 0px;
   padding: 2px 8px;
 
   cursor: pointer;
@@ -237,7 +237,7 @@ input[type='range']::-ms-tooltip {
 
 .tab-setting {
   background-color: transparent;
-  color: #444; 
+  color: #444;
   border: solid 1px #555;
   padding: 2px 8px;
   border-radius: 5px;
@@ -340,4 +340,11 @@ input[type='range']::-ms-tooltip {
   max-width: 12em;
   text-align: center;
   font-family: inherit;
+}
+
+.inverse {
+  transform: scaleX(-1);
+}
+.inverser {
+  transition: transform 100ms 0s ease;
 }

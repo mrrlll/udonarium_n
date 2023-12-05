@@ -130,6 +130,12 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
       actions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(gameObject) } });
     }
     actions.push(ContextMenuSeparator);
+    if (gameObject.isInverse) {
+      actions.push({ name: '画像を反転しない', action: () => { gameObject.isInverse = false; EventSystem.trigger('UPDATE_INVENTORY', null)　} });
+    } else {
+      actions.push({ name: '画像を反転する', action: () => { gameObject.isInverse = true; EventSystem.trigger('UPDATE_INVENTORY', null)　} });
+    }
+    actions.push(ContextMenuSeparator);
     let locations = [
       { name: 'table', alias: 'テーブルに移動' },
       { name: 'common', alias: '共有イベントリに移動' },
