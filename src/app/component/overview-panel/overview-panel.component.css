@@ -47,9 +47,9 @@
   color: #ccc;
   font-size: 1em;
   text-align: right;
-  vertical-align: middle; 
+  vertical-align: middle;
   height: 32px;
-  line-height: 32px; 
+  line-height: 32px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -67,7 +67,7 @@
   font-size: 0.8em;
   padding: 10px;
   color: #ccc;
-  vertical-align: middle; 
+  vertical-align: middle;
   overflow: hidden;
   text-align: right;
   padding: 2px 1em;
@@ -79,7 +79,7 @@
   width: min-content;
   max-width: 100%;
   margin-left: auto;
-  margin-right: 0; 
+  margin-right: 0;
   overflow: hidden;
   color: #CCC;
   background-color: rgba(30, 30, 30, 0.8);
@@ -105,8 +105,8 @@
   left : 8px;
   bottom: -21px;
   width: 42px;
-  height: 42px; 
-  border-radius: 100px; 
+  height: 42px;
+  border-radius: 100px;
   padding: 4px;
 }
 
@@ -148,7 +148,7 @@
 
 .text-note-container {
   width: 100%;
-  max-height: 400px; 
+  max-height: 400px;
   padding: 0.6em 1.2em;
   box-sizing: border-box;
   overflow: hidden auto;
@@ -166,6 +166,7 @@
   margin-bottom: -6px;
   border-radius: 1em;
   z-index: 1;
+  overflow: visible;
 }
 
 .character-image {
@@ -301,14 +302,14 @@
 .hidden-spacer {
   visibility: hidden;
   height: 0px;
-  min-width: 3em; 
+  min-width: 3em;
   overflow: hidden;
   white-space: pre-wrap;
 }
 
 .textarea-spacer {
   visibility: hidden;
-  min-width: 3em; 
+  min-width: 3em;
   height: auto;
   min-height: 24px;
   overflow: hidden;
@@ -320,7 +321,7 @@
 
 .input {
   width: 100%;
-  min-width: 3em; 
+  min-width: 3em;
   text-align: right;
   font: inherit;
   font-size: inherit;
@@ -365,8 +366,8 @@ input[type=number]:hover, input[type=number]:focus {
 
 .is-fill {
   position: absolute;
-  top: 0; 
-  left: 0; 
+  top: 0;
+  left: 0;
   right: 0;
   bottom: 0;
 }
@@ -482,4 +483,43 @@ input[type='range']::-ms-thumb {
 
 input[type='range']::-ms-tooltip {
   display: none;
+}
+
+.inverse {
+  transform: scaleX(-1);
+}
+.inverser {
+  transition: transform 132ms 0s ease;
+}
+.hollow {
+  opacity: 0.6;
+  filter: blur(1px);
+}
+.black-paint {
+  filter: brightness(0);
+}
+
+.aura.black {
+  filter: drop-shadow(0 -4px 4px black);
+}
+.aura.blue {
+  filter: drop-shadow(0 -4px 4px #33f);
+}
+.aura.green {
+  filter: drop-shadow(0 -4px 4px #3f3);
+}
+.aura.cyan {
+  filter: drop-shadow(0 -4px 4px #3ff);
+}
+.aura.red {
+  filter: drop-shadow(0 -4px 4px #f00);
+}
+.aura.magenta {
+  filter: drop-shadow(0 -4px 4px #f0f);
+}
+.aura.yellow {
+  filter: drop-shadow(0 -4px 4px #ff3);
+}
+.aura.white {
+  filter: drop-shadow(0 -4px 4px #fff);
 }
