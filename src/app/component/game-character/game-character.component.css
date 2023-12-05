@@ -305,17 +305,6 @@
   display: inline;
 }
 
-.isStealth {
-  /* background-color:blue; */
-  filter: invert(100%);
-  display:inline-block;
-}
-
-.isStealth img{
-  opacity: 0.5;
-  display:block;
-}
-
 .altitude-indicator {
   font-size: 10px;
 }
@@ -330,4 +319,15 @@
 .elevation-indicator {
   font-weight: bolder;
   font-size: 12px;
+}
+
+.isStealth {
+  /* background-color:blue; */
+  filter: invert(100%);
+  display:inline-block;
+}
+
+.isStealth img{
+  opacity: 0.5;
+  display:block;
 }

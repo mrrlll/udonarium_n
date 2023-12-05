@@ -170,7 +170,13 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
           }),
         {
           name: 'オーラ', action: null,
-          subActions: ['なし', 'ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト']
+          subActions: [{
+            name: `${gameObject.aura == -1 ? '◉' : '○'} なし`, action: () => {
+              gameObject.aura = -1;
+              EventSystem.trigger('UPDATE_INVENTORY', null)
+            }
+          }, ContextMenuSeparator]
+          .concat(['ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト']
           .map((color, i) => {
             return {
               name: `${gameObject.aura == i - 1 ? '◉' : '○'} ${color}`, action: () => {
@@ -179,7 +185,7 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
               }
             }
           })
-        },
+        )},
         ContextMenuSeparator,
         {
           name: 'リセット', action: () => {
