@@ -381,13 +381,13 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     actions.push(
       !this.isNotRide
       ?{
-        name: '☑ 他のコマに乗る', action: () => {
+        name: '☑ 他のキャラクターに乗る', action: () => {
           this.isNotRide = true;
         },
         disabled: (this.isNotRide),
         altitudeHande: this.gameCharacter
       }:{
-        name: '☐ 他のコマに乗る', action: () => {
+        name: '☐ 他のキャラクターに乗る', action: () => {
           this.isNotRide = false;
         },
         altitudeHande: this.gameCharacter
