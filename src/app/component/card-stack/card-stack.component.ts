@@ -366,26 +366,26 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
     if (this.isSelected) {
       let selectedCardStacks = () => this.selectionService.objects.filter(object => object.aliasName === this.cardStack.aliasName) as CardStack[];
       subActions.push({
-        name: 'すべて表にする', action: () => {
+        name: '全て表にする', action: () => {
           selectedCardStacks().forEach(cardStack => cardStack.faceUpAll());
           SoundEffect.play(PresetSound.cardDraw);
         }
       });
       subActions.push({
-        name: 'すべて裏にする', action: () => {
+        name: '全て裏にする', action: () => {
           selectedCardStacks().forEach(cardStack => cardStack.faceDownAll());
           SoundEffect.play(PresetSound.cardDraw);
         }
       });
       subActions.push({
-        name: 'すべて正位置にする', action: () => {
+        name: '全て正位置にする', action: () => {
           selectedCardStacks().forEach(cardStack => cardStack.uprightAll());
           SoundEffect.play(PresetSound.cardDraw);
         }
       });
       subActions.push(ContextMenuSeparator);
       subActions.push({
-        name: 'すべてシャッフル', action: () => {
+        name: '全てシャッフル', action: () => {
           SoundEffect.play(PresetSound.cardShuffle);
           selectedCardStacks().forEach(cardStack => {
             cardStack.shuffle();
@@ -395,20 +395,20 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
       });
       subActions.push(ContextMenuSeparator);
       subActions.push({
-        name: this.isRotate ? 'すべて回転をオフにする' : 'すべて回転をオンにする', action: () => {
+        name: this.isRotate ? '☑ 回転' : '☐ 回転', action: () => {
           selectedCardStacks().forEach(cardStack => cardStack.toggleRotate());
         }
       });
       if(this.isGM){
         subActions.push({
-          name: this.isHide ? 'すべて表示する' : 'すべて非表示にする', action: () => {
+          name: this.isHide ? '☑ 表示' : '☐ 表示', action: () => {
             selectedCardStacks().forEach(cardStack => cardStack.toggleHide());
           }
         });
       }
       subActions.push(ContextMenuSeparator);
       subActions.push({
-        name: 'すべて削除する', action: () => {
+        name: '削除する', action: () => {
           selectedCardStacks().forEach(cardStack => {
             cardStack.destroy();
           });
@@ -458,19 +458,19 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
     });
     actions.push(ContextMenuSeparator);
     actions.push({
-      name: 'すべて表にする', action: () => {
+      name: '全て表にする', action: () => {
         this.cardStack.faceUpAll();
         SoundEffect.play(PresetSound.cardDraw);
       }
     });
     actions.push({
-      name: 'すべて裏にする', action: () => {
+      name: '全て裏にする', action: () => {
         this.cardStack.faceDownAll();
         SoundEffect.play(PresetSound.cardDraw);
       }
     });
     actions.push({
-      name: 'すべて正位置にする', action: () => {
+      name: '全て正位置にする', action: () => {
         this.cardStack.uprightAll();
         SoundEffect.play(PresetSound.cardDraw);
       }
@@ -486,8 +486,8 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
     actions.push({ name: 'カード一覧', action: () => { this.showStackList(this.cardStack); } });
     actions.push(ContextMenuSeparator);
     actions.push((this.isShowTotal
-      ? { name: '枚数を非表示にする', action: () => { this.cardStack.isShowTotal = false; } }
-      : { name: '枚数を表示する', action: () => { this.cardStack.isShowTotal = true; } }
+      ? { name: '☑ 枚数を表示', action: () => { this.cardStack.isShowTotal = false; } }
+      : { name: '☐ 枚数を表示', action: () => { this.cardStack.isShowTotal = true; } }
     ));
     actions.push({ name: 'カードサイズを揃える', action: () => { if (this.cardStack.topCard) this.cardStack.unifyCardsSize(this.cardStack.topCard.size); } });
     actions.push(ContextMenuSeparator);
@@ -524,12 +524,12 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
     });
     actions.push(ContextMenuSeparator);
     actions.push({
-      name: this.isRotate ? '回転をオフ' : '回転をオン', action: () => {
+      name: this.isRotate ? '☑ 回転' : '☐ 回転', action: () => {
         this.cardStack.toggleRotate();
       }
     });
     actions.push({
-      name: this.isGM && this.isHide ? '表示する' : '非表示にする', action: () => {
+      name: this.isGM && this.isHide ? '☑ 表示' : '☐ 表示', action: () => {
         this.cardStack.toggleHide();
       }
     })

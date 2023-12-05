@@ -177,23 +177,23 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
       let subActions: ContextMenuAction[] = [];
 
       subActions.push({
-        name: 'すべてボーダーを表示', action: () => {
+        name: '☑ すべてボーダーを表示', action: () => {
           selectedGameTableMasks().forEach(gameTableMask => gameTableMask.maskborder = true);
         }
       });
       subActions.push({
-        name: 'すべてボーダーを非表示', action: () => {
+        name: '☐ すべてボーダーを非表示', action: () => {
           selectedGameTableMasks().forEach(gameTableMask => gameTableMask.maskborder = false);
         }
       });
       subActions.push({
-        name: 'すべて固定する', action: () => {
+        name: '☑ すべて固定', action: () => {
           selectedGameTableMasks().forEach(gameTableMask => gameTableMask.isLock = true);
           SoundEffect.play(PresetSound.lock);
         }
       });
       subActions.push({
-        name: 'すべて固定解除する', action: () => {
+        name: '☐ すべて固定', action: () => {
           selectedGameTableMasks().forEach(gameTableMask => gameTableMask.isLock = false);
           SoundEffect.play(PresetSound.unlock);
         }
@@ -248,11 +248,11 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
     actions.push(
       (this.maskborder
         ? {
-          name: 'ボーターを非表示', action: () => {
+          name: '☑ ボーターを表示', action: () => {
             this.maskborder = false;
           }
         } : {
-          name: 'ボーターを表示', action: () => {
+          name: '☐ ボーターを表示', action: () => {
             this.maskborder = true;
           }
         }
@@ -260,13 +260,13 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
     );
     actions.push((this.isLock
       ? {
-        name: '固定解除', action: () => {
+        name: '☑ 固定', action: () => {
           this.isLock = false;
           SoundEffect.play(PresetSound.unlock);
         }
       }
       : {
-        name: '固定する', action: () => {
+        name: '☐ 固定', action: () => {
           this.isLock = true;
           SoundEffect.play(PresetSound.lock);
         }

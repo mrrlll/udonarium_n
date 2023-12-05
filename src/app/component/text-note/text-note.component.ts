@@ -212,11 +212,11 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
     actions.push(
       this.isLocked
       ?{
-        name: '固定解除', action: () => {
+        name: '☑ 固定', action: () => {
           this.isLocked = false;
         }
       }:{
-        name: '固定する', action: () => {
+        name: '☐ 固定', action: () => {
           this.isLocked = true;
         }
       }
@@ -224,16 +224,28 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
     actions.push(
       this.isUpright
       ?{
-        name: '直立しない', action: () => {
+        name: '☑ 直立', action: () => {
           this.isUpright = false;
         }
       }:{
-        name: '直立する', action: () => {
+        name: '☐ 直立', action: () => {
           this.isUpright = true;
         }
       }
     )
     actions.push(ContextMenuSeparator);
+    actions.push(
+      this.isAltitudeIndicate
+      ?{
+        name: '☑ 高度の表示', action: () => {
+          this.isAltitudeIndicate = false;
+        }
+      }:{
+        name: '☐ 高度の表示', action: () => {
+          this.isAltitudeIndicate = true;
+        }
+      }
+    )
     actions.push(
       this.altitude >= 0
       ?{

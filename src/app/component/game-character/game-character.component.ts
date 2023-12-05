@@ -303,7 +303,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
         }
     );
     subActions.push({
-      name: '　オーラ', action: null,
+      name: 'オーラ', action: null,
       subActions: ['なし', 'ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト']
       .map((color, i) => {
         return {
@@ -328,6 +328,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
 
     actions.push({ name: '画像効果', action: null, subActions: subActions });
 
+    actions.push(ContextMenuSeparator);
     // 影を表示非表示
     actions.push(this.isDropShadow
       ? {
@@ -352,6 +353,33 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
       }:{
         name: '高さを0にする', action: () => {
           this.altitude = 0;
+        },
+        altitudeHande: this.gameCharacter
+      }
+    )
+    actions.push(
+      this.isAltitudeIndicate
+      ?{
+        name: '☑ 高度を表示', action: () => {
+          this.isAltitudeIndicate = false;
+        }
+      }:{
+        name: '☐ 高度を表示', action: () => {
+          this.isAltitudeIndicate = true;
+        }
+      }
+    )
+    actions.push(
+      !this.isNotRide
+      ?{
+        name: '☑ 他のコマに乗る', action: () => {
+          this.isNotRide = true;
+        },
+        disabled: (this.isNotRide),
+        altitudeHande: this.gameCharacter
+      }:{
+        name: '☐ 他のコマに乗る', action: () => {
+          this.isNotRide = false;
         },
         altitudeHande: this.gameCharacter
       }
@@ -389,13 +417,13 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     // ステルスモードのオンオフ
     if(this.isGM && this.isStealth){
       actions.push({
-        name: 'ステルスモードを無効', action: () => {
+        name: '☑ ステルスモード', action: () => {
           this.gameCharacter.hideOff();
         }
       });
     }else if(this.isGM && !this.isStealth){
       actions.push({
-        name: 'ステルスモードを有効', action: () => {
+        name: '☐ ステルスモード', action: () => {
           this.gameCharacter.hideOn();
         }
       });

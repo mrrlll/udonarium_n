@@ -202,9 +202,15 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
         {
           name: '選択した地形', action: null, subActions: [
             {
-              name: 'すべて固定する', action: () => {
+              name: '☑ すべて固定', action: () => {
                 selectedGameTableMasks().forEach(terrain => terrain.isLocked = true);
                 SoundEffect.play(PresetSound.lock);
+              }
+            },
+            {
+              name: '☐ すべて固定', action: () => {
+                selectedGameTableMasks().forEach(terrain => terrain.isLocked = false);
+                SoundEffect.play(PresetSound.unlock);
               }
             },
             {
@@ -233,12 +239,12 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
 
     actions.push((this.isLocked
       ? {
-        name: '固定解除', action: () => {
+        name: '☑ 固定', action: () => {
           this.isLocked = false;
           SoundEffect.play(PresetSound.unlock);
         }
       } : {
-        name: '固定する', action: () => {
+        name: '☐ 固定', action: () => {
           this.isLocked = true;
           SoundEffect.play(PresetSound.lock);
         }
@@ -247,11 +253,11 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
     // 影を表示非表示
     actions.push(this.isDropShadow
       ? {
-        name: '影を非表示', action: () => {
+        name: '☑ 影を表示', action: () => {
           this.isDropShadow = false;
         }
       } : {
-        name: '影を表示', action: () => {
+        name: '☐ 影を表示', action: () => {
           this.isDropShadow = true;
         }
       }
@@ -260,11 +266,11 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
     actions.push(
       this.isAltitudeIndicate
       ? {
-        name: '高度を非表示', action: () => {
+        name: '☑ 高度を表示', action: () => {
           this.isAltitudeIndicate = false;
         }
       } : {
-        name: '高度を表示', action: () => {
+        name: '☐ 高度を表示', action: () => {
           this.isAltitudeIndicate = true;
         }
       }
@@ -287,7 +293,7 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
     actions.push(ContextMenuSeparator);
     actions.push((this.hasWall
       ? {
-        name: '壁を非表示', action: () => {
+        name: '☑ 壁を表示', action: () => {
           this.mode = TerrainViewState.FLOOR;
           if (this.depth * this.width === 0) {
             this.terrain.width = this.width <= 0 ? 1 : this.width;
@@ -295,7 +301,7 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
           }
         }
       } : {
-        name: '壁を表示', action: () => {
+        name: '☐ 壁を表示', action: () => {
           this.mode = TerrainViewState.ALL;
         }
       }));

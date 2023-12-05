@@ -169,7 +169,7 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
             }
           }),
         {
-          name: '　オーラ', action: null,
+          name: 'オーラ', action: null,
           subActions: ['なし', 'ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト']
           .map((color, i) => {
             return {
@@ -193,6 +193,45 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
         }
       ]
     });
+    actions.push(
+      (gameObject.isAltitudeIndicate
+      ? {
+        name: '☑ 高度の表示', action: () => {
+          gameObject.isAltitudeIndicate = false;
+          EventSystem.trigger('UPDATE_INVENTORY', null);
+        }
+      } : {
+        name: '☐ 高度の表示', action: () => {
+          gameObject.isAltitudeIndicate = true;
+          EventSystem.trigger('UPDATE_INVENTORY', null);
+        }
+      })
+    );
+    actions.push(ContextMenuSeparator);
+    actions.push(
+    {
+      name: '高度を0にする', action: () => {
+        if (gameObject.altitude != 0) {
+          gameObject.altitude = 0;
+          if (gameObject.location.name === 'table') SoundEffect.play(PresetSound.sweep);
+        }
+      },
+      altitudeHande: gameObject
+    });
+    actions.push((!gameObject.isNotRide
+      ? {
+        name: '☑ 他のコマに乗る', action: () => {
+          gameObject.isNotRide = true;
+          SoundEffect.play(PresetSound.sweep);
+          EventSystem.trigger('UPDATE_INVENTORY', null);
+        }
+      } : {
+        name: '☐ 他のコマに乗る', action: () => {
+          gameObject.isNotRide = false;
+          SoundEffect.play(PresetSound.piecePut);
+          EventSystem.trigger('UPDATE_INVENTORY', null);
+        }
+      }));
     actions.push(ContextMenuSeparator);
     let locations = [
       { name: 'table', alias: 'テーブルに移動' },
