@@ -72,6 +72,8 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameCharacter.isAltitudeIndicate = isAltitudeIndicate; }
   get isInverse(): boolean { return this.gameCharacter.isInverse; }
   set isInverse(isInverse: boolean) { this.gameCharacter.isInverse = isInverse; }
+  get isHollow(): boolean { return this.gameCharacter.isHollow; }
+  set isHollow(isHollow: boolean) { this.gameCharacter.isHollow = isHollow; }
   get isStealth(): boolean { return this.gameCharacter.isStealth; }
   set isStealth(isStealth: boolean) { this.gameCharacter.isStealth = this.isStealth; }
 
@@ -263,6 +265,20 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
         } : {
           name: 'コマ画像を反転する', action: () => {
             this.isInverse = true;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        }
+    );
+    actions.push(
+      this.isHollow
+        ? {
+          name: 'コマ画像を透過しない', action: () => {
+            this.isHollow = false;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        } : {
+          name: 'コマ画像を透過する', action: () => {
+            this.isHollow = true;
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         }

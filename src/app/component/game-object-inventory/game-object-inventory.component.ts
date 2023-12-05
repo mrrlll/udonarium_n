@@ -135,6 +135,11 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
     } else {
       actions.push({ name: '画像を反転する', action: () => { gameObject.isInverse = true; EventSystem.trigger('UPDATE_INVENTORY', null)　} });
     }
+    if (gameObject.isHollow) {
+      actions.push({ name: '半透明にしない', action: () => { gameObject.isHollow = false; EventSystem.trigger('UPDATE_INVENTORY', null)　} });
+    } else {
+      actions.push({ name: '半透明にする', action: () => { gameObject.isHollow = true; EventSystem.trigger('UPDATE_INVENTORY', null)　} });
+    }
     actions.push(ContextMenuSeparator);
     let locations = [
       { name: 'table', alias: 'テーブルに移動' },
