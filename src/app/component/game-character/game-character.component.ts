@@ -70,6 +70,8 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   set isDropShadow(isDropShadow: boolean) { this.gameCharacter.isDropShadow = isDropShadow; }
   get isAltitudeIndicate(): boolean { return this.gameCharacter.isAltitudeIndicate; }
   set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameCharacter.isAltitudeIndicate = isAltitudeIndicate; }
+  get isInverse(): boolean { return this.gameCharacter.isInverse; }
+  set isInverse(isInverse: boolean) { this.gameCharacter.isInverse = isInverse; }
   get isStealth(): boolean { return this.gameCharacter.isStealth; }
   set isStealth(isStealth: boolean) { this.gameCharacter.isStealth = this.isStealth; }
 
@@ -251,6 +253,18 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     actions.push({ name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } });
     actions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } });
     actions.push(ContextMenuSeparator);
+    actions.push(
+      this.isInverse
+        ? {
+          name: 'コマ画像を反転しない', action: () => {
+            this.isInverse = false;
+          }
+        } : {
+          name: 'コマ画像を反転する', action: () => {
+            this.isInverse = true;
+          }
+        }
+    );
     // 影を表示非表示
     actions.push(this.isDropShadow
       ? {
