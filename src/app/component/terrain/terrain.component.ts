@@ -274,21 +274,12 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
         }
       }
     );
-    actions.push(
-      this.altitude >= 0
-      ?{
-        name: '高さを0にする', action: () => {
-          this.altitude = 0;
-        },
-        disabled: (this.altitude == 0),
-        altitudeHande: this.terrain
-      }:{
-        name: '高さを0にする', action: () => {
-          this.altitude = 0;
-        },
-        altitudeHande: this.terrain
-      }
-    );
+    actions.push({
+      name: '高さを0にする', action: () => {
+        this.altitude = 0;
+      },
+      altitudeHande: this.terrain
+  })
     actions.push(ContextMenuSeparator);
     actions.push((this.hasWall
       ? {

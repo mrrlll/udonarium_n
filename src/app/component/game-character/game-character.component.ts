@@ -360,21 +360,12 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
       }
     );
     actions.push(ContextMenuSeparator);
-    actions.push(
-      this.altitude >= 0
-      ?{
-        name: '高さを0にする', action: () => {
-          this.altitude = 0;
-        },
-        disabled: (this.altitude == 0),
-        altitudeHande: this.gameCharacter
-      }:{
+    actions.push({
         name: '高さを0にする', action: () => {
           this.altitude = 0;
         },
         altitudeHande: this.gameCharacter
-      }
-    )
+    })
     actions.push(
       this.isAltitudeIndicate
       ?{

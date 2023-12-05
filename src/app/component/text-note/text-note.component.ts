@@ -244,22 +244,13 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
           this.isAltitudeIndicate = true;
         }
       }
-    )
-    actions.push(
-      this.altitude >= 0
-      ?{
-        name: '高さを0にする', action: () => {
-          this.altitude = 0;
-        },
-        disabled: (this.altitude == 0),
-        altitudeHande: this.textNote
-      }:{
-        name: '高さを0にする', action: () => {
-          this.altitude = 0;
-        },
-        altitudeHande: this.textNote
-      }
-    )
+    );
+    actions.push({
+      name: '高さを0にする', action: () => {
+        this.altitude = 0;
+      },
+      altitudeHande: this.textNote
+    });
     actions.push(ContextMenuSeparator);
     actions.push({
       name: 'コピーを作る', action: () => {
