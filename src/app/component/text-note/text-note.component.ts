@@ -108,8 +108,10 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
         this.changeDetector.markForCheck();
       })
       .on<number>('TABLE_VIEW_ROTATE_Z', -1000, event => {
-        this.viewRotateZ = event.data;
-        this.changeDetector.markForCheck();
+        this.ngZone.run(() => {
+          this.viewRotateZ = event.data;
+          this.changeDetector.markForCheck();
+        });
       })
       .on(`UPDATE_SELECTION/identifier/${this.textNote?.identifier}`, event => {
         this.changeDetector.markForCheck();
