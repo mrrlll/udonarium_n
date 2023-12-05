@@ -31,7 +31,7 @@
   <div class="component-content is-small-size"
     [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
     <div *ngIf="hasImage" style="position: relative;">
-      <img class="card-image" [src]="imageUrl | safe: 'resourceUrl'" />
+      <img class="card-image" [src]="imageUrl | safe: 'resourceUrl'" draggable="false"/>
       <button class="zoom-button" (click)="chanageImageView(true)">
         <i class="material-icons">zoom_in</i>
       </button>
@@ -82,7 +82,7 @@
       *ngIf="hasImage">
       <div class="inverser" [ngClass]="{inverse: tabletopObject.isInverse, hollow: tabletopObject.isHollow}">
         <span class="aura" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
-          <img class="character-image" [ngClass]="{'black-paint': tabletopObject.isBlackPaint}" [src]="imageUrl | safe: 'resourceUrl'">
+          <img class="character-image" [ngClass]="{'black-paint': tabletopObject.isBlackPaint}" [src]="imageUrl | safe: 'resourceUrl'" style="pointer-events: none">
         </span>
       </div>
     </div>
@@ -110,7 +110,7 @@
     <div class="image-area character-image-box"
       [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }"
       *ngIf="hasImage">
-      <img class="character-image" [src]="imageUrl | safe: 'resourceUrl'" />
+      <img class="character-image" [src]="imageUrl | safe: 'resourceUrl'" style="pointer-events: none" />
     </div>
     <div class="title-area component-title" [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging,
     'pointer-events-none': this.isPointerDragging }">{{character.name}}</div>
@@ -151,7 +151,7 @@
       [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }"
       *ngIf="hasImage">
       <img class="character-image" [ngClass]="{'is-black-mask': !dice.isVisible, 'is-harf-black-mask': dice.isMine}"
-        [src]="imageUrl | safe: 'resourceUrl'" />
+        [src]="imageUrl | safe: 'resourceUrl'" draggable="false" />
     </div>
     <div class="void-area is-pointer-events-none"></div>
     <div class="dataElm-area component-background"
