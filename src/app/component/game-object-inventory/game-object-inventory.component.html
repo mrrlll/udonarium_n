@@ -53,7 +53,7 @@
   <div class="inventory-object">
     <div class="object-name">{{gameObject.name}}
       <button class="indicate" [disabled]="selectedIdentifier !== gameObject.identifier" style="font-size: 0.8em; padding: 2px 5px;" title="影の表示" [ngClass]="{'is-active': gameObject.isDropShadow}" (click)="gameObject.isDropShadow = !gameObject.isDropShadow">
-        <i class="material-icons" style="font-size: 1em;">brightness_6</i>
+        <i class="material-icons" style="font-size: 1em;">star_half</i>
       </button>
       <button class="indicate" [disabled]="selectedIdentifier !== gameObject.identifier" style="font-size: 0.8em; padding: 2px 5px;" title="高度の表示" [ngClass]="{'is-active': gameObject.isAltitudeIndicate}" (click)="gameObject.isAltitudeIndicate = !gameObject.isAltitudeIndicate">
         <i class="material-icons rotate" style="font-size: 1em;">straighten</i>
