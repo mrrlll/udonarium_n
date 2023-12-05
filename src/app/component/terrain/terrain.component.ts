@@ -119,9 +119,9 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
       .on('UPDATE_FILE_RESOURE', event => {
         this.changeDetector.markForCheck();
       })
-      .on<number>('TABLE_VIEW_ROTATE_Z', -1000, event => {
+      .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
         this.ngZone.run(() => {
-          this.viewRotateZ = event.data;
+          this.viewRotateZ = event.data['z'];
           this.changeDetector.markForCheck();
         });
       })

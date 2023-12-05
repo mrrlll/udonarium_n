@@ -5,6 +5,7 @@ import {
   Component,
   HostListener,
   Input,
+  NgZone,
   OnChanges,
   OnDestroy
 } from '@angular/core';
@@ -105,9 +106,11 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     private changeDetector: ChangeDetectorRef,
     private selectionService: TabletopSelectionService,
     private pointerDeviceService: PointerDeviceService,
-    private appCustomService: AppConfigCustomService
+    private appCustomService: AppConfigCustomService,
+    private ngZone: NgZone
   ) { }
 
+  viewRotateX = 0;
   viewRotateZ = 0;
   math = Math;
 
@@ -125,6 +128,13 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
+      })
+      .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
+        this.ngZone.run(() => {
+          this.viewRotateX = event.data['x'];
+          this.viewRotateZ = event.data['z'];
+          this.changeDetector.markForCheck();
+        });
       })
       .on(`UPDATE_SELECTION/identifier/${this.gameCharacter?.identifier}`, event => {
         this.changeDetector.markForCheck();
