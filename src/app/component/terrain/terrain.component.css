@@ -33,9 +33,9 @@
   opacity: 0.8;
 }
 
-/* .is-pointer-events-none {
+.is-pointer-events-none {
   pointer-events: none;
-} */
+}
 
 .is-pointer-events-auto {
   pointer-events: auto;
