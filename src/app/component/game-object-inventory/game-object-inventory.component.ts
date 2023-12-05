@@ -146,16 +146,28 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
       }),
       (gameObject.isHollow
         ? {
-          name: '☑ 半透明', action: () => {
+          name: '☑ ぼかし', action: () => {
             gameObject.isHollow = false;
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         } : {
-          name: '☐ 半透明', action: () => {
+          name: '☐ ぼかし', action: () => {
             gameObject.isHollow = true;
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         }),
+        (gameObject.isBlackPaint
+          ? {
+            name: '☑ 黒塗り', action: () => {
+              gameObject.isBlackPaint = false;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
+            }
+          } : {
+            name: '☐ 黒塗り', action: () => {
+              gameObject.isBlackPaint = true;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
+            }
+          }),
     ]});
     actions.push(ContextMenuSeparator);
     let locations = [

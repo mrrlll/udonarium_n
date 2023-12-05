@@ -157,6 +157,10 @@
   filter: blur(1px);
 }
 
+.black-paint {
+  filter: brightness(0);
+}
+
 .name-tag {
   box-sizing: border-box;
   font-size: 15px;

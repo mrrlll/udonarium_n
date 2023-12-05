@@ -26,8 +26,8 @@
                 <div class="has-length-limit">{{name}}</div>
               </div>
             </ng-container>
-            <div class="inverser" [ngClass]="{inverse: isInverse, hollow: isHollow}"><img class="image chrome-smooth-image-trick is-3d" [ngStyle]="{'height':+ this.gameCharacter.komaImageHeignt + 'px','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}" *ngIf="(0 < imageFile.url.length) && this.gameCharacter.specifyKomaImageFlag" [src]="imageFile.url | safe: 'resourceUrl'"></div>
-            <div class="inverser" [ngClass]="{inverse: isInverse, hollow: isHollow}"><img [hidden]="" class="image is-3d" [ngStyle]="{'width':'100%'}" *ngIf="(0 < imageFile.url.length) && !this.gameCharacter.specifyKomaImageFlag" [src]="imageFile.url | safe: 'resourceUrl'"></div>
+            <div class="inverser" [ngClass]="{inverse: isInverse, hollow: isHollow}"><img class="image chrome-smooth-image-trick is-3d" [ngStyle]="{'height':+ this.gameCharacter.komaImageHeignt + 'px','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}" *ngIf="(0 < imageFile.url.length) && this.gameCharacter.specifyKomaImageFlag" class="image" [ngClass]="{'black-paint': isBlackPaint}" [src]="imageFile.url | safe: 'resourceUrl'"></div>
+            <div class="inverser" [ngClass]="{inverse: isInverse, hollow: isHollow}"><img [hidden]="" class="image is-3d" [ngStyle]="{'width':'100%'}" *ngIf="(0 < imageFile.url.length) && !this.gameCharacter.specifyKomaImageFlag" class="image" [ngClass]="{'black-paint': isBlackPaint}" [src]="imageFile.url | safe: 'resourceUrl'"></div>
             <div class="rotate-grab rotate-grab-icon of-top"
               [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
               <i class="material-icons">autorenew</i>
@@ -88,8 +88,8 @@
                 <div class="has-length-limit">{{name}}</div>
               </div>
             </ng-container>
-            <div class="inverser" [ngClass]="{inverse: isInverse, hollow: isHollow}"><img class="image chrome-smooth-image-trick is-3d isStealth" [ngStyle]="{'height':+ this.gameCharacter.komaImageHeignt + 'px','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}" *ngIf="(0 < imageFile.url.length) && this.gameCharacter.specifyKomaImageFlag" [src]="imageFile.url | safe: 'resourceUrl'"></div>
-            <div class="inverser" [ngClass]="{inverse: isInverse, hollow: isHollow}"><img [hidden]="" class="image is-3d isStealth" [ngStyle]="{'width':'100%'}" *ngIf="(0 < imageFile.url.length) && !this.gameCharacter.specifyKomaImageFlag" [src]="imageFile.url | safe: 'resourceUrl'"></div>
+            <div class="inverser" [ngClass]="{inverse: isInverse, hollow: isHollow}"><img class="image chrome-smooth-image-trick is-3d isStealth" [ngStyle]="{'height':+ this.gameCharacter.komaImageHeignt + 'px','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}" *ngIf="(0 < imageFile.url.length) && this.gameCharacter.specifyKomaImageFlag" class="image" [ngClass]="{'black-paint': isBlackPaint}" [src]="imageFile.url | safe: 'resourceUrl'"></div>
+            <div class="inverser" [ngClass]="{inverse: isInverse, hollow: isHollow}"><img [hidden]="" class="image is-3d isStealth" [ngStyle]="{'width':'100%'}" *ngIf="(0 < imageFile.url.length) && !this.gameCharacter.specifyKomaImageFlag" class="image" [ngClass]="{'black-paint': isBlackPaint}" [src]="imageFile.url | safe: 'resourceUrl'"></div>
             <div class="rotate-grab rotate-grab-icon of-top"
               [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
               <i class="material-icons">autorenew</i>

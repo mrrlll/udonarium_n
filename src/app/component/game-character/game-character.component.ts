@@ -74,6 +74,8 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   set isInverse(isInverse: boolean) { this.gameCharacter.isInverse = isInverse; }
   get isHollow(): boolean { return this.gameCharacter.isHollow; }
   set isHollow(isHollow: boolean) { this.gameCharacter.isHollow = isHollow; }
+  get isBlackPaint(): boolean { return this.gameCharacter.isBlackPaint; }
+  set isBlackPaint(isBlackPaint: boolean) { this.gameCharacter.isBlackPaint = isBlackPaint; }
   get isStealth(): boolean { return this.gameCharacter.isStealth; }
   set isStealth(isStealth: boolean) { this.gameCharacter.isStealth = this.isStealth; }
 
@@ -251,11 +253,12 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
 
   private makeContextMenu(): ContextMenuAction[] {
     let actions: ContextMenuAction[] = [];
+    let subActions: ContextMenuAction[] = [];
 
     actions.push({ name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } });
     actions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } });
     actions.push(ContextMenuSeparator);
-    actions.push(
+    subActions.push(
       this.isInverse
         ? {
           name: '☑ 反転', action: () => {
@@ -269,20 +272,35 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
           }
         }
     );
-    actions.push(
+    subActions.push(
       this.isHollow
         ? {
-          name: '☑ 半透明', action: () => {
+          name: '☑ ぼかし', action: () => {
             this.isHollow = false;
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         } : {
-          name: '☐ 半透明', action: () => {
+          name: '☐ ぼかし', action: () => {
             this.isHollow = true;
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         }
     );
+    subActions.push(
+      this.isBlackPaint
+        ? {
+          name: '☑ 黒塗り', action: () => {
+            this.isBlackPaint = false;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        } : {
+          name: '☐ 黒塗り', action: () => {
+            this.isBlackPaint = true;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        }
+    );
+    actions.push({ name: '画像効果', action: null, subActions: subActions });
     // 影を表示非表示
     actions.push(this.isDropShadow
       ? {
