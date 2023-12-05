@@ -304,11 +304,11 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     // 影を表示非表示
     actions.push(this.isDropShadow
       ? {
-        name: '影を非表示', action: () => {
+        name: '☑ 影を表示', action: () => {
           this.isDropShadow = false;
         }
       } : {
-        name: '影を表示', action: () => {
+        name: '☐ 影を表示', action: () => {
           this.isDropShadow = true;
         }
       }
