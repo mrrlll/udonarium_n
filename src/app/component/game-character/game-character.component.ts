@@ -76,6 +76,8 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   set isHollow(isHollow: boolean) { this.gameCharacter.isHollow = isHollow; }
   get isBlackPaint(): boolean { return this.gameCharacter.isBlackPaint; }
   set isBlackPaint(isBlackPaint: boolean) { this.gameCharacter.isBlackPaint = isBlackPaint; }
+  get aura(): number { return this.gameCharacter.aura; }
+  set aura(aura: number) { this.gameCharacter.aura = aura; }
   get isStealth(): boolean { return this.gameCharacter.isStealth; }
   set isStealth(isStealth: boolean) { this.gameCharacter.isStealth = this.isStealth; }
 
@@ -300,7 +302,32 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
           }
         }
     );
+    subActions.push({
+      name: 'オーラ', action: null,
+      subActions: ['なし', 'ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト']
+      .map((color, i) => {
+        return {
+          name: `${this.aura == i - 1 ? '◉' : '○'} ${color}`, action: () => {
+            this.aura = i - 1;
+            EventSystem.trigger('UPDATE_INVENTORY', null)
+          }
+        };
+      })
+    });
+    subActions.push(ContextMenuSeparator);
+    subActions.push({
+      name: 'リセット', action: () => {
+        this.isInverse = false;
+        this.isHollow = false;
+        this.isBlackPaint = false;
+        this.aura = -1;
+        EventSystem.trigger('UPDATE_INVENTORY', null);
+      },
+      disabled: !this.isInverse && !this.isHollow && !this.isBlackPaint && this.aura == -1
+    });
+
     actions.push({ name: '画像効果', action: null, subActions: subActions });
+
     // 影を表示非表示
     actions.push(this.isDropShadow
       ? {

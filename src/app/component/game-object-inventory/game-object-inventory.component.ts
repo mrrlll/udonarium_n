@@ -168,7 +168,31 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
               EventSystem.trigger('UPDATE_INVENTORY', null);
             }
           }),
-    ]});
+        {
+          name: 'オーラ', action: null,
+          subActions: ['なし', 'ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト']
+          .map((color, i) => {
+            return {
+              name: `${gameObject.aura == i - 1 ? '◉' : '○'} ${color}`, action: () => {
+                gameObject.aura = i - 1;
+                EventSystem.trigger('UPDATE_INVENTORY', null)
+              }
+            }
+          })
+        },
+        ContextMenuSeparator,
+        {
+          name: 'リセット', action: () => {
+            gameObject.isInverse = false;
+            gameObject.isHollow = false;
+            gameObject.isBlackPaint = false;
+            gameObject.aura = -1;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          },
+          disabled: !gameObject.isInverse && !gameObject.isHollow && !gameObject.isBlackPaint && gameObject.aura == -1
+        }
+      ]
+    });
     actions.push(ContextMenuSeparator);
     let locations = [
       { name: 'table', alias: 'テーブルに移動' },
