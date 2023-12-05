@@ -74,6 +74,7 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
   private callbackOnMouseUp = (e) => this.onMouseUp(e);
 
   gridSize: number = 50;
+  viewRotateZ = 10;
   math = Math;
 
   private calcFitHeightTimer: NodeJS.Timer = null;
@@ -89,8 +90,6 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
     private selectionService: TabletopSelectionService,
     private pointerDeviceService: PointerDeviceService
   ) { }
-
-  viewRotateZ = 0;
 
   ngOnChanges(): void {
     EventSystem.unregister(this);

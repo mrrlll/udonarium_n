@@ -85,6 +85,7 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
   movableOption: MovableOption = {};
   rotableOption: RotableOption = {};
 
+  viewRotateZ = 10;
   math = Math;
 
   private input: InputHandler = null;
@@ -101,8 +102,6 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
     private pointerDeviceService: PointerDeviceService,
     private coordinateService: CoordinateService,
   ) { }
-
-  viewRotateZ = 0;
 
   ngOnChanges(): void {
     EventSystem.unregister(this);

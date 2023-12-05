@@ -95,6 +95,9 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   }
 
   gridSize: number = 50;
+  viewRotateX = 50;
+  viewRotateZ = 10;
+  math = Math;
 
   movableOption: MovableOption = {};
   rotableOption: RotableOption = {};
@@ -109,10 +112,6 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     private appCustomService: AppConfigCustomService,
     private ngZone: NgZone
   ) { }
-
-  viewRotateX = 0;
-  viewRotateZ = 0;
-  math = Math;
 
   ngOnChanges(): void {
     EventSystem.unregister(this);
