@@ -141,7 +141,7 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
     this.textNote.toTopmost();
 
     // TODO:もっと良い方法考える
-    if (e.button === 2 || this.isLocked) {
+    if (e.button === 2) {
       EventSystem.trigger('DRAG_LOCKED_OBJECT', { srcEvent: e });
       return;
     }
@@ -251,6 +251,7 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
     actions.push({
       name: 'コピーを作る', action: () => {
         let cloneObject = this.textNote.clone();
+        cloneObject.isLocked = false;
         cloneObject.location.x += this.gridSize;
         cloneObject.location.y += this.gridSize;
         cloneObject.toTopmost();
