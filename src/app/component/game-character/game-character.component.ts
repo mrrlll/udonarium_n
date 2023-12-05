@@ -248,6 +248,9 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   private makeContextMenu(): ContextMenuAction[] {
     let actions: ContextMenuAction[] = [];
 
+    actions.push({ name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } });
+    actions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } });
+    actions.push(ContextMenuSeparator);
     // 影を表示非表示
     actions.push(this.isDropShadow
       ? {
@@ -276,9 +279,6 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
         altitudeHande: this.gameCharacter
       }
     )
-    actions.push(ContextMenuSeparator);
-    actions.push({ name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } });
-    actions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } });
     actions.push(ContextMenuSeparator);
     actions.push({
       name: '共有イベントリに移動', action: () => {

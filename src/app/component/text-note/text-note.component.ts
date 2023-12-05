@@ -47,6 +47,24 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
   get altitude(): number { return this.textNote.altitude; }
   set altitude(altitude: number) { this.textNote.altitude = altitude; }
 
+  get textNoteAltitude(): number {
+    let ret = this.altitude;
+    if (this.isUpright && this.altitude < 0) {
+      if (-this.height <= this.altitude) return 0;
+      ret += this.height;
+    }
+    return +ret.toFixed(1);
+  }
+
+  get isUpright(): boolean { return this.textNote.isUpright; }
+  set isUpright(isUpright: boolean) { this.textNote.isUpright = isUpright; }
+
+  get isAltitudeIndicate(): boolean { return this.textNote.isAltitudeIndicate; }
+  set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.textNote.isAltitudeIndicate = isAltitudeIndicate; }
+
+  get isLocked(): boolean { return this.textNote.isLocked; }
+  set isLocked(isLocked: boolean) { this.textNote.isLocked = isLocked; }
+
   get isActive(): boolean { return document.activeElement === this.textAreaElementRef.nativeElement; }
 
   get selectionState(): SelectionState { return this.selectionService.state(this.textNote); }
@@ -56,6 +74,7 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
   private callbackOnMouseUp = (e) => this.onMouseUp(e);
 
   gridSize: number = 50;
+  math = Math;
 
   private calcFitHeightTimer: NodeJS.Timer = null;
 
@@ -71,6 +90,8 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
     private pointerDeviceService: PointerDeviceService
   ) { }
 
+  viewRotateZ = 0;
+
   ngOnChanges(): void {
     EventSystem.unregister(this);
     EventSystem.register(this)
@@ -84,6 +105,10 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
         this.changeDetector.markForCheck();
       })
       .on('UPDATE_FILE_RESOURE', event => {
+        this.changeDetector.markForCheck();
+      })
+      .on<number>('TABLE_VIEW_ROTATE_Z', -1000, event => {
+        this.viewRotateZ = event.data;
         this.changeDetector.markForCheck();
       })
       .on(`UPDATE_SELECTION/identifier/${this.textNote?.identifier}`, event => {
@@ -116,7 +141,7 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
     this.textNote.toTopmost();
 
     // TODO:もっと良い方法考える
-    if (e.button === 2) {
+    if (e.button === 2 || this.isLocked) {
       EventSystem.trigger('DRAG_LOCKED_OBJECT', { srcEvent: e });
       return;
     }
@@ -180,6 +205,33 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
   private makeContextMenu(): ContextMenuAction[] {
     let actions: ContextMenuAction[] = [];
 
+    actions.push({ name: 'メモを編集', action: () => { this.showDetail(this.textNote); } });
+    actions.push(ContextMenuSeparator);
+    actions.push(
+      this.isLocked
+      ?{
+        name: '固定解除', action: () => {
+          this.isLocked = false;
+        }
+      }:{
+        name: '固定する', action: () => {
+          this.isLocked = true;
+        }
+      }
+    );
+    actions.push(
+      this.isUpright
+      ?{
+        name: '直立しない', action: () => {
+          this.isUpright = false;
+        }
+      }:{
+        name: '直立する', action: () => {
+          this.isUpright = true;
+        }
+      }
+    )
+    actions.push(ContextMenuSeparator);
     actions.push(
       this.altitude >= 0
       ?{
@@ -196,8 +248,6 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
       }
     )
     actions.push(ContextMenuSeparator);
-
-    actions.push({ name: 'メモを編集', action: () => { this.showDetail(this.textNote); } });
     actions.push({
       name: 'コピーを作る', action: () => {
         let cloneObject = this.textNote.clone();
