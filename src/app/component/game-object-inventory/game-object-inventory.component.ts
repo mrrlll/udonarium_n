@@ -126,20 +126,37 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
     let actions: ContextMenuAction[] = [];
 
     actions.push({ name: '詳細を表示', action: () => { this.showDetail(gameObject); } });
-    if (gameObject.location.name !== 'graveyard') {
-      actions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(gameObject) } });
-    }
+    // if (gameObject.location.name !== 'graveyard') {
+    actions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(gameObject) }, disabled: gameObject.location.name === 'graveyard' });
+
     actions.push(ContextMenuSeparator);
-    if (gameObject.isInverse) {
-      actions.push({ name: '画像を反転しない', action: () => { gameObject.isInverse = false; EventSystem.trigger('UPDATE_INVENTORY', null)　} });
-    } else {
-      actions.push({ name: '画像を反転する', action: () => { gameObject.isInverse = true; EventSystem.trigger('UPDATE_INVENTORY', null)　} });
-    }
-    if (gameObject.isHollow) {
-      actions.push({ name: '半透明にしない', action: () => { gameObject.isHollow = false; EventSystem.trigger('UPDATE_INVENTORY', null)　} });
-    } else {
-      actions.push({ name: '半透明にする', action: () => { gameObject.isHollow = true; EventSystem.trigger('UPDATE_INVENTORY', null)　} });
-    }
+    actions.push({ name: '画像効果', action: null,
+    subActions: [
+      (gameObject.isInverse
+      ? {
+        name: '☑ 反転', action: () => {
+          gameObject.isInverse = false;
+          EventSystem.trigger('UPDATE_INVENTORY', null);
+        }
+      } : {
+        name: '☐ 反転', action: () => {
+          gameObject.isInverse = true;
+          EventSystem.trigger('UPDATE_INVENTORY', null);
+        }
+      }),
+      (gameObject.isHollow
+        ? {
+          name: '☑ 半透明', action: () => {
+            gameObject.isHollow = false;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        } : {
+          name: '☐ 半透明', action: () => {
+            gameObject.isHollow = true;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        }),
+    ]});
     actions.push(ContextMenuSeparator);
     let locations = [
       { name: 'table', alias: 'テーブルに移動' },

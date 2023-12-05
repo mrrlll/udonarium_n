@@ -258,12 +258,12 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     actions.push(
       this.isInverse
         ? {
-          name: 'コマ画像を反転しない', action: () => {
+          name: '☑ 反転', action: () => {
             this.isInverse = false;
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         } : {
-          name: 'コマ画像を反転する', action: () => {
+          name: '☐ 反転', action: () => {
             this.isInverse = true;
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
@@ -272,12 +272,12 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     actions.push(
       this.isHollow
         ? {
-          name: 'コマ画像を透過しない', action: () => {
+          name: '☑ 半透明', action: () => {
             this.isHollow = false;
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         } : {
-          name: 'コマ画像を透過する', action: () => {
+          name: '☐ 半透明', action: () => {
             this.isHollow = true;
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
