@@ -20,6 +20,7 @@ import { GameObjectInventoryService } from 'service/game-object-inventory.servic
 import { PointerDeviceService } from 'service/pointer-device.service';
 
 import { GameCharacter } from '@udonarium/game-character';
+import { RangeArea } from '@udonarium/range';
 
 @Component({
   selector: 'overview-panel',
@@ -190,5 +191,14 @@ export class OverviewPanelComponent implements OnChanges, AfterViewInit, OnDestr
 
   private getInventoryTags(gameObject: TabletopObject): DataElement[] {
     return this.inventoryService.tableInventory.dataElementMap.get(gameObject.identifier);
+  }
+
+  get rangeElms(): DataElement[] {
+    let ret = []
+    if (!this.tabletopObject || !(this.tabletopObject instanceof RangeArea) || !this.tabletopObject.commonDataElement) return ret;
+    if (this.tabletopObject.commonDataElement.getFirstElementByName('length')) ret.push(this.tabletopObject.commonDataElement.getFirstElementByName('length'));
+    if ((this.tabletopObject.type === 'CORN' || this.tabletopObject.type === 'LINE') && this.tabletopObject.commonDataElement.getFirstElementByName('width')) ret.push(this.tabletopObject.commonDataElement.getFirstElementByName('width'));
+    if (this.tabletopObject.commonDataElement.getFirstElementByName('opacity')) ret.push(this.tabletopObject.commonDataElement.getFirstElementByName('opacity'));
+    return ret;
   }
 }

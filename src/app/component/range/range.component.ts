@@ -296,8 +296,8 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
   get length(): number { return this.adjustMinBounds(this.range.length); }
   get opacity(): number { return this.range.opacity; }
   get imageFile(): ImageFile { return this.range.imageFile; }
-  get isLock(): boolean { return this.range.isLock; }
-  set isLock(isLock: boolean) { this.range.isLock = isLock; }
+  get isLocked(): boolean { return this.range.isLocked; }
+  set isLocked(isLock: boolean) { this.range.isLocked = isLock; }
 
   get areaQuadrantSize(): number {
     let w = this.width < 1 ? 1 : this.width;
@@ -333,9 +333,12 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     return `${shadow} 0px 0px 3px`;
   }
 
+  get followingCharactor(): GameCharacter { return this.range.followingCharactor; }
+  set followingCharactor(followingCharactor: GameCharacter) { this.range.followingCharactor = followingCharactor; }
+
   get dockableCharacters(): GameCharacter[] {
-    let ary = this.tabletopService.characters.filter(character => {
-      if (character.location.name !== 'table') return false;
+    let ary: GameCharacter[] = this.tabletopService.characters.filter(character => {
+      if (character.location.name !== 'table' || character.isHideIn) return false;
       //if (this.range.followingCharctor && this.range.followingCharctor === character) isContainFollowing = true;
       return [
         {x: 0, y: 0},
@@ -347,15 +350,13 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
         && (this.range.location.y - this.rangeLength * this.gridSize) <= character.location.y  + point.y && character.location.y + point.y <= (this.range.location.y + this.rangeLength * this.gridSize);
       });
     });
-    if (this.range.followingCharctor && !ary.some(character => character === this.range.followingCharctor)) ary.push(this.range.followingCharctor);
+    if (this.followingCharactor && !ary.some(character => character === this.followingCharactor)) ary.push(this.followingCharactor);
     return ary.sort((a, b) => a.name.localeCompare(b.name, 'ja'));
   }
 
   get rangeLength() {
     let length = (this.length < 1 ? 1 : this.length);
-    if (this.range.followingCharctor && this.range.isExpandByFollowing) {
-      length += this.range.followingCharctor.size / 2;
-    }
+    if (this.followingCharactor && this.range.isExpandByFollowing) length += this.followingCharactor.size / 2;
     return length;
   }
 
@@ -399,12 +400,23 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
           });
           markForCheck = true;
         }
-        if (object === this.range.followingCharctor || (this.range.followingCharctor && object instanceof ObjectNode && this.range.followingCharctor.contains(object))) {
-          this.ngZone.run(() => {
-            this.range.following();
-            this.setRange();
-          });
-          markForCheck = true;
+        if (this.followingCharactor) {
+          if (object.identifier === this.followingCharactor.identifier) {
+            //console.log('追従動作');
+            this.ngZone.run(() => {
+              this.range.following();
+              this.setRange();
+            });
+            markForCheck = true;
+          } else if (object instanceof ObjectNode) {
+            if (this.followingCharactor.contains(object)) {
+              this.ngZone.run(() => {
+                this.range.following();
+                this.setRange();
+              });
+              markForCheck = true;
+            }
+          }
         }
         if (markForCheck) this.changeDetector.markForCheck();
       })
@@ -453,7 +465,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.input.cancel();
 
     // TODO:もっと良い方法考える
-    if (this.isLock) {
+    if (this.isLocked) {
       EventSystem.trigger('DRAG_LOCKED_OBJECT', {});
     }
   }
@@ -469,16 +481,16 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     let menuArray = [];
     menuArray.push(
-      this.isLock
+      this.isLocked
         ? {
           name: '☑ 固定', action: () => {
-            this.isLock = false;
+            this.isLocked = false;
             SoundEffect.play(PresetSound.unlock);
           }
         }
         : {
           name: '☐ 固定', action: () => {
-            this.isLock = true;
+            this.isLocked = true;
             SoundEffect.play(PresetSound.lock);
           }
         }
@@ -500,25 +512,24 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (this.range.type == 'CIRCLE' || this.range.type == 'SQUARE' || this.range.type == 'DIAMOND') {
       let menu: ContextMenuAction[] = this.dockableCharacters.length <= 0
-        ? this.range.followingCharctor ? [] : [{ name: 'キャラクターがいません', action: null, disabled: true, center: true }]
+        ? this.followingCharactor ? [] : [{ name: 'キャラクターがいません', action: null, disabled: true, center: true }]
         : this.dockableCharacters.map(character => {
           return {
-            name: `${this.range.followingCharctor && this.range.followingCharctor === character ? '◉' : '○'} ${character.name}`,
+            name: `${this.followingCharactor && this.followingCharactor.identifier === character.identifier ? '◉' : '○'} ${character.name}`,
             action: () => {
-              this.range.followingCharctor = character;
+              this.followingCharactor = character;
               this.range.following();
               SoundEffect.play(PresetSound.lock);
             }
           };
         });
-      if (this.range.followingCharctor) {
+      if (this.followingCharactor) {
         if (menu.length != 0) menu.push(ContextMenuSeparator);
         menu.push({
-            name: '追従を解除', action: () => {
+            name: '追従を解除する', action: () => {
               SoundEffect.play(PresetSound.unlock);
-              this.range.followingCharctor = null;
-            },
-            level: menu.length != 0 ? 2 : 0
+              this.followingCharactor = null;
+            }
           });
       }
       menuArray.push({
@@ -547,6 +558,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
           : {
             name: '☐ 高度にも追従', action: () => {
               this.range.isFollowAltitude = true;
+              if (this.followingCharactor) this.range.following();
             }
           });
     } else {
@@ -635,7 +647,8 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
           console.log('コピー', cloneObject);
           cloneObject.location.x += this.gridSize;
           cloneObject.location.y += this.gridSize;
-          cloneObject.isLock = false;
+          cloneObject.isLocked = false;
+          cloneObject.followingCharctorIdentifier = null;
           if (this.range.parent) this.range.parent.appendChild(cloneObject);
           SoundEffect.play(PresetSound.cardPut);
         }
@@ -712,7 +725,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       offSetY: this.range.offSetY,
       //fillOutLine: this.range.fillOutLine,
       gridType: this.currentTable.gridType,
-      isDocking: this.range.followingCharctor ? true : false,
+      isDocking: this.followingCharactor ? true : false,
       fillType: this.range.fillType
     };
     console.log('this.range.location.x-y:' + this.range.location.x + ' ' + this.range.location.y);
