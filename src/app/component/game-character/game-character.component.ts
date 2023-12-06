@@ -325,7 +325,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
         .concat(['ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト']
         .map((color, i) => {
           return {
-            name: `${this.aura == i ? '◉' : '○'} ${color}`, action: () => {
+            name: `${this.aura == i ? '◉' : '○'} ${color}`, colorSample: true, action: () => {
               this.aura = i;
               EventSystem.trigger('UPDATE_INVENTORY', null)
             }

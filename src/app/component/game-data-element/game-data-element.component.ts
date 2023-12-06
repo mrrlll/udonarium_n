@@ -170,4 +170,16 @@ export class GameDataElementComponent implements OnInit, OnChanges, OnDestroy {
   get isNotApplicable(): boolean {
     return this.isCommonValue && this.descriptionType === 'range-not-width' && this.gameDataElement.name === 'width';
   }
-};
+
+  get colorSampleTextShadow() {
+    const shadow = this.value && /^\#[0-9a-f]{6}$/i.test(this.value.toString()) ? (this.value.toString().substring(1, 7).match(/.{2}/g).reduce((a, c) => { return a + parseInt(c, 16); }, 0) > 128 * 3 ? '#111' : '#eee') : '#eee';
+    return `${shadow} -1px -1px 0px,
+      ${shadow} 0px -1px 0px,
+      ${shadow} 1px -1px 0px,
+      ${shadow} -1px 0px 0px,
+      ${shadow} 1px 0px 0px,
+      ${shadow} -1px 1px 0px,
+      ${shadow} 0px 1px 0px,
+      ${shadow} 1px 1px 0px`;
+  }
+}

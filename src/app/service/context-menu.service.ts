@@ -24,7 +24,9 @@ export interface ContextMenuAction {
   type?: ContextMenuType,
   subActions?: ContextMenuAction[],
   altitudeHande?: TabletopObject,
-  default?: boolean
+  default?: boolean,
+  center?: boolean,
+  colorSample?: boolean
 }
 
 @Injectable()
