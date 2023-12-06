@@ -72,6 +72,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   set filterText(filterText: string) { this._filterText = filterText; this.filterTextChange.emit(filterText); }
 
   @Output() chat = new EventEmitter<{ text: string, gameType: string, sendFrom: string, sendTo: string }>();
+  @Output() tabSwitch = new EventEmitter<number>();
 
   get isDirect(): boolean { return this.sendTo != null && this.sendTo.length ? true : false }
   gameHelp: string = '';
@@ -107,6 +108,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   get diceBotInfos() { return DiceBot.diceBotInfos }
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
   get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
+
+  private calcFitHeightInterval: NodeJS.Timer = null;
 
   constructor(
     private ngZone: NgZone,
@@ -193,41 +196,9 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     this.calcFitHeight();
   }
 
-  sendChat(event: KeyboardEvent) {
+  tabSwitchAction(event: KeyboardEvent, direction: number) {
     if (event) event.preventDefault();
-
-    if (!this.text.length) return;
-    if (event && event.keyCode !== 13) return;
-
-    if (!this.sendFrom.length) this.sendFrom = this.myPeer.identifier;
-
-    if (this.history.length >= ChatInputComponent.MAX_HISTORY_NUM) {
-      this.history.shift();
-    }
-    this.history.push(this.text);
-    this.currentHistoryIndex = -1;
-
-    this.chat.emit({ text: this.text, gameType: this.gameType, sendFrom: this.sendFrom, sendTo: this.sendTo });
-
-    this.text = '';
-    this.previousWritingLength = this.text.length;
-    let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
-    textArea.value = '';
-    this.calcFitHeight();
-  }
-
-  calcFitHeight() {
-    let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
-    textArea.style.height = '';
-    if (textArea.scrollHeight >= textArea.offsetHeight) {
-      textArea.style.height = textArea.scrollHeight + 'px';
-    }
-  }
-
-  loadDiceBot(gameType: string) {
-    DiceBot.getHelpMessage(gameType).then(help => {
-      console.log('onChangeGameType done\n' + help);
-    });
+    this.tabSwitch.emit(direction);
   }
 
   private history: string[] = new Array();
@@ -257,6 +228,50 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
     textArea.value = histText;
     this.calcFitHeight();
+  }
+
+  sendChat(event: KeyboardEvent) {
+    if (event) event.preventDefault();
+
+    if (!this.text.length) return;
+    if (event && event.keyCode !== 13) return;
+
+    if (!this.sendFrom.length) this.sendFrom = this.myPeer.identifier;
+
+    if (this.history.length >= ChatInputComponent.MAX_HISTORY_NUM) {
+      this.history.shift();
+    }
+    this.history.push(this.text);
+    this.currentHistoryIndex = -1;
+
+    this.chat.emit({ text: this.text, gameType: this.gameType, sendFrom: this.sendFrom, sendTo: this.sendTo });
+
+    this.text = '';
+    this.previousWritingLength = this.text.length;
+    this.kickCalcFitHeight();
+  }
+
+  kickCalcFitHeight() {
+    if (this.calcFitHeightInterval == null) {
+      this.calcFitHeightInterval = setTimeout(() => {
+        this.calcFitHeightInterval = null;
+        this.calcFitHeight();
+      }, 0)
+    }
+  }
+
+  calcFitHeight() {
+    let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
+    textArea.style.height = '';
+    if (textArea.scrollHeight >= textArea.offsetHeight) {
+      textArea.style.height = textArea.scrollHeight + 'px';
+    }
+  }
+
+  loadDiceBot(gameType: string) {
+    DiceBot.getHelpMessage(gameType).then(help => {
+      console.log('onChangeGameType done\n' + help);
+    });
   }
 
   showDicebotHelp() {

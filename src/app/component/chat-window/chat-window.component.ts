@@ -69,12 +69,6 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     EventSystem.unregister(this);
   }
 
-  showDiceTableSetting() {
-    let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x + 50, top: coordinate.y - 450, width: 650, height: 400 };
-    let component = this.panelService.open<DiceTableSettingComponent>(DiceTableSettingComponent, option);
-  }
-
   // @TODO やり方はもう少し考えた方がいいい
   scrollToBottom(isForce: boolean = false) {
     if (isForce) this.isAutoScroll = true;
@@ -122,6 +116,12 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     component.selectedTab = this.chatTab;
   }
 
+  showDiceTableSetting() {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x + 50, top: coordinate.y - 450, width: 650, height: 400 };
+    let component = this.panelService.open<DiceTableSettingComponent>(DiceTableSettingComponent, option);
+  }
+
   sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string, color?: string}) {
     if (this.chatTab) {
       this.chatMessageService.sendMessage(
@@ -133,6 +133,22 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
         value.color,
         );
     }
+  }
+
+  chatTabSwitchRelative(direction: number) {
+    let chatTabs = this.chatMessageService.chatTabs;
+    let index = chatTabs.findIndex((elm) => elm.identifier == this.chatTabidentifier);
+    if (index < 0) { return; }
+
+    let nextIndex: number;
+    if (index == chatTabs.length - 1 && direction == 1) {
+      nextIndex = 0;
+    } else if (index == 0 && direction == -1) {
+      nextIndex = chatTabs.length - 1;
+    } else {
+      nextIndex = index + direction;
+    }
+    this.chatTabidentifier = chatTabs[nextIndex].identifier;
   }
 
   trackByChatTab(index: number, chatTab: ChatTab) {

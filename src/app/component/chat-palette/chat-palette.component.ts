@@ -18,7 +18,7 @@ import { PanelService } from 'service/panel.service';
 })
 export class ChatPaletteComponent implements OnInit, OnDestroy {
   @ViewChild('chatInput', { static: true }) chatInputComponent: ChatInputComponent;
-  @ViewChild('chatPlette') chatPletteElementRef: ElementRef<HTMLSelectElement>;
+  @ViewChild('chatPalette') chatPaletteElementRef: ElementRef<HTMLSelectElement>;
   @Input() character: GameCharacter = null;
 
   get palette(): ChatPalette { return this.character.chatPalette; }
@@ -93,16 +93,23 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   }
 
   selectPalette(line: string) {
-    this.text = line;
+    // this.text = line;
+    let multiLine = line.replace(/\\n/g, '\n');
+    this.text = multiLine;
+    this.chatInputComponent.kickCalcFitHeight();
   }
 
   clickPalette(line: string) {
-    if (this.doubleClickTimer && this.text === line) {
+    // if (this.doubleClickTimer && this.text === line) {
+    let multiLine = line.replace(/\\n/g, '\n');
+    if (this.doubleClickTimer && this.text === multiLine) {
       clearTimeout(this.doubleClickTimer);
       this.doubleClickTimer = null;
       this.chatInputComponent.sendChat(null);
     } else {
-      this.text = line;
+      // this.text = line;
+      this.text = multiLine;
+      this.chatInputComponent.kickCalcFitHeight();
       this.doubleClickTimer = setTimeout(() => { this.doubleClickTimer = null }, 400);
     }
   }
@@ -114,9 +121,9 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     }
   }
 
-  resetPletteSelect() {
-    if (!this.chatPletteElementRef.nativeElement) return;
-    this.chatPletteElementRef.nativeElement.selectedIndex = -1;
+  resetPaletteSelect() {
+    if (!this.chatPaletteElementRef.nativeElement) return;
+    this.chatPaletteElementRef.nativeElement.selectedIndex = -1;
   }
 
   toggleEditMode() {
@@ -131,5 +138,21 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   filter(value: string): boolean {
     if (this.filterText == null || this.filterText.trim() == '') return true;
     return StringUtil.toHalfWidth(value.replace(/[―ー—‐]/g, '-')).replace(/[\r\n\s]+/, ' ').trim().indexOf(StringUtil.toHalfWidth(this.filterText.replace(/[―ー—‐]/g, '-')).replace(/[\r\n\s]+/, ' ').trim()) >= 0;
+  }
+
+  chatTabSwitchRelative(direction: number) {
+    let chatTabs = this.chatMessageService.chatTabs;
+    let index = chatTabs.findIndex((elm) => elm.identifier == this.chatTabidentifier);
+    if (index < 0) { return; }
+
+    let nextIndex: number;
+    if (index == chatTabs.length - 1 && direction == 1) {
+      nextIndex = 0;
+    } else if (index == 0 && direction == -1) {
+      nextIndex = chatTabs.length - 1;
+    } else {
+      nextIndex = index + direction;
+    }
+    this.chatTabidentifier = chatTabs[nextIndex].identifier;
   }
 }

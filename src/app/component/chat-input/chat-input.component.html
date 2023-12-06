@@ -28,9 +28,10 @@
     </div>
     <div>
       <form>
-        <textarea class="chat-input" placeholder="Enterで送信  Shift+Enterで改行" [(ngModel)]="text"
+        <textarea class="chat-input" placeholder="Enter:送信 Shift+Enter:改行 Ctrl+上下:履歴 Ctrl+左右:タブ切替" [(ngModel)]="text"
           [ngModelOptions]="{standalone: true}" (input)="onInput()" (keydown.enter)="sendChat($event)" (focus)="isFilterTextUpdate = true" (blur)="isFilterTextUpdate = false"
           (keydown.control.arrowup)="moveHistory($event, -1)" (keydown.control.arrowdown)="moveHistory($event, 1)"
+          (keydown.control.arrowleft)="tabSwitchAction($event, -1)" (keydown.control.arrowright)="tabSwitchAction($event, 1)"
           #textArea></textarea>
         <button type="submit" (click)="sendChat(null)">SEND</button>
       </form>
