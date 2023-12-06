@@ -106,8 +106,8 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   rotableOption: RotableOption = {};
   rollOption: RotableOption = {};
 
-  private highlightTimerID: number | null;
-  private unhighlightTimerID: number | null;
+  private highlightTimer: NodeJS.Timer;
+  private unhighlightTimer: NodeJS.Timer;
 
   constructor(
     private contextMenuService: ContextMenuService,
@@ -138,23 +138,24 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
         if (this.gameCharacter.identifier !== event.data.identifier) { return; }
         if (this.gameCharacter.location.name != "table") { return; }
 
+        console.log(`recv focus event to ${this.gameCharacter.name}`);
         // アニメーション開始のタイマーが既にあってアニメーション開始前（ごくわずかな間）ならば何もしない
-        if (this.highlightTimerID != null) { return; }
+        if (this.highlightTimer != null) { return; }
 
         // アニメーション中であればアニメーションを初期化
         if (this.rootElementRef.nativeElement.classList.contains('focused')) {
-          window.clearTimeout(this.unhighlightTimerID);
+          clearTimeout(this.unhighlightTimer);
           this.rootElementRef.nativeElement.classList.remove('focused');
         }
 
         // アニメーション開始処理タイマー
-        this.highlightTimerID = window.setTimeout(() => {
-          this.highlightTimerID = null;
+        this.highlightTimer = setTimeout(() => {
+          this.highlightTimer = null;
           this.rootElementRef.nativeElement.classList.add('focused');
         }, 0);
         // アニメーション終了処理タイマー
-        this.unhighlightTimerID = window.setTimeout(() => {
-          this.unhighlightTimerID = null;
+        this.unhighlightTimer = setTimeout(() => {
+          this.unhighlightTimer = null;
           this.rootElementRef.nativeElement.classList.remove('focused');
         }, 1010);
       })
