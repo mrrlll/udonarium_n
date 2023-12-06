@@ -13,6 +13,10 @@
   height: 20px;
 }
 
+.ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input {
+  top: auto;
+}
+
 .ng-dropdown-panel.ud-select .ng-dropdown-panel-items .ng-option {
   font-size: 80%;
   padding: 4px 10px;
