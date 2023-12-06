@@ -9,6 +9,8 @@ import { ChatMessageService } from 'service/chat-message.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
+import { DiceTableSettingComponent } from 'component/dice-table-setting/dice-table-setting.component';
+
 @Component({
   selector: 'chat-window',
   templateUrl: './chat-window.component.html',
@@ -65,6 +67,12 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     EventSystem.unregister(this);
+  }
+
+  showDiceTableSetting() {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 500, height: 350 };
+    let component = this.panelService.open<DiceTableSettingComponent>(DiceTableSettingComponent, option);
   }
 
   // @TODO やり方はもう少し考えた方がいいい

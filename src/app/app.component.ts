@@ -105,6 +105,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   progresPercent: number = 0;
   networkService = Network;
 
+  dispcounter : number = 10 ;//表示更新用ダミー
+
   static imageUrl = '';
   get imageUrl(): string {
     return AppComponent.imageUrl;

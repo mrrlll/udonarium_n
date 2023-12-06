@@ -63,6 +63,7 @@ import { TimerMenuComponent } from 'component/timer/timer-menu.component';
 
 
 import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
+import { DiceTableSettingComponent } from 'component/dice-table-setting/dice-table-setting.component';
 
 import { AppConfigService } from 'service/app-config.service';
 import { ChatMessageService } from 'service/chat-message.service';
@@ -148,6 +149,7 @@ import { RangeComponent } from 'component/range/range.component';
     CardsListWindowComponent,
     GameTableMaskInventoryComponent,
     RangeComponent,
+    DiceTableSettingComponent
   ],
   imports: [
     BrowserModule,
