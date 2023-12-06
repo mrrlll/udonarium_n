@@ -336,6 +336,13 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
   get followingCharactor(): GameCharacter { return this.range.followingCharactor; }
   set followingCharactor(followingCharactor: GameCharacter) { this.range.followingCharactor = followingCharactor; }
 
+  get isFollowed(): boolean {
+    return this.followingCharactor
+      && this.followingCharactor.location.x <= this.range.location.x && this.range.location.x <= (this.followingCharactor.location.x + this.followingCharactor.size * this.gridSize)
+      && this.followingCharactor.location.y <= this.range.location.y && this.range.location.y <= (this.followingCharactor.location.y + this.followingCharactor.size * this.gridSize)
+      && (this.followingCharactor.altitude + this.followingCharactor.posZ - 0.5) <= (this.range.altitude + this.range.posZ) && (this.range.altitude + this.range.posZ) <= (this.followingCharactor.altitude + this.followingCharactor.posZ + 0.5)
+  }
+
   get dockableCharacters(): GameCharacter[] {
     let ary: GameCharacter[] = this.tabletopService.characters.filter(character => {
       if (character.location.name !== 'table' || character.isHideIn) return false;
@@ -568,12 +575,12 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
         menuArray.push(
           this.range.isFollowAltitude
           ? {
-            name: '☑ 高度にも追従', action: () => {
+            name: '☑ 高さ・高度にも追従', action: () => {
               this.range.isFollowAltitude = false;
             }
           }
           : {
-            name: '☐ 高度にも追従', action: () => {
+            name: '☐ 高さ・高度にも追従', action: () => {
               this.range.isFollowAltitude = true;
               if (this.followingCharactor) this.range.following();
             }
@@ -593,6 +600,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       );
     }
+    menuArray.push(ContextMenuSeparator);
 
 /*
     menuArray.push(
