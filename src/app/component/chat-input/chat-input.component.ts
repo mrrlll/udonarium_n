@@ -200,6 +200,13 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     if (event && event.keyCode !== 13) return;
 
     if (!this.sendFrom.length) this.sendFrom = this.myPeer.identifier;
+
+    if (this.history.length >= ChatInputComponent.MAX_HISTORY_NUM) {
+      this.history.shift();
+    }
+    this.history.push(this.text);
+    this.currentHistoryIndex = -1;
+
     this.chat.emit({ text: this.text, gameType: this.gameType, sendFrom: this.sendFrom, sendTo: this.sendTo });
 
     this.text = '';
@@ -221,6 +228,28 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     DiceBot.getHelpMessage(gameType).then(help => {
       console.log('onChangeGameType done\n' + help);
     });
+  }
+
+  private history: string[] = new Array();
+  private currentHistoryIndex: number = -1;
+  private static MAX_HISTORY_NUM = 1000;
+
+  moveHistory(event: KeyboardEvent, direction: number) {
+    if (event) event.preventDefault();
+
+    if (direction < 0 && this.currentHistoryIndex < 0) {
+      this.currentHistoryIndex = this.history.length - 1;
+    } else if (direction > 0 && this.currentHistoryIndex >= this.history.length - 1) {
+      this.currentHistoryIndex = -1;
+    } else {
+      this.currentHistoryIndex = this.currentHistoryIndex + direction;
+    }
+
+    if (this.currentHistoryIndex < 0) {
+      this.text = '';
+    } else {
+      this.text = this.history[this.currentHistoryIndex];
+    }
   }
 
   showDicebotHelp() {
