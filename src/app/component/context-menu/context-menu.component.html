@@ -14,8 +14,11 @@
   </div>
 </div>
 <ng-template #actionMenu let-action="action">
-  <li [ngClass]="{'hasHighlight': !action.disabled, 'disabled': action.disabled}" (click)="action.disabled ? false : doAction(action)" (mouseenter)="action.disabled ? false : showSubMenu(action)">
-    <div class="menu-title" [ngClass]="{default: action.default}">
+  <li [ngClass]="{'hasHighlight': !(action.disabled || action.icon || (action.altitudeHande && action.altitudeHande.altitude == 0)), 'disabled': (action.disabled || (action.altitudeHande && action.altitudeHande.altitude == 0))}"
+      [style.padding-left.em]="(action.level ? (action.level + 1.5) : 1.5) - (altitudeHande ? 0.5 : 0)"
+      (click)="(action.disabled || (action.altitudeHande && action.altitudeHande.altitude == 0)) ? false : doAction(action)"
+      (mouseenter)="(action.disabled || (action.altitudeHande && action.altitudeHande.altitude == 0)) ? false : showSubMenu(action)">
+    <div class="menu-title" [ngClass]="{'icon-menu': action.icon, default: action.default}">
       <input *ngIf="action.name && action.name.indexOf('☑') == 0" type="checkbox" checked />
       <input *ngIf="action.name && action.name.indexOf('☐') == 0" type="checkbox" />
       <input *ngIf="action.name && action.name.indexOf('◉') == 0" type="radio" checked />

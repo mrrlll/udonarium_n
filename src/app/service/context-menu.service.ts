@@ -1,5 +1,7 @@
 import { ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
 import { TabletopObject } from '@udonarium/tabletop-object';
+import { ImageFile } from '@udonarium/core/file-storage/image-file';
+import { PeerCursor } from '@udonarium/peer-cursor';
 
 interface ContextMenuPoint {
   x: number,
@@ -25,8 +27,14 @@ export interface ContextMenuAction {
   subActions?: ContextMenuAction[],
   altitudeHande?: TabletopObject,
   default?: boolean,
+  icon?: ImageFile,
+  error?: string,
   center?: boolean,
-  colorSample?: boolean
+  materialIcon?: string,
+  isOuterLink?: boolean
+  colorSample?: boolean,
+  selfOnly?: boolean,
+  level?: number
 }
 
 @Injectable()
