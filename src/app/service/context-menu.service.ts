@@ -15,7 +15,7 @@ export enum ContextMenuType {
 
 export const ContextMenuSeparator: ContextMenuAction = {
   name: '',
-  disabled: true,
+  disabled: false,
   type: ContextMenuType.SEPARATOR
 }
 
