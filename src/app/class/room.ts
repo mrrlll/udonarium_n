@@ -14,6 +14,7 @@ import { Terrain } from './terrain';
 import { TextNote } from './text-note';
 
 import { CutIn } from './cut-in';
+import { DiceTable } from './dice-table';
 
 @SyncObject('room')
 export class Room extends GameObject implements InnerXml {
@@ -40,6 +41,7 @@ export class Room extends GameObject implements InnerXml {
     //GamePanel追加
     objects = objects.concat(ObjectStore.instance.getObjects(GamePanel));
     objects = objects.concat(ObjectStore.instance.getObjects(CutIn));
+    objects = objects.concat(ObjectStore.instance.getObjects(DiceTable))
     for (let object of objects) {
       xml += object.toXml();
     }
@@ -60,6 +62,7 @@ export class Room extends GameObject implements InnerXml {
     //GamePanel追加
     objects = objects.concat(ObjectStore.instance.getObjects(GamePanel))
     objects = objects.concat(ObjectStore.instance.getObjects(CutIn));
+    objects = objects.concat(ObjectStore.instance.getObjects(DiceTable))
     for (let object of objects) {
       object.destroy();
     }
