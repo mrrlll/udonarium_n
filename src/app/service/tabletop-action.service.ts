@@ -279,6 +279,7 @@ export class TabletopActionService {
       this.getCreateBlankCardMenu(position),
       this.getCreateTrumpMenu(position),
       this.getCreateDiceSymbolMenu(position),
+      this.getCreateRangeMenu(position),
     ];
   }
 
