@@ -15,6 +15,7 @@ import { GameCharacter } from '@udonarium/game-character';
 import { CardStack } from '@udonarium/card-stack';
 import { Card } from '@udonarium/card';
 import { DiceSymbol } from '@udonarium/dice-symbol';
+import { RangeArea } from '@udonarium/range';
 
 @Component({
   selector: 'game-character-sheet',
@@ -108,6 +109,11 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy {
         SoundEffect.play(PresetSound.piecePut);
         break;
     }
+  }
+
+  get descriptionType():string {
+    if (this.tabletopObject instanceof RangeArea && !this.tabletopObject.isApplyWidth) return 'range-not-width';
+    return this.tabletopObject.aliasName;
   }
 
   async saveToXML() {

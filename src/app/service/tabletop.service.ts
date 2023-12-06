@@ -11,6 +11,7 @@ import { GameCharacter } from '@udonarium/game-character';
 import { GameTable } from '@udonarium/game-table';
 import { GameTableMask } from '@udonarium/game-table-mask';
 import { PeerCursor } from '@udonarium/peer-cursor';
+import { RangeArea } from '@udonarium/range';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TableSelecter } from '@udonarium/table-selecter';
 import { TabletopObject } from '@udonarium/tabletop-object';
@@ -40,6 +41,7 @@ export class TabletopService {
     let viewTable = this.tableSelecter.viewTable;
     return viewTable ? viewTable.masks : [];
   });
+  private rangeCache = new TabletopCache<RangeArea>(() => ObjectStore.instance.getObjects(RangeArea).filter(obj => obj.isVisibleOnTable));
   private terrainCache = new TabletopCache<Terrain>(() => {
     let viewTable = this.tableSelecter.viewTable;
     return viewTable ? viewTable.terrains : [];
@@ -51,6 +53,7 @@ export class TabletopService {
   get cards(): Card[] { return this.cardCache.objects; }
   get cardStacks(): CardStack[] { return this.cardStackCache.objects; }
   get tableMasks(): GameTableMask[] { return this.tableMaskCache.objects; }
+  get ranges(): RangeArea[] { return this.rangeCache.objects; }
   get terrains(): Terrain[] { return this.terrainCache.objects; }
   get textNotes(): TextNote[] { return this.textNoteCache.objects; }
   get diceSymbols(): DiceSymbol[] { return this.diceSymbolCache.objects; }
@@ -121,6 +124,8 @@ export class TabletopService {
         return this.textNoteCache;
       case DiceSymbol.aliasName:
         return this.diceSymbolCache;
+      case RangeArea.aliasName:
+        return this.rangeCache;
       default:
         return null;
     }

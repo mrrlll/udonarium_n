@@ -16,7 +16,9 @@
     <button (click)="openModal(tabletopObject['face'])" [disabled]="!tabletopObject['isVisible']">ダイス目の画像を変更</button>
   </ng-container>
   <ng-container *ngSwitchDefault>
-    <button (click)="openModal('imageIdentifier', true)">画像変更</button>
+    <ng-container *ngIf="tabletopObject.aliasName !== 'range'">
+      <button (click)="openModal('imageIdentifier', tabletopObject.imageFile && tabletopObject.imageFile.url.length > 0)">画像変更</button>
+    </ng-container>
   </ng-container>
 </ng-container>
 <button (click)="clone()">コピーを作る</button>
@@ -58,7 +60,9 @@
   <ng-container *ngIf="tabletopObject.commonDataElement">
     <div class="flex-item">
       <div class="table">
-        <div class="table-row" game-data-element [gameDataElement]="tabletopObject.commonDataElement" [isTagLocked]="true"></div>
+        <div class="table-row" game-data-element [gameDataElement]="tabletopObject.commonDataElement" [isTagLocked]="true"
+        [isHideText]="tabletopObject.aliasName === 'card' && !tabletopObject.isFront && !tabletopObject.isHand && !tabletopObject.isGMMode" [isNoLogging]="isNoLogging" [descriptionType]="descriptionType">
+        </div>
       </div>
     </div>
   </ng-container>
