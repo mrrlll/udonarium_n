@@ -1,3 +1,10 @@
+/*
+Porting from Udonarium Lily
+Copyright (c) 2020 entyu
+
+MIT License
+https://opensource.org/licenses/mit-license.php
+*/
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -7,8 +14,8 @@ import {
   HostListener,
   Input,
   NgZone,
+  OnChanges,
   OnDestroy,
-  OnInit,
   ViewChild,
 } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
@@ -18,7 +25,6 @@ import { EventSystem } from '@udonarium/core/system';
 import { RangeArea } from '@udonarium/range';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
-//import { RangeDockingCharacterComponent } from 'component/range-docking-character/range-docking-character.component';
 
 import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
@@ -32,11 +38,12 @@ import { TabletopActionService } from 'service/tabletop-action.service';
 import { TabletopService } from 'service/tabletop.service';
 import { RangeRender, RangeRenderSetting, ClipAreaCorn, ClipAreaLine, ClipAreaSquare, ClipAreaDiamond} from './range-render'; // 注意別のコンポーネントフォルダにアクセスしてグリッドの描画を行っている
 import { TableSelecter } from '@udonarium/table-selecter';
-import { FilterType, GameTable, GridType } from '@udonarium/game-table';
+import { GameTable } from '@udonarium/game-table';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { ModalService } from 'service/modal.service';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { GameCharacter } from '@udonarium/game-character';
+import { SelectionState, TabletopSelectionService } from 'service/tabletop-selection.service';
 
 @Component({
   selector: 'range',
@@ -44,7 +51,7 @@ import { GameCharacter } from '@udonarium/game-character';
   styleUrls: ['./range.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
+export class RangeComponent implements OnChanges, OnDestroy, AfterViewInit {
   @Input() range: RangeArea = null;
   @Input() is3D: boolean = false;
 //  @Input() rotateDeg : string = ''
@@ -298,6 +305,12 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
   get imageFile(): ImageFile { return this.range.imageFile; }
   get isLocked(): boolean { return this.range.isLocked; }
   set isLocked(isLock: boolean) { this.range.isLocked = isLock; }
+  get isHide(): boolean { return this.range.isHide; }
+  set isHide(isHide: boolean) { this.range.isHide = isHide; }
+
+  get selectionState(): SelectionState { return this.selectionService.state(this.range); }
+  get isSelected(): boolean { return this.selectionState !== SelectionState.NONE; }
+  get isMagnetic(): boolean { return this.selectionState === SelectionState.MAGNETIC; }
 
   get areaQuadrantSize(): number {
     let w = this.width < 1 ? 1 : this.width;
@@ -397,13 +410,13 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     private changeDetector: ChangeDetectorRef,
     private pointerDeviceService: PointerDeviceService,
     private coordinateService: CoordinateService,
-
+    private selectionService: TabletopSelectionService,
     private tabletopService: TabletopService,
-
     private modalService: ModalService,
   ) { }
 
-  ngOnInit() {
+  ngOnChanges() {
+    EventSystem.unregister(this);
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         let object = ObjectStore.instance.get(event.data.identifier);
@@ -436,6 +449,9 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         }
         if (markForCheck) this.changeDetector.markForCheck();
+      })
+      .on(`UPDATE_SELECTION/identifier/${this.range?.identifier}`, event => {
+        this.changeDetector.markForCheck();
       })
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
@@ -500,31 +516,39 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     let objectPosition = this.coordinateService.calcTabletopLocalCoordinate();
 
     let menuArray = [];
+
+    if (this.selectionService.objects.length) {
+      menuArray.push({ name: 'ここに集める', action: () => this.selectionService.congregate(objectPosition) });
+      menuArray.push(ContextMenuSeparator);
+    }
+
     menuArray.push(
       this.isLocked
         ? {
           name: '☑ 固定', action: () => {
             this.isLocked = false;
             SoundEffect.play(PresetSound.unlock);
-          }
+          },
+          checkBox: 'check'
         }
         : {
           name: '☐ 固定', action: () => {
             this.isLocked = true;
             SoundEffect.play(PresetSound.lock);
-          }
+          },
+          checkBox: 'check'
         }
     )
     menuArray.push(
       {
         name: '影響グリッドの判定方法', action: null,
         subActions: [
-          { name: `${this.range.fillType == 0 ? '◉' : '○'} 判定なし (輪郭内を塗りつぶす)`, action: () => { this.range.fillType = 0; } },
+          { name: `${this.range.fillType == 0 ? '◉' : '○'} 判定なし (輪郭内を塗りつぶす)`, action: () => { this.range.fillType = 0; }, checkBox: 'radio' },
           ContextMenuSeparator,
-          { name: `${this.range.fillType == 1 ? '◉' : '○'} グリッドの中心を覆う`, action: () => { this.range.fillType = 1; } },
-          { name: `${this.range.fillType == 2 ? '◉' : '○'} グリッドの一部でも覆う`, action: () => { this.range.fillType = 2; } },
-          { name: `${this.range.fillType == 3 ? '◉' : '○'} グリッドの半分以上を覆う`, action: () => { this.range.fillType = 3; } },
-          { name: `${this.range.fillType == 4 ? '◉' : '○'} グリッド全体を覆う`, action: () => { this.range.fillType = 4; } },
+          { name: `${this.range.fillType == 1 ? '◉' : '○'} グリッドの中心を覆う`, action: () => { this.range.fillType = 1; }, checkBox: 'radio' },
+          { name: `${this.range.fillType == 2 ? '◉' : '○'} グリッドの一部でも覆う`, action: () => { this.range.fillType = 2; }, checkBox: 'radio' },
+          { name: `${this.range.fillType == 3 ? '◉' : '○'} グリッドの半分以上を覆う`, action: () => { this.range.fillType = 3; }, checkBox: 'radio' },
+          { name: `${this.range.fillType == 4 ? '◉' : '○'} グリッド全体を覆う`, action: () => { this.range.fillType = 4; }, checkBox: 'radio' },
         ]
       }
     );
@@ -543,7 +567,8 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
                 //this.setRange();
               });
               SoundEffect.play(PresetSound.lock);
-            }
+            },
+            checkBox: 'radio'
           };
         });
       //if (this.followingCharactor) {
@@ -565,25 +590,29 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
         ? {
           name: '☑ 追従時サイズに合わせて拡大', action: () => {
             this.range.isExpandByFollowing = false;
-          }
+          },
+          checkBox: 'check'
         }
         : {
           name: '☐ 追従時サイズに合わせて拡大', action: () => {
             this.range.isExpandByFollowing = true;
-          }
+          },
+          checkBox: 'check'
         });
         menuArray.push(
           this.range.isFollowAltitude
           ? {
             name: '☑ 高さ・高度にも追従', action: () => {
               this.range.isFollowAltitude = false;
-            }
+            },
+            checkBox: 'check'
           }
           : {
             name: '☐ 高さ・高度にも追従', action: () => {
               this.range.isFollowAltitude = true;
               if (this.followingCharactor) this.range.following();
-            }
+            },
+            checkBox: 'check'
           });
     } else {
       menuArray.push(
@@ -591,28 +620,33 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
         ? {
           name: '☑ 細かい角度で回転', action: () => {
             this.range.subDivisionSnapPolygonal = false;
-          }
+          },
+          checkBox: 'check'
         } :
         {
           name: '☐ 細かい角度で回転', action: () => {
             this.range.subDivisionSnapPolygonal = true;
-          }
+          },
+          checkBox: 'check'
         }
       );
     }
     menuArray.push(ContextMenuSeparator);
-
 /*
     menuArray.push(
       {
         name: 'グリッド表示をずらす', action: null,
         subActions: [
           this.range.offSetX
-          ? { name: '☑ 横(左右) 方向', action: () => { this.range.offSetX = false; } }
-          : { name: '☐ 横(左右) 方向', action: () => { this.range.offSetX = true; }},
+          ? { name: '☑ 横(左右) 方向', action: () => { this.range.offSetX = false; },
+                checkBox: 'check' }
+          : { name: '☐ 横(左右) 方向', action: () => { this.range.offSetX = true; },
+                checkBox: 'check' },
           this.range.offSetY
-          ? { name: `☑ 縦(上下) 方向`, action: () => { this.range.offSetY = false; } }
-          : { name: `☐ 縦(上下) 方向`, action: () => { this.range.offSetY = true; } },
+          ? { name: `☑ 縦(上下) 方向`, action: () => { this.range.offSetY = false; },
+                checkBox: 'check' }
+          : { name: `☐ 縦(上下) 方向`, action: () => { this.range.offSetY = true; },
+                checkBox: 'check' },
         ],
         disabled: this.range.fillType == 0
       }
@@ -622,11 +656,13 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       ? {
         name: '☑ 高度の表示', action: () => {
           this.isAltitudeIndicate = false;
-        }
+        },
+        checkBox: 'check'
       } : {
         name: '☐ 高度の表示', action: () => {
           this.isAltitudeIndicate = true;
-        }
+        },
+        checkBox: 'check'
       });
     menuArray.push({
       name: '高度を0にする', action: () => {
@@ -639,32 +675,9 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     menuArray.push(ContextMenuSeparator);
     menuArray.push(
-      { name: '射程・範囲を編集', action: () => { this.showDetail(this.range); } }
+      { name: '射程・範囲を編集...', action: () => { this.showDetail(this.range); } }
     );
-    if (this.range.getUrls().length > 0) {
-      menuArray.push(
-        {
-          name: '参照URLを開く', action: null,
-          subActions: this.range.getUrls().map((urlElement) => {
-            const url = urlElement.value.toString();
-            return {
-              name: urlElement.name ? urlElement.name : url,
-              action: () => {
-                if (StringUtil.sameOrigin(url)) {
-                  window.open(url.trim(), '_blank', 'noopener');
-                } else {
-                  this.modalService.open(OpenUrlComponent, { url: url, title: this.range.name, subTitle: urlElement.name });
-                }
-              },
-              disabled: !StringUtil.validUrl(url),
-              error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,
-              isOuterLink: StringUtil.validUrl(url) && !StringUtil.sameOrigin(url)
-            };
-          })
-        }
-      );
-      menuArray.push(ContextMenuSeparator);
-    }
+
     menuArray.push(
       {
         name: 'コピーを作る', action: () => {
@@ -682,6 +695,8 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     menuArray.push(
       {
         name: '削除する', action: () => {
+          // なぜかこの処理がないと削除できない
+          this.isHide = true;
           this.range.destroy();
           SoundEffect.play(PresetSound.sweep);
         }

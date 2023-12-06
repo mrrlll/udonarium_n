@@ -15,6 +15,7 @@ export class RangeArea extends TabletopObject {
 
   @SyncVar() isLocked: boolean = false;
   @SyncVar() rotate: number = 0;
+  @SyncVar() isHide: boolean = false;
   @SyncVar() followingCharctorIdentifier: string = null;
   @SyncVar() followingCounterDummy: number = 0; // 追従時再描画用ダミー
 
