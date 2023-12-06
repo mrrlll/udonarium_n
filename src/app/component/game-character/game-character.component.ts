@@ -136,12 +136,15 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
       })
       .on('HIGHTLIGHT_TABLETOP_OBJECT', event => {
         if (this.gameCharacter !== event.data) { return; }
-        console.log(`recv focus event to ${this.gameCharacter.name}`);if (this.rootElementRef.nativeElement.classList.contains('focused')) {
+        console.log(`recv focus event to ${this.gameCharacter.name}`);
+        // アニメーション開始のタイマーが既にあってアニメーション開始前（ごくわずかな間）ならば何もしない
+        if (this.highlightTimerID != null) { return; }
+
+        // アニメーション中であればアニメーションを初期化
+        if (this.rootElementRef.nativeElement.classList.contains('focused')) {
           window.clearTimeout(this.unhighlightTimerID);
           this.rootElementRef.nativeElement.classList.remove('focused');
         }
-        // アニメーション開始のタイマーが既にあってアニメーション開始前（ごくわずかな間）ならば何もしない
-        if (this.highlightTimerID != null) { return; }
 
         // アニメーション開始処理タイマー
         this.highlightTimerID = window.setTimeout(() => {
