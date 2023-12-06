@@ -42,6 +42,18 @@ export class DiceBot extends GameObject {
     return ObjectStore.instance.getObjects(DiceTable);
   }
 
+  async checkSecretDiceCommand(gameType,chatText): Promise<boolean> {
+    let text: string = StringUtil.toHalfWidth(chatText).toLowerCase();
+    let nonRepeatText = text.replace(/^(\d+)?\s+/,'repeat1 ').replace(/^x(\d+)?\s+/,'repeat1 ').replace(/repeat(\d+)?\s+/,'');
+//    console.log("シークレット確認nonRepeatText:" + nonRepeatText);
+    let regArray = /^s(.*)?/ig.exec(nonRepeatText);
+    console.log("check secret regArray:" + regArray);
+    if( !regArray ) return false;
+    const gameSystem = await DiceBot.loadGameSystemAsync(gameType);
+    if (!gameSystem.COMMAND_PATTERN.test(regArray[1])) return false;
+    return true;
+  }
+
   // GameObject Lifecycle
   onStoreAdded() {
     super.onStoreAdded();

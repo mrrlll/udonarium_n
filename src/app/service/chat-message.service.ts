@@ -8,6 +8,7 @@ import { Network } from '@udonarium/core/system';
 import { GameCharacter } from '@udonarium/game-character';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
+import { DiceBot } from '@udonarium/dice-bot';
 
 const HOURS = 60 * 60 * 1000;
 
@@ -87,7 +88,36 @@ export class ChatMessageService {
       color: color,
     };
 
-    return chatTab.addMessage(chatMessage);
+    let chkMessage = ' ' + StringUtil.toHalfWidth(text).toLowerCase();
+    let matches_array = chkMessage.match(/\s@(\S+)$/i);
+    if( matches_array ){
+      if( RegExp.$1 == 'hide' )
+        chatMessage.imageIdentifier = '';
+
+      chatMessage.text = text.replace(/([@＠]\S+)$/i,'');
+    }
+
+    let dicebot = ObjectStore.instance.get<DiceBot>('DiceBot');
+    dicebot.checkSecretDiceCommand(gameType,text).then(value => {
+      console.log(value); // => resolve!!
+
+      let chatMessageAddSecretTag: ChatMessageContext = {
+        from:             chatMessage.from,
+        to:               chatMessage.to,
+        name:             chatMessage.name,
+        imageIdentifier:  chatMessage.imageIdentifier,
+        timestamp:        chatMessage.timestamp,
+        tag:              value ? chatMessage.tag + ' secret' : chatMessage.tag ,
+        text:             chatMessage.text,
+        imagePos:         chatMessage.imagePos,
+        messColor:        chatMessage.messColor,
+        sendFrom:         chatMessage.sendFrom
+      };
+
+      chatTab.addMessage(chatMessageAddSecretTag);
+    });
+
+    return;
   }
 
   sendOperationLog(text: string, logLevel: number=1) {
