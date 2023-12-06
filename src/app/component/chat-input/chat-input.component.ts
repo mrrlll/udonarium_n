@@ -225,9 +225,12 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
     this.text = histText;
     this.previousWritingLength = this.text.length;
-    let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
-    textArea.value = histText;
-    this.calcFitHeight();
+    if (this.calcFitHeightInterval == null) {
+      this.calcFitHeightInterval = setTimeout(() => {
+        this.calcFitHeightInterval = null;
+        this.calcFitHeight();
+      }, 0)
+    }
   }
 
   sendChat(event: KeyboardEvent) {
