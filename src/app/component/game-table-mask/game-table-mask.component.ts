@@ -245,6 +245,9 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
   private makeContextMenu(): ContextMenuAction[] {
     let objectPosition = this.coordinateService.calcTabletopLocalCoordinate();
     let actions: ContextMenuAction[] = [];
+
+    actions.push({ name: 'マップマスクを編集', action: () => { this.showDetail(this.gameTableMask); } });
+    actions.push(ContextMenuSeparator);
     actions.push(
       (this.maskborder
         ? {
@@ -273,7 +276,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
       }
     ));
     actions.push(ContextMenuSeparator);
-    actions.push({ name: 'マップマスクを編集', action: () => { this.showDetail(this.gameTableMask); } });
+
     actions.push({
       name: 'コピーを作る', action: () => {
         let cloneObject = this.gameTableMask.clone();
