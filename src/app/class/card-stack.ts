@@ -35,6 +35,10 @@ export class CardStack extends TabletopObject {
   get isEmpty(): boolean { return this.cards.length < 1 }
   get imageFile(): ImageFile { return this.topCard ? this.topCard.imageFile : null; }
 
+  complement(): void {
+    this.cards.forEach(card => card.complement());
+  }
+
   shuffle(): Card[] {
     if (!this.cardRoot) return;
     let length = this.cardRoot.children.length;
