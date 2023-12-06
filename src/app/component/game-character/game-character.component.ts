@@ -345,8 +345,6 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     });
 
     actions.push({ name: '画像効果', action: null, subActions: subActions });
-
-    actions.push(ContextMenuSeparator);
     // 影を表示非表示
     actions.push(this.isDropShadow
       ? {

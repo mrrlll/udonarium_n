@@ -51,6 +51,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
   get tableImage(): ImageFile { return this.imageService.getSkeletonOr(this.currentTable.imageIdentifier); }
   get backgroundImage(): ImageFile { return this.imageService.getEmptyOr(this.currentTable.backgroundImageIdentifier); }
   get backgroundFilterType(): FilterType { return this.currentTable.backgroundFilterType; }
+  get gridHeight(): number { return this.tabletopService.currentTable.gridHeight; }
 
   private isTableTransformMode: boolean = false;
   private isTableTransformed: boolean = false;
