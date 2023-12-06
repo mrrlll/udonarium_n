@@ -151,7 +151,7 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
       this.parentMenu = action;
       this.subMenu = action.subActions;
       clearTimeout(this.hideSubMenuTimer);
-    }, 250);
+    }, 100);
   }
 
   hideSubMenu() {
