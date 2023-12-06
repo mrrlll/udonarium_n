@@ -1,8 +1,7 @@
-
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
+import { ObjectContext } from './core/synchronize-object/game-object';
 import { DiceTablePalette } from './chat-palette';
-
 
 export interface TableLine {
   table: string;
@@ -12,14 +11,25 @@ export interface TableVariable {
   name: string;
   table: string;
 }
+
+
 @SyncObject('dice-table')
-export class DiceTable extends ObjectNode{
+export class DiceTable extends ObjectNode{ //GameObject {
 
   @SyncVar() name: string = 'ダイス表';
   @SyncVar() command: string = 'SAMPLE';
   @SyncVar() dice: string = '1d6';
 
   text:string='';
+
+  get diceTablePalette(): DiceTablePalette {
+    for (let child of this.children) {
+      if (child instanceof DiceTablePalette){
+        return child;
+      }
+    }
+    return null;
+  }
 
   static create(): DiceTable {
     let diceTable: DiceTable = new DiceTable();
@@ -43,12 +53,11 @@ export class DiceTable extends ObjectNode{
   }
 
   // override
-  // apply(context: ObjectContext) {
-  //   super.apply(context);
-  // }
+  apply(context: ObjectContext) {
+    super.apply(context);
+  }
 
 
 
-  @SyncVar() selected: boolean = false;
 
 }
