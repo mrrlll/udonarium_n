@@ -523,6 +523,10 @@ export class RangeComponent implements OnChanges, OnDestroy, AfterViewInit {
     }
 
     menuArray.push(
+      { name: '射程・範囲を編集', action: () => { this.showDetail(this.range); } }
+    );
+    menuArray.push(ContextMenuSeparator);
+    menuArray.push(
       this.isLocked
         ? {
           name: '☑ 固定', action: () => {
@@ -674,9 +678,6 @@ export class RangeComponent implements OnChanges, OnDestroy, AfterViewInit {
       altitudeHande: this.range
     });
     menuArray.push(ContextMenuSeparator);
-    menuArray.push(
-      { name: '射程・範囲を編集...', action: () => { this.showDetail(this.range); } }
-    );
 
     menuArray.push(
       {

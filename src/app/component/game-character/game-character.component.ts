@@ -345,18 +345,6 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     });
 
     actions.push({ name: '画像効果', action: null, subActions: subActions });
-    // 影を表示非表示
-    actions.push(this.isDropShadow
-      ? {
-        name: '☑ 影を表示', action: () => {
-          this.isDropShadow = false;
-        }
-      } : {
-        name: '☐ 影を表示', action: () => {
-          this.isDropShadow = true;
-        }
-      }
-    );
     actions.push(ContextMenuSeparator);
     actions.push({
         name: '高さを0にする', action: () => {
@@ -382,7 +370,6 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
         name: '☑ 他のキャラクターに乗る', action: () => {
           this.isNotRide = true;
         },
-        disabled: (this.isNotRide),
         altitudeHande: this.gameCharacter
       }:{
         name: '☐ 他のキャラクターに乗る', action: () => {

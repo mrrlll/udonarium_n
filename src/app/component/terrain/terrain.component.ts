@@ -236,6 +236,8 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
     let objectPosition = this.coordinateService.calcTabletopLocalCoordinate();
     let actions: ContextMenuAction[] = [];
 
+    actions.push({ name: '地形設定を編集', action: () => { this.showDetail(this.terrain); } });
+    actions.push(ContextMenuSeparator);
     actions.push((this.isLocked
       ? {
         name: '☑ 固定', action: () => {
@@ -296,7 +298,6 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
         }
       }));
     actions.push(ContextMenuSeparator);
-    actions.push({ name: '地形設定を編集', action: () => { this.showDetail(this.terrain); } });
     actions.push({
       name: 'コピーを作る', action: () => {
         let cloneObject = this.terrain.clone();

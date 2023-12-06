@@ -401,7 +401,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
       });
       if(this.isGM){
         subActions.push({
-          name: this.isHide ? '☑ 表示' : '☐ 表示', action: () => {
+          name: this.isHide ? '☑ 非表示' : '☐ 非表示', action: () => {
             selectedCardStacks().forEach(cardStack => cardStack.toggleHide());
           }
         });
@@ -428,6 +428,8 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
   private makeContextMenu(): ContextMenuAction[] {
     let actions: ContextMenuAction[] = [];
 
+    actions.push({ name: '詳細を表示', action: () => { this.showDetail(this.cardStack); } });
+    actions.push(ContextMenuSeparator);
     actions.push({
       name: this.isLocked ? '☑ 固定' : '☐ 固定',
       action: () => {
@@ -504,7 +506,6 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
       }
     });
     actions.push(ContextMenuSeparator);
-    actions.push({ name: '詳細を表示', action: () => { this.showDetail(this.cardStack); } });
     actions.push({
       name: 'コピーを作る', action: () => {
         let cloneObject = this.cardStack.clone();
@@ -529,7 +530,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
       }
     });
     actions.push({
-      name: this.isGM && this.isHide ? '☑ 表示' : '☐ 表示', action: () => {
+      name: this.isGM && this.isHide ? '☑ 非表示' : '☐ 非表示', action: () => {
         this.cardStack.toggleHide();
       }
     })

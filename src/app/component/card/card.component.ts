@@ -372,14 +372,14 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
       });
       subActions.push(ContextMenuSeparator);
       subActions.push({
-        name: this.isRotate ? '回転をオフ' : '回転をオン', action: () => {
+        name: this.isRotate ? '☑ 回転' : '☐ 回転', action: () => {
           selectedCards().forEach(card => card.toggleRotate());
         }
       });
       // すべてカードを表示/非表示
       if(this.isGM){
         subActions.push({
-          name: this.isHide ? 'すべて表示する' : 'すべて非表示にする', action: () => {
+          name: this.isHide ? '☑ すべて非表示' : '☐ すべて非表示', action: () => {
             selectedCards().forEach(card => card.toggleHide());
           }
         });
@@ -403,6 +403,14 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
   private makeContextMenu(): ContextMenuAction[] {
     let actions: ContextMenuAction[] = [];
 
+    actions.push({ name: 'カードを編集', action: () => { this.showDetail(this.card); } });
+    actions.push(ContextMenuSeparator);
+    actions.push(
+      this.isLocked
+        ? { name: '☑ 固定', action: () => { this.isLocked = false; } }
+        : { name: '☐ 固定', action: () => { this.isLocked = true; } }
+    )
+    actions.push(ContextMenuSeparator);
     actions.push(!this.isVisible || this.isHand
       ? {
         name: '表にする', action: () => {
@@ -449,7 +457,6 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
       }
     });
     actions.push(ContextMenuSeparator);
-    actions.push({ name: 'カードを編集', action: () => { this.showDetail(this.card); } });
     actions.push({
       name: 'コピーを作る', action: () => {
         let cloneObject = this.card.clone();
@@ -467,15 +474,17 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
     });
     actions.push(ContextMenuSeparator);
     actions.push({
-      name: this.isRotate ? '回転をオフ' : '回転をオン', action: () => {
+      name: this.isRotate ? '☑ 回転' : '☐ 回転', action: () => {
         this.card.toggleRotate();
       }
     });
-    actions.push({
-      name: this.isGM && this.isHide ? '表示する' : '非表示にする', action: () => {
-        this.card.toggleHide();
-      }
-    });
+    if(this.isGM){
+      actions.push({
+        name: this.isHide ? '☑ 非表示' : '☐ 非表示', action: () => {
+          this.card.toggleHide();
+        }
+      });
+    };
     return actions;
   }
 

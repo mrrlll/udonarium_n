@@ -248,19 +248,6 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
 
     actions.push({ name: 'マップマスクを編集', action: () => { this.showDetail(this.gameTableMask); } });
     actions.push(ContextMenuSeparator);
-    actions.push(
-      (this.maskborder
-        ? {
-          name: '☑ ボーターを表示', action: () => {
-            this.maskborder = false;
-          }
-        } : {
-          name: '☐ ボーターを表示', action: () => {
-            this.maskborder = true;
-          }
-        }
-      )
-    );
     actions.push((this.isLock
       ? {
         name: '☑ 固定', action: () => {
@@ -275,6 +262,19 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
         }
       }
     ));
+    actions.push(
+      (this.maskborder
+        ? {
+          name: '☑ ボーターを表示', action: () => {
+            this.maskborder = false;
+          }
+        } : {
+          name: '☐ ボーターを表示', action: () => {
+            this.maskborder = true;
+          }
+        }
+      )
+    );
     actions.push(ContextMenuSeparator);
 
     actions.push({
