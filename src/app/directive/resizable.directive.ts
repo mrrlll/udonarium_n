@@ -19,23 +19,41 @@ export class ResizableDirective implements AfterViewInit, OnDestroy {
   @Input('resizable.bounds') boundsSelector: string = 'body';
   @Input('resizable.stack') stackSelector: string = '';
   @Input('resizable.minWidth') minWidth: number = 100;
-  @Input('resizable.minHeight') minHeight: number = 100
+  @Input('resizable.minHeight') minHeight: number = 100;
+
+  @Input('resizable.align') set align(align: string) { this._align = align; this.initialize(); };
 
   @Output('resizable.start') ostart: EventEmitter<MouseEvent | TouchEvent> = new EventEmitter();
   @Output('resizable.move') onmove: EventEmitter<MouseEvent | TouchEvent> = new EventEmitter();
   @Output('resizable.end') onend: EventEmitter<MouseEvent | TouchEvent> = new EventEmitter();
 
   private handleMap = new Map<HandleType, ResizeHandler>();
-  private handleTypes: HandleType[] = [
-    HandleType.N,
-    HandleType.E,
-    HandleType.W,
-    HandleType.S,
-    HandleType.NE,
-    HandleType.NW,
-    HandleType.SE,
-    HandleType.SW
-  ];
+  private _align = 'normal';
+
+  private get handleTypes(): HandleType[] {
+    if (this._align === 'horizontal') {
+      return [
+        HandleType.E,
+        HandleType.W
+      ];
+    }
+    if (this._align === 'vertical') {
+      return [
+        HandleType.N,
+        HandleType.S
+      ];
+    }
+    return [
+      HandleType.N,
+      HandleType.E,
+      HandleType.W,
+      HandleType.S,
+      HandleType.NE,
+      HandleType.NW,
+      HandleType.SE,
+      HandleType.SW
+    ];
+  }
 
   private startPosition: BoxSize = { left: 0, top: 0, width: 0, height: 0 };
 
@@ -59,6 +77,8 @@ export class ResizableDirective implements AfterViewInit, OnDestroy {
 
   private initialize() {
     this.ngZone.runOutsideAngular(() => {
+      this.handleMap.forEach(handle => handle.destroy());
+      this.handleMap.clear();
       this.handleTypes.forEach(type => {
         let handle = new ResizeHandler(this.elementRef.nativeElement, type);
         this.handleMap.set(type, handle);
@@ -75,7 +95,8 @@ export class ResizableDirective implements AfterViewInit, OnDestroy {
   }
 
   destroy() {
-    this.handleMap.forEach(handle => handle.input.destroy());
+    this.handleMap.forEach(handle => handle.destroy());
+    this.handleMap.clear();
   }
 
   private onResizeStart(e: MouseEvent | TouchEvent, handle: ResizeHandler) {
