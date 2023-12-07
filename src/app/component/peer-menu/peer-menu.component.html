@@ -1,4 +1,4 @@
-<div *ngIf="myPeer">
+@if (myPeer) {
   <div style="display: flex; align-items: flex-end;">
     <div *ngIf="myPeer.image" class="image cover" [style.background-image]="'url(' + myPeer.image.url + ')' | safe: 'style' "
       (click)="changeIcon()" style="cursor: pointer">
@@ -17,14 +17,18 @@
   </div>
   <hr/>
   <span>ニックネーム：<input [(ngModel)]="myPeerName"  placeholder="ニックネーム" /></span>
-</div>
+}
 <div>
   <span>あなたのID：<span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peer.userId}}</span>
+  @if (!networkService.isOpen){
     <span *ngIf="!networkService.isOpen" style="font-weight: bold;">???</span>
+  }
+  @if (networkService.isOpen){
     <button *ngIf="networkService.isOpen" (click)="getUrl()" id="geturlbtn">接続URL取得</button>
+  }
   </span>
 </div>
-<div *ngIf="isViewer">
+@if(isViewer){
   <hr />
   <p class="menu-able-box-description">GM以外の参加者が利用できるメニューパネル</p>
   <div class="menu-able-box">
@@ -77,24 +81,24 @@
     初期状態ではネタバレに繋がる恐れのある機能などは非表示になっています。<br>
     [音楽]はGMモード時のみ曲リストが表示され、非GM状態の時は音量調整のみ可能です。
   </label>
-</div>
+}
+
 <!--<div>host ID:{{networkService.hostPeerID}}</div>-->
-<ng-container *ngIf="networkService.peer.isRoom">
+@if (networkService.peer.isRoom){
   <hr/>
   <div>
     <span>ルーム名：<span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peer.roomName}}/{{networkService.peer.roomId}}</span></span>
   </div>
-  <div>
-    <span>パスワード：<span
-      *ngIf="networkService.peer.hasPassword">
-        <span *ngIf="networkService.isOpen" style="font-weight: bold;">{{isPasswordVisible ? networkService.peer.password : '●●●●●●●●'}}</span>
-        <button style="padding: 2px; margin-left: 1.0em; font-size: 1.0em;" (click)="togglePasswordVisibility()">
-          <span class="material-icons" style="font-size: 1.0em; vertical-align: text-bottom;">{{isPasswordVisible ? 'visibility' : 'visibility_off'}}</span>
-        </button>
-      </span>
-    </span>
+  <div *ngIf="networkService.peer.hasPassword">
+    <span>パスワード：</span>
+    @if (networkService.isOpen){
+      <span style="font-weight: bold;">{{isPasswordVisible ? networkService.peer.password : '●●●●●●●●'}}</span>
+      <button style="padding: 2px; margin-left: 1.0em; font-size: 1.0em;" (click)="togglePasswordVisibility()">
+        <span class="material-icons" style="font-size: 1.0em; vertical-align: text-bottom;">{{isPasswordVisible ? 'visibility' : 'visibility_off'}}</span>
+      </button>
+    }
   </div>
-</ng-container>
+}
 <hr/>
 <div *ngFor="let peer of networkService.peers">
   <div class="peer-info">
