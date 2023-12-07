@@ -62,7 +62,7 @@ export class DiceBot extends GameObject {
         let chatMessage = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
         if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) return;
 
-        let text: string = StringUtil.toHalfWidth(chatMessage.text).trim();
+        let text: string = StringUtil.toHalfWidth(chatMessage.text).replace("\u200b", '').trim();
         let gameType: string = chatMessage.tags ? chatMessage.tags[0]:'' ;
 
         if (text.startsWith('/')) {
