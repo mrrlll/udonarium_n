@@ -4,89 +4,126 @@
 <ui-panel (rotateEvent)="rotateChange($event)" [top]="0" [left]="0" [width]="100" [height]="menuHeight" [title]="'メニュー'" [isAbleFullScreenButton]="true" [isAbleCloseButton]="false"  [isAbleRotateButton]="true" [className]="'main-panel'">
   <nav [ngClass]="{'horizontal': isHorizontal}">
     <ul>
-      <li (click)="open('PeerMenuComponent')" *ngIf="isGM || roomSetting.peerMenuAuthority">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">people</i></div>
-          <div>接続情報</div>
-        </a>
-      </li>
-      <li (click)="open('ChatWindowComponent')" *ngIf="isGM || roomSetting.chatWindowAuthority">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">speaker_notes</i></div>
-          <div>チャット</div>
-        </a>
-      </li>
-      <li (click)="open('GameTableSettingComponent')" *ngIf="isGM || roomSetting.gameTableSettingAuthority">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">layers</i></div>
-          <div>テーブル設定</div>
-        </a>
-      </li>
-      <li (click)="open('FileStorageComponent')" *ngIf="isGM || roomSetting.fileStorageAuthority">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">photo_library</i></div>
-          <div>画像</div>
-        </a>
-      </li>
-      <li (click)="open('JukeboxComponent')" *ngIf="isGM || roomSetting.jukeboxAuthority">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons">queue_music</i></div>
-          <div>音楽</div>
-        </a>
-      </li>
-      <li (click)="open('CutInListComponent')" *ngIf="isGM || roomSetting.cutinAuthority">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons">movie</i></div>
-          <div>カットイン</div>
-        </a>
-      </li>
-      <li (click)="open('GameObjectInventoryComponent')" *ngIf="isGM || roomSetting.gameObjectInventoryAuthority">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">folder_shared</i></div>
-          <div>インベントリ</div>
-        </a>
-      </li>
-      <li (click)="open('GamePanelSettingComponent')" *ngIf="isGM || roomSetting.gamePanelSettingAuthority">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">picture_as_pdf</i></div>
-          <div>PDF</div>
-        </a>
-      </li>
-      <li *ngIf="isGM || roomSetting.fileSelectAuthority">
-        <a routerLink="/" routerLinkActive="active">
-          <label>
-            <div><i class="material-icons">open_in_browser</i></div>
-            <div>ZIP読込</div>
-            <input type="file" style="display: none;" (change)="handleFileSelect($event)" multiple
-              accept="application/xml,text/xml,application/zip" />
-          </label>
-        </a>
-      </li>
-      <li *ngIf="!isSaveing && isGM || roomSetting.fileSaveAuthority" (click)="save()">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons">sd_storage</i></div>
-          <div>保存</div>
-        </a>
-      </li>
-      <li *ngIf="isSaveing" style="pointer-events: none;">
-        <a>
-          <div><i class="material-icons vibration-amine">sd_storage</i></div>
-          <div>{{progresPercent}}%</div>
-        </a>
-      </li>
-      <li (click)="open('TimerMenuComponent')" *ngIf="isGM || roomSetting.timerAuthority">
-        <a routerLink="/" routerLinkActive="active">
-          <div><i class="material-icons icon-size">access_alarm</i></div>
-          <div>タイマー</div>
-        </a>
-      </li>
-      <li (click)="utilityMenu($event)">
+      @if(isGM || roomSetting.peerMenuAuthority){
+        <li (click)="open('PeerMenuComponent')">
+          <a routerLink="/" routerLinkActive="active">
+            <div><i class="material-icons icon-size">people</i></div>
+            <div>接続情報</div>
+          </a>
+        </li>
+      }
+
+      @if(isGM || roomSetting.chatWindowAuthority){
+        <li (click)="open('ChatWindowComponent')">
+          <a routerLink="/" routerLinkActive="active">
+            <div><i class="material-icons icon-size">speaker_notes</i></div>
+            <div>チャット</div>
+          </a>
+        </li>
+      }
+
+      @if(isGM || roomSetting.gameTableSettingAuthority){
+        <li (click)="open('GameTableSettingComponent')">
+          <a routerLink="/" routerLinkActive="active">
+            <div><i class="material-icons icon-size">layers</i></div>
+            <div>テーブル設定</div>
+          </a>
+        </li>
+      }
+
+      @if(isGM || roomSetting.fileStorageAuthority){
+        <li (click)="open('FileStorageComponent')">
+          <a routerLink="/" routerLinkActive="active">
+            <div><i class="material-icons icon-size">photo_library</i></div>
+            <div>画像</div>
+          </a>
+        </li>
+      }
+
+      @if(isGM || roomSetting.jukeboxAuthority){
+        <li (click)="open('JukeboxComponent')">
+          <a routerLink="/" routerLinkActive="active">
+            <div><i class="material-icons">queue_music</i></div>
+            <div>音楽</div>
+          </a>
+        </li>
+      }
+
+      @if(isGM || roomSetting.cutinAuthority){
+        <li (click)="open('CutInListComponent')">
+          <a routerLink="/" routerLinkActive="active">
+            <div><i class="material-icons">movie</i></div>
+            <div>カットイン</div>
+          </a>
+        </li>
+      }
+
+      @if(isGM || roomSetting.gameObjectInventoryAuthority){
+        <li (click)="open('GameObjectInventoryComponent')">
+          <a routerLink="/" routerLinkActive="active">
+            <div><i class="material-icons icon-size">folder_shared</i></div>
+            <div>インベントリ</div>
+          </a>
+        </li>
+      }
+
+      @if(isGM || roomSetting.gamePanelSettingAuthority){
+        <li (click)="open('GamePanelSettingComponent')" *ngIf="isGM || roomSetting.gamePanelSettingAuthority">
+          <a routerLink="/" routerLinkActive="active">
+            <div><i class="material-icons icon-size">picture_as_pdf</i></div>
+            <div>PDF</div>
+          </a>
+        </li>
+      }
+
+      @if(isGM || roomSetting.fileSelectAuthority){
+        <li>
+          <a routerLink="/" routerLinkActive="active">
+            <label>
+              <div><i class="material-icons">open_in_browser</i></div>
+              <div>ZIP読込</div>
+              <input type="file" style="display: none;" (change)="handleFileSelect($event)" multiple
+                accept="application/xml,text/xml,application/zip" />
+            </label>
+          </a>
+        </li>
+      }
+
+      @if(isGM || roomSetting.fileSaveAuthority){
+        <li (click)="save()">
+          <a routerLink="/" routerLinkActive="active">
+            <div><i class="material-icons">sd_storage</i></div>
+            <div>保存</div>
+          </a>
+        </li>
+      }
+
+      @if(isSaveing){
+        <li style="pointer-events: none;">
+          <a>
+            <div><i class="material-icons vibration-amine">sd_storage</i></div>
+            <div>{{progresPercent}}%</div>
+          </a>
+        </li>
+      }
+
+      @if(isGM || roomSetting.timerAuthority){
+        <li (click)="open('TimerMenuComponent')">
+          <a routerLink="/" routerLinkActive="active">
+            <div><i class="material-icons icon-size">access_alarm</i></div>
+            <div>タイマー</div>
+          </a>
+        </li>
+      }
+
+      <li (click)="open('OtherSettingsComponent')">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">build</i></div>
           <div>その他機能</div>
         </a>
       </li>
-      <li (click)="personalSettings($event)">
+
+      <li (click)="open('PersonalSettingsComponent')">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">settings</i></div>
           <div>個人設定</div>
@@ -99,7 +136,7 @@
 <network-indicator class="networkIndicator"></network-indicator>
 <app-game-panel-store></app-game-panel-store>
 <mat-toolbar class="toolbar">
-  @if(myPeer.image){
+  <!-- @if(myPeer.image){
     <div class="toolbar content myicon image cover" [style.background-image]="'url(' + myPeer.image.url + ')' | safe: 'style' "
     (click)="open('PeerMenuComponent')" style="cursor: pointer"></div>
   }
@@ -109,7 +146,7 @@
     } @else {
       <span class="toolbar content peer-info title" (click)="getUrl()">{{networkService.peer.userId}}</span>
     }
-  </div>
+  </div> -->
   <div class="toolbar content volume-area">
     <span class="toolbar content volume-icon">{{ volume === 0 ? '🔈' : volume <= 0.50 ? '🔉' : '🔊' }}</span>
     <input class="toolbar content volume-slider" [(ngModel)]="volume" type="range" min="0" max="1" step="0.01" />
