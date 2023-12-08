@@ -116,14 +116,14 @@
         </li>
       }
 
-      <li (click)="open('OtherSettingsComponent')">
+      <li (click)="utilityMenu($event)">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">build</i></div>
           <div>その他機能</div>
         </a>
       </li>
 
-      <li (click)="open('PersonalSettingsComponent')">
+      <li (click)="personalSettings($event)">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">settings</i></div>
           <div>個人設定</div>
