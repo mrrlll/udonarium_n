@@ -85,6 +85,9 @@ import { CardsListWindowComponent } from './component/cards-list-window/cards-li
 import { GameTableMaskInventoryComponent } from './component/game-table-mask-inventory/game-table-mask-inventory.component';
 import { RangeComponent } from 'component/range/range.component';
 
+import { MatSliderModule } from '@angular/material/slider';
+import { MatToolbarModule } from '@angular/material/toolbar';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -162,6 +165,8 @@ import { RangeComponent } from 'component/range/range.component';
     PdfViewerModule,
     HttpClientModule,
     HttpClientJsonpModule,
+    MatSliderModule,
+    MatToolbarModule,
     ToastrModule.forRoot({
       closeButton: true,
       enableHtml: true,

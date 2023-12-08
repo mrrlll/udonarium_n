@@ -2,6 +2,13 @@
   display: block;
 }
 
+#app-table-layer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
 nav ul {
     list-style:none;
     padding: 0px;
@@ -100,4 +107,42 @@ nav ul a, nav ul a:hover, nav ul a:active, nav ul a:visited {
 }
 .horizontal .self-only-indicater {
   display: none;
+}
+
+.toolbar {
+  z-index: 100000;
+}
+
+.peer-info.title {
+  font-weight: bold;
+}
+
+.volume-area {
+  margin: 0 0 0 auto;
+}
+
+.image {
+  padding: 0px;
+  width: 32px;
+  height: 32px;
+  display: table-cell;
+  vertical-align: top;
+}
+
+.image img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  vertical-align: bottom;
+}
+
+.cover {
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.toolbar.content.peer-info.title:hover {
+  background-color: rgba(255, 255, 255, 70); /* ここにハイライト色を設定 */
 }

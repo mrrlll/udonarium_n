@@ -32,6 +32,7 @@ import { SeBox } from '@udonarium/SeBox';
 import { CardsListWindowComponent } from 'component/cards-list-window/cards-list-window.component';
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
+import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { FileStorageComponent } from 'component/file-storage/file-storage.component';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { GameObjectInventoryComponent } from 'component/game-object-inventory/game-object-inventory.component';
@@ -124,6 +125,32 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   get menuHeight(): number {
     if (this.isGM) return MENU_LENGTH * 50 + 70;
     return this.roomSetting.getMenuHeight();
+  }
+
+  get jukebox(): Jukebox { return ObjectStore.instance.get<Jukebox>('Jukebox'); }
+  get volume(): number {
+    return this.jukebox.volume;
+  }
+  set volume(volume: number) {
+    this.jukebox.volume = volume;
+    AudioPlayer.volume = volume * this.roomVolume;
+    EventSystem.trigger('CHANGE_JUKEBOX_VOLUME', null);
+    if (window.localStorage) {
+      localStorage.setItem(AudioPlayer.MAIN_VOLUME_LOCAL_STORAGE_KEY, volume.toString());
+    }
+  }
+  get roomVolume(): number {
+    let conf = ObjectStore.instance.get<Config>('Config');
+    return conf? conf.roomVolume : 1 ;
+  }
+  set roomVolume(volume: number){
+    let conf = ObjectStore.instance.get<Config>('Config');
+    if(conf) conf.roomVolume = volume;
+    this.jukebox.setNewVolume();
+  }
+
+  get myPeer(): PeerCursor {
+    return PeerCursor.myCursor;
   }
 
   isHorizontal = false;
@@ -612,6 +639,21 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     URL.revokeObjectURL(AppComponent.imageUrl);
     AppComponent.imageUrl = '';
   }
+
+  changeIcon() {
+    this.modalService.open<string>(FileSelecterComponent).then(value => {
+      if (!this.myPeer || !value) return;
+      this.myPeer.imageIdentifier = value;
+    });
+  }
+
+  getUrl = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('id');
+    url.searchParams.append('id', this.networkService.peer.userId);
+    navigator.clipboard.writeText(url.href);
+
+  };
 }
 
 PanelService.UIPanelComponentClass = UIPanelComponent;
