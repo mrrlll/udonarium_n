@@ -1,21 +1,4 @@
 <div id="app-table-layer">
-  <mat-toolbar class="toolbar">
-    @if(myPeer.image){
-      <div class="toolbar content myicon image cover" [style.background-image]="'url(' + myPeer.image.url + ')' | safe: 'style' "
-    (click)="open('PeerMenuComponent')" style="cursor: pointer"></div>
-    }
-    <div class="toolbar content peer-info">
-      @if(networkService.isOpen && networkService.peer.isRoom){
-        <span class="toolbar content peer-info title">{{networkService.peer.roomName}}/{{networkService.peer.roomId}}</span>
-      } @else {
-        <span class="toolbar content peer-info title" (click)="getUrl()">{{networkService.peer.userId}}</span>
-      }
-    </div>
-    <div class="toolbar content volume-area">
-      <span class="toolbar content volume-icon">{{ volume === 0 ? '🔈' : volume <= 0.50 ? '🔉' : '🔊' }}</span>
-      <input class="toolbar content volume-slider" [(ngModel)]="volume" type="range" min="0" max="1" step="0.01" />
-    </div>
-  </mat-toolbar>
   <game-table></game-table>
 </div>
 <ui-panel (rotateEvent)="rotateChange($event)" [top]="0" [left]="0" [width]="100" [height]="menuHeight" [title]="'メニュー'" [isAbleFullScreenButton]="true" [isAbleCloseButton]="false"  [isAbleRotateButton]="true" [className]="'main-panel'">
@@ -115,3 +98,20 @@
 <div #modalLayer></div>
 <network-indicator class="networkIndicator"></network-indicator>
 <app-game-panel-store></app-game-panel-store>
+<mat-toolbar class="toolbar">
+  @if(myPeer.image){
+    <div class="toolbar content myicon image cover" [style.background-image]="'url(' + myPeer.image.url + ')' | safe: 'style' "
+    (click)="open('PeerMenuComponent')" style="cursor: pointer"></div>
+  }
+  <div class="toolbar content peer-info">
+    @if(networkService.isOpen && networkService.peer.isRoom){
+      <span class="toolbar content peer-info title">{{networkService.peer.roomName}}/{{networkService.peer.roomId}}</span>
+    } @else {
+      <span class="toolbar content peer-info title" (click)="getUrl()">{{networkService.peer.userId}}</span>
+    }
+  </div>
+  <div class="toolbar content volume-area">
+    <span class="toolbar content volume-icon">{{ volume === 0 ? '🔈' : volume <= 0.50 ? '🔉' : '🔊' }}</span>
+    <input class="toolbar content volume-slider" [(ngModel)]="volume" type="range" min="0" max="1" step="0.01" />
+  </div>
+</mat-toolbar>
