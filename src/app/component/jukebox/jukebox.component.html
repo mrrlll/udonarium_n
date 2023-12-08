@@ -2,9 +2,7 @@
   <span style="user-select: none;">【音量】</span>
   <div class="volume-area">
     <span (dblclick)="toggleMute('audition')" [innerHTML]="auditionLabel" [title]="getTooltip('audition')" (mouseover)="showTooltip('audition')" (mouseout)="hideTooltip('audition')"></span>
-    <mat-slider type="range" min="0" max="1" step="0.01" discrete>
-      <input matSliderThumb [(ngModel)]="auditionVolume"/>
-    </mat-slider>
+    <input [(ngModel)]="auditionVolume" type="range" min="0" max="1" step="0.01" />
     <input type="text" [(ngModel)]="percentAuditionVolume" (input)="updateAuditionVolume()" style="width: 25px;"/>%
   </div>
   <div class="volume-area" >

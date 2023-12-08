@@ -1,5 +1,5 @@
 <div id="app-table-layer">
-  <mat-toolbar class="toolbar" style="background-color: rgba(30, 30, 30, 0.8);">
+  <mat-toolbar class="toolbar">
     @if(myPeer.image){
       <div class="toolbar content myicon image cover" [style.background-image]="'url(' + myPeer.image.url + ')' | safe: 'style' "
     (click)="open('PeerMenuComponent')" style="cursor: pointer"></div>
@@ -13,9 +13,7 @@
     </div>
     <div class="toolbar content volume-area">
       <span class="toolbar content volume-icon">{{ volume === 0 ? '🔈' : volume <= 0.50 ? '🔉' : '🔊' }}</span>
-      <mat-slider class="toolbar content volume-slider"type="range" min="0" max="1" step="0.01">
-        <input matSliderThumb [(ngModel)]="volume"/>
-      </mat-slider>
+      <input class="toolbar content volume-slider" [(ngModel)]="volume" type="range" min="0" max="1" step="0.01" />
     </div>
   </mat-toolbar>
   <game-table></game-table>

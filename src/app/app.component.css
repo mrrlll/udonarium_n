@@ -110,11 +110,12 @@ nav ul a, nav ul a:hover, nav ul a:active, nav ul a:visited {
 }
 
 .toolbar {
-  z-index: 100000;
+  z-index: 9999;
 }
 
 .peer-info.title {
   font-weight: bold;
+  cursor: pointer;
 }
 
 .volume-area {
@@ -141,8 +142,4 @@ nav ul a, nav ul a:hover, nav ul a:active, nav ul a:visited {
   background-position: center top;
   background-repeat: no-repeat;
   background-size: cover;
-}
-
-.toolbar.content.peer-info.title:hover {
-  background-color: rgba(255, 255, 255, 70); /* ここにハイライト色を設定 */
 }
