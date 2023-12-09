@@ -412,7 +412,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     setTimeout(() => {
       this.panelService.open(PeerMenuComponent, { width: 450, height: 550, left: 100 });
       //this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 100, top: 450 });
-      this.panelService.open(TimerMenuComponent, { width: 180, height: 90, left: 1500, top: 10, className: 'timer-menu-panel' });
+      this.panelService.open(TimerMenuComponent, { width: 180, height: 80, left: 1500, top: 10, className: 'timer-menu-panel' });
     }, 0);
   }
 
