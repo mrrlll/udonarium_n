@@ -18,6 +18,8 @@
   width: 300px;
   max-height: 100%;
   max-width: 100%;
+
+  /* transition: all 0.1s; */
 }
 
 .scrollable-panel {
@@ -70,14 +72,14 @@
   }
 }
 
-/* .timer-menu-panel {
+.timer-menu-panel {
   border: none;
-  color: #fff;
-  background: rgba(44, 44, 44, 0.87);
+  /* color: #fff; */
+  /* background: rgba(44, 44, 44, 0.87); */
   box-shadow: 0px 3px 5px -1px rgb(0 0 0 / 20%),
     0px 5px 8px 0px rgb(0 0 0 / 14%), 0px 1px 14px 0px rgb(0 0 0 / 12%);
-  transition: all 0.2s;
-} */
+  transition: all 0.1s;
+}
 
 /* .timer-menu-panel:hover {
   background: rgba(44, 44, 44, 0.93);
@@ -87,11 +89,11 @@
   background: none;
 }
 
-/* .timer-menu-panel .title-button button:first-child {
+.timer-menu-panel .title-button button:first-child {
   display: none;
-} */
+}
 
-/* .timer-menu-panel .scrollable-panel {
+.timer-menu-panel .scrollable-panel {
   padding: 0;
   overflow: hidden;
-} */
+}

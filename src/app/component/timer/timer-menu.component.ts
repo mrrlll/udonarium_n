@@ -35,6 +35,7 @@ export class TimerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     Promise.resolve().then(() => {
       this.panelService.title = '';
+      this.panelService.isAbleFullScreenButton = false;
     });
   }
 
