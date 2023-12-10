@@ -226,18 +226,25 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     let noneIconImage = ImageStorage.instance.add(fileContext);
     ImageTag.create(noneIconImage.identifier).tag = '*default アイコン';
 
-    try {
-      localForage.getItem(AudioPlayer.MAIN_VOLUME_LOCAL_STORAGE_KEY).then(volume => {
-        if (typeof volume === 'number' && 0 <= volume && volume <= 1) AudioPlayer.volume = volume;
-      });
-      localForage.getItem(AudioPlayer.AUDITION_VOLUME_LOCAL_STORAGE_KEY).then(volume => {
-        if (typeof volume === 'number' && 0 <= volume && volume <= 1) AudioPlayer.auditionVolume = volume;
-      });
-      localForage.getItem(AudioPlayer.SE_VOLUME_LOCAL_STORAGE_KEY).then(volume => {
-        if (typeof volume === 'number' && 0 <= volume && volume <= 1) AudioPlayer.seVolume = volume;
-      });
-    } catch(e) {
-      console.log(e);
+    // try {
+    //   localForage.getItem(AudioPlayer.MAIN_VOLUME_LOCAL_STORAGE_KEY).then(volume => {
+    //     if (typeof volume === 'number' && 0 <= volume && volume <= 1) AudioPlayer.volume = volume;
+    //   });
+    //   localForage.getItem(AudioPlayer.AUDITION_VOLUME_LOCAL_STORAGE_KEY).then(volume => {
+    //     if (typeof volume === 'number' && 0 <= volume && volume <= 1) AudioPlayer.auditionVolume = volume;
+    //   });
+    //   localForage.getItem(AudioPlayer.SE_VOLUME_LOCAL_STORAGE_KEY).then(volume => {
+    //     if (typeof volume === 'number' && 0 <= volume && volume <= 1) AudioPlayer.seVolume = volume;
+    //   });
+
+    // } catch(e) {
+    //   console.log(e);
+    // }
+
+    if (window.localStorage) {
+      if (localStorage.getItem(AudioPlayer.MAIN_VOLUME_LOCAL_STORAGE_KEY) != null) {
+        this.volume = parseFloat(localStorage.getItem(AudioPlayer.MAIN_VOLUME_LOCAL_STORAGE_KEY));
+      }
     }
 
     AudioPlayer.resumeAudioContext();

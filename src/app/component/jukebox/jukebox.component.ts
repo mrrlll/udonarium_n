@@ -100,7 +100,19 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     private pointerDeviceService: PointerDeviceService,
     private ngZone: NgZone,
     private appCustomService: AppConfigCustomService
-  ) { }
+  ) {
+    if (window.localStorage) {
+      if (localStorage.getItem(AudioPlayer.MAIN_VOLUME_LOCAL_STORAGE_KEY) != null) {
+        this.volume = parseFloat(localStorage.getItem(AudioPlayer.MAIN_VOLUME_LOCAL_STORAGE_KEY));
+      }
+      if (localStorage.getItem(AudioPlayer.AUDITION_VOLUME_LOCAL_STORAGE_KEY) != null) {
+        this.auditionVolume = parseFloat(localStorage.getItem(AudioPlayer.AUDITION_VOLUME_LOCAL_STORAGE_KEY));
+      }
+      if (localStorage.getItem(AudioPlayer.SE_VOLUME_LOCAL_STORAGE_KEY) != null) {
+        this.seVolume = parseFloat(localStorage.getItem(AudioPlayer.SE_VOLUME_LOCAL_STORAGE_KEY));
+      }
+    }
+  }
 
   ngOnInit() {
     this.isViewer = this.appCustomService.dataViewer;
