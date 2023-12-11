@@ -1,78 +1,18 @@
-<div *ngIf="!isHide"
-  class="component is-3d is-pointer-events-none" [ngClass]="{'is-grab': !isLocked}"
+<div
+  [ngClass]="{'is-grab': !isLocked, 'isHide': isHide}"
+  class="component is-3d is-pointer-events-none"
   [style.width.px]="size * gridSize"
   appMovable
   [movable.option]="movableOption"
   [movable.disable]="isLocked"
   (movable.ondragstart)="onMove()"
   (movable.ondragend)="onMoved()"
-  (keyup.t)="horizontal()" (keyup.r)="turnRight()" (keyup.u)="vertical()" (keyup.shift.r)="turnLeft()" tabindex="-1"
+  tabindex="-1"
+  *ngIf="!isHide || isGM"
 >
   <div
     @slidInOut
     class="component-content is-pointer-events-auto is-3d"
-    appRotable
-    [rotable.option]="rotableOption"
-    [rotable.disable]="isLocked"
-    (rotable.ondragstart)="onMove()"
-    (rotable.ondragend)="onMoved()"
-  >
-    <img
-      *ngIf="imageFile"
-      [@inverse]="state"
-      class="card-image chrome-smooth-image-trick"
-      [src]="(isFront ? frontImage.url : backImage.url) | safe: 'resourceUrl'"
-    />
-    <div
-      *ngIf="!isFront && hasOwner && 0 < ownerName.length"
-      class="name-tag is-nowrap has-length-limit is-black-background"
-      [ngStyle]="{
-        transform:
-          'translateY(-75%) translateX(-50%) translateX(' +
-          (size * gridSize) / 2 +
-          'px)'
-      }"
-    >
-      <span>{{ ownerName }}</span>
-    </div>
-    <img
-      *ngIf="(isHand && frontImage) || (isGM && frontImage && !isFront)"
-      @flipOpen
-      class="card-image thumbnail-transform is-translucent chrome-smooth-image-trick"
-      [src]="frontImage.url | safe: 'resourceUrl'"
-    />
-    <ng-container *ngIf="!isIconHidden && isRotate">
-      <div class="rotate-grab of-left-top">
-        <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
-      </div>
-      <div class="rotate-grab of-left-bottom">
-        <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
-      </div>
-      <div class="rotate-grab of-right-bottom">
-        <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
-      </div>
-      <div class="rotate-grab of-right-top">
-        <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
-      </div>
-      <div class="border-bg is-pointer-events-none"></div>
-    </ng-container>
-    <div *ngIf="isSelected" class="selected-highlight" [ngClass]="{'is-magnetic': isMagnetic}"></div>
-  </div>
-</div>
-
-<div *ngIf="isHide && isGM"
-  class="component is-3d is-pointer-events-none" [ngClass]="{'is-grab': !isLocked}"
-  [style.width.px]="size * gridSize"
-  appMovable
-  [movable.option]="movableOption"
-  [movable.disable]="isLocked"
-  (movable.ondragstart)="onMove()"
-  (movable.ondragend)="onMoved()"
-  (keyup.t)="horizontal()" (keyup.r)="turnRight()" (keyup.u)="vertical()" (keyup.shift.r)="turnLeft()" tabindex="-1"
->
-  <div
-    @slidInOut
-    class="component-content is-pointer-events-auto is-3d isHide"
     appRotable
     [rotable.option]="rotableOption"
     [rotable.disable]="isLocked"
