@@ -13,15 +13,17 @@
   <div class="volume-area" >
     <span (dblclick)="toggleMute('se')" [innerHTML]="seLabel" [title]="getTooltip('se')" (mouseover)="showTooltip('se')" (mouseout)="hideTooltip('se')"></span>
     <input [(ngModel)]="seVolume" type="range" min="0" max="1" step="0.01" />
-    <input type="text" [(ngModel)]="percentSEVolume" (input)="updateSeVolume()" style="width: 25px;"/>% ※アラームの音量もこちら
+    <input type="text" [(ngModel)]="percentSEVolume" (input)="updateSeVolume()" style="width: 25px;"/>% <span style="font-size: 15px;">※アラームの音量もこちら</span>
   </div>
   <span class="volume-save-description" style="font-size: 0.8em;">音量設定はブラウザに保存されます。</span>
   <hr/>
   <div *ngIf="isViewer" class="volume-area" >
     <span (dblclick)="toggleMute('room')" [innerHTML]="roomLabel" [title]="getTooltip('room')" (mouseover)="showTooltip('room')" (mouseout)="hideTooltip('room')"></span>
     <input [(ngModel)]="roomVolume" type="range" min="0" max="2" step="0.01" />
-    <input type="text" [(ngModel)]="percentRoomVolume" (input)="updateRoomVolume()" style="width: 25px;"/>% <font style="font-size: 15px;">※全プレイヤー一括変更</font><br>
-    <button *ngIf="isViewer" (click)="fadeout()" [disabled]="0" >フェードアウト</button><button *ngIf="isViewer" (click)="fadein()" [disabled]="0" >フェードイン</button>
+    <input type="text" [(ngModel)]="percentRoomVolume" (input)="updateRoomVolume()" style="width: 25px;"/>% <span style="font-size: 15px;">※全プレイヤー一括変更</span>
+    <div class="fade-button">
+      <button *ngIf="isViewer" (click)="fadeout()" [disabled]="0" >フェードアウト</button><button *ngIf="isViewer" (click)="fadein()" [disabled]="0" >フェードイン</button>
+    </div>
     <hr/>
   </div>
   <label *ngIf="!isViewer">
