@@ -1,5 +1,5 @@
 <div
-  [ngClass]="{'is-grab': !isLocked, 'isHide': isHide}"
+  [ngClass]="{ 'is-grab': !isLocked, 'isHide': isHide }"
   class="component is-3d is-pointer-events-none"
   [style.width.px]="size * gridSize"
   appMovable
@@ -9,7 +9,7 @@
   (movable.ondragend)="onMoved()"
   tabindex="-1"
   *ngIf="!isHide || isGM"
->
+  >
   <div
     @slidInOut
     class="component-content is-pointer-events-auto is-3d"

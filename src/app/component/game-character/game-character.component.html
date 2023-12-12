@@ -1,7 +1,16 @@
-<div *ngIf="!isStealth" class="component is-3d is-grab is-pointer-events-none" [style.width.px]="size * gridSize"
-  [style.height.px]="size * gridSize" appMovable [movable.option]="movableOption" (movable.ondragstart)="onMove()"
-  (movable.ondragend)="onMoved()" #root>
-  <!-- <div class="component-content is-3d" [@bounceInOut]="'in'"> -->
+<div
+  [ngClass]="{ 'isHide': isStealth }"
+  class="component is-3d is-grab is-pointer-events-none"
+  [style.width.px]="size * gridSize"
+  [style.height.px]="size * gridSize"
+  appMovable
+  [movable.option]="movableOption"
+  (movable.ondragstart)="onMove()"
+  (movable.ondragend)="onMoved()"
+  #root
+  *ngIf="!isStealth || isGM"
+  >
+  <div class="component-content is-3d" [@bounceInOut]="'in'">
   <div class="component-content is-3d">
     <div class="component-content is-3d is-pointer-events-auto" appRotable [rotable.option]="rotableOption"
       (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
@@ -27,83 +36,13 @@
               </div>
             </ng-container>
             <div class="inverser" [ngClass]="{inverse: isInverse}">
-              <span class="aura" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
-                <img class="image chrome-smooth-image-trick is-3d" [ngStyle]="{'height':+ this.gameCharacter.komaImageHeignt + 'px','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}" *ngIf="(0 < imageFile.url.length) && this.gameCharacter.specifyKomaImageFlag" [ngClass]="{'black-paint': isBlackPaint, 'hollow': isHollow}" [src]="imageFile.url | safe: 'resourceUrl'">
+              <span class="aura" [ngClass]="{ black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
+                <img class="image chrome-smooth-image-trick is-3d" [ngStyle]="{'height':+ this.gameCharacter.komaImageHeignt + 'px','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}" *ngIf="(0 < imageFile.url.length) && this.gameCharacter.specifyKomaImageFlag" [ngClass]="{ 'isStealth': isStealth, 'black-paint': isBlackPaint, 'hollow': isHollow}" [src]="imageFile.url | safe: 'resourceUrl'">
               </span>
             </div>
             <div class="inverser" [ngClass]="{inverse: isInverse}">
-              <span class="aura" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
-                <img [hidden]="" class="image is-3d" [ngStyle]="{'width':'100%'}" *ngIf="(0 < imageFile.url.length) && !this.gameCharacter.specifyKomaImageFlag" class="image" [ngClass]="{'black-paint': isBlackPaint, 'hollow': isHollow}" [src]="imageFile.url | safe: 'resourceUrl'">
-              </span>
-            </div>
-            <div class="rotate-grab rotate-grab-icon of-top"
-              [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
-              <i class="material-icons">autorenew</i>
-            </div>
-            <div class="rotate-grab rotate-grab-icon of-bottom"
-              [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px'}">
-              <i class="material-icons">autorenew</i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="is-3d" *ngIf="isAltitudeIndicate && (altitude <= -0.5 || 0.5 <= altitude)"
-      style="display: flex; flex-flow: column nowrap; justify-content: space-between; border-left: 2px dashed black;  transform-origin: top left"
-      [style.height.px]="math.abs(altitude * gridSize) - (altitude > 0 ? 0 : size * gridSize + characterImageHeight)"
-      [ngStyle]="{transform: 'translateX(' + (size * gridSize / 2) + 'px) translateY(' + (-size * gridSize / 2) + 'px) rotateX(-90deg) translateY(' + (altitude > 0 ? -altitude * gridSize : 0) + 'px) rotateY(' + (viewRotateZ) + 'deg)'}">
-      <div [style.visibility]="altitude > 0 ? 'visible' : 'hidden'">
-        <span class="elevation-indicator" style="position: absolute"><i>{{ elevation }}</i></span>
-        <span class="elevation-indicator" style="position: absolute; transform: rotateY(-180deg)"><i>{{ elevation }}</i></span>
-      </div>
-      <div>
-        <span class="altitude-indicator">{{ math.abs(altitude) }}</span>
-        <span class="altitude-indicator" style="position: absolute; transform: rotateY(-180deg)">{{ math.abs(altitude) }}</span>
-      </div>
-      <div [style.visibility]="altitude < 0 ? 'visible' : 'hidden'">
-        <span class="elevation-indicator" style="position: absolute"><i>{{ elevation }}</i></span>
-        <span class="elevation-indicator" style="position: absolute; transform: rotateY(-180deg)"><i>{{ elevation }}</i></span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div *ngIf="isStealth && isGM" class="component is-3d is-grab is-pointer-events-none" [style.width.px]="size * gridSize"
-  [style.height.px]="size * gridSize" appMovable [movable.option]="movableOption" (movable.ondragstart)="onMove()"
-  (movable.ondragend)="onMoved()" #root>
-  <!-- <div class="component-content is-3d" [@bounceInOut]="'in'"> -->
-  <div class="component-content is-3d">
-    <div class="component-content is-3d is-pointer-events-auto" appRotable [rotable.option]="rotableOption"
-      (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
-      <div class="pedestal-inner"></div>
-      <div *ngIf="isSelected" class="selected-highlight" [ngClass]="{'is-magnetic': isMagnetic}"></div>
-      <div class="pedestal-outer"></div>
-      <div class="pedestal-grab rotate-grab">
-        <div class="pedestal-grab-border">
-          <div class="material-icons of-front">autorenew</div>
-          <div class="material-icons of-back">autorenew</div>
-        </div>
-      </div>
-      <span class="aura" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}"><img class="image" *ngIf="isDropShadow && 0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" style="filter: brightness(0) blur(1px)" [ngStyle]="{'opacity': isHollow ? 0.4 : 0.7, 'transform': 'scale(' + (isInverse ? -1 : 1) + ', 0.6) translateY(-40%) rotateZ(' + ((isInverse ? -1 : 1) * roll) + 'deg)'}"></span>
-      <div class="upright-transform is-fit-width is-3d" [ngClass]="{fall: altitude == 0}" [ngStyle]="{'transform': 'rotateY(90deg) rotateZ(-90deg) rotateY(-90deg) translateY(-50%) translateY(' + (-altitude) * gridSize +'px)'}">
-        <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
-          appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
-          <div class="rotate-inner is-3d">
-            <ng-container *ngIf="0 < name.length">
-              <div *ngFor="let rotateY of ['0', '180deg']"
-                class="name-tag is-nowrap is-black-background"
-                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateY(' + rotateY + ')'}">
-                <div class="has-length-limit">{{name}}</div>
-              </div>
-            </ng-container>
-            <div class="inverser" [ngClass]="{inverse: isInverse}">
-              <span class="aura" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
-                <img class="image chrome-smooth-image-trick is-3d isStealth" [ngStyle]="{'height':+ this.gameCharacter.komaImageHeignt + 'px','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}" *ngIf="(0 < imageFile.url.length) && this.gameCharacter.specifyKomaImageFlag" [ngClass]="{'black-paint': isBlackPaint, 'hollow': isHollow}" [src]="imageFile.url | safe: 'resourceUrl'">
-              </span>
-            </div>
-            <div class="inverser" [ngClass]="{inverse: isInverse}">
-              <span class="aura" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
-                <img [hidden]="" class="image is-3d isStealth" [ngStyle]="{'width':'100%'}" *ngIf="(0 < imageFile.url.length) && !this.gameCharacter.specifyKomaImageFlag" [ngClass]="{'black-paint': isBlackPaint, 'hollow': isHollow}" [src]="imageFile.url | safe: 'resourceUrl'">
+              <span class="aura" [ngClass]="{ black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
+                <img [hidden]="" class="image is-3d" [ngStyle]="{'width':'100%'}" *ngIf="(0 < imageFile.url.length) && !this.gameCharacter.specifyKomaImageFlag" class="image" [ngClass]="{ 'isStealth': isStealth, 'black-paint': isBlackPaint, 'hollow': isHollow}" [src]="imageFile.url | safe: 'resourceUrl'">
               </span>
             </div>
             <div class="rotate-grab rotate-grab-icon of-top"

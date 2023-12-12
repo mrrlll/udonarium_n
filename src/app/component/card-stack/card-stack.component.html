@@ -1,7 +1,16 @@
-<div *ngIf="!isHide" class="component is-3d is-pointer-events-none" [ngClass]="{'is-empty': isEmpty}"
+<div
+  [ngClass]="{ 'is-empty': isEmpty, 'is-grab': !isLocked, 'isHide': isHide }"
+  class="component is-3d is-pointer-events-none"
   [style.width.px]="size * gridSize"
-  appMovable [movable.option]="movableOption" [movable.disable]="isLocked" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
-  <div class="component-content is-pointer-events-auto" [ngClass]="{'is-grab': !isLocked}"
+  appMovable
+  [movable.option]="movableOption"
+  [movable.disable]="isLocked"
+  (movable.ondragstart)="onMove()"
+  (movable.ondragend)="onMoved()"
+  tabindex="-1"
+  *ngIf="!isHide || isGM"
+  >
+  <div class="component-content is-pointer-events-auto" [ngClass]="{ 'is-grab': !isLocked, 'isHide': isHide }"
     appRotable [rotable.option]="rotableOption" [rotable.disable]="isLocked" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
     <div [@shuffle]="animeState"
       (@shuffle.start)="animationShuffleStarted($event)"
@@ -11,40 +20,6 @@
     </div>
     <ng-container *ngIf="!isIconHidden && isRotate">
       <div class="rotate-grab of-left-top">
-        <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
-      </div>
-      <div class="rotate-grab of-left-bottom">
-        <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
-      </div>
-      <div class="rotate-grab of-right-bottom">
-        <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
-      </div>
-      <div class="rotate-grab of-right-top">
-        <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
-      </div>
-    </ng-container>
-    <div *ngIf="isShowTotal" class="name-tag is-nowrap is-black-background is-3d number-of-cards" style="z-index: 10" [ngStyle]="{'transform': 'translateY(-50%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">      <span>{{cards.length}}枚</span>
-    </div>
-    <div *ngIf="hasOwner" class="name-tag has-length-limit is-nowrap is-black-background" [ngStyle]="{'transform': 'translateY(50%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
-      <span>{{ownerName}} が確認中</span>
-    </div>
-    <div *ngIf="isSelected" class="selected-highlight" [ngClass]="{'is-magnetic': isMagnetic}"></div>
-  </div>
-</div>
-
-<div *ngIf="isHide && isGM" class="component is-3d is-pointer-events-none" [ngClass]="{'is-empty': isEmpty}"
-  [style.width.px]="size * gridSize"
-  appMovable [movable.option]="movableOption" [movable.disable]="isLocked" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
-  <div class="component-content is-pointer-events-auto isHide" [ngClass]="{'is-grab': !isLocked}"
-    appRotable [rotable.option]="rotableOption" [rotable.disable]="isLocked" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
-    <div [@shuffle]="animeState"
-      (@shuffle.start)="animationShuffleStarted($event)"
-      (@shuffle.done)="animationShuffleDone($event)">
-      <img *ngIf="topCard && imageFile" class="card-image chrome-smooth-image-trick"
-        [ngStyle]="{'transform': 'rotateZ(' + topCard.rotate +'deg)'}" [src]="imageFile.url | safe: 'resourceUrl'">
-    </div>
-    <ng-container *ngIf="!isIconHidden && isRotate">
-      <div class="rotate-grab of-left-top ">
         <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
       </div>
       <div class="rotate-grab of-left-bottom">
