@@ -159,7 +159,6 @@
 
 .character-image-box {
   width: 100px;
-  max-height: 120px;
   vertical-align: bottom;
   margin-left: 0.5em;
   margin-bottom: -6px;
@@ -172,7 +171,6 @@
   max-height: 150px;
   vertical-align: bottom;
   object-fit: contain;
-  object-position: bottom left;
   object-position: bottom center;
 }
 
@@ -184,11 +182,11 @@
 
 .is-black-mask {
   filter: brightness(0);
- }
+}
 
- .is-harf-black-mask {
+.is-harf-black-mask {
   filter: brightness(0.5);
- }
+}
 
 .character-grid-container {
   display: grid;

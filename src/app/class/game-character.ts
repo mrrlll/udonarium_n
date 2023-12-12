@@ -92,10 +92,6 @@ export class GameCharacter extends TabletopObject {
     if (!element && this.commonDataElement) {
       this.commonDataElement.appendChild(DataElement.create('altitude', 0, {}, 'altitude_' + this.identifier));
     }
-    element = this.getElement('height', this.commonDataElement);
-    if (!element && this.commonDataElement) {
-      this.commonDataElement.insertBefore(DataElement.create('height', 0, { 'currentValue': '' }, 'height_' + this.identifier), this.getElement('altitude', this.commonDataElement));
-    }
   }
 
   static create(name: string, size: number, imageIdentifier: string ): GameCharacter {
