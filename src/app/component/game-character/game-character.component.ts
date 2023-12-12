@@ -439,7 +439,6 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
       }
     });
     actions.push(ContextMenuSeparator);
-    // ステルスモードのオンオフ
     if(this.isGM && this.isStealth){
       actions.push({
         name: '☑ ステルスモード', action: () => {
