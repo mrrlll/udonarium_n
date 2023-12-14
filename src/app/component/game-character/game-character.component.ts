@@ -19,6 +19,7 @@ import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.component';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { MovableOption } from 'directive/movable.directive';
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuAction, ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { PanelOption, PanelService } from 'service/panel.service';
@@ -27,6 +28,7 @@ import { SelectionState, TabletopSelectionService } from 'service/tabletop-selec
 import { TabletopObject } from '@udonarium/tabletop-object';
 import { AppConfigCustomService } from 'service/app-config-custom.service';
 import { Observable, Subscription } from 'rxjs';
+import { TableSelecter } from '@udonarium/table-selecter';
 
 @Component({
   selector: 'game-character',
@@ -93,6 +95,10 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   get isSelected(): boolean { return this.selectionState !== SelectionState.NONE; }
   get isMagnetic(): boolean { return this.selectionState === SelectionState.MAGNETIC; }
 
+  get roomAltitude(): boolean { return this.tableSelecter.roomAltitude; }
+
+  get tableSelecter(): TableSelecter { return TableSelecter.instance; }
+
   get elevation(): number {
     return +((this.gameCharacter.posZ + (this.altitude * this.gridSize)) / this.gridSize).toFixed(1);
   }
@@ -133,6 +139,9 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
+      })
+      .on('NO_ROOM_ALTITUDE', event => {
+        this.gameCharacter.altitude = 0;
       })
       .on('HIGHTLIGHT_TABLETOP_OBJECT', event => {
         if (this.gameCharacter.identifier !== event.data.identifier) { return; }
@@ -377,39 +386,41 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
 
     actions.push({ name: '画像効果', action: null, subActions: subActions });
     actions.push(ContextMenuSeparator);
-    actions.push({
-        name: '高さを0にする', action: () => {
-          this.altitude = 0;
-        },
-        altitudeHande: this.gameCharacter
-    })
-    actions.push(
-      this.isAltitudeIndicate
-      ?{
-        name: '☑ 高度を表示', action: () => {
-          this.isAltitudeIndicate = false;
+    if(this.roomAltitude){
+      actions.push({
+          name: '高さを0にする', action: () => {
+            this.altitude = 0;
+          },
+          altitudeHande: this.gameCharacter
+      })
+      actions.push(
+        this.isAltitudeIndicate
+        ?{
+          name: '☑ 高度を表示', action: () => {
+            this.isAltitudeIndicate = false;
+          }
+        }:{
+          name: '☐ 高度を表示', action: () => {
+            this.isAltitudeIndicate = true;
+          }
         }
-      }:{
-        name: '☐ 高度を表示', action: () => {
-          this.isAltitudeIndicate = true;
+      )
+      actions.push(
+        !this.isNotRide
+        ?{
+          name: '☑ 他のキャラクターに乗る', action: () => {
+            this.isNotRide = true;
+          },
+          altitudeHande: this.gameCharacter
+        }:{
+          name: '☐ 他のキャラクターに乗る', action: () => {
+            this.isNotRide = false;
+          },
+          altitudeHande: this.gameCharacter
         }
-      }
-    )
-    actions.push(
-      !this.isNotRide
-      ?{
-        name: '☑ 他のキャラクターに乗る', action: () => {
-          this.isNotRide = true;
-        },
-        altitudeHande: this.gameCharacter
-      }:{
-        name: '☐ 他のキャラクターに乗る', action: () => {
-          this.isNotRide = false;
-        },
-        altitudeHande: this.gameCharacter
-      }
-    )
-    actions.push(ContextMenuSeparator);
+      )
+      actions.push(ContextMenuSeparator);
+    }
     actions.push({
       name: '共有イベントリに移動', action: () => {
         this.gameCharacter.setLocation('common');

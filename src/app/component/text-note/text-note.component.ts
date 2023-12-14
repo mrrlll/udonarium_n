@@ -22,6 +22,7 @@ import { ContextMenuAction, ContextMenuSeparator, ContextMenuService } from 'ser
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { SelectionState, TabletopSelectionService } from 'service/tabletop-selection.service';
+import { TableSelecter } from '@udonarium/table-selecter';
 
 @Component({
   selector: 'text-note',
@@ -46,6 +47,13 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
   get width(): number { return MathUtil.clampMin(this.textNote.width); }
   get altitude(): number { return this.textNote.altitude; }
   set altitude(altitude: number) { this.textNote.altitude = altitude; }
+
+  get roomAltitude(): boolean { return this.tableSelecter.roomAltitude; }
+  set roomAltitude(roomAltitude: boolean) {
+    this.tableSelecter.roomAltitude = roomAltitude;
+  }
+
+  get tableSelecter(): TableSelecter { return TableSelecter.instance; }
 
   get textNoteAltitude(): number {
     let ret = this.altitude;
@@ -105,6 +113,9 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
       })
       .on('UPDATE_FILE_RESOURE', event => {
         this.changeDetector.markForCheck();
+      })
+      .on('NO_ROOM_ALTITUDE', event => {
+        this.textNote.altitude = 0;
       })
       .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
         this.ngZone.run(() => {
@@ -233,25 +244,27 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
       }
     )
     actions.push(ContextMenuSeparator);
-    actions.push(
-      this.isAltitudeIndicate
-      ?{
-        name: '☑ 高度の表示', action: () => {
-          this.isAltitudeIndicate = false;
+    if(this.roomAltitude){
+      actions.push(
+        this.isAltitudeIndicate
+        ?{
+          name: '☑ 高度の表示', action: () => {
+            this.isAltitudeIndicate = false;
+          }
+        }:{
+          name: '☐ 高度の表示', action: () => {
+            this.isAltitudeIndicate = true;
+          }
         }
-      }:{
-        name: '☐ 高度の表示', action: () => {
-          this.isAltitudeIndicate = true;
-        }
-      }
-    );
-    actions.push({
-      name: '高さを0にする', action: () => {
-        this.altitude = 0;
-      },
-      altitudeHande: this.textNote
-    });
-    actions.push(ContextMenuSeparator);
+      );
+      actions.push({
+        name: '高さを0にする', action: () => {
+          this.altitude = 0;
+        },
+        altitudeHande: this.textNote
+      });
+      actions.push(ContextMenuSeparator);
+    }
     actions.push({
       name: 'コピーを作る', action: () => {
         let cloneObject = this.textNote.clone();

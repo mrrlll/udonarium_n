@@ -18,6 +18,7 @@ export class TableSelecter extends GameObject {
   @SyncVar() viewTableIdentifier: string = '';
   gridShow: boolean = false; // true=常時グリッド表示
   gridSnap: boolean = true;
+  roomAltitude: boolean = true;
 
   // GameObject Lifecycle
   onStoreAdded() {

@@ -27,6 +27,8 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopActionService } from 'service/tabletop-action.service';
 import { SelectionState, TabletopSelectionService } from 'service/tabletop-selection.service';
 
+import { TableSelecter } from '@udonarium/table-selecter';
+
 @Component({
   selector: 'terrain',
   templateUrl: './terrain.component.html',
@@ -69,6 +71,13 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
   get selectionState(): SelectionState { return this.selectionService.state(this.terrain); }
   get isSelected(): boolean { return this.selectionState !== SelectionState.NONE; }
   get isMagnetic(): boolean { return this.selectionState === SelectionState.MAGNETIC; }
+
+  get roomAltitude(): boolean { return this.tableSelecter.roomAltitude; }
+  set roomAltitude(roomAltitude: boolean) {
+    this.tableSelecter.roomAltitude = roomAltitude;
+  }
+
+  get tableSelecter(): TableSelecter { return TableSelecter.instance; }
 
   gridSize: number = 50;
 
@@ -123,6 +132,9 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
           this.viewRotateZ = event.data['z'];
           this.changeDetector.markForCheck();
         });
+      })
+      .on('NO_ROOM_ALTITUDE', event => {
+        this.terrain.altitude = 0;
       })
       .on(`UPDATE_SELECTION/identifier/${this.terrain?.identifier}`, event => {
         this.changeDetector.markForCheck();
@@ -264,25 +276,27 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
       }
     );
     actions.push(ContextMenuSeparator);
-    actions.push(
-      this.isAltitudeIndicate
-      ? {
-        name: '☑ 高度を表示', action: () => {
-          this.isAltitudeIndicate = false;
+    if(this.roomAltitude){
+      actions.push(
+        this.isAltitudeIndicate
+        ? {
+          name: '☑ 高度を表示', action: () => {
+            this.isAltitudeIndicate = false;
+          }
+        } : {
+          name: '☐ 高度を表示', action: () => {
+            this.isAltitudeIndicate = true;
+          }
         }
-      } : {
-        name: '☐ 高度を表示', action: () => {
-          this.isAltitudeIndicate = true;
-        }
-      }
-    );
-    actions.push({
-      name: '高さを0にする', action: () => {
-        this.altitude = 0;
-      },
-      altitudeHande: this.terrain
-  })
-    actions.push(ContextMenuSeparator);
+      );
+      actions.push({
+        name: '高さを0にする', action: () => {
+          this.altitude = 0;
+        },
+        altitudeHande: this.terrain
+      })
+      actions.push(ContextMenuSeparator);
+    }
     actions.push((this.hasWall
       ? {
         name: '☑ 壁を表示', action: () => {

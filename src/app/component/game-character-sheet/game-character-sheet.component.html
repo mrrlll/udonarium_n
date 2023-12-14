@@ -69,7 +69,7 @@
         <img class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name"
           [ngClass]="{'black-paint': tabletopObject.isBlackPaint, 'hollow': tabletopObject.isHollow}"
           (dblclick)="openMainImageModal()"
-          [@switchImage]="tabletopObject.currntImageIndex" />
+        />
         <p style="font-size: 15px;">画像をダブルクリックで変更</p>
       </span>
     </span>

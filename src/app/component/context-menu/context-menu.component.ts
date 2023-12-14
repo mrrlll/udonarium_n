@@ -1,7 +1,9 @@
 import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ContextMenuAction, ContextMenuService } from 'service/context-menu.service';
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopObject } from '@udonarium/tabletop-object';
+import { RoomSetting } from '@udonarium/room-setting';
 
 @Component({
   selector: 'context-menu',
@@ -19,6 +21,7 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   parentMenu: ContextMenuAction;
   subMenu: ContextMenuAction[];
+  roomSetting: RoomSetting;
 
   showSubMenuTimer: NodeJS.Timer;
   hideSubMenuTimer: NodeJS.Timer;
@@ -43,6 +46,7 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.isSubmenu) {
       this.title = this.contextMenuService.title;
       this.actions = this.contextMenuService.actions;
+      this.roomSetting = ObjectStore.instance.get<RoomSetting>('room-setting');
     }
   }
 

@@ -14,6 +14,7 @@ import { PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
 import { Config } from '@udonarium/config';
 import { DiceBot } from '@udonarium/dice-bot';
+import { RoomSetting } from '@udonarium/room-setting';
 
 @Component({
   selector: 'game-table-setting',
@@ -23,6 +24,8 @@ import { DiceBot } from '@udonarium/dice-bot';
 export class GameTableSettingComponent implements OnInit, OnDestroy {
   minSize: number = 1;
   maxSize: number = 100;
+
+  roomSetting: RoomSetting;
 
   @Input('gameType') _gameType: string = '';
   @Output() gameTypeChange = new EventEmitter<string>();
@@ -69,6 +72,10 @@ export class GameTableSettingComponent implements OnInit, OnDestroy {
   set tableGridSnap(tableGridSnap: boolean) {
     this.tableSelecter.gridSnap = tableGridSnap;
   }
+  get roomAltitude(): boolean { return this.tableSelecter.roomAltitude; }
+  set roomAltitude(roomAltitude: boolean) {
+    this.tableSelecter.roomAltitude = roomAltitude;
+  }
 
   get tableGridType(): GridType { return this.selectedTable.gridType; }
   set tableGridType(gridType: GridType) { if (this.isEditable) this.selectedTable.gridType = Number(gridType); }
@@ -103,6 +110,7 @@ export class GameTableSettingComponent implements OnInit, OnDestroy {
   ngOnInit() {
     Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'テーブル設定');
     this.selectedTable = this.tableSelecter.viewTable;
+    this.roomSetting = ObjectStore.instance.get<RoomSetting>('room-setting');
     EventSystem.register(this)
       .on('DELETE_GAME_OBJECT', 1000, event => {
         if (!this.selectedTable || event.data.identifier !== this.selectedTable.identifier) return;
@@ -185,5 +193,11 @@ export class GameTableSettingComponent implements OnInit, OnDestroy {
   cloneGameTable() {
     let xmlString = ObjectSerializer.instance.toXml(this.selectedTable);
     return ObjectSerializer.instance.parseXml(xmlString);
+  }
+
+  roomAltitudeChange() {
+    if(!this.roomAltitude){
+      EventSystem.trigger('NO_ROOM_ALTITUDE', null);
+    }
   }
 }

@@ -54,6 +54,7 @@ import { SelectionState, TabletopSelectionService } from 'service/tabletop-selec
 export class RangeComponent implements OnChanges, OnDestroy, AfterViewInit {
   @Input() range: RangeArea = null;
   @Input() is3D: boolean = false;
+
 //  @Input() rotateDeg : string = ''
 
   @ViewChild('gridCanvas', { static: true }) gridCanvas: ElementRef<HTMLCanvasElement>;
@@ -390,6 +391,11 @@ export class RangeComponent implements OnChanges, OnDestroy, AfterViewInit {
     return ret;
   }
 
+  get roomAltitude(): boolean { return this.tableSelecter.roomAltitude; }
+  set roomAltitude(roomAltitude: boolean) {
+    this.tableSelecter.roomAltitude = roomAltitude;
+  }
+
   gridSize: number = 50;
 
   movableOption: MovableOption = {};
@@ -455,6 +461,9 @@ export class RangeComponent implements OnChanges, OnDestroy, AfterViewInit {
       })
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
+      })
+      .on('NO_ROOM_ALTITUDE', event => {
+        this.range.altitude = 0;
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
@@ -603,21 +612,24 @@ export class RangeComponent implements OnChanges, OnDestroy, AfterViewInit {
           },
           checkBox: 'check'
         });
-        menuArray.push(
-          this.range.isFollowAltitude
-          ? {
-            name: '☑ 高さ・高度にも追従', action: () => {
-              this.range.isFollowAltitude = false;
-            },
-            checkBox: 'check'
-          }
-          : {
-            name: '☐ 高さ・高度にも追従', action: () => {
-              this.range.isFollowAltitude = true;
-              if (this.followingCharactor) this.range.following();
-            },
-            checkBox: 'check'
-          });
+        if(this.roomAltitude){
+          menuArray.push(
+            this.range.isFollowAltitude
+            ? {
+              name: '☑ 高さ・高度にも追従', action: () => {
+                this.range.isFollowAltitude = false;
+              },
+              checkBox: 'check'
+            }
+            : {
+              name: '☐ 高さ・高度にも追従', action: () => {
+                this.range.isFollowAltitude = true;
+                if (this.followingCharactor) this.range.following();
+              },
+              checkBox: 'check'
+            }
+          );
+        }
     } else {
       menuArray.push(
         this.range.subDivisionSnapPolygonal
@@ -656,29 +668,30 @@ export class RangeComponent implements OnChanges, OnDestroy, AfterViewInit {
       }
     );
 */
-    menuArray.push(this.isAltitudeIndicate
-      ? {
-        name: '☑ 高度の表示', action: () => {
-          this.isAltitudeIndicate = false;
+    if(this.roomAltitude){
+      menuArray.push(this.isAltitudeIndicate
+        ? {
+          name: '☑ 高度の表示', action: () => {
+            this.isAltitudeIndicate = false;
+          },
+          checkBox: 'check'
+        } : {
+          name: '☐ 高度の表示', action: () => {
+            this.isAltitudeIndicate = true;
+          },
+          checkBox: 'check'
+        });
+      menuArray.push({
+        name: '高度を0にする', action: () => {
+          if (this.altitude != 0) {
+            this.altitude = 0;
+            SoundEffect.play(PresetSound.sweep);
+          }
         },
-        checkBox: 'check'
-      } : {
-        name: '☐ 高度の表示', action: () => {
-          this.isAltitudeIndicate = true;
-        },
-        checkBox: 'check'
+        altitudeHande: this.range
       });
-    menuArray.push({
-      name: '高度を0にする', action: () => {
-        if (this.altitude != 0) {
-          this.altitude = 0;
-          SoundEffect.play(PresetSound.sweep);
-        }
-      },
-      altitudeHande: this.range
-    });
-    menuArray.push(ContextMenuSeparator);
-
+      menuArray.push(ContextMenuSeparator);
+    }
     menuArray.push(
       {
         name: 'コピーを作る', action: () => {

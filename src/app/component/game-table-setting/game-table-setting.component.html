@@ -73,6 +73,8 @@
         <label>スナップ:
           <input type="checkbox" [(ngModel)]="tableGridSnap" name="tableGridSnap" />
         </label>
+        <label style="user-select: none;">高度を有効:<input id="RoomAltitude" type="checkbox" [(ngModel)]="roomAltitude" (change)="roomAltitudeChange()"></label>
+        <br>
         <ng-container *ngIf="!isDeleted">
           <button [disabled]="isSaveing" (click)="save()">
             <div style="position: relative;">
