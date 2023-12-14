@@ -31,7 +31,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   roomSetting: RoomSetting;
 
-  private interval: NodeJS.Timer;
+  private interval: NodeJS.Timeout;
   get myPeer(): PeerCursor {
     return PeerCursor.myCursor;
   }

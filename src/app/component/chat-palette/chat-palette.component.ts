@@ -44,7 +44,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
 
   filterText: string = '';
 
-  private doubleClickTimer: NodeJS.Timer = null;
+  private doubleClickTimer: NodeJS.Timeout = null;
 
   get diceBotInfos() { return DiceBot.diceBotInfos }
 

@@ -85,7 +85,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
 
   animeState: string = 'inactive';
 
-  private iconHiddenTimer: NodeJS.Timer = null;
+  private iconHiddenTimer: NodeJS.Timeout = null;
   get isIconHidden(): boolean { return this.iconHiddenTimer != null };
 
   get isLocked(): boolean { return this.cardStack ? this.cardStack.isLocked : false; }

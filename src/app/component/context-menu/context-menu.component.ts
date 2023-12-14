@@ -23,8 +23,8 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   subMenu: ContextMenuAction[];
   roomSetting: RoomSetting;
 
-  showSubMenuTimer: NodeJS.Timer;
-  hideSubMenuTimer: NodeJS.Timer;
+  showSubMenuTimer: NodeJS.Timeout;
+  hideSubMenuTimer: NodeJS.Timeout;
 
   private callbackOnOutsideClick = (e) => this.onOutsideClick(e);
 

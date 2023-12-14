@@ -115,8 +115,8 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   rotableOption: RotableOption = {};
   rollOption: RotableOption = {};
 
-  private highlightTimer: NodeJS.Timer;
-  private unhighlightTimer: NodeJS.Timer;
+  private highlightTimer: NodeJS.Timeout;
+  private unhighlightTimer: NodeJS.Timeout;
 
   constructor(
     private contextMenuService: ContextMenuService,

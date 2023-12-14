@@ -115,7 +115,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
   get isSelected(): boolean { return this.selectionState !== SelectionState.NONE; }
   get isMagnetic(): boolean { return this.selectionState === SelectionState.MAGNETIC; }
 
-  private iconHiddenTimer: NodeJS.Timer = null;
+  private iconHiddenTimer: NodeJS.Timeout = null;
   get isIconHidden(): boolean { return this.iconHiddenTimer != null };
 
   get isLocked(): boolean { return this.card ? this.card.isLocked : false; }
