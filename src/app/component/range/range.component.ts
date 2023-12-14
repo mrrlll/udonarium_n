@@ -44,6 +44,7 @@ import { ModalService } from 'service/modal.service';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { GameCharacter } from '@udonarium/game-character';
 import { SelectionState, TabletopSelectionService } from 'service/tabletop-selection.service';
+import { Config } from '@udonarium/config';
 
 @Component({
   selector: 'range',
@@ -391,10 +392,8 @@ export class RangeComponent implements OnChanges, OnDestroy, AfterViewInit {
     return ret;
   }
 
-  get roomAltitude(): boolean { return this.tableSelecter.roomAltitude; }
-  set roomAltitude(roomAltitude: boolean) {
-    this.tableSelecter.roomAltitude = roomAltitude;
-  }
+  get config(): Config { return ObjectStore.instance.get<Config>('Config')};
+  get roomAltitude(): boolean { return this.config.roomAltitude; }
 
   gridSize: number = 50;
 

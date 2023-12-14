@@ -17,6 +17,7 @@ import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { Terrain, TerrainViewState } from '@udonarium/terrain';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { InputHandler } from 'directive/input-handler';
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuAction, ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
@@ -26,7 +27,7 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopActionService } from 'service/tabletop-action.service';
 import { SelectionState, TabletopSelectionService } from 'service/tabletop-selection.service';
-
+import { Config } from '@udonarium/config';
 import { TableSelecter } from '@udonarium/table-selecter';
 
 @Component({
@@ -38,6 +39,8 @@ import { TableSelecter } from '@udonarium/table-selecter';
 export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
   @Input() terrain: Terrain = null;
   @Input() is3D: boolean = false;
+
+  get config(): Config { return ObjectStore.instance.get<Config>('Config')};
 
   get name(): string { return this.terrain.name; }
   get mode(): TerrainViewState { return this.terrain.mode; }
@@ -72,10 +75,7 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
   get isSelected(): boolean { return this.selectionState !== SelectionState.NONE; }
   get isMagnetic(): boolean { return this.selectionState === SelectionState.MAGNETIC; }
 
-  get roomAltitude(): boolean { return this.tableSelecter.roomAltitude; }
-  set roomAltitude(roomAltitude: boolean) {
-    this.tableSelecter.roomAltitude = roomAltitude;
-  }
+  get roomAltitude(): boolean { return this.config.roomAltitude; }
 
   get tableSelecter(): TableSelecter { return TableSelecter.instance; }
 

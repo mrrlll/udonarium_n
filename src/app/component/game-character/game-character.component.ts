@@ -29,6 +29,7 @@ import { TabletopObject } from '@udonarium/tabletop-object';
 import { AppConfigCustomService } from 'service/app-config-custom.service';
 import { Observable, Subscription } from 'rxjs';
 import { TableSelecter } from '@udonarium/table-selecter';
+import { Config } from '@udonarium/config';
 
 @Component({
   selector: 'game-character',
@@ -63,6 +64,8 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   subs: Subscription;
   isGM: boolean;
 
+  get config(): Config { return ObjectStore.instance.get<Config>('Config')};
+
   get name(): string { return this.gameCharacter.name; }
   get size(): number { return MathUtil.clampMin(this.gameCharacter.size); }
   get altitude(): number { return this.gameCharacter.altitude; }
@@ -95,7 +98,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   get isSelected(): boolean { return this.selectionState !== SelectionState.NONE; }
   get isMagnetic(): boolean { return this.selectionState === SelectionState.MAGNETIC; }
 
-  get roomAltitude(): boolean { return this.tableSelecter.roomAltitude; }
+  get roomAltitude(): boolean { return this.config.roomAltitude; }
 
   get tableSelecter(): TableSelecter { return TableSelecter.instance; }
 

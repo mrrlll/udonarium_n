@@ -69,10 +69,9 @@ export class GameTableSettingComponent implements OnInit, OnDestroy {
   set tableGridSnap(tableGridSnap: boolean) {
     this.tableSelecter.gridSnap = tableGridSnap;
   }
-  get roomAltitude(): boolean { return this.tableSelecter.roomAltitude; }
-  set roomAltitude(roomAltitude: boolean) {
-    this.tableSelecter.roomAltitude = roomAltitude;
-  }
+
+  get roomAltitude(): boolean { return this.config._roomAltitude }
+  set roomAltitude(roomAltitude: boolean) { this.config._roomAltitude = roomAltitude; }
 
   get tableGridType(): GridType { return this.selectedTable.gridType; }
   set tableGridType(gridType: GridType) { if (this.isEditable) this.selectedTable.gridType = Number(gridType); }
@@ -192,7 +191,7 @@ export class GameTableSettingComponent implements OnInit, OnDestroy {
   }
 
   roomAltitudeChange() {
-    if(!this.tableSelecter.roomAltitude){
+    if(!this.roomAltitude){
       EventSystem.trigger('NO_ROOM_ALTITUDE', null);
     }
   }

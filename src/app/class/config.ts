@@ -13,6 +13,7 @@ export class Config extends ObjectNode implements InnerXml {
   @SyncVar() _defaultDiceBot: string = 'DiceBot';
   @SyncVar() _roomVolume: number = 1.00;
   @SyncVar() _roomGridDispAlways: boolean = false;
+  @SyncVar() _roomAltitude: boolean = true;
 
   get defaultDiceBot(): string {
     if(this._defaultDiceBot == ''){
@@ -30,6 +31,9 @@ export class Config extends ObjectNode implements InnerXml {
 
   get roomGridDispAlways(): boolean { return this._roomGridDispAlways; }
   set roomGridDispAlways(roomGridDispAlways: boolean) { this._roomGridDispAlways = roomGridDispAlways; }
+
+  get roomAltitude(): boolean { return this._roomAltitude; }
+  set roomAltitude(roomAltitude: boolean) { this._roomAltitude = roomAltitude; }
 
   private static _instance: Config;
   static get instance(): Config {
@@ -59,6 +63,7 @@ export class Config extends ObjectNode implements InnerXml {
   apply(context: ObjectContext) {
     let _roomVolume = this._roomVolume;
     let _defaultDiceBot = this._defaultDiceBot;
+    let _roomAltitude = this._roomAltitude;
     super.apply(context);
     if (_defaultDiceBot !== this._defaultDiceBot) {
       console.log("this._defaultDiceBot変更");
@@ -69,7 +74,8 @@ export class Config extends ObjectNode implements InnerXml {
       console.log("全体ボリューム変更");
     }
 
+    if (_roomAltitude !== this._roomAltitude) {
+      console.log("roomAltitude変更");
+    }
   }
-
-
 }

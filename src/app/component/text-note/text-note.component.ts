@@ -23,6 +23,8 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { SelectionState, TabletopSelectionService } from 'service/tabletop-selection.service';
 import { TableSelecter } from '@udonarium/table-selecter';
+import { Config } from '@udonarium/config';
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 
 @Component({
   selector: 'text-note',
@@ -36,6 +38,9 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
   @Input() textNote: TextNote = null;
   @Input() is3D: boolean = false;
 
+  get config(): Config { return ObjectStore.instance.get<Config>('Config')};
+
+
   get title(): string { return this.textNote.title; }
   get text(): string { this.calcFitHeightIfNeeded(); return this.textNote.text; }
   set text(text: string) { this.calcFitHeightIfNeeded(); this.textNote.text = text; }
@@ -48,10 +53,7 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
   get altitude(): number { return this.textNote.altitude; }
   set altitude(altitude: number) { this.textNote.altitude = altitude; }
 
-  get roomAltitude(): boolean { return this.tableSelecter.roomAltitude; }
-  set roomAltitude(roomAltitude: boolean) {
-    this.tableSelecter.roomAltitude = roomAltitude;
-  }
+  get roomAltitude(): boolean { return this.config.roomAltitude; }
 
   get tableSelecter(): TableSelecter { return TableSelecter.instance; }
 

@@ -6,12 +6,14 @@
     <div>
       <span>
         <input type="checkbox" [(ngModel)]="isViewer" (change)="output()" id="isViewerCheck" />
-        <label for="isViewerCheck">
+        <label for="isViewerCheck" style="user-select: none;">
           GM＆観戦者用モード<br>
         </label>
+        <label style="user-select: none;">
           ┣非公開カードが透けて見えます。<br>
           ┣その他機能からカード一覧を開けます。<br>
           ┗制限されている機能が解放されます。
+        </label>
       </span>
     </div>
   </div>
