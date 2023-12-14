@@ -15,6 +15,7 @@ import { ContextMenuAction, ContextMenuSeparator, ContextMenuService } from 'ser
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { Config } from '@udonarium/config';
 
 @Component({
   selector: 'game-object-inventory',
@@ -30,6 +31,8 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
 
   isEdit: boolean = false;
 
+  get config(): Config { return ObjectStore.instance.get<Config>('Config')};
+
   get sortTag(): string { return this.inventoryService.sortTag; }
   set sortTag(sortTag: string) { this.inventoryService.sortTag = sortTag; }
   get sortOrder(): SortOrder { return this.inventoryService.sortOrder; }
@@ -41,6 +44,8 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
   get sortOrderName(): string { return this.sortOrder === SortOrder.ASC ? '昇順' : '降順'; }
 
   get newLineString(): string { return this.inventoryService.newLineString; }
+
+  get roomAltitude(): boolean { return this.config.roomAltitude; }
 
   constructor(
     private changeDetector: ChangeDetectorRef,
@@ -209,44 +214,46 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
         }
       ]
     });
-    actions.push(
-      (gameObject.isAltitudeIndicate
-      ? {
-        name: '☑ 高度の表示', action: () => {
-          gameObject.isAltitudeIndicate = false;
-          EventSystem.trigger('UPDATE_INVENTORY', null);
-        }
-      } : {
-        name: '☐ 高度の表示', action: () => {
-          gameObject.isAltitudeIndicate = true;
-          EventSystem.trigger('UPDATE_INVENTORY', null);
-        }
-      })
-    );
-    actions.push(ContextMenuSeparator);
-    actions.push(
-    {
-      name: '高度を0にする', action: () => {
-        if (gameObject.altitude != 0) {
-          gameObject.altitude = 0;
-          if (gameObject.location.name === 'table') SoundEffect.play(PresetSound.sweep);
-        }
-      },
-      altitudeHande: gameObject
-    });
-    actions.push((!gameObject.isNotRide
-      ? {
-        name: '☑ 他のキャラクターに乗る', action: () => {
-          gameObject.isNotRide = true;
-          EventSystem.trigger('UPDATE_INVENTORY', null);
-        }
-      } : {
-        name: '☐ 他のキャラクターに乗る', action: () => {
-          gameObject.isNotRide = false;
-          EventSystem.trigger('UPDATE_INVENTORY', null);
-        }
-      }));
-    actions.push(ContextMenuSeparator);
+    if(this.roomAltitude){
+      actions.push(
+        (gameObject.isAltitudeIndicate
+        ? {
+          name: '☑ 高度の表示', action: () => {
+            gameObject.isAltitudeIndicate = false;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        } : {
+          name: '☐ 高度の表示', action: () => {
+            gameObject.isAltitudeIndicate = true;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        })
+      );
+      actions.push(ContextMenuSeparator);
+      actions.push(
+      {
+        name: '高度を0にする', action: () => {
+          if (gameObject.altitude != 0) {
+            gameObject.altitude = 0;
+            if (gameObject.location.name === 'table') SoundEffect.play(PresetSound.sweep);
+          }
+        },
+        altitudeHande: gameObject
+      });
+      actions.push((!gameObject.isNotRide
+        ? {
+          name: '☑ 他のキャラクターに乗る', action: () => {
+            gameObject.isNotRide = true;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        } : {
+          name: '☐ 他のキャラクターに乗る', action: () => {
+            gameObject.isNotRide = false;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        }));
+      actions.push(ContextMenuSeparator);
+    }
     let locations = [
       { name: 'table', alias: 'テーブルに移動' },
       { name: 'common', alias: '共有イベントリに移動' },
