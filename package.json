@@ -22,7 +22,7 @@
     "@angular/platform-browser": "^17.0.7",
     "@angular/platform-browser-dynamic": "^17.0.7",
     "@angular/router": "^17.0.7",
-    "@angular/youtube-player": "^17.0.1",
+    "@angular/youtube-player": "^17.0.4",
     "@babel/traverse": "^7.23.4",
     "@ng-select/ng-select": "^12.0.4",
     "autolinker": "^4.0.0",
