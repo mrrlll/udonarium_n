@@ -40,7 +40,9 @@
               "pako",
               "pdfjs-dist/build/pdf",
               "pdfjs-dist/web/pdf_viewer",
-              "vkbeautify"
+              "vkbeautify",
+              "ng2-pdf-viewer",
+              "pdfjs-dist"
             ]
           },
           "configurations": {
