@@ -1,4 +1,4 @@
 [[redirects]]
   from = "/*"
-  to = "/udonariumN/index.html"
+  to = "/udonariumN/browser/index.html"
   status = 200
