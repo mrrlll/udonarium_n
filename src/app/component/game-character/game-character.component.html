@@ -33,14 +33,14 @@
               <ng-container *ngIf="gameCharacter.buffDataElement.children.length == 1">
                 <ng-container *ngFor="let child of gameCharacter.buffDataElement.children">
                   <ng-container *ngIf="child.children.length > 0">
-                    <div *ngIf="gameCharacter.buffDataElement" class="buff-tag is-nowrap is-buff-background is-3d will-change backface-off"
+                    <div *ngIf="gameCharacter.buffDataElement" class="buff-tag is-nowrap is-buff-background is-3d backface-off"
                       [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%)'}">
                       <div [hidden]="!gameCharacter.targeted" class="target-icon-buff scrolldown5"><img src="./assets/images/target/target.png"></div>
                       <div [hidden]="foldingBuff">
                         <div class="buff-folding-icon " (mousedown)="foldingBuffFlag(true)">▼</div>
                         <div class="!table is-3d">
                           <div class="flex-item is-3d" *ngFor="let childElement of gameCharacter.buffDataElement.children">
-                            <div class="table-row fornt-tag is-3d" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="true"></div>
+                            <div class="table-row is-3d" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="true"></div>
                           </div>
                         </div>
                       </div>
@@ -48,12 +48,12 @@
                         <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(false)">▲</div>
                         <div class="table is-3d">
                           <div class="flex-item is-3d">
-                            <div class="table-row fornt-tag is-3d" style="font-family: Cambria, Georgia; font-size: 12px;">簡易表示中/バフ{{buffNum}}個</div>
+                            <div class="table-row is-3d" style="font-family: Cambria, Georgia; font-size: 12px;">簡易表示中/バフ{{buffNum}}個</div>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div *ngIf="gameCharacter.buffDataElement" class="buff-tag is-nowrap is-buff-background is-3d will-change backface-off"
+                    <div *ngIf="gameCharacter.buffDataElement" class="buff-tag is-nowrap is-buff-background is-3d backface-off"
                      [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%) rotateY(180deg)'}">
                       <div class="target-icon-buff2 scrolldown5" [hidden]="!gameCharacter.targeted"
                       [ngStyle]="{'transform': 'rotateY(180deg)'}"><img src="./assets/images/target/target.png"></div>
@@ -61,7 +61,7 @@
                         <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(true)">▼</div>
                         <div class="table is-3d">
                           <div class="flex-item is-3d" *ngFor="let childElement of gameCharacter.buffDataElement.children">
-                            <div class="table-row fornt-tag is-3d" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="true"></div>
+                            <div class="table-row is-3d" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="true"></div>
                           </div>
                         </div>
                       </div>
@@ -69,7 +69,7 @@
                         <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(false)">▲</div>
                         <div class="table is-3d">
                           <div class="flex-item is-3d">
-                            <div class="table-row fornt-tag is-3d" style="font-family: Cambria, Georgia; font-size: 12px;">簡易表示中/バフ{{buffNum}}個</div>
+                            <div class="table-row is-3d" style="font-family: Cambria, Georgia; font-size: 12px;">簡易表示中/バフ{{buffNum}}個</div>
                           </div>
                         </div>
                       </div>
