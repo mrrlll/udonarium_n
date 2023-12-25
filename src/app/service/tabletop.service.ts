@@ -100,9 +100,9 @@ export class TabletopService {
           gameObject.location.x = pointer.x - 25;
           gameObject.location.y = pointer.y - 25;
           gameObject.posZ = pointer.z;
-          // gameObjectがgameCharacterか判断
+
+          // キャラクターコマだった場合、拡張データを追加してエラー防止
           if (gameObject instanceof GameCharacter) {
-            // GameCharacterにキャスト
             let gameCharacter = gameObject as GameCharacter;
             gameCharacter.addExtendData();
             this.placeToTabletop(gameCharacter);
