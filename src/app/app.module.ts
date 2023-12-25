@@ -88,6 +88,12 @@ import { RangeComponent } from 'component/range/range.component';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
+import { RemoteControllerComponent } from 'component/remote-controller/remote-controller.component';
+import { GameDataElementBuffComponent } from 'component/game-data-element-buff/game-data-element-buff.component';
+import { ControllerInputComponent } from 'component/controller-input/controller-input.component';
+import { ChatColorSettingComponent } from 'component/chat-color-setting/chat-color-setting.component';
+import { GameCharacterBuffViewComponent } from 'component/game-character-buff-view/game-character-buff-view.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -152,7 +158,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     CardsListWindowComponent,
     GameTableMaskInventoryComponent,
     RangeComponent,
-    DiceTableSettingComponent
+    DiceTableSettingComponent,
+    RemoteControllerComponent,
+    GameDataElementBuffComponent,
+    ControllerInputComponent,
+    ChatColorSettingComponent,
+    GameCharacterBuffViewComponent
   ],
   imports: [
     BrowserModule,

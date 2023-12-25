@@ -1,0 +1,50 @@
+<div class="table" [ngClass]="{ 'direct-message': isDirect }" >
+  <div class="table">
+    <div class="table-cell imagebox">
+      <img *ngIf="0 < imageFile.url.length" class="image" [src]="imageFile.url | safe: 'resourceUrl'" />
+    </div>
+    <div class="table-cell">
+      <div class="table">
+        <div class="table-cell" >
+          <div>
+            <ng-select class="ud-select" style="width: 10em;" [(ngModel)]="sendFrom" [searchable]="false" [clearable]="false">
+              <ng-option *ngIf="!onlyCharacters" [value]="myPeer?.identifier">{{myPeer?.name}}（あなた）</ng-option>
+              <ng-option *ngFor="let gameCharacter of gameCharacters" [value]="gameCharacter.identifier">{{gameCharacter.name}}
+              </ng-option>
+            </ng-select>
+            <div class="table-cell" >
+              <div style="font-size:0.8em;text-align:right">
+                選択数：{{selectNum}}<br>
+                <button class="color-setting small-font" (click)="allBoxCheck();" style="width:7em;">
+                  <ng-container *ngIf="0 != selectNum">
+                  全解除口→
+                  </ng-container>
+                  <ng-container *ngIf="0 == selectNum">
+                  全選択〆→
+                  </ng-container>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+  <div style="width:100%;">バフ/デバッファー
+    <div style="float:right;text-align:right;">隠す
+        <input name="buff_hide_chk" type="checkbox"
+        (change) ="buffHideChkChange($event.target.checked)" >
+    </div>
+    <form>
+      <div  [hidden] = "buffHideIsChk">
+        <textarea class="controller-input" placeholder="Enterで送信" [(ngModel)]="text"
+          [ngModelOptions]="{standalone: true}" (input)="onInput()" (keydown.enter)="sendChat($event)"
+            #textArea></textarea>
+        <button type="submit" (click)="sendChat(null)">実行</button>
+      </div>
+    </form>
+  </div>
+
+</div>

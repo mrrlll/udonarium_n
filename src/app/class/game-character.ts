@@ -35,9 +35,41 @@ export class GameCharacter extends TabletopObject {
 
   @SyncVar() owner: string = '';
 
-  @SyncVar() isStealth: boolean = false;
+  // @SyncVar() isStealth: boolean = false;
+
+  _targeted: boolean = false;
+  get targeted(): boolean {
+    return this._targeted;
+  }
+  set targeted( flag: boolean) {
+    this._targeted = flag;
+  }
 
   _selectedTachieNum: number = 0;
+  get selectedTachieNum(): number {
+    if( this._selectedTachieNum > ( this.imageDataElement.children.length - 1) ){
+      this._selectedTachieNum = this.imageDataElement.children.length - 1;
+    }
+    if( this._selectedTachieNum < 0 ){
+      this._selectedTachieNum = 0;
+    }
+
+    return this._selectedTachieNum;
+  }
+
+  set selectedTachieNum(num : number){
+    console.log("set selectedTachieNum NUM=" + num +" len" + this.imageDataElement.children.length);
+
+    if( num > ( this.imageDataElement.children.length - 1 ) ){
+      num = this.imageDataElement.children.length - 1;
+    }
+    if( num < 0 ){
+      num = 0;
+    }
+    this._selectedTachieNum = num
+    console.log("set selectedTachieNum" + this._selectedTachieNum);
+
+  }
 
   private getIconNumElement(): DataElement {
     const iconNum = this.detailDataElement.getFirstElementByName('ICON');
@@ -102,6 +134,39 @@ export class GameCharacter extends TabletopObject {
     gameCharacter.createTestGameDataElement(name, size, imageIdentifier);
 
     return gameCharacter;
+  }
+
+  addExtendData(){
+
+    this.addBuffDataElement();
+
+    let iconNum = this.detailDataElement.getElementsByName('コマ画像');
+    if( iconNum.length == 0 ){
+      let elementKoma: DataElement = DataElement.create('コマ画像', '', {}, 'コマ画像' + this.identifier);
+      this.detailDataElement.appendChild(elementKoma);
+
+      elementKoma.appendChild(DataElement.create(
+        'ICON',
+        this.imageDataElement.children.length - 1,
+        { 'type': 'numberResource', 'currentValue': 0 },
+        'ICON_' + this.identifier
+      ));
+    }
+
+    let isbuff = this.buffDataElement.getElementsByName('バフ/デバフ');
+    if( isbuff.length == 0 ){
+      let buffElement: DataElement = DataElement.create('バフ/デバフ', '', {}, 'バフ/デバフ' + this.identifier);
+      this.buffDataElement.appendChild(buffElement);
+    }
+    if( this.remoteController == null){
+      let controller: BuffPalette = new BuffPalette('RemotController_' + this.identifier);
+      controller.setPalette(`コントローラ入力例：
+マッスルベアー DB+2 3
+クリティカルレイ A 18
+セイクリッドウェポン 命+1攻+2 18`);
+      controller.initialize();
+      this.appendChild(controller);
+    }
   }
 
   clone() :this {
@@ -213,6 +278,8 @@ export class GameCharacter extends TabletopObject {
 //格闘＝１`);
     palette.initialize();
     this.appendChild(palette);
+
+    this.addExtendData();
   }
 
 
@@ -275,6 +342,90 @@ export class GameCharacter extends TabletopObject {
 //格闘＝１`);
     palette.initialize();
     this.appendChild(palette);
+  }
+
+  deleteBuff(name: string):boolean{
+    if (this.buffDataElement.children){
+      const dataElm = this.buffDataElement.children[0];
+      const data = (dataElm as DataElement).getFirstElementByName(name);
+      if(!data)return false;
+      data.destroy();
+      return true;
+    }
+    return false;
+  }
+
+  decreaseBuffRound(){
+    if (this.buffDataElement.children){
+      const dataElm = this.buffDataElement.children[0];
+      for (const data  of dataElm.children){
+        let oldNumS = '';
+        let sum: number;
+        oldNumS = (data.value as string);
+        sum = parseInt(oldNumS);
+        sum = sum - 1;
+        data.value = sum;
+      }
+    }
+  }
+
+  increaseBuffRound(){
+    if (this.buffDataElement.children){
+      const dataElm = this.buffDataElement.children[0];
+      for (const data  of dataElm.children){
+        let oldNumS = '';
+        let sum: number;
+        oldNumS = (data.value as string);
+        sum = parseInt(oldNumS);
+        sum = sum + 1;
+        data.value = sum;
+      }
+    }
+  }
+
+  deleteZeroRoundBuff(){
+    if (this.buffDataElement.children){
+      const dataElm = this.buffDataElement.children[0];
+      for (const data  of dataElm.children){
+        let oldNumS = '';
+        let num: number;
+        oldNumS = (data.value as string);
+        num = parseInt(oldNumS);
+        if ( num <= 0){
+        data.destroy();
+        }
+      }
+    }
+  }
+
+  addBuffRound(name: string, _info?: string , _round?: number){
+    let info = '';
+    let round = 3;
+    if(_info ){
+      info = _info;
+    }
+    if(_round != null){
+      round = _round;
+    }
+    if(this.buffDataElement.children){
+      let dataElm = this.buffDataElement.children[0];
+      let data = this.buffDataElement.getFirstElementByName( name );
+      if ( data ){
+        data.value = round;
+        data.currentValue = info;
+      }else{
+        dataElm.appendChild(DataElement.create(name, round , { type: 'numberResource', currentValue: info }, ));
+      }
+    }
+  }
+
+  chkChangeStatusName(name: string): boolean{
+    const data = this.detailDataElement.getFirstElementByName(name);
+    if(!data)return false;
+    if(data.type == 'numberResource'){ return true;}
+    if(data.type == ''){ return true;}
+    if(data.type == 'note'){ return true;}
+    return false;
   }
 
   chkChangeStatus(name: string, nowOrMax: string): boolean{

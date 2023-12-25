@@ -195,6 +195,25 @@
   filter: drop-shadow(0 -4px 4px #fff);
 }
 
+.buff-tag {
+  box-sizing: border-box;
+  padding: 3px 9px;
+/*  border:10px #666;*/
+  border: 1px #222 solid;
+  border-radius: 12px;
+  position: absolute;
+  margin: auto;
+  top: -35px;
+}
+
+.is-buff-background {
+  color: #222;
+/*  background-color: rgba(100, 100, 0, 0.5);*/
+/*  background-color: rgba(240,218,189, 0.8);*/
+  background-color: rgba(240,229,215, 0.8);
+
+}
+
 .name-tag {
   box-sizing: border-box;
   font-size: 13px;
@@ -325,6 +344,10 @@
   backface-visibility: hidden;
 }
 
+.backface-off {
+  backface-visibility: hidden;
+}
+
 .elevation-indicator {
   font-weight: bolder;
   font-size: 12px;
@@ -353,4 +376,101 @@
     0px 0px 10px 5px #ff0,
     inset 0px 0px 10px 5px #ff0; }
   100% { box-shadow: none; }
+}
+
+.buff-folding-dummy {
+  width: 1px;
+  height: 1px;
+
+}
+
+.buff-folding-icon {
+  font-size: 12px;
+  vertical-align: middle;
+  text-align: center;
+  margin-left:100%;
+  position:absolute;
+  width:20px;
+  height:20px;
+  left:-20px;
+  top:-20px;
+  background-color: rgba(240,229,215, 0.8);
+  box-sizing: border-box;
+  border: 1px #222 solid;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.target-icon {
+  width: 30px;
+  font-size: 20px;
+  left: 6px;
+  box-sizing: border-box;
+  position: absolute;
+}
+
+.scrolldown4{
+	position:absolute;
+	animation: arrowmove 1s ease-in-out infinite;
+}
+
+@keyframes arrowmove{
+      0%{top: -80px;}
+     100%{top: -60px;}
+ }
+
+
+/* 矢印の描写 */
+.scrolldown4:before {
+  top: -60px;
+}
+
+/*描画位置*/
+.scrolldown4:after{
+	content:"";
+	position: absolute;
+	top: -80px;
+}
+
+.target-icon-buff {
+  width: 30px;
+  font-size: 20px;
+  margin-left: 50%;
+  left: -10px;
+  box-sizing: border-box;
+  position: absolute;
+  margin-top:
+}
+
+.target-icon-buff2 {
+  width: 30px;
+  font-size: 20px;
+  margin-left: 50%;
+  left: -20px;
+  box-sizing: border-box;
+  position: absolute;
+  margin-top:
+}
+
+.scrolldown5{
+	position:absolute;
+	animation: arrowmove2 1s ease-in-out infinite;
+}
+
+@keyframes arrowmove2{
+      0%{top: -50px;}
+     100%{top: -30px;}
+ }
+
+
+/* 矢印の描写 */
+.scrolldown5:before {
+  top: -30px;
+}
+
+/*描画位置*/
+.scrolldown5:after{
+	content:"";
+	position: absolute;
+	top: -50px;
 }

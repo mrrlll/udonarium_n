@@ -18,6 +18,7 @@ import { GameCharacter } from '@udonarium/game-character';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.component';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
+import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { RotableOption } from 'directive/rotable.directive';
@@ -30,6 +31,8 @@ import { AppConfigCustomService } from 'service/app-config-custom.service';
 import { Observable, Subscription } from 'rxjs';
 import { TableSelecter } from '@udonarium/table-selecter';
 import { Config } from '@udonarium/config';
+import { RemoteControllerComponent } from 'component/remote-controller/remote-controller.component';
+import { GameCharacterBuffViewComponent } from 'component/game-character-buff-view/game-character-buff-view.component';
 
 @Component({
   selector: 'game-character',
@@ -58,6 +61,8 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   @Input() is3D: boolean = false;
   @Input() tabletopObject: TabletopObject = null;
   @ViewChild('root') rootElementRef: ElementRef<HTMLElement>;
+
+  private foldingBuff: boolean = false;
 
   // GMフラグ
   obs: Observable<boolean>;
@@ -114,12 +119,14 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   movableOption: MovableOption = {};
   rotableOption: RotableOption = {};
   rollOption: RotableOption = {};
+  private input: InputHandler = null;
 
   private highlightTimer: NodeJS.Timeout;
   private unhighlightTimer: NodeJS.Timeout;
 
   constructor(
     private contextMenuService: ContextMenuService,
+    private elementRef: ElementRef<HTMLElement>,
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
     private selectionService: TabletopSelectionService,
@@ -145,6 +152,12 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
       })
       .on('NO_ROOM_ALTITUDE', event => {
         this.gameCharacter.altitude = 0;
+      })
+      .on('CHK_TARGET_CHANGE', -1000, event => {
+        let objct = ObjectStore.instance.get(event.data.identifier);
+        if (objct == this.gameCharacter) {
+          this.changeDetector.detectChanges();
+        }
       })
       .on('HIGHTLIGHT_TABLETOP_OBJECT', event => {
         if (this.gameCharacter.identifier !== event.data.identifier) { return; }
@@ -204,7 +217,15 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.input.destroy();
     EventSystem.unregister(this);
+  }
+
+  ngAfterViewInit() {
+    this.ngZone.runOutsideAngular(() => {
+      this.input = new InputHandler(this.elementRef.nativeElement);
+    });
+    this.input.onStart = this.onInputStart.bind(this);
   }
 
   @HostListener('dragstart', ['$event'])
@@ -235,6 +256,10 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
 
   onMoved() {
     SoundEffect.play(PresetSound.piecePut);
+  }
+
+  onInputStart(e: any) {
+    this.input.cancel();
   }
 
   private makeSelectionContextMenu(): ContextMenuAction[] {
@@ -315,6 +340,8 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
 
     actions.push({ name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } });
     actions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } });
+    actions.push({ name: 'リモコンを表示', action: () => { this.showRemoteController(this.gameCharacter) } });
+    actions.push({ name: 'バフ編集', action: () => { this.showBuffEdit(this.gameCharacter) } });
     actions.push(ContextMenuSeparator);
     subActions.push(
       this.isInverse
@@ -469,6 +496,35 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     return actions;
   }
 
+  checkKey(event) {
+    //イベント処理
+    let key_event = event || window.event;
+    let key_shift = (key_event.shiftKey);
+    let key_ctrl = (key_event.ctrlKey);
+    let key_alt = (key_event.altKey);
+    let key_meta = (key_event.metaKey);
+    //キーに対応した処理
+
+    if (key_shift) console.log("shiftキー");
+    if (key_ctrl) console.log("ctrlキー");
+    if (key_alt) {
+      console.log("altキー");
+      this.gameCharacter.targeted = this.gameCharacter.targeted ? false : true;
+    }
+    if (key_meta) console.log("metaキー");
+
+    if (key_shift && key_alt) {
+      console.log("shift+ALTキー");
+      let objects = ObjectStore.instance.getObjects(GameCharacter);
+      for (let object of objects) {
+        object.targeted = false;
+        EventSystem.trigger('CHK_TARGET_CHANGE', { identifier: object.identifier, className: object.aliasName });
+      }
+    }
+
+    //出力
+  }
+
   private showDetail(gameObject: GameCharacter) {
     let coordinate = this.pointerDeviceService.pointers[0];
     let title = 'キャラクターシート';
@@ -483,5 +539,32 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 615, height: 350 };
     let component = this.panelService.open<ChatPaletteComponent>(ChatPaletteComponent, option);
     component.character = gameObject;
+  }
+
+  private showRemoteController(gameObject: GameCharacter) {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 700, height: 625 };
+    let component = this.panelService.open<RemoteControllerComponent>(RemoteControllerComponent, option);
+    component.character = gameObject;
+  }
+
+  private showBuffEdit(gameObject: GameCharacter) {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 420, height: 300 };
+    option.title = gameObject.name + 'のバフ編集';
+    let component = this.panelService.open<GameCharacterBuffViewComponent>(GameCharacterBuffViewComponent, option);
+    component.character = gameObject;
+  }
+
+  private foldingBuffFlag(flag: boolean){
+    console.log('private foldingBuffFlag');
+    this.foldingBuff = flag;
+  }
+
+  get buffNum(): number{
+    if ( this.gameCharacter.buffDataElement.children.length == 0){
+      return 0;
+    }
+    return this.gameCharacter.buffDataElement.children[0].children.length;
   }
 }

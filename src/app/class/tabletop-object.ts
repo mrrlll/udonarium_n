@@ -42,6 +42,8 @@ export class TabletopObject extends ObjectNode {
   get commonDataElement(): DataElement { return this.getElement('common'); }
   get detailDataElement(): DataElement { return this.getElement('detail'); }
 
+  get buffDataElement(): DataElement { return this.getElement('buff'); }//リリィにてバフ機能用の追加
+
   @SyncVar() currntImageIndex: number = 0;
   /*
   get imageFile(): ImageFile {
@@ -54,6 +56,13 @@ export class TabletopObject extends ObjectNode {
     return this._imageFile;
   }
   */
+
+  addBuffDataElement(){
+    if (!this.buffDataElement){
+      this.rootDataElement.appendChild(DataElement.create('buff', '', {}, 'buff_' + this.identifier));
+    }
+  }
+
   get imageElement(): DataElement {
     if (!this.imageDataElement) return null;
     let imageIdElements: DataElement[] = this.imageDataElement.getElementsByName('imageIdentifier');
@@ -140,6 +149,8 @@ export class TabletopObject extends ObjectNode {
   @SyncVar() isNotRide: boolean = true;
   @SyncVar() isInventoryIndicate: boolean = true;
 
+  @SyncVar() isStealth: boolean = false;
+
   get isGMMode(): boolean{ return PeerCursor.myCursor ? PeerCursor.myCursor.isGMMode : false; }
 
   calcSqrDistance(other: TabletopObject): number {
@@ -162,6 +173,7 @@ export class TabletopObject extends ObjectNode {
     }
     if (!this.commonDataElement) this.rootDataElement.appendChild(DataElement.create('common', '', {}, 'common_' + this.identifier));
     if (!this.detailDataElement) this.rootDataElement.appendChild(DataElement.create('detail', '', {}, 'detail_' + this.identifier));
+    if (!this.buffDataElement) this.rootDataElement.appendChild(DataElement.create('buff', '', {}, 'buff_' + this.identifier));//entyu
   }
 
   protected getElement(name: string, from: DataElement = this.rootDataElement): DataElement {

@@ -20,6 +20,7 @@ import { ImageTag } from '@udonarium/image-tag';
 import { RangeArea } from '@udonarium/range';
 import { DiceTable } from '@udonarium/dice-table';
 import { DiceTablePalette } from '@udonarium/chat-palette';
+import { DataElement } from '@udonarium/data-element';
 
 @Injectable({
   providedIn: 'root'
@@ -205,6 +206,15 @@ export class TabletopActionService {
     TableSelecter.instance.viewTableIdentifier = gameTable.identifier;
   }
 
+  addBuffRound(character: GameCharacter, name: string, subcom: string, round: number){
+    if(character.buffDataElement.children){
+      for (let dataElm of character.buffDataElement.children){
+        dataElm.appendChild(DataElement.create(name, round, { 'type': 'numberResource', 'currentValue': subcom }, name + '_' + character.identifier ));
+        return;
+      }
+    }
+  }
+
   makeDefaultTabletopObjects() {
     let testCharacter: GameCharacter = null;
     let testFile: ImageFile = null;
@@ -224,6 +234,7 @@ export class TabletopActionService {
     testCharacter.location.y = 9 * 50;
     testCharacter.initialize();
     testCharacter.createTestGameDataElement('モンスターA', 1, testFile.identifier);
+    this.addBuffRound( testCharacter, 'テストバフ1', '防+1', 3);
 
     testCharacter = new GameCharacter('testCharacter_2');
     testCharacter.location.x = 8 * 50;
@@ -250,6 +261,7 @@ export class TabletopActionService {
     testCharacter.location.y = 11 * 50;
     testCharacter.initialize();
     testCharacter.createTestGameDataElement('キャラクターA', 1, testFile.identifier);
+    this.addBuffRound( testCharacter, 'テストバフ2', '攻撃+10', 1);
 
     testCharacter = new GameCharacter('testCharacter_5');
     fileContext = ImageFile.createEmpty('testCharacter_5_image').toContext();
@@ -260,6 +272,7 @@ export class TabletopActionService {
     testCharacter.location.y = 12 * 50;
     testCharacter.initialize();
     testCharacter.createTestGameDataElement('キャラクターB', 1, testFile.identifier);
+    this.addBuffRound( testCharacter, 'テストバフ2', '攻撃+10', 1);
 
     testCharacter = new GameCharacter('testCharacter_6');
     fileContext = ImageFile.createEmpty('testCharacter_6_image').toContext();
@@ -270,6 +283,7 @@ export class TabletopActionService {
     testCharacter.location.y = 13 * 50;
     testCharacter.initialize();
     testCharacter.createTestGameDataElement('キャラクターC', 1, testFile.identifier);
+    this.addBuffRound( testCharacter, 'テストバフ3', '', 3);
 
     let diceTable = DiceTable.create();
     diceTable.name = 'サンプルダイス表';
