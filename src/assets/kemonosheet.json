@@ -161,17 +161,6 @@
                 }
               ],
               "@_name": "絆"
-            },
-            {
-              "data": [
-                {
-                  "#text": "",
-                  "@_name": "ICON",
-                  "@_type": "numberResource",
-                  "@_currentValue": "0"
-                }
-              ],
-              "@_name": "コマ画像"
             }
             ],
             "@_name": "detail"

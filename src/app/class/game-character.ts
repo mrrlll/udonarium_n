@@ -137,7 +137,6 @@ export class GameCharacter extends TabletopObject {
   }
 
   addExtendData(){
-
     this.addBuffDataElement();
 
     let iconNum = this.detailDataElement.getElementsByName('コマ画像');
