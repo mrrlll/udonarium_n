@@ -13,12 +13,25 @@
         {
           "data": [
             {
-                "#text": "仮名",
-                "@_name": "name"
+              "#text": "仮名",
+              "@_name": "name"
             },
             {
-                "#text": 3,
-                "@_name": "size"
+              "#text": 3,
+              "@_name": "size"
+            },
+            {
+              "#text": 0,
+              "@_name": "altitude"
+            },
+            {
+              "#text": 3,
+              "@_name": "貌力の強度"
+            },
+            {
+              "#text": "本名:\n性別:　年齢:\n仮面:\n貌力:\n雰囲気:\n動機:",
+              "@_type": "note",
+              "@_name": "設定"
             }
           ],
           "@_name": "common"
@@ -27,6 +40,10 @@
           "data": [
             {
               "data": [
+                {
+                  "#text": 0,
+                  "@_name": "先制値"
+                },
                 {
                   "#text": 10,
                   "@_type": "numberResource",
@@ -53,12 +70,12 @@
                 },
                 {
                   "#text": "特性名",
-                  "@_name": "特性①",
+                  "@_name": "特性",
                   "@_type": "check"
                 },
                 {
                   "#text": "特性名",
-                  "@_name": "特性②",
+                  "@_name": "特性",
                   "@_type": "check"
                 },
                 {
@@ -75,16 +92,6 @@
             },
             {
               "data": [
-                {
-                  "#text": "本名:\n性別:　年齢:\n仮面:\n貌力:\n雰囲気:\n動機:",
-                  "@_type": "note",
-                  "@_name": "設定"
-                },
-                {
-                  "#text": 3,
-                  "@_name": "貌力の強度",
-                  "@_type": ""
-                },
                 {
                   "#text": "「」(威力:)(特殊効果:)",
                   "@_type": "",
@@ -108,7 +115,7 @@
                   "@_type": "note"
                 }
               ],
-              "@_name": "情報"
+              "@_name": "装備"
             },
             {
               "data": [
