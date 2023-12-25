@@ -86,6 +86,7 @@ export class ChatMessageService {
       tag: gameType,
       text: text,
       color: color,
+      sendFrom: sendFrom,
     };
 
     let chkMessage = ' ' + StringUtil.toHalfWidth(text).toLowerCase();

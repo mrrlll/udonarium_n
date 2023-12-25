@@ -11,6 +11,8 @@ import { formatDate } from '@angular/common';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { ObjectStore } from './core/synchronize-object/object-store';
 
+import { GameCharacter } from '@udonarium/game-character';
+
 export interface ChatMessageContext {
   identifier?: string;
   tabIdentifier?: string;
@@ -32,6 +34,11 @@ export interface ChatMessageContext {
   sendFrom?: string;
 }
 
+export interface ChatMessageTargetContext {
+  text: string;
+  object: GameCharacter;
+}
+
 @SyncObject('chat')
 export class ChatMessage extends ObjectNode implements ChatMessageContext {
   @SyncVar() originFrom: string;
@@ -48,6 +55,8 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   @SyncVar() lastUpdate: number = 0
   @SyncVar() color: string;
   @SyncVar() toColor: string = '';
+
+  targetInfo: ChatMessageTargetContext[];
 
   get tabIdentifier(): string { return this.parent.identifier; }
   get text(): string { return <string>this.value }

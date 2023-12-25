@@ -531,6 +531,21 @@ export class GameCharacter extends TabletopObject {
     return true;
   }
 
+  chkChangeStatusValue(name: string, nowOrMax: string): boolean{
+    const data = this.detailDataElement.getFirstElementByName(name);
+    if(!data)return false;
+    if(data.type == 'numberResource'){
+      if(nowOrMax == 'now' || nowOrMax =='max'){
+        return true;
+      }
+    }else if(data.type != 'note'){
+      if(nowOrMax == 'now'){
+        return true;
+      }
+    }
+    return false;
+  }
+
 
   changeStatusValue(name: string, nowOrMax: string, addValue: number, limitMin ?: boolean ,limitMax ?: boolean ): string{
     const data = this.detailDataElement.getFirstElementByName(name);
