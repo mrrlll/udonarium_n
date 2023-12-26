@@ -1,5 +1,6 @@
 import { Component, ElementRef, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ChatMessage } from '@udonarium/chat-message';
+import GameSystemClass from 'bcdice/lib/game_system';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
@@ -71,7 +72,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   get filterText(): string { return this._filterText };
   set filterText(filterText: string) { this._filterText = filterText; this.filterTextChange.emit(filterText); }
 
-  @Output() chat = new EventEmitter<{ text: string, gameType: string, sendFrom: string, sendTo: string }>();
+  @Output() chat = new EventEmitter<{ text: string, gameSystem: GameSystemClass, sendFrom: string, sendTo: string }>();
   @Output() tabSwitch = new EventEmitter<number>();
 
   get isDirect(): boolean { return this.sendTo != null && this.sendTo.length ? true : false }
@@ -247,7 +248,14 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     this.history.push(this.text);
     this.currentHistoryIndex = -1;
 
-    this.chat.emit({ text: this.text, gameType: this.gameType, sendFrom: this.sendFrom, sendTo: this.sendTo });
+    const message = {
+      text: this.text, sendFrom: this.sendFrom, sendTo: this.sendTo,
+    }
+    DiceBot.loadGameSystemAsync(this.gameType).then((gameSystem) => {
+      this.chat.emit({
+        text: message.text, gameSystem: gameSystem, sendFrom: message.sendFrom, sendTo: message.sendTo
+      });
+    });
 
     this.text = '';
     this.previousWritingLength = this.text.length;

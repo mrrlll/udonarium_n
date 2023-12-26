@@ -365,7 +365,7 @@ export class RemoteControllerComponent implements OnInit, OnDestroy, AfterViewIn
         text = text + '[' + object.name + ']';
       }
       const mess = 'バフのRを減少 ' + text;
-      this.chatMessageService.sendMessage(this.chatTab, mess, this.sendFrom, '');
+      this.chatMessageService.sendMessage(this.chatTab, mess, this._gameSystem, this.sendFrom, '');
     }
   }
 
@@ -387,7 +387,7 @@ export class RemoteControllerComponent implements OnInit, OnDestroy, AfterViewIn
         text = text + '[' + object.name + ']';
       }
       const mess = '0R以下のバフを消去 ' + text;
-      this.chatMessageService.sendMessage(this.chatTab, mess, this.sendFrom, '');
+      this.chatMessageService.sendMessage(this.chatTab, mess, this._gameSystem, this.sendFrom, '');
     }
   }
 
@@ -446,7 +446,7 @@ export class RemoteControllerComponent implements OnInit, OnDestroy, AfterViewIn
       this.remoteAddBuffRound(gameCharacters, buffname, sub, round);
 
       const mess = 'バフを付与 ' + bufftext + ' > ' + text;
-      this.chatMessageService.sendMessage(this.chatTab, mess, this.sendFrom, '');
+      this.chatMessageService.sendMessage(this.chatTab, mess, this._gameSystem, this.sendFrom, '');
       this.errorMessageBuff = '';
     }else{
       this.errorMessageBuff = '対象が未選択です';
@@ -470,7 +470,7 @@ export class RemoteControllerComponent implements OnInit, OnDestroy, AfterViewIn
       let hugou = '+';
       if ( this.remoteNumber < 0) { hugou = ''; }
       const mess = '[' + this.remoteControllerSelect.dispName + ']変更[' + hugou + this.remoteNumber + ']＞' + text;
-      this.chatMessageService.sendMessage(this.chatTab, mess, this.sendFrom, '',);
+      this.chatMessageService.sendMessage(this.chatTab, mess, this._gameSystem, this.sendFrom, '');
       this.errorMessageController = '';
     }else{
       this.errorMessageController = '対象キャラクターが未選択です';

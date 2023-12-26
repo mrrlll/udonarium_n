@@ -1,4 +1,4 @@
-import { ChatMessage, ChatMessageContext } from './chat-message';
+import { ChatMessage, ChatMessageContext, ChatMessageTargetContext } from './chat-message';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { InnerXml, ObjectSerializer } from './core/synchronize-object/object-serializer';
@@ -126,12 +126,11 @@ export class ChatTab extends ObjectNode implements InnerXml {
     }
   }
 
-  addMessage(message: ChatMessageContext): ChatMessage {
+  addMessage(message: ChatMessageContext , messageTargetContext ? :ChatMessageTargetContext[] ): ChatMessage {
     message.tabIdentifier = this.identifier;
 
     let chat = new ChatMessage();
     for (let key in message) {
-      console.log('addMessage:' + key);
       if (key === 'identifier') continue;
       if (key === 'tabIdentifier') continue;
 
@@ -141,52 +140,31 @@ export class ChatTab extends ObjectNode implements InnerXml {
       }
       if (message[key] == null || message[key] === '') continue;
 
-      if (key === 'imagePos') {
-        if (message.to != null && message.to !== '') { continue; } // 秘話時に立ち絵の更新をかけない
-        this.pos_num = message[key];
-        if ( 0 <= this.pos_num && this.pos_num < this.imageIdentifier.length ){
-          let oldpos = this.getImageCharactorPos(message.name);
-          if ( oldpos >= 0 ){ // 同名キャラの古い位置を消去
-            this.imageIdentifier[oldpos] = '';
-            this.imageCharactorName[oldpos] = '';
-            this.imageDispFlag[oldpos] = false;
-          }
-          // 非表示コマンド\s
-
-          if ( message.imageIdentifier == '' ){
-            // 事前に古い立ち絵は消す処理をしているため処理なし
-          }else{
-
-            this.imageIdentifier[this.pos_num] = message.imageIdentifier;
-            this.imageCharactorName[this.pos_num] = message.name;
-            this.replaceTachieZindex(this.pos_num);
-            this.imageDispFlag[this.pos_num] = true;
-
-            chat.setAttribute(key, message[key]);
-          }
-          this.imageIdentifierDummy = message.imageIdentifier; // 同期方法が無理やり感がある、後日
-
-        }
-        continue;
-      }
-
       chat.setAttribute(key, message[key]);
     }
     chat.initialize();
 
-    // if ( 0 > chat.tags.indexOf('secret') ){
-    //   this.cutInLauncher.chatActivateCutIn( chat.text , message.to ); // カットイン末尾発動
-    // }
+    if ( 0 > chat.tags.indexOf('secret') ){
+      this.cutInLauncher.chatActivateCutIn( chat.text , message.to ); // カットイン末尾発動
+    }
 
-    EventSystem.trigger('SEND_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier });
+    let isContext = false;
+    if (messageTargetContext){
+      if (messageTargetContext.length >= 1){
+        isContext = true;
+      }
+    }
+    if(isContext){
+      for( let context of messageTargetContext){
+        EventSystem.trigger('SEND_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier, messageTrget: context });
+      }
+    }else{
+      EventSystem.trigger('SEND_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier, messageTrget: null });
+    }
 
     EventSystem.trigger('DICE_TABLE_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier });
 
-    EventSystem.trigger('RESOURCE_EDIT_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier });
-
-    // 2021年4月実装のえいぷりるコマンド判定
-    // EventSystem.trigger('APRIL_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier });
-
+    EventSystem.trigger('RESOURCE_EDIT_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier, messageTargetContext: messageTargetContext ? messageTargetContext : null});
 
     this.appendChild(chat);
     return chat;

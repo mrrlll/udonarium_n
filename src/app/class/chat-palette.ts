@@ -3,6 +3,7 @@ import { ObjectContext } from './core/synchronize-object/game-object';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { CompareOption, StringUtil } from './core/system/util/string-util';
 import { DataElement } from './data-element';
+import { GameCharacter } from './game-character';
 
 export interface PaletteLine {
   palette: string;
@@ -128,9 +129,28 @@ export class ChatPalette extends ObjectNode {
     this.isAnalized = false;
   }
 
+  checkTargetCharactor(text: string): boolean{
+    let istarget = text.match(/[tTｔＴ][{｛]\s*([^{}｛｝]+)\s*[}｝]/g) ? true : false;
+
+    if( text.match(/^[sSｓＳ]?[tTｔＴ][:：]([^:：]+)/g) ){
+      istarget = true;
+    }
+    if( text.match(/\s[sSｓＳ]?[tTｔＴ][:：]([^:：]+)/g) ){
+      istarget = true;
+    }
+    if( text.match(/^[tTｔＴ][&＆]([^&＆]+)/g) ){
+      istarget = true;
+    }
+    if( text.match(/\s[tTｔＴ][&＆]([^&＆]+)/g) ){
+      istarget = true;
+    }
+    console.log('複数対象用コマンド：'+istarget);
+    return istarget;
+  }
+
   evaluate(line: PaletteLine, extendVariables?: DataElement): string
-  evaluate(line: string, extendVariables?: DataElement): string
-  evaluate(line: any, extendVariables?: DataElement): string {
+  evaluate(line: string, extendVariables?: DataElement,target?: GameCharacter): string
+  evaluate(line: any, extendVariables?: DataElement,target?: GameCharacter): string {
     let evaluate: string = '';
     if (typeof line === 'string') {
       evaluate = line;

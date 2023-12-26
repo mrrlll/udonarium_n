@@ -388,7 +388,7 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       };
 
       let summary = `<?xml version="1.0" encoding="UTF-8"?>
-      // <summary-setting dataTag="開始条件 展開 耐久度 威力 軽減値 特殊効果 異形 情報 リソース 絆 能力 装備"></summary-setting>
+      <summary-setting sortTag="先制値" sortOrder="ASC" dataTag="先制値 開始条件 展開 耐久度 威力 軽減値 特殊効果 異形 情報 リソース 絆 能力 装備"></summary-setting>
       `
       this.generateKoma(kemonosheet, summary);
       return;

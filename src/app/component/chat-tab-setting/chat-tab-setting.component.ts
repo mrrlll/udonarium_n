@@ -103,23 +103,23 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
         this.selectedTab.children[0].destroy();
     }
     let mess = 'ログをクリアしました'
-    let gameType: string = '';
+    let gameSystem = null;
     let sendTo ='';
-    this.chatMessageService.sendMessage(this.selectedTab, mess, gameType, this.myPeer.identifier, sendTo);
+    this.chatMessageService.sendMessage(this.selectedTab, mess, gameSystem, this.myPeer.identifier, sendTo);
   }
 
   deleteLogALL(){
     if( !this.allowDeleteLog ) return;
 
     let mess = 'ログをクリアしました'
-    let gameType: string = '';
+    let gameSystem = null;
     let sendTo ='';
 
     for (let child of ChatTabList.instance.chatTabs) {
       while( child.children.length > 0){
         child.children[0].destroy();
       }
-      this.chatMessageService.sendMessage(child, mess, gameType, this.myPeer.identifier, sendTo);
+      this.chatMessageService.sendMessage(child, mess, gameSystem, this.myPeer.identifier, sendTo);
     }
   }
 

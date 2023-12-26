@@ -7,10 +7,6 @@ import { StringUtil } from './core/system/util/string-util';
 import { Autolinker } from 'autolinker';
 import { PeerCursor } from './peer-cursor';
 import { formatDate } from '@angular/common';
-
-import { ChatTabList } from '@udonarium/chat-tab-list';
-import { ObjectStore } from './core/synchronize-object/object-store';
-
 import { GameCharacter } from '@udonarium/game-character';
 
 export interface ChatMessageContext {

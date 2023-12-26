@@ -7,13 +7,11 @@ import { ChatTab } from './chat-tab';
 import { SyncObject } from './core/synchronize-object/decorator';
 import { GameObject } from './core/synchronize-object/game-object';
 import { GameCharacter } from './game-character';
-import { DataElement } from './data-element';
 import { ObjectStore } from './core/synchronize-object/object-store';
 import { EventSystem } from './core/system';
 import { PromiseQueue } from './core/system/util/promise-queue';
 import { StringUtil } from './core/system/util/string-util';
 import { DiceTable } from './dice-table';
-import { DiceTablePalette } from './chat-palette';
 
 import { PeerCursor } from './peer-cursor';
 
@@ -71,27 +69,124 @@ interface ChatCommandResult {
   isSecret: boolean;
 }
 
-let loader: BCDiceLoader;
-let queue: PromiseQueue = initializeDiceBotQueue();
-
 @SyncObject('dice-bot')
 export class DiceBot extends GameObject {
   static diceBotInfos: GameSystemInfo[] = [];
+
+  private static loader: BCDiceLoader;
+  private static queue: PromiseQueue = DiceBot.initializeDiceBotQueue();
+
+  static getCustomGameSystemInfo(ststem: GameSystemClass, locale: string): GameSystemInfo{
+    const gameSystemInfo: GameSystemInfo = {
+      id: ststem.ID,
+      name: ststem.NAME,
+      className: ststem.ID,
+      sortKey: ststem.SORT_KEY,
+      locale: locale,
+      superClassName: "Base",
+    };
+    return gameSystemInfo;
+  }
+
+  private static initializeDiceBotQueue(): PromiseQueue {
+    let queue = new PromiseQueue('DiceBotQueue');
+    queue.add(async () => {
+      DiceBot.loader = new (await import(
+        /* webpackChunkName: "lib/bcdice/bcdice-loader" */
+        './bcdice/bcdice-loader')
+      ).default;
+      DiceBot.diceBotInfos = DiceBot.loader.listAvailableGameSystems()
+      .sort((a, b) => {
+        if (a.sortKey < b.sortKey) return -1;
+        if (a.sortKey > b.sortKey) return 1;
+        return 0;
+      });
+  });
+  return queue;
+}
 
   getDiceTables(): DiceTable[] {
     return ObjectStore.instance.getObjects(DiceTable);
   }
 
-  async checkSecretDiceCommand(gameType,chatText): Promise<boolean> {
-    let text: string = StringUtil.toHalfWidth(chatText).toLowerCase();
-    let nonRepeatText = text.replace(/^(\d+)?\s+/,'repeat1 ').replace(/^x(\d+)?\s+/,'repeat1 ').replace(/repeat(\d+)?\s+/,'');
-//    console.log("シークレット確認nonRepeatText:" + nonRepeatText);
-    let regArray = /^s(.*)?/ig.exec(nonRepeatText);
-    console.log("check secret regArray:" + regArray);
-    if( !regArray ) return false;
-    const gameSystem = await DiceBot.loadGameSystemAsync(gameType);
-    if (!gameSystem.COMMAND_PATTERN.test(regArray[1])) return false;
-    return true;
+  static deleteMyselfResourceBuff(str: string): string{
+    let beforeIsSpace = true;
+    let beforeIsT = false;
+    let tCommand = false;
+    let deleteCommand = false;
+    let str2 = '';
+    for (let i = 0; i < str.length; i++) {
+      let chktext :string = str[i];
+
+      if ( beforeIsSpace && chktext.match(/[tTｔＴ]/)){
+        beforeIsSpace = false;
+        beforeIsT = true;
+        deleteCommand = false;
+        tCommand = false;
+        console.log( 'sendChat文字置換' + 'match(/[tTｔＴ]/)');
+        str2 = str2 + str[i];
+        continue;
+      }
+
+      if ( beforeIsT && chktext.match(/[:：&＆]/)){
+        beforeIsSpace = false;
+        beforeIsT = false;
+        deleteCommand = false;
+        tCommand = true;
+        console.log( 'sendChat文字置換' + 'match(/[:：&＆]/)');
+        str2 = str2 + str[i];
+        continue;
+      }
+
+      if ( (tCommand || beforeIsSpace || deleteCommand) && chktext.match(/[:：&＆]/)){
+        beforeIsSpace = false;
+        beforeIsT = false;
+        deleteCommand = true;
+        tCommand = false;
+        continue;
+      }
+
+      if ( chktext.match(/\s/)){
+        beforeIsSpace = true;
+        beforeIsT = false;
+        deleteCommand = false;
+        tCommand = false;
+        str2 = str2 + str[i];
+        console.log( 'sendChat文字置換' + 'match(/\\s/)');
+        continue;
+      }else{
+        beforeIsSpace = false;
+      }
+
+      if(deleteCommand){
+        continue;
+      }
+
+      str2 = str2 + str[i];
+    }
+    return str2;
+  }
+
+  checkSecretEditCommand(chatText: string): boolean {
+    const text: string = ' ' + StringUtil.toHalfWidth(chatText).toLowerCase();
+    const replaceText = text.replace('：', ':');
+    let m = replaceText.match(/\sST?:/i);
+    console.log(m);
+    if( m ) return true;
+    return false;
+  }
+
+  checkSecretDiceCommand(gameSystem: GameSystemClass, chatText: string): boolean {
+    const text: string = StringUtil.toHalfWidth(chatText).toLowerCase();
+    const nonRepeatText = text.replace(/^(\d+)?\s+/, 'repeat1 ').replace(/^x(\d+)?\s+/, 'repeat1 ').replace(/repeat(\d+)?\s+/, '');
+    const regArray = /^s(.*)?/ig.exec(nonRepeatText);
+    console.log('checkSecretDiceCommand:' + chatText + ' gameSystem.name:' + gameSystem.name);
+
+    if ( gameSystem.COMMAND_PATTERN ){
+      return regArray && gameSystem.COMMAND_PATTERN.test(regArray[1]);
+    }
+    console.log('checkSecretDiceCommand:' + false);
+    return false;
   }
 
   // GameObject Lifecycle
@@ -102,32 +197,45 @@ export class DiceBot extends GameObject {
         let chatMessage = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
         if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) return;
 
-        let text: string = StringUtil.toHalfWidth(chatMessage.text).replace("\u200b", '').trim();
-        let gameType: string = chatMessage.tags ? chatMessage.tags[0]:'' ;
+        let text: string;
+        if (event.data.messageTrget){
+          text = StringUtil.toHalfWidth(event.data.messageTrget.text);
+        }else{
+          text = StringUtil.toHalfWidth(chatMessage.text);
+        }
 
-        if (text.startsWith('/')) {
-          const [_, command, arg] = /^\/(\w+)\s*(.*)/i.exec(text) || [];
-          if (command) {
-            const commandResult = await DiceBot.chatCommandAsync(command, arg, gameType);
-            if (commandResult.result) {
-              this.sendChatCommandResultMessage(commandResult, chatMessage);
-            }
+        const gameType: string = chatMessage.tags ? chatMessage.tags[0] : '';
+        try {
+          const regArray = /^((\d+)?\s+)?(.*)?/ig.exec(text);
+          const repeat: number = (regArray[2] != null) ? Number(regArray[2]) : 1;
+          let rollText: string = (regArray[3] != null) ? regArray[3] : text;
+          console.log('SEND_MESSAGE gameType :' + gameType);
+          const gameSystem = await DiceBot.loadGameSystemAsync(gameType);
+          if ( gameSystem.COMMAND_PATTERN ){
+            if ( !gameSystem.COMMAND_PATTERN.test(rollText)) { return; }
           }
-        }
+          if (!rollText || repeat < 1 ) { return; }
 
-        let regArray = /^((\d+)?\s+)?(.*)?/ig.exec(text);
-        let repeat: number = (regArray[2] != null) ? Number(regArray[2]) : 1;
-        let rollText: string = (regArray[3] != null) ? regArray[3] : text;
-        if (!rollText || repeat < 1) return;
-        // 繰り返しコマンドに変換
-        if (repeat > 1) {
-          rollText = `x${repeat} ${rollText}`
-        }
+          // 繰り返しコマンドに変換
+          if (repeat > 1) {
+            rollText = `x${repeat} ${rollText}`;
+          }
 
-        let rollResult = await DiceBot.diceRollAsync(rollText, gameType);
-        if (!rollResult.result) return;
-        console.log(rollResult)
-        this.sendResultMessage(rollResult, chatMessage);
+          const rollResult = await DiceBot.diceRollAsync(rollText, gameSystem);
+          if (!rollResult.result) { return; }
+
+          if (event.data.messageTrget){
+            if (event.data.messageTrget.object){
+              this.sendResultMessage(rollResult, chatMessage, ' [' + event.data.messageTrget.object.name +']');
+            }else{
+              this.sendResultMessage(rollResult, chatMessage);
+            }
+          }else{
+            this.sendResultMessage(rollResult, chatMessage);
+          }
+        } catch (e) {
+          console.error(e);
+        }
         return;
       })
       .on('DICE_TABLE_MESSAGE', async event => {
@@ -142,7 +250,7 @@ export class DiceBot extends GameObject {
         if( !diceTable )return;
         if( splitText.length == 0 )return;
 
-        let rollDice = null ;
+        let rollDice = null;
         let rollTable = null;
         for( let table of diceTable){
           if( table.command == splitText[0] ){
@@ -157,7 +265,8 @@ export class DiceBot extends GameObject {
           let rollText: string = (regArray[3] != null) ? regArray[3] : text;
           let finalResult: DiceRollResult = { id: 'DiceBot', result: '', isSecret: false };
           for (let i = 0; i < repeat && i < 32; i++) {
-            let rollResult = await DiceBot.diceRollAsync(rollText, gameType);
+            const gameSystem = await DiceBot.loadGameSystemAsync(rollTable.diceTablePalette.dicebot);
+            let rollResult = await DiceBot.diceRollAsync(rollText, gameSystem);
             if (rollResult.result.length < 1) break;
 
             finalResult.result += rollResult.result;
@@ -198,7 +307,7 @@ export class DiceBot extends GameObject {
         const text: string = StringUtil.toHalfWidth(chatMessage.text);
         const gameType: string = chatMessage.tags ? chatMessage.tags[0] : '';
 
-        this.checkResourceEditCommand( chatMessage , event.data.messageTargetContext ? event.data.messageTargetContext : []);
+        this.checkResourceEditCommand(chatMessage, event.data.messageTargetContext ? event.data.messageTargetContext: []);
         return;
       });
   }
@@ -214,34 +323,32 @@ export class DiceBot extends GameObject {
     if (object instanceof GameCharacter) {
       return object;
     }else{
-      console.log('キャラクタからの発信じゃありません');
       return null;
     }
   }
 
-  private checkResourceEditCommand( originalMessage: ChatMessage , messageTargetContext: ChatMessageTargetContext[]){
+  private checkResourceEditCommand(originalMessage: ChatMessage , messageTargetContext: ChatMessageTargetContext[]){
+    let resourceByCharacter: ResourceByCharacter[] = [];
+    let buffByCharacter: BuffByCharacter[] = [];
 
-    let resourceByCharacter :ResourceByCharacter[] = [];
-    let buffByCharacter :BuffByCharacter[] = [];
-
-    let sendFromObject :GameCharacter = this.messageSendGameCharacter(originalMessage.sendFrom);
-    let isSecret = false;
+    let sendFromObject: GameCharacter = this.messageSendGameCharacter(originalMessage.sendFrom);
+    let isSecret: boolean = false;
 
     for (const oneMessageTargetContext of messageTargetContext) {
-      let text = ' ' + oneMessageTargetContext.text;
-      let isMatch = text.match(/(\s[sSｓＳ][tTｔＴ]?[:：&＆])/i) ? true : false;
+      let text: string = ' ' + oneMessageTargetContext.text;
+      let isMatch: boolean = text.match(/(\s[sSｓＳ][tTｔＴ]?[:：&＆])/i) ? true : false;
       if(isMatch){
         isSecret = true;
       }
 
-      let text2 = text.replace(/(\s[sSｓＳ][tTｔＴ][:：])/i, ' t:');
-      let text3 = text2.replace(/(\s[sSｓＳ][:：])/i, ' :');
-      let text4 = text3.replace(/([tTｔＴ][:：])/gi, 't:');
-      let text5 = text4.replace(/([tTｔＴ][&＆])/gi, 't&');
-      let text6 = text5.replace(/([:：])/gi, ':');
-      let text7 = text6.replace(/([&＆])/gi, '&');
+      let text2: string = text.replace(/(\s[sSｓＳ][tTｔＴ][:：])/i, ' t:');
+      let text3: string = text2.replace(/(\s[sSｓＳ][:：])/i, ' :');
+      let text4: string = text3.replace(/([tTｔＴ][:：])/gi, 't:');
+      let text5: string = text4.replace(/([tTｔＴ][&＆])/gi, 't&');
+      let text6: string = text5.replace(/([:：])/gi, ':');
+      let text7: string = text6.replace(/([&＆])/gi, '&');
 
-      let splitText = text7.split(/\s/);
+      let splitText:string[] = text7.split(/\s/);
 
       let resourceCommand: string[] = [];
       let buffCommand: string[] = [];
@@ -260,7 +367,6 @@ export class DiceBot extends GameObject {
 
         if ( resultRes ){
           for( let res of resultRes){
-            console.log(res);
             let resByCharacter :ResourceByCharacter = {
               resourceCommand: '',
               object: null,
@@ -401,12 +507,12 @@ export class DiceBot extends GameObject {
   async resourceEditProcess(sendFromObject , resourceByCharacter: ResourceByCharacter[], buffByCharacter: BuffByCharacter[], originalMessage: ChatMessage, isSecret: Boolean){
 
     const allEditList: ResourceEdit[] = [];
-    let gameType: string = originalMessage.tags ? originalMessage.tags[0]:'' ;
+    const gameSystem = await DiceBot.loadGameSystemAsync(originalMessage.tags ? originalMessage.tags[0] : '');
 
     let targetObjects: GameCharacter[] = [];
     console.log('resourceEditProcess');
     console.log(resourceByCharacter)
-    for ( const res of resourceByCharacter ){
+    for (const res of resourceByCharacter){
       let oneText = res.resourceCommand;
       let targeted = oneText.match(/^t:/i) ? true :false;
       let obj :GameCharacter;
@@ -418,7 +524,7 @@ export class DiceBot extends GameObject {
         if (oneResourceEdit.operator != '>') {
           // ダイスロール及び四則演算
           try {
-            const rollResult = await DiceBot.diceRollAsync(oneResourceEdit.command, gameType);
+            const rollResult = await DiceBot.diceRollAsync(oneResourceEdit.command, gameSystem);
             if (!rollResult.result) { return null; }
             const splitResult = rollResult.result.split(' ＞ ');
             oneResourceEdit.diceResult = splitResult[splitResult.length - 2].replace(/\+\(1\[1\]\-1\)$/, '');
@@ -428,7 +534,7 @@ export class DiceBot extends GameObject {
             console.error(e);
           }
         }
-        allEditList.push( oneResourceEdit);
+        allEditList.push(oneResourceEdit);
       }else{
         if( sendFromObject == null) {
           obj = null;
@@ -441,7 +547,7 @@ export class DiceBot extends GameObject {
           if (oneResourceEdit.operator != '>') {
             // ダイスロール及び四則演算
             try {
-              const rollResult = await DiceBot.diceRollAsync(oneResourceEdit.command, gameType);
+              const rollResult = await DiceBot.diceRollAsync(oneResourceEdit.command, gameSystem);
               if (!rollResult.result) { return null; }
               const splitResult = rollResult.result.split(' ＞ ');
               oneResourceEdit.diceResult = splitResult[splitResult.length - 2].replace(/\+\(1\[1\]\-1\)$/, '');
@@ -451,10 +557,43 @@ export class DiceBot extends GameObject {
               console.error(e);
             }
           }
-          allEditList.push( oneResourceEdit);
+          allEditList.push(oneResourceEdit);
         }
       }
     }
+    let repBuffCommandList: BuffEdit[] = [];
+    for ( const buff of buffByCharacter ){
+      let oneText = buff.buffCommand;
+      let targeted = oneText.match(/^t&/i) ? true :false;
+      let obj :GameCharacter;
+      if (targeted) {
+        let object = buff.object;
+        const replaceText = oneText.replace('＆', '&').replace(/＋$/, '+').replace(/－$/, '-');
+        let oneBuffEdit: BuffEdit = {
+          command: replaceText,
+          object : object,
+          targeted : targeted
+        };
+        repBuffCommandList.push(oneBuffEdit);
+      }else{
+        if( sendFromObject == null) {
+          obj = null;
+          console.log('キャラクターでないものに対してバフ操作はできません');
+          return;
+        }else{
+          const replaceText = oneText.replace('＆', '&').replace(/＋$/, '+').replace(/－$/, '-');
+          let oneBuffEdit: BuffEdit = {
+            command: replaceText,
+            object : sendFromObject,
+            targeted : targeted
+          };
+          repBuffCommandList.push(oneBuffEdit);
+        }
+      }
+    }
+
+    this.resourceBuffEdit( allEditList , repBuffCommandList, originalMessage, isSecret);
+    return;
   }
 
   private resourceTextEdit(edit: ResourceEdit, character: GameCharacter): string{
@@ -601,7 +740,7 @@ export class DiceBot extends GameObject {
     let nameText;
     if ( isDiceRoll ){
       fromText = 'System-BCDice';
-      nameText = '<BCDice：' + originalMessage.name + '>';
+      nameText = `<BCDice：` + originalMessage.name + '>';
     }else{
       fromText = 'System';
       nameText = originalMessage.name;
@@ -622,10 +761,11 @@ export class DiceBot extends GameObject {
     if (chatTab) { chatTab.addMessage(resourceMessage); }
   }
 
-  private sendResultMessage(rollResult: DiceRollResult, originalMessage: ChatMessage) {
+  private sendResultMessage(rollResult: DiceRollResult, originalMessage: ChatMessage, multiTargetOption?: string) {
     let id: string = rollResult.id.split(':')[0];
+    console.log(rollResult)
     let result: string = rollResult.result;
-    let isSecret: boolean = rollResult.isSecret;
+    const isSecret: boolean = rollResult.isSecret;
     const isSuccess: boolean = rollResult.isSuccess;
     const isFailure: boolean = rollResult.isFailure;
     const isCritical: boolean = rollResult.isCritical;
@@ -639,7 +779,10 @@ export class DiceBot extends GameObject {
     if (isCritical) tag += ' critical';
     if (isFumble) tag += ' fumble';
 
-    let diceBotMessage: ChatMessageContext = {
+    const gameType: string = originalMessage.tags ? originalMessage.tags[0] : '';
+    console.log(tag)
+
+    const diceBotMessage: ChatMessageContext = {
       identifier: '',
       tabIdentifier: originalMessage.tabIdentifier,
       originFrom: originalMessage.from,
@@ -647,8 +790,8 @@ export class DiceBot extends GameObject {
       timestamp: originalMessage.timestamp + 1,
       imageIdentifier: 'dice',
       tag: `${isSecret ? ' secret ' : ''}${tag}`,
-      name: `${id} : ${originalMessage.name}${isSecret ? ' (Secret)' : ''}`,
-      text: `${result}`,
+      name: isSecret ? `<Secret-${gameType}：` + originalMessage.name + '>' : `<${gameType}：` + originalMessage.name + '>',
+      text: multiTargetOption? result + multiTargetOption : result,
       color: originalMessage.color,
     };
 
@@ -713,30 +856,28 @@ export class DiceBot extends GameObject {
   }
 
 
-  static async diceRollAsync(message: string, gameType: string): Promise<DiceRollResult> {
-    const empty: DiceRollResult = { id: gameType, result: '', isSecret: false };
-    try {
-      const gameSystem = await DiceBot.loadGameSystemAsync(gameType);
-      if (!gameSystem?.COMMAND_PATTERN.test(message)) return empty;
-
-      const result = gameSystem.eval(message);
-      if (result) {
-        console.log('diceRoll!!!', result.text);
-        console.log('isSecret!!!', result.secret);
-        return {
-          id: gameSystem.ID,
-          result: result.text.replace(/\n?(#\d+)\n/ig, '$1 '), // 繰り返しダイスロールは改行表示を短縮する
-          isSecret: result.secret,
-          isSuccess: result.success,
-          isFailure: result.failure,
-          isCritical: result.critical,
-          isFumble: result.fumble
-        };
+  static async diceRollAsync(message: string, gameSystem: GameSystemClass): Promise<DiceRollResult> {
+    return DiceBot.queue.add(() => {
+      try {
+        const result = gameSystem.eval(message);
+        if (result) {
+          console.log('diceRoll!!!', result.text);
+          console.log('isSecret!!!', result.secret);
+          return {
+            id: gameSystem.ID,
+            result: `${result.text}`.replace(/\n?(#\d+)\n/ig, '$1 '), // 繰り返しダイスロールは改行表示を短縮する
+            isSecret: result.secret,
+            isSuccess: result.success,
+            isFailure: result.failure,
+            isCritical: result.critical,
+            isFumble: result.fumble
+          };
+        }
+      } catch (e) {
+        console.error(e);
       }
-    } catch (e) {
-      console.error(e);
-    }
-    return empty;
+      return { id: gameSystem.ID, result: '', isSecret: false };
+    });
   }
 
   static async getHelpMessage(gameType: string): Promise<string> {
@@ -750,30 +891,13 @@ export class DiceBot extends GameObject {
   }
 
   static async loadGameSystemAsync(gameType: string): Promise<GameSystemClass> {
-    return await queue.add(() => {
-      const id = this.diceBotInfos.some(info => info.id === gameType) ? gameType : 'DiceBot';
+    return await DiceBot.queue.add(() => {
+      const id = this.diceBotInfos.some((info) => info.id === gameType) ? gameType : 'DiceBot';
       try {
-        return loader.getGameSystemClass(id);
+        return DiceBot.loader.getGameSystemClass(id);
       } catch {
-        return loader.dynamicLoad(id);
+        return DiceBot.loader.dynamicLoad(id);
       }
     });
   }
-}
-
-function initializeDiceBotQueue(): PromiseQueue {
-  let queue = new PromiseQueue('DiceBotQueue');
-  queue.add(async () => {
-    loader = new (await import(
-      /* webpackChunkName: "lib/bcdice/bcdice-loader" */
-      './bcdice/bcdice-loader')
-    ).default;
-    DiceBot.diceBotInfos = loader.listAvailableGameSystems()
-      .sort((a, b) => {
-        if (a.sortKey < b.sortKey) return -1;
-        if (a.sortKey > b.sortKey) return 1;
-        return 0;
-      });
-  });
-  return queue;
 }

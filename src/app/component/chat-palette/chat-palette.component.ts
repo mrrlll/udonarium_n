@@ -1,4 +1,5 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import GameSystemClass from 'bcdice/lib/game_system';
 import { ChatPalette } from '@udonarium/chat-palette';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -10,6 +11,8 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 import { ChatInputComponent } from 'component/chat-input/chat-input.component';
 import { ChatMessageService } from 'service/chat-message.service';
 import { PanelService } from 'service/panel.service';
+
+import { ChatMessage, ChatMessageContext, ChatMessageTargetContext } from '@udonarium/chat-message';
 
 @Component({
   selector: 'chat-palette',
@@ -114,10 +117,67 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     }
   }
 
-  sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string }) {
+  private targeted(gameCharacter: GameCharacter): boolean {
+    if (gameCharacter.location.name != 'table') return false;
+    return gameCharacter.targeted;
+  }
+
+  private targetedGameCharacterList( ): GameCharacter[]{
+    let objects :GameCharacter[] = [];
+    objects = ObjectStore.instance
+        .getObjects<GameCharacter>(GameCharacter)
+        .filter(character => this.targeted(character));
+    return objects;
+  }
+
+  sendChat(value: { text: string, gameSystem: GameSystemClass, sendFrom: string, sendTo: string , tachieNum: number, messColor: string}) {
     if (this.chatTab) {
-      let text = this.palette.evaluate(value.text, this.character.rootDataElement);
-      this.chatMessageService.sendMessage(this.chatTab, text, value.gameType, value.sendFrom, value.sendTo);
+      let outtext = '';
+      let objects: GameCharacter[] = [];
+      let messageTargetContext: ChatMessageTargetContext[] = [];
+      if ( this.palette.checkTargetCharactor(value.text)) {
+        objects = this.targetedGameCharacterList();
+        let first = true;
+        if (objects.length == 0) {
+          outtext += '対象が未選択です'
+        }
+
+        for(let object of objects){
+          outtext += first ? '' : '\n'
+          let str = value.text;
+          let str2 = '';
+          if( first){
+            str2 = str;
+          }else{
+            //自分リソース操作指定の省略
+            str2 = DiceBot.deleteMyselfResourceBuff(str);
+          }
+
+          outtext += this.palette.evaluate(str2, this.character.rootDataElement, object);
+          outtext += ' ['+object.name + ']';
+          first = false;
+
+          let targetContext: ChatMessageTargetContext = {
+            text: '',
+            object: null
+          };
+          targetContext.text = this.palette.evaluate(str2, this.character.rootDataElement, object);
+          targetContext.object = object;
+          messageTargetContext.push( targetContext);
+        }
+      }else{
+        objects = [];
+        outtext = this.palette.evaluate(value.text, this.character.rootDataElement);
+        let targetContext: ChatMessageTargetContext = {
+          text: '',
+          object: null
+        };
+        targetContext.text = outtext;
+        targetContext.object = null;
+        messageTargetContext.push( targetContext);
+      }
+      this.chatMessageService.sendMessage(this.chatTab, outtext, value.gameSystem, value.sendFrom, value.sendTo, value.tachieNum, value.messColor, messageTargetContext);
+      // this.chatMessageService.sendMessage(this.chatTab, text, value.gameType, value.sendFrom, value.sendTo);
     }
   }
 

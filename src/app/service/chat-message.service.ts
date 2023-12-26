@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
+import GameSystemClass from 'bcdice/lib/game_system';
 
-import { ChatMessage, ChatMessageContext } from '@udonarium/chat-message';
+import { ChatMessage, ChatMessageContext, ChatMessageTargetContext } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -76,14 +77,29 @@ export class ChatMessageService {
     return Math.floor(this.timeOffset + (performance.now() - this.performanceOffset));
   }
 
-  sendMessage(chatTab: ChatTab, text: string, gameType: string, sendFrom: string, sendTo?: string, color? :string): ChatMessage {
+  sendMessage(chatTab: ChatTab, text: string, gameSystem: GameSystemClass | null, sendFrom: string, sendTo?: string, tachieNum?: number, color?: string, messageTargetContext?: ChatMessageTargetContext[]): ChatMessage {
+    let dicebot = ObjectStore.instance.get<DiceBot>('DiceBot');
+    let chatMessageTag: string;
+    console.log('えすと')
+    if (gameSystem == null) {
+      chatMessageTag = '';
+    } else if (dicebot.checkSecretDiceCommand(gameSystem, text)) {
+      console.log(dicebot.checkSecretDiceCommand(gameSystem, text))
+      chatMessageTag = `${gameSystem.ID} secret`;
+    } else if (dicebot.checkSecretEditCommand(text)) {
+      chatMessageTag = `${gameSystem.ID} secret`;
+    } else {
+
+      chatMessageTag = gameSystem.ID;
+    }
+
     let chatMessage: ChatMessageContext = {
       from: Network.peer.userId,
       to: this.findId(sendTo),
       name: this.makeMessageName(sendFrom, sendTo),
       imageIdentifier: this.findImageIdentifier(sendFrom),
       timestamp: this.calcTimeStamp(chatTab),
-      tag: gameType,
+      tag: chatMessageTag,
       text: text,
       color: color,
       sendFrom: sendFrom,
@@ -98,27 +114,8 @@ export class ChatMessageService {
       chatMessage.text = text.replace(/([@＠]\S+)$/i,'');
     }
 
-    let dicebot = ObjectStore.instance.get<DiceBot>('DiceBot');
-    dicebot.checkSecretDiceCommand(gameType,text).then(value => {
-      console.log(value); // => resolve!!
 
-      let chatMessageAddSecretTag: ChatMessageContext = {
-        from:             chatMessage.from,
-        to:               chatMessage.to,
-        name:             chatMessage.name,
-        imageIdentifier:  chatMessage.imageIdentifier,
-        timestamp:        chatMessage.timestamp,
-        tag:              value ? chatMessage.tag + ' secret' : chatMessage.tag ,
-        text:             chatMessage.text,
-        imagePos:         chatMessage.imagePos,
-        messColor:        chatMessage.messColor,
-        sendFrom:         chatMessage.sendFrom
-      };
-
-      chatTab.addMessage(chatMessageAddSecretTag);
-    });
-
-    return;
+    return chatTab.addMessage(chatMessage, messageTargetContext ? messageTargetContext : null);
   }
 
   sendOperationLog(text: string, logLevel: number=1) {
