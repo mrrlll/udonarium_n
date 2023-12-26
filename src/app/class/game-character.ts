@@ -60,7 +60,7 @@ export class GameCharacter extends TabletopObject {
   }
 
   set selectedTachieNum(num : number){
-    console.log("set selectedTachieNum NUM=" + num +" len" + this.imageDataElement.children.length);
+    // console.log("set selectedTachieNum NUM=" + num +" len" + this.imageDataElement.children.length);
 
     if( num > ( this.imageDataElement.children.length - 1 ) ){
       num = this.imageDataElement.children.length - 1;
@@ -69,7 +69,7 @@ export class GameCharacter extends TabletopObject {
       num = 0;
     }
     this._selectedTachieNum = num
-    console.log("set selectedTachieNum" + this._selectedTachieNum);
+    // console.log("set selectedTachieNum" + this._selectedTachieNum);
 
   }
 
@@ -109,7 +109,7 @@ export class GameCharacter extends TabletopObject {
   set name(value:string) { this.setCommonValue('name', value); }
 
   TestExec() {
-    console.log('TestExec');
+    // console.log('TestExec');
 
   }
   get remoteController(): BuffPalette {
@@ -493,7 +493,7 @@ export class GameCharacter extends TabletopObject {
     let oldNumS = '';
     let newNum: number;
     let sum: number;
-    console.log('getStatusValue type' + type);
+    // console.log('getStatusValue type' + type);
 
     if ( type == 'value') {
       oldNumS = (data.value as string);

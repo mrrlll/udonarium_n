@@ -33,7 +33,7 @@ export class ChatMessageService {
 
   calibrateTimeOffset() {
     if (this.intervalTimer != null) {
-      console.log('calibrateTimeOffset was canceled.');
+      // console.log('calibrateTimeOffset was canceled.');
       return;
     }
     let index = Math.floor(Math.random() * this.ntpApiUrls.length);
@@ -52,10 +52,10 @@ export class ChatMessageService {
         let fixedTime = st + latency;
         this.timeOffset = fixedTime;
         this.performanceOffset = endTime;
-        console.log('latency: ' + latency + 'ms');
-        console.log('st: ' + st + '');
-        console.log('timeOffset: ' + this.timeOffset);
-        console.log('performanceOffset: ' + this.performanceOffset);
+        // console.log('latency: ' + latency + 'ms');
+        // console.log('st: ' + st + '');
+        // console.log('timeOffset: ' + this.timeOffset);
+        // console.log('performanceOffset: ' + this.performanceOffset);
         this.setIntervalTimer();
       })
       .catch(error => {
@@ -80,11 +80,9 @@ export class ChatMessageService {
   sendMessage(chatTab: ChatTab, text: string, gameSystem: GameSystemClass | null, sendFrom: string, sendTo?: string, tachieNum?: number, color?: string, messageTargetContext?: ChatMessageTargetContext[]): ChatMessage {
     let dicebot = ObjectStore.instance.get<DiceBot>('DiceBot');
     let chatMessageTag: string;
-    console.log('えすと')
     if (gameSystem == null) {
       chatMessageTag = '';
     } else if (dicebot.checkSecretDiceCommand(gameSystem, text)) {
-      console.log(dicebot.checkSecretDiceCommand(gameSystem, text))
       chatMessageTag = `${gameSystem.ID} secret`;
     } else if (dicebot.checkSecretEditCommand(text)) {
       chatMessageTag = `${gameSystem.ID} secret`;
