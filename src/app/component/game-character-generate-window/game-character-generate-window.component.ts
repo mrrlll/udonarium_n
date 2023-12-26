@@ -321,20 +321,20 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       // 仮名
       kemonosheet.character.data.data[1].data[0]["#text"] = handlename;
       // 余裕
-      kemonosheet.character.data.data[2].data[0].data[1]["#text"] = charadata.status.margin.limit;
-      kemonosheet.character.data.data[2].data[0].data[1]["@_currentValue"] = charadata.status.margin.limit;
+      kemonosheet.character.data.data[2].data[0].data[0]["#text"] = charadata.status.margin.limit;
+      kemonosheet.character.data.data[2].data[0].data[0]["@_currentValue"] = charadata.status.margin.limit;
       // 予算
       if(charadata.status.budget.limit === null) charadata.status.budget.limit = 0;
-      kemonosheet.character.data.data[2].data[0].data[4]["#text"] = charadata.status.budget.limit;
-      kemonosheet.character.data.data[2].data[0].data[4]["@_currentValue"] = charadata.status.budget.limit;
+      kemonosheet.character.data.data[2].data[0].data[3]["#text"] = charadata.status.budget.limit;
+      kemonosheet.character.data.data[2].data[0].data[3]["@_currentValue"] = charadata.status.budget.limit;
       // 特性
-      kemonosheet.character.data.data[2].data[0].data[5]["#text"] = useTalent[0]; // 特性①
-      kemonosheet.character.data.data[2].data[0].data[6]["#text"] = useTalent[1]; // 特性②
+      kemonosheet.character.data.data[2].data[0].data[4]["#text"] = useTalent[0]; // 特性①
+      kemonosheet.character.data.data[2].data[0].data[5]["#text"] = useTalent[1]; // 特性②
       // 獸憑き
       if (charadata.beastpoint.value === null) charadata.beastpoint.value = 0;
-      kemonosheet.character.data.data[2].data[0].data[7]["#text"] = charadata.beastpoint.value;
+      kemonosheet.character.data.data[2].data[0].data[6]["#text"] = charadata.beastpoint.value;
       // 状態異常
-      kemonosheet.character.data.data[2].data[0].data[8]["#text"] = debuff;
+      kemonosheet.character.data.data[2].data[0].data[7]["#text"] = debuff;
       // キャラノート
       kemonosheet.character.data.data[1].data[4]['#text'] = character_note;
       // 貌力の強度

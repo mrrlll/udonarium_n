@@ -41,10 +41,6 @@
             {
               "data": [
                 {
-                  "#text": 0,
-                  "@_name": "先制値"
-                },
-                {
                   "#text": 10,
                   "@_type": "numberResource",
                   "@_currentValue": "10",
@@ -86,6 +82,10 @@
                 {
                   "#text": "",
                   "@_name": "状態異常"
+                },
+                {
+                  "#text": 0,
+                  "@_name": "先制値"
                 }
               ],
               "@_name": "リソース"
