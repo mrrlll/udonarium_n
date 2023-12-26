@@ -55,6 +55,8 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
   get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
 
+  get continueDice(): Number { return this.character.continueDice; }
+
   constructor(
     public chatMessageService: ChatMessageService,
     private panelService: PanelService
@@ -128,6 +130,20 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
         .getObjects<GameCharacter>(GameCharacter)
         .filter(character => this.targeted(character));
     return objects;
+  }
+
+  async continueDiceRoll() {
+    const gameSystem = await DiceBot.loadGameSystemAsync(this.gameType);
+    let message = {
+      text: `KC${this.character.continueDice}`,
+      gameSystem: gameSystem,
+      sendFrom: this.sendFrom,
+      sendTo: this.sendTo,
+      tachieNum: null,
+      messColor: null
+    }
+
+    this.sendChat(message)
   }
 
   sendChat(value: { text: string, gameSystem: GameSystemClass, sendFrom: string, sendTo: string , tachieNum: number, messColor: string}) {

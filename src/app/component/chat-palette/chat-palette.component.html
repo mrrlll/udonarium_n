@@ -27,5 +27,6 @@
       <span *ngIf="!isEdit">チャットパレットの編集</span>
       <span *ngIf="isEdit">チャットパレットを確定</span>
     </button>
+    <button *ngIf="gameType === 'KemonoNoMori'" style="margin: 0 0 0 auto;" [disabled]="!character.continueDice" (click)="continueDiceRoll()">継続判定(KC{{character.continueDice}})</button>
   </div>
 </div>

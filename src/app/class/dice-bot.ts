@@ -801,8 +801,28 @@ export class DiceBot extends GameObject {
         diceBotMessage.to += ' ' + originalMessage.from;
       }
     }
-    let chatTab = ObjectStore.instance.get<ChatTab>(originalMessage.tabIdentifier);
+    console.log(originalMessage.sendFrom)
+    this.kemonoContinueDiceCheck(rollResult, originalMessage);
+    const chatTab = ObjectStore.instance.get<ChatTab>(originalMessage.tabIdentifier);
     if (chatTab) chatTab.addMessage(diceBotMessage);
+  }
+
+  private kemonoContinueDiceCheck(rollResult: DiceRollResult, originalMessage: ChatMessage): void{
+    const gameType: string = originalMessage.tags ? originalMessage.tags[0] : '';
+    const gameCharacter = ObjectStore.instance.get<GameCharacter>(originalMessage.sendFrom);
+    if ( gameType != 'KemonoNoMori' ) return;
+    if(rollResult.isSuccess){
+      if(rollResult.isCritical){
+        gameCharacter.continueDice = 10;
+      } else {
+        const regArray = /＞\s(\d+)\s＞/ig.exec(rollResult.result);
+        if(regArray){
+          gameCharacter.continueDice = Number(regArray[1]);
+        }
+      };
+    } else {
+      gameCharacter.continueDice = null;
+    }
   }
 
   private sendChatCommandResultMessage(chatCommandResult: ChatCommandResult, originalMessage: ChatMessage) {
