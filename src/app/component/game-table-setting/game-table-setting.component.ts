@@ -195,4 +195,8 @@ export class GameTableSettingComponent implements OnInit, OnDestroy {
       EventSystem.trigger('NO_ROOM_ALTITUDE', null);
     }
   }
+
+  shouldDisableDelete(): boolean {
+    return this.getGameTables().length <= 1;
+  }
 }

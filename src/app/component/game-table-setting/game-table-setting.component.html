@@ -82,7 +82,7 @@
               <div *ngIf="isSaveing" class="progress">{{progresPercent}}%</div>
             </div>
           </button>
-          <button class="danger" (click)="delete()" [disabled]="getGameTables().length <= 1">削除</button>
+          <button class="danger" (click)="delete()" [disabled]="shouldDisableDelete()">削除</button>
         </ng-container>
         <ng-container *ngIf="isDeleted">
           <button (click)="restore()">元に戻す</button>

@@ -71,3 +71,13 @@
   word-break: break-word;
   vertical-align: bottom;
 }
+
+/* .buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+} */
+
+label {
+  user-select: none;
+}
