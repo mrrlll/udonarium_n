@@ -211,7 +211,6 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
         }
       });
       if(this.isGM) {
-        console.log('isGM')
         subActions.push(ContextMenuSeparator);
         subActions.push({
           name: 'すべてインベントリにしまう', action: () => {
