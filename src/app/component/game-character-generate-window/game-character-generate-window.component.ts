@@ -148,7 +148,7 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
 
       skynauts2sheet['character']['chat-palette']['#text'] = chatpalatte;
       let summary = `<?xml version="1.0" encoding="UTF-8"?>
-      <summary-setting sortTag="name" sortOrder="ASC" dataTag="生命点　移動力　技術　感覚　教養　身体　キズナ①　キズナ②　キズナ③　キズナ④　キズナ⑤　キズナ⑥　キズナ⑦　キズナ⑧　キズナ⑨　キズナ⑩　デバフ"></summary-setting>
+      <summary-setting sortTag="name" sortOrder="ASC" dataTag="生命点 移動力 技術 感覚 教養 身体 キズナ① キズナ② キズナ③ キズナ④ キズナ⑤ キズナ⑥ キズナ⑦ キズナ⑧ キズナ⑨ キズナ⑩ デバフ"></summary-setting>
       `
 
       this.generateKoma(skynauts2sheet, summary, 'skynauts2');
