@@ -1,13 +1,17 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { GenerateService } from 'service/generate.service';
+import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 import { XmlUtil } from '@udonarium/core/system/util/xml-util';
 import { EventSystem } from '@udonarium/core/system';
+import { TableSelecter } from '@udonarium/table-selecter';
+import { TabletopService } from 'service/tabletop.service';
 
 import { PanelService } from 'service/panel.service';
 import { ModalService } from 'service/modal.service';
 
 import { XMLBuilder } from 'fast-xml-parser';
 import { HttpClient } from '@angular/common/http';
+import { GameCharacter } from '@udonarium/game-character';
 
 @Component({
   selector: 'app-game-character-generate-window',
@@ -21,6 +25,7 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
     private modalService: ModalService,
     private panelService: PanelService,
     private http: HttpClient,
+    private tabletopService: TabletopService
   ){}
 
   @ViewChild('charactersheeturlInput', { static: false })
@@ -146,7 +151,7 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       <summary-setting sortTag="name" sortOrder="ASC" dataTag="生命点　移動力　技術　感覚　教養　身体　キズナ①　キズナ②　キズナ③　キズナ④　キズナ⑤　キズナ⑥　キズナ⑦　キズナ⑧　キズナ⑨　キズナ⑩　デバフ"></summary-setting>
       `
 
-      this.generateKoma(skynauts2sheet, summary);
+      this.generateKoma(skynauts2sheet, summary, 'skynauts2');
       return;
     });
   }
@@ -390,12 +395,12 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       let summary = `<?xml version="1.0" encoding="UTF-8"?>
       <summary-setting sortTag="先制値" sortOrder="ASC" dataTag="先制値 開始条件 展開 耐久度 余裕 食事 水分 予算 威力 軽減値 特性① 特性② 特性③ 特殊効果 異形 獸憑き 状態異常 移動 格闘 射撃 製作 察知 自制 貌力 装備 武器 防具 小道具① 小道具② 持ち物 情報 絆"></summary-setting>
       `
-      this.generateKoma(kemonosheet, summary);
+      this.generateKoma(kemonosheet, summary, 'kemono');
       return;
     });
   };
 
-  generateKoma(sheetdata, summary){
+  generateKoma(sheetdata, summary, system){
     const xb = new XMLBuilder({
       ignoreAttributes: false,
       textNodeName: "#text",
@@ -406,10 +411,26 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
 
     const xmlContent = xb.build(sheetdata);
 
-    let xmlElement: Element = XmlUtil.xml2element(summary);
-    if (xmlElement) EventSystem.trigger('XML_LOADED', { xmlElement: xmlElement });
-    xmlElement = XmlUtil.xml2element(xmlContent);
-    if (xmlElement) EventSystem.trigger('XML_LOADED', { xmlElement: xmlElement, system: 'kemono' });
+    // インベントリ表示項目の設定
+    let summaryElement: Element = XmlUtil.xml2element(summary);
+    ObjectSerializer.instance.parseXml(summaryElement);
+
+    // キャラクターのコマ
+    let gameCharacterElement = XmlUtil.xml2element(xmlContent);
+    if (gameCharacterElement) {
+      let gameCharacter = ObjectSerializer.instance.parseXml(gameCharacterElement) as GameCharacter;
+      gameCharacter.addExtendData();
+      let viewTable = TableSelecter.instance.viewTable;
+      gameCharacter.location.x = viewTable.width * 20;
+      gameCharacter.location.y = viewTable.height * 20;
+      gameCharacter.posZ = 0;
+      if(system === 'kemono'){
+
+        gameCharacter.overViewMaxHeight = 400;
+        gameCharacter.overViewWidth = 300;
+      }
+      this.tabletopService.placeToTabletop(gameCharacter);
+    }
 
     return;
   };

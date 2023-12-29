@@ -101,18 +101,7 @@ export class TabletopService {
           gameObject.location.y = pointer.y - 25;
           gameObject.posZ = pointer.z;
 
-          // キャラクターコマだった場合、拡張データを追加してエラー防止
-          if (gameObject instanceof GameCharacter) {
-            let gameCharacter = gameObject as GameCharacter;
-            gameCharacter.addExtendData();
-            if(event.data.system === 'kemono'){
-              gameCharacter.overViewMaxHeight = 400;
-              gameCharacter.overViewWidth = 300;
-            }
-            this.placeToTabletop(gameCharacter);
-          } else {
-            this.placeToTabletop(gameObject);
-          }
+          this.placeToTabletop(gameObject);
           SoundEffect.play(PresetSound.piecePut);
         } else if (gameObject instanceof ChatTab) {
           ChatTabList.instance.addChatTab(gameObject);
@@ -174,7 +163,7 @@ export class TabletopService {
     this.parentMap.clear();
   }
 
-  private placeToTabletop(gameObject: TabletopObject) {
+  placeToTabletop(gameObject: TabletopObject) {
     switch (gameObject.aliasName) {
       case GameTableMask.aliasName:
         if (gameObject instanceof GameTableMask) gameObject.isLock = false;
