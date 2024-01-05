@@ -31,9 +31,6 @@ export class GameTableMask extends TabletopObject {
 
   complement(): void {
     let element = this.getElement('fontsize', this.commonDataElement);
-    if (!element && this.commonDataElement) {
-      this.commonDataElement.appendChild(DataElement.create('fontsize', 18, { }, 'fontsize_' + this.identifier));
-    }
     element = this.getElement('text', this.commonDataElement);
     if (!element && this.commonDataElement) {
       this.commonDataElement.appendChild(DataElement.create('text', '', { type: 'note', currentValue: '' }, 'text_' + this.identifier));
