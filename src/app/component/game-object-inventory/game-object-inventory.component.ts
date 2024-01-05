@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { GameObject } from '@udonarium/core/synchronize-object/game-object';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -23,7 +23,7 @@ import { Config } from '@udonarium/config';
   styleUrls: ['./game-object-inventory.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GameObjectInventoryComponent implements OnInit, OnDestroy {
+export class GameObjectInventoryComponent implements AfterViewInit, OnInit, OnDestroy {
   inventoryTypes: string[] = ['table', 'common', 'graveyard'];
 
   selectTab: string = 'table';
@@ -31,6 +31,7 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
   multiMoveTargets: Set<string> = new Set();
 
   isEdit: boolean = false;
+  disptimer = null;
   isMultiMove: boolean = false;
 
   get config(): Config { return ObjectStore.instance.get<Config>('Config')};
@@ -88,8 +89,17 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
     this.inventoryTypes = ['table', 'common', Network.peerId, 'graveyard'];
   }
 
+  ngAfterViewInit() {
+    this.disptimer = setInterval(() => {
+      this.changeDetector.detectChanges();
+    }, 200 );
+    //操作を検知して更新する方式に変えたい
+
+  }
+
   ngOnDestroy() {
     EventSystem.unregister(this);
+    this.disptimer = null;
   }
 
   getTabTitle(inventoryType: string) {
@@ -119,7 +129,20 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
   }
 
   getGameObjects(inventoryType: string): TabletopObject[] {
-    return this.getInventory(inventoryType).tabletopObjects;
+    switch (inventoryType) {
+      case 'table':
+
+        let tableCharacterList_dest = [] ;
+        let tableCharacterList_scr = this.inventoryService.tableInventory.tabletopObjects;
+        for (let character of tableCharacterList_scr) {
+          let character_ : GameCharacter = <GameCharacter>character;
+          if( !character_.hideInventory ) tableCharacterList_dest.push( <TabletopObject>character );
+        }
+        return tableCharacterList_dest;
+
+      default:
+        return this.getInventory(inventoryType).tabletopObjects;
+    }
   }
 
   getInventoryTags(gameObject: GameCharacter): DataElement[] {

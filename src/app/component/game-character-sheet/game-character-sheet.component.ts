@@ -147,6 +147,9 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy {
     });
   }
 
+  clickHide(){
+  }
+
   chkKomaSize( height ){
     let character = <GameCharacter>this.tabletopObject;
     if( height < 50 )

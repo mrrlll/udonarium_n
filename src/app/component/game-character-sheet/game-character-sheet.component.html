@@ -46,8 +46,9 @@
     <input type="checkbox" id="specifyKomaImageFlag" [(ngModel)]="tabletopObject.specifyKomaImageFlag" name="specifyKomaImageFlag" (click)="clickImageFlag()">
     <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 1 +';' | safe: 'style'" min="50" max="750" [(ngModel)]="tabletopObject.komaImageHeignt"  [disabled]="!tabletopObject.specifyKomaImageFlag"/>
     <input class="is-caret" [(ngModel)]="tabletopObject.komaImageHeignt"  [disabled]="!tabletopObject.specifyKomaImageFlag" type="number" style="width:12em;" min="50" max="750" name="popWidth" (change)="chkKomaSize($event.target.value)" style="color: #555;"/>
-    <span style="float: right;">編集切り替えで設定項目を更に表示</span>
-    <div *ngIf="isEdit">
+    <input type="checkbox" id="hideInventory" value="hideInventory" style="float: right;" [(ngModel)]="tabletopObject.hideInventory" name="hideInventory" (click)="clickHide()"/>
+    <label for="hideInventory" style="float: right; user-select: none;">テーブルインベントリ非表示</label>
+    <div>
       <label style="user-select: none;">パネル横幅</label>
       <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 10 +';' | safe: 'style'"
         min="270" max="800" [(ngModel)]="tabletopObject.overViewWidth" />
@@ -62,6 +63,8 @@
         style="color: #555;"/>
         <!-- 縦幅と横幅をデフォルトに戻すボタン -->
         <button (click)="resetPopSize()">デフォルトに戻す</button>
+        <input type="checkbox" style="float: right;" [(ngModel)]="tabletopObject.nonTalkFlag" id="nonTalkFlag"/>
+        <label for="nonTalkFlag" style="float: right; user-select: none;">発言をしない</label>
     </div>
   </div>
 </ng-container>
