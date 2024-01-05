@@ -18,10 +18,10 @@
         </div>
       </div>
       <ng-container *ngFor="let mask of tableMasks; trackBy: trackByGameObject">
-        <ng-container *ngIf="mask.detailDataElement && 0 < mask.detailDataElement.children.length">
+        <ng-container *ngIf="mask.text.length > 0">
           <game-table-mask class="is-3d" [gameTableMask]="mask" [appTooltip]="mask"></game-table-mask>
         </ng-container>
-        <ng-container *ngIf="!mask.detailDataElement || mask.detailDataElement.children.length <= 0">
+        <ng-container *ngIf="!mask.text || mask.text.length == 0">
           <game-table-mask class="is-3d" [gameTableMask]="mask"></game-table-mask>
         </ng-container>
       </ng-container>

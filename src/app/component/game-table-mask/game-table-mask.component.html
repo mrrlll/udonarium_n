@@ -1,4 +1,4 @@
-<div *ngIf="!isHide" class="component" [ngClass]="{'is-grab': !isLock}"
+<div *ngIf="!isHide" class="component is-3d is-pointer-events-none" [ngClass]="{'is-grab': !isLock}"
   [style.width.px]="width * gridSize" [style.height.px]="height * gridSize"
   appMovable [movable.option]="movableOption" [movable.disable]="isLock" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
   <div *ngIf="imageFile.url.length < 1; then blackMask; else imageMask"></div>

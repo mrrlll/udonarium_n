@@ -311,7 +311,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
     let coordinate = this.pointerDeviceService.pointers[0];
     let title = 'マップマスク設定';
     if (gameObject.name.length) title += ' - ' + gameObject.name;
-    let option: PanelOption = { title: title, left: coordinate.x - 200, top: coordinate.y - 150, width: 400, height: 300 };
+    let option: PanelOption = { title: title, left: coordinate.x - 200, top: coordinate.y - 150, width: 600, height: 380 };
     let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
     component.tabletopObject = gameObject;
   }

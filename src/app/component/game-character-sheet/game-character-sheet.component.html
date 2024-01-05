@@ -28,6 +28,10 @@
     <div *ngIf="isSaveing" class="progress">{{progresPercent}}%</div>
   </div>
 </button>
+<ng-container *ngIf="tabletopObject.aliasName === 'table-mask'">
+  <input type="checkbox" style="float: right;" [(ngModel)]="tabletopObject.isOverviewOnlyGMShow" id="isOverviewOnlyGMShow"/>
+  <label for="isOverviewOnlyGMShow" style="float: right; user-select: none;">GMにのみパネルを表示する</label>
+</ng-container>
 <ng-container *ngIf="tabletopObject.aliasName === 'character'">
   <select *ngIf="tabletopObject" (change)="setLocation($event.target.value)" [ngModel]="tabletopObject.location.name">
     <option value="table">テーブル</option>
