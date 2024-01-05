@@ -1,6 +1,7 @@
 <div class="component">
   <ng-container *ngTemplateOutlet="inventoryTab"></ng-container>
   <ng-container *ngTemplateOutlet="inventoryViewSetting"></ng-container>
+  <ng-container *ngTemplateOutlet="inventoryMultiMove"></ng-container>
   <div *ngIf="getGameObjects(selectTab).length < 1">{{getTabTitle(selectTab)}}インベントリは空です</div>
   <div (contextmenu)="onContextMenu($event, gameObject)" *ngFor="let gameObject of getGameObjects(selectTab); trackBy: trackByGameObject"
   (click)="selectGameObject(gameObject)"  (dblclick)="focusToObject(gameObject)"
@@ -24,9 +25,17 @@
 <ng-template #inventoryViewSetting>
   <ng-container *ngIf="isEdit">
     <div>
-      <div style="font-size: 12px;">並び順</div>
+      <div style="font-size: 12px;">並び順第1</div>
       <input [(ngModel)]="sortTag" placeholder="タグ名" />
       <select [(ngModel)]="sortOrder">
+        <option value="ASC">昇順</option>
+        <option value="DESC">降順</option>
+      </select>
+    </div>
+    <div>
+      <div style="font-size: 12px;">並び順第2</div>
+      <input [(ngModel)]="sortTag2nd" placeholder="タグ名" />
+      <select [(ngModel)]="sortOrder2nd">
         <option value="ASC">昇順</option>
         <option value="DESC">降順</option>
       </select>
@@ -40,14 +49,38 @@
   <ng-container *ngIf="!isEdit">
     <table style="font-size: 0.8em;">
       <tr>
-        <th style=" vertical-align:middle;">並び順:</th>
+        <th style=" vertical-align:middle;">並び順 第1:</th>
         <td style=" vertical-align:middle;">
           <ng-container *ngIf="0 < sortTag.length">{{sortTag}} ({{sortOrderName}})</ng-container>
           <ng-container *ngIf="sortTag.length < 1">-</ng-container>
         </td>
+        <th style=" vertical-align:middle;"> 第2:</th>
+        <td style=" vertical-align:middle;">
+
+          <ng-container *ngIf="0 < sortTag2nd.length">{{sortTag2nd}} ({{sortOrderName2nd}})</ng-container>
+          <ng-container *ngIf="sortTag2nd.length < 1">-</ng-container>
+        </td>
         <td><button class="tab-setting small-font" (click)="toggleEdit()"><i class="material-icons small-font">settings</i>設定</button></td>
       </tr>
     </table>
+  </ng-container>
+</ng-template>
+<ng-template #inventoryMultiMove>
+  <ng-container *ngIf="isMultiMove">
+    <div>
+      一括移動:
+      <button class="tab-setting small-font" (click)="allTabBoxCheck();">
+        <ng-container *ngIf="existsMultiMoveSelectedInTab(); else selectAll">全解除口↓</ng-container>
+        <ng-template #selectAll>全選択〆↓</ng-template>
+      </button>
+      <button class="tab-setting small-font" (click)="onMultiMoveContextMenu()"><i class="material-icons small-font">settings</i>実行</button>
+      <button class="tab-setting small-font" (click)="toggleMultiMove()"><i class="material-icons small-font">settings</i>キャンセル</button>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!isMultiMove">
+    <div>
+      <button class="tab-setting small-font" (click)="toggleMultiMove()"><i class="material-icons small-font">settings</i>一括移動</button>
+    </div>
   </ng-container>
 </ng-template>
 <ng-template #gameObjectTags let-gameObject="gameObject">
@@ -67,10 +100,13 @@
       </button>
     </div>
     <div class="object-tags-box">
-      <div class="table-cell image-box">
-        <span class="aura" [ngClass]="{black: gameObject.aura == 0, blue: gameObject.aura == 1, green: gameObject.aura == 2, cyan: gameObject.aura == 3, red: gameObject.aura == 4, magenta: gameObject.aura == 5, yellow: gameObject.aura == 6, white: gameObject.aura == 7}">
-          <img *ngIf="gameObject.imageFile.url" class="inverser" [src]="gameObject.imageFile.url | safe: 'resourceUrl'" [ngClass]="{inverse: gameObject.isInverse, hollow: gameObject.isHollow, 'black-paint': gameObject.isBlackPaint}" />
-        </span>
+      <div class="table-cell"  *ngIf="isMultiMove">
+        <input type="checkbox" [checked]="multiMoveTargets.has(gameObject.identifier)" (change)="toggleMultiMoveTarget($event, gameObject)" />
+      </div>
+      <div class="table-cell">
+        <div class="image-box">
+          <img *ngIf="gameObject.imageFile.url" [src]="gameObject.imageFile.url | safe: 'resourceUrl'" />
+        </div>
       </div>
       <div class="table-cell">
         <div *ngIf="gameObject.rootDataElement">

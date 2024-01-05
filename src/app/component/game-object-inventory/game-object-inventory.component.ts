@@ -28,8 +28,10 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
 
   selectTab: string = 'table';
   selectedIdentifier: string = '';
+  multiMoveTargets: Set<string> = new Set();
 
   isEdit: boolean = false;
+  isMultiMove: boolean = false;
 
   get config(): Config { return ObjectStore.instance.get<Config>('Config')};
 
@@ -37,11 +39,18 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
   set sortTag(sortTag: string) { this.inventoryService.sortTag = sortTag; }
   get sortOrder(): SortOrder { return this.inventoryService.sortOrder; }
   set sortOrder(sortOrder: SortOrder) { this.inventoryService.sortOrder = sortOrder; }
+
+  get sortTag2nd(): string { return this.inventoryService.sortTag2nd; }
+  set sortTag2nd(sortTag: string) { this.inventoryService.sortTag2nd = sortTag; }
+  get sortOrder2nd(): SortOrder { return this.inventoryService.sortOrder2nd; }
+  set sortOrder2nd(sortOrder: SortOrder) { this.inventoryService.sortOrder2nd = sortOrder; }
+
   get dataTag(): string { return this.inventoryService.dataTag; }
   set dataTag(dataTag: string) { this.inventoryService.dataTag = dataTag; }
   get dataTags(): string[] { return this.inventoryService.dataTags; }
 
   get sortOrderName(): string { return this.sortOrder === SortOrder.ASC ? '昇順' : '降順'; }
+  get sortOrderName2nd(): string { return this.sortOrder2nd === SortOrder.ASC ? '昇順' : '降順'; }
 
   get newLineString(): string { return this.inventoryService.newLineString; }
 
@@ -293,6 +302,13 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
     this.isEdit = !this.isEdit;
   }
 
+  toggleMultiMove() {
+    if (this.isMultiMove) {
+      this.multiMoveTargets.clear();
+    }
+    this.isMultiMove = !this.isMultiMove;
+  }
+
   cleanInventory() {
     let tabTitle = this.getTabTitle(this.selectTab);
     let gameObjects = this.getGameObjects(this.selectTab);
@@ -301,6 +317,78 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
       this.deleteGameObject(gameObject);
     }
     SoundEffect.play(PresetSound.sweep);
+  }
+
+  existsMultiMoveSelectedInTab(): boolean {
+    return this.getGameObjects(this.selectTab).some(x => this.multiMoveTargets.has(x.identifier))
+  }
+
+  toggleMultiMoveTarget(e: Event, gameObject: GameCharacter) {
+    if (!(e.target instanceof HTMLInputElement)) { return; }
+    if (e.target.checked) {
+      this.multiMoveTargets.add(gameObject.identifier);
+    } else {
+      this.multiMoveTargets.delete(gameObject.identifier);
+    }
+    console.log(`multimove selected ${[...this.multiMoveTargets]}`);
+  }
+
+  allTabBoxCheck() {
+    if (this.existsMultiMoveSelectedInTab()) {
+      this.getGameObjects(this.selectTab).forEach(x => this.multiMoveTargets.delete(x.identifier));
+    } else {
+      this.getGameObjects(this.selectTab).forEach(x => this.multiMoveTargets.add(x.identifier));
+    }
+  }
+
+  onMultiMoveContextMenu() {
+    if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
+
+    let position = this.pointerDeviceService.pointers[0];
+    let actions: ContextMenuAction[] = [];
+    let locations = [
+      { name: 'table', alias: 'テーブルに移動' },
+      { name: 'common', alias: '共有イベントリに移動' },
+      { name: Network.peerId, alias: '個人イベントリに移動' },
+      { name: 'graveyard', alias: '墓場に移動' }
+    ];
+    for (let location of locations) {
+      if (this.selectTab === location.name) continue;
+      actions.push({
+        name: location.alias, action: () => {
+          this.multiMove(location.name);
+          this.toggleMultiMove();
+          SoundEffect.play(PresetSound.piecePut);
+        }
+      });
+    }
+
+    this.contextMenuService.open(position, actions, "一括移動");
+  }
+
+  multiMove(location: string) {
+    for (const gameObjectIdentifier of this.multiMoveTargets) {
+      let gameObject = ObjectStore.instance.get(gameObjectIdentifier);
+      if (gameObject instanceof GameCharacter) {
+        gameObject.setLocation(location);
+      }
+    }
+  }
+
+  multiDelete() {
+    let inGraveyard: Set<GameCharacter> = new Set();
+    for (const gameObjectIdentifier of this.multiMoveTargets) {
+      let gameObject: GameCharacter = ObjectStore.instance.get(gameObjectIdentifier);
+      if (gameObject instanceof GameCharacter && gameObject.location.name == 'graveyard') {
+        inGraveyard.add(gameObject);
+      }
+    }
+    if (inGraveyard.size < 1) return;
+
+    if (!confirm(`選択したもののうち墓場に存在する${inGraveyard.size}個の要素を完全に削除しますか？`)) return;
+    for (const gameObject of inGraveyard) {
+      this.deleteGameObject(gameObject);
+    }
   }
 
   private cloneGameObject(gameObject: TabletopObject) {
@@ -330,9 +418,17 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
   }
 
   selectGameObject(gameObject: GameObject) {
+    if (this.isMultiMove) {
+      if (this.multiMoveTargets.has(gameObject.identifier)) {
+        this.multiMoveTargets.delete(gameObject.identifier);
+      } else {
+        this.multiMoveTargets.add(gameObject.identifier);
+      }
+      console.log(`multimove selected ${[...this.multiMoveTargets]}`);
+    }
     let aliasName: string = gameObject.aliasName;
     EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: gameObject.identifier, className: gameObject.aliasName });
-    EventSystem.trigger('HIGHTLIGHT_TABLETOP_OBJECT', { identifier: gameObject.identifier })
+    EventSystem.trigger('HIGHTLIGHT_TABLETOP_OBJECT', { identifier: gameObject.identifier });
   }
 
   private deleteGameObject(gameObject: GameObject) {
