@@ -440,7 +440,11 @@ export class GameObjectInventoryComponent implements AfterViewInit, OnInit, OnDe
     EventSystem.trigger('FOCUS_TO_TABLETOP_COORDINATE', { x: gameObject.location.x, y: gameObject.location.y });
   }
 
-  selectGameObject(gameObject: GameObject) {
+  selectGameObject(gameObject: GameObject, e: Event=null) {
+    console.log(e)
+    if (e && e instanceof PointerEvent && e.ctrlKey) {
+      this.isMultiMove = true;
+    }
     if (this.isMultiMove) {
       if (this.multiMoveTargets.has(gameObject.identifier)) {
         this.multiMoveTargets.delete(gameObject.identifier);

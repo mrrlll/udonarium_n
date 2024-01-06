@@ -4,7 +4,7 @@
   <ng-container *ngTemplateOutlet="inventoryMultiMove"></ng-container>
   <div *ngIf="getGameObjects(selectTab).length < 1">{{getTabTitle(selectTab)}}インベントリは空です</div>
   <div (contextmenu)="onContextMenu($event, gameObject)" *ngFor="let gameObject of getGameObjects(selectTab); trackBy: trackByGameObject"
-  (click)="selectGameObject(gameObject)"  (dblclick)="focusToObject(gameObject)"
+  (click)="selectGameObject(gameObject, $event)"  (dblclick)="focusToObject(gameObject, $event)"
   [ngClass]="{'box': true, 'selected': (selectedIdentifier === gameObject.identifier)}">
     <ng-container *ngTemplateOutlet="gameObjectTags; context:{ gameObject: gameObject}"></ng-container>
   </div>
@@ -80,6 +80,7 @@
   <ng-container *ngIf="!isMultiMove">
     <div>
       <button class="tab-setting small-font" (click)="toggleMultiMove()"><i class="material-icons small-font">settings</i>一括移動</button>
+      <span style="margin: 2px"><small>キャラを<kbd style="border-radius: 3px; border: 1px outset #ccc; padding: 1px; background-color: #eee">Ctrl</kbd>+クリックでも複数選択が開始されます</small></span>
     </div>
   </ng-container>
 </ng-template>
