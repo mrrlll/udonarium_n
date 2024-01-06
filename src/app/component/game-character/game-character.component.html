@@ -89,7 +89,7 @@
             <!-- 名前表示 -->
             <ng-container *ngIf="0 < name.length">
               <div *ngFor="let rotateY of ['0', '180deg']"
-                class="name-tag is-nowrap is-black-background"
+                class="name-tag is-nowrap is-black-background" [ngClass]="{'nonTalkFlag': gameCharacter.nonTalkFlag}"
                 [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateY(' + rotateY + ')'}">
                 <div class="has-length-limit">{{name}}</div>
               </div>
