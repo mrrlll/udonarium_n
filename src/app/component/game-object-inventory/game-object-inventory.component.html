@@ -3,7 +3,7 @@
   <ng-container *ngTemplateOutlet="inventoryViewSetting"></ng-container>
   <ng-container *ngTemplateOutlet="inventoryMultiMove"></ng-container>
   <div *ngIf="getGameObjects(selectTab).length < 1">{{getTabTitle(selectTab)}}インベントリは空です</div>
-  <div (contextmenu)="onContextMenu($event, gameObject)" *ngFor="let gameObject of getGameObjects(selectTab); trackBy: trackByGameObject"
+  <div style="user-select: none;" (contextmenu)="onContextMenu($event, gameObject)" *ngFor="let gameObject of getGameObjects(selectTab); trackBy: trackByGameObject"
   (click)="selectGameObject(gameObject, $event)"  (dblclick)="focusToObject(gameObject, $event)"
   [ngClass]="{'box': true, 'selected': (selectedIdentifier === gameObject.identifier)}">
     <ng-container *ngTemplateOutlet="gameObjectTags; context:{ gameObject: gameObject}"></ng-container>
@@ -76,6 +76,7 @@
       <button class="tab-setting small-font" (click)="onMultiMoveContextMenu()"><i class="material-icons small-font">settings</i>実行</button>
       <button class="tab-setting small-font" (click)="toggleMultiMove()"><i class="material-icons small-font">settings</i>キャンセル</button>
     </div>
+    <span>Shift+クリックで範囲選択</span>
   </ng-container>
   <ng-container *ngIf="!isMultiMove">
     <div>
