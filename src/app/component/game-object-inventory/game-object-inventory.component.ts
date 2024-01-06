@@ -423,7 +423,7 @@ export class GameObjectInventoryComponent implements AfterViewInit, OnInit, OnDe
     let coordinate = this.pointerDeviceService.pointers[0];
     let title = 'キャラクターシート';
     if (gameObject.name.length) title += ' - ' + gameObject.name;
-    let option: PanelOption = { title: title, left: coordinate.x - 800, top: coordinate.y - 300, width: 800, height: 600 };
+    let option: PanelOption = { title: title, left: coordinate.x - 800, top: coordinate.y - 300, width: 860, height: 600 };
     let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
     component.tabletopObject = gameObject;
   }
