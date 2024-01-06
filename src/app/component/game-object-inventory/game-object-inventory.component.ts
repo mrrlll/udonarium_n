@@ -441,10 +441,10 @@ export class GameObjectInventoryComponent implements AfterViewInit, OnInit, OnDe
   }
 
   selectGameObject(gameObject: GameObject, e: Event=null) {
-    console.log(e)
-    if (e && e instanceof PointerEvent && e.ctrlKey) {
+    if (e && e instanceof MouseEvent && e.ctrlKey) {
       this.isMultiMove = true;
     }
+    // TODO: Shiftキー＋クリック時に範囲選択
     if (this.isMultiMove) {
       if (this.multiMoveTargets.has(gameObject.identifier)) {
         this.multiMoveTargets.delete(gameObject.identifier);
