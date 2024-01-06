@@ -30,6 +30,7 @@
         <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
           appRotable [rotable.option]="rollOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
           <div class="rotate-inner is-3d">
+            <!-- バフ表示 -->
             <div class="is-3d" *ngIf="gameCharacter.buffDataElement" >
               <ng-container *ngIf="gameCharacter.buffDataElement.children.length == 1">
                 <ng-container *ngFor="let child of gameCharacter.buffDataElement.children">
@@ -85,42 +86,12 @@
                 <img src="./assets/images/target/target.png">
               </div>
             </div>
-            <ng-container *ngIf="this.gameCharacter.nonTalkFlag">
-              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d will-change backface-off"
-                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'
-                , 'background-color': 'rgba(255,255,255, 0.6)' , 'color' : '#333' ,  'border': 'solid 1px #555' }">
-                <div class="has-length-limit is-3d" >{{name}}
-                  <ng-container *ngIf="isLock">
-                    <i class="material-icons lock-icon" style="display: inline;">lock</i>
-                  </ng-container>
-                </div>
-              </div>
-              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d will-change backface-off"
-                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateY(180deg)'
-                , 'background-color': 'rgba(255,255,255, 0.6)' , 'color' : '#333' ,  'border': 'solid 1px #555' }">
-                <div class="has-length-limit is-3d" >{{name}}
-                  <ng-container *ngIf="isLock">
-                    <i class="material-icons lock-icon" style="display: inline;">lock</i>
-                  </ng-container>
-                </div>
-              </div>
-            </ng-container>
-            <ng-container *ngIf="!this.gameCharacter.nonTalkFlag">
-              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d will-change backface-off"
-                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
-                <div class="has-length-limit is-3d">{{name}}
-                  <ng-container *ngIf="isLock">
-                    <i class="material-icons lock-icon" style="display: inline;">lock</i>
-                  </ng-container>
-                </div>
-              </div>
-              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d will-change backface-off"
-                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateY(180deg)'}">
-                <div class="has-length-limit is-3d">{{name}}
-                  <ng-container *ngIf="isLock">
-                    <i class="material-icons lock-icon" style="display: inline;">lock</i>
-                  </ng-container>
-                </div>
+            <!-- 名前表示 -->
+            <ng-container *ngIf="0 < name.length">
+              <div *ngFor="let rotateY of ['0', '180deg']"
+                class="name-tag is-nowrap is-black-background"
+                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateY(' + rotateY + ')'}">
+                <div class="has-length-limit">{{name}}</div>
               </div>
             </ng-container>
             <div class="inverser" [ngClass]="{inverse: isInverse}">

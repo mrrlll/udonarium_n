@@ -43,24 +43,22 @@
   <label for="isHideCheck" style="float: right; user-select: none;">GMにのみパネルを表示する</label>
   <div class="extra-setting" style="width:50%;display:table-cell;">
     <label for="specifyKomaImageFlag" style="user-select: none;">コマ画像の高さを指定</label>
-    <input type="checkbox" id="specifyKomaImageFlag" [(ngModel)]="tabletopObject.specifyKomaImageFlag" name="specifyKomaImageFlag" (click)="clickImageFlag()">
+    <input type="checkbox" class="extra-input" id="specifyKomaImageFlag" [(ngModel)]="tabletopObject.specifyKomaImageFlag" name="specifyKomaImageFlag" (click)="clickImageFlag()">
     <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 1 +';' | safe: 'style'" min="50" max="750" [(ngModel)]="tabletopObject.komaImageHeignt"  [disabled]="!tabletopObject.specifyKomaImageFlag"/>
-    <input class="is-caret" [(ngModel)]="tabletopObject.komaImageHeignt"  [disabled]="!tabletopObject.specifyKomaImageFlag" type="number" style="width:12em;" min="50" max="750" name="popWidth" (change)="chkKomaSize($event.target.value)" style="color: #555;"/>
+    <input class="is-caret" [(ngModel)]="tabletopObject.komaImageHeignt"  [disabled]="!tabletopObject.specifyKomaImageFlag" type="number" style="width: 50px;" min="50" max="750" name="popWidth" (change)="chkKomaSize($event.target.value)" style="color: #555;"/>
     <input type="checkbox" id="hideInventory" value="hideInventory" style="float: right;" [(ngModel)]="tabletopObject.hideInventory" name="hideInventory" (click)="clickHide()"/>
     <label for="hideInventory" style="float: right; user-select: none;">テーブルインベントリ非表示</label>
     <div>
       <label style="user-select: none;">パネル横幅</label>
       <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 10 +';' | safe: 'style'"
         min="270" max="800" [(ngModel)]="tabletopObject.overViewWidth" />
-      <input [(ngModel)]="tabletopObject.overViewWidth" type="number"
-        min="270" max="800" name="popWidth" (change)="chkPopWidth($event.target.value)"
-        style="color: #555;"/>
+      <input class="extra-input" [(ngModel)]="tabletopObject.overViewWidth" type="number"
+        min="270" max="800" name="popWidth" (change)="chkPopWidth($event.target.value)" style="width: 50px;"/>
       <label style="user-select: none;">パネル縦幅</label>
       <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 10 +';' | safe: 'style'"
         min="250" max="1000" [(ngModel)]="tabletopObject.overViewMaxHeight" />
-      <input [(ngModel)]="tabletopObject.overViewMaxHeight" type="number"
-        min="250" max="1000" name="popWidth" (change)="chkPopMaxHeight($event.target.value)"
-        style="color: #555;"/>
+      <input class="extra-input" [(ngModel)]="tabletopObject.overViewMaxHeight" type="number"
+        min="250" max="1000" name="popWidth" (change)="chkPopMaxHeight($event.target.value)" style="width: 50px;"/>
         <!-- 縦幅と横幅をデフォルトに戻すボタン -->
         <button (click)="resetPopSize()">デフォルトに戻す</button>
         <input type="checkbox" style="float: right;" [(ngModel)]="tabletopObject.nonTalkFlag" id="nonTalkFlag"/>

@@ -348,6 +348,11 @@
 
 .backface-off {
   backface-visibility: hidden;
+  transform: rotateY(0deg);
+}
+
+.parent-element {
+  transform-style: preserve-3d;
 }
 
 .elevation-indicator {
@@ -475,4 +480,9 @@
 	content:"";
 	position: absolute;
 	top: -50px;
+}
+
+.extra-input{
+  width: 10px;
+  color: #555;
 }
