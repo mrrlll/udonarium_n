@@ -331,6 +331,11 @@
   display: none;
 }
 
+.lock-icon {
+  font-size: 13px;
+  vertical-align: middle;
+}
+
 .component:hover .material-icons, .component:active .material-icons {
   display: inline;
 }
@@ -422,9 +427,9 @@
 }
 
 @keyframes arrowmove{
-      0%{top: -80px;}
-     100%{top: -60px;}
- }
+  0%{top: -80px;}
+  100%{top: -60px;}
+}
 
 
 /* 矢印の描写 */

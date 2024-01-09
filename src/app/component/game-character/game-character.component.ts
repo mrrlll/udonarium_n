@@ -1,5 +1,6 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import {
+  ApplicationInitStatus,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -84,6 +85,8 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   set isDropShadow(isDropShadow: boolean) { this.gameCharacter.isDropShadow = isDropShadow; }
   get isAltitudeIndicate(): boolean { return this.gameCharacter.isAltitudeIndicate; }
   set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameCharacter.isAltitudeIndicate = isAltitudeIndicate; }
+  get isLock(): boolean { return this.gameCharacter.isLock; }
+  set isLock(isLock: boolean) { this.gameCharacter.isLock = isLock; }
   get isInverse(): boolean { return this.gameCharacter.isInverse; }
   set isInverse(isInverse: boolean) { this.gameCharacter.isInverse = isInverse; }
   get isHollow(): boolean { return this.gameCharacter.isHollow; }
@@ -260,6 +263,10 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
 
   onInputStart(e: any) {
     this.input.cancel();
+
+    if (this.isLock) {
+      EventSystem.trigger('DRAG_LOCKED_OBJECT', {});
+    }
   }
 
   private makeSelectionContextMenu(): ContextMenuAction[] {
@@ -413,7 +420,21 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
       },
       disabled: !this.isInverse && !this.isHollow && !this.isBlackPaint && this.aura == -1
     });
-
+    actions.push(
+      this.isLock
+      ?{
+        name: '☑ 固定する', action: () => {
+          this.isLock = false;
+          SoundEffect.play(PresetSound.unlock);
+        }
+      }:{
+        name: '☐ 固定する', action: () => {
+          this.isLock = true;
+          SoundEffect.play(PresetSound.lock);
+        }
+      }
+    )
+    actions.push(ContextMenuSeparator);
     actions.push({ name: '画像効果', action: null, subActions: subActions });
     actions.push(ContextMenuSeparator);
     if(this.roomAltitude){

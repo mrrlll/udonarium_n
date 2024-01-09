@@ -15,7 +15,7 @@
   <div class="component-content is-3d" [@bounceInOut]="'in'">
     <div class="component-content is-3d is-pointer-events-auto" appRotable [rotable.option]="rotableOption"
       (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
-      <div class="pedestal-grab rotate-grab">
+      <div *ngIf="!isLock" class="pedestal-grab rotate-grab">
         <div class="pedestal-grab-border">
           <div class="material-icons of-front">autorenew</div>
           <div class="material-icons of-back">autorenew</div>
@@ -91,7 +91,11 @@
               <div *ngFor="let rotateY of ['0', '180deg']"
                 class="name-tag is-nowrap is-black-background" [ngClass]="{'nonTalkFlag': gameCharacter.nonTalkFlag}"
                 [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateY(' + rotateY + ')'}">
-                <div class="has-length-limit">{{name}}</div>
+                <div class="has-length-limit">{{name}}
+                  <ng-container *ngIf="isLock">
+                    <i class="material-icons lock-icon" style="display: inline;">lock</i>
+                  </ng-container>
+                </div>
               </div>
             </ng-container>
             <div class="inverser" [ngClass]="{inverse: isInverse}">
