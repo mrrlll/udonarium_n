@@ -108,11 +108,11 @@
                 <img [hidden]="" class="image is-3d" [ngStyle]="{'width':'100%'}" *ngIf="(0 < imageFile.url.length) && !this.gameCharacter.specifyKomaImageFlag" class="image" [ngClass]="{ 'isStealth': isStealth, 'black-paint': isBlackPaint, 'hollow': isHollow}" [src]="imageFile.url | safe: 'resourceUrl'">
               </span>
             </div>
-            <div class="rotate-grab rotate-grab-icon of-top"
+            <div *ngIf="!isLock" class="rotate-grab rotate-grab-icon of-top"
               [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
               <i class="material-icons">autorenew</i>
             </div>
-            <div class="rotate-grab rotate-grab-icon of-bottom"
+            <div *ngIf="!isLock" class="rotate-grab rotate-grab-icon of-bottom"
               [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px'}">
               <i class="material-icons">autorenew</i>
             </div>
