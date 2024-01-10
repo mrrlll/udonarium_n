@@ -11,6 +11,7 @@ import { ModalService } from 'service/modal.service';
 import { XMLBuilder } from 'fast-xml-parser';
 import { HttpClient } from '@angular/common/http';
 import { GameCharacter } from '@udonarium/game-character';
+import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 
 @Component({
   selector: 'app-game-character-generate-window',
@@ -23,6 +24,7 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
     private generateService: GenerateService,
     private modalService: ModalService,
     private panelService: PanelService,
+    private inventoryService: GameObjectInventoryService,
     private http: HttpClient,
     private tabletopService: TabletopService
   ){}
@@ -33,6 +35,8 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
   characterSheetUrl: string = '';
   isUnsupportedSiteSystem: boolean = false;
   isKeyNotFound: boolean = false;
+
+  get dataTags(): string[] { return this.inventoryService.dataTags; }
 
   ngOnInit() {
     Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'キャラ駒生成');
@@ -342,8 +346,17 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       kemonosheet.character.data.data[2].data[0].data[3]["#text"] = charadata.status.budget.limit ? charadata.status.budget.limit : 0;
       kemonosheet.character.data.data[2].data[0].data[3]["@_currentValue"] = charadata.status.budget.limit ? charadata.status.budget.limit : 0;
       // 特性
+      let dataTags = this.dataTags;
+      let dataTagsTalentCount: number = 0;
       let talentNumber: string[] = ["①", "②", "③", "④", "⑤", "⑥"]
       let talentsummary: string = "";
+      let talentcount: number = 0;
+
+      for (let dataTag of dataTags){
+        if (dataTag.indexOf("特性") !== -1){
+          dataTagsTalentCount++;
+        };
+      };
       for(let i = 0; i <= 6; i++){
         if (talent[`name${i+1}`] === null) break;
         data = {
@@ -351,9 +364,16 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
           "#text": talent[`name${i+1}`],
           "@_type": "check"
         }
+        talentcount++;
         kemonosheet.character.data.data[2].data[0].data.splice(4+i, 0, data);
-        talentsummary += `特性${talentNumber[i]} `;
       };
+      console.log(dataTagsTalentCount);
+      console.log(talentcount);
+      let count: number = Math.max(dataTagsTalentCount, talentcount);
+      for (let i = 0; i < count; i++) {
+        talentsummary += `特性${talentNumber[i]} `;
+      }
+
       // 獸憑き
       if (charadata.beastpoint.value === null) charadata.beastpoint.value = 0;
       kemonosheet.character.data.data[2].data[0].data[6]["#text"] = charadata.beastpoint.value;
