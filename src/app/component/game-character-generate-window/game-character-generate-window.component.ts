@@ -351,7 +351,6 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       let talentNumber: string[] = ["①", "②", "③", "④", "⑤", "⑥"]
       let talentsummary: string = "";
       let talentcount: number = 0;
-
       for (let dataTag of dataTags){
         if (dataTag.indexOf("特性") !== -1){
           dataTagsTalentCount++;
@@ -367,8 +366,6 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
         talentcount++;
         kemonosheet.character.data.data[2].data[0].data.splice(4+i, 0, data);
       };
-      console.log(dataTagsTalentCount);
-      console.log(talentcount);
       let count: number = Math.max(dataTagsTalentCount, talentcount);
       for (let i = 0; i < count; i++) {
         talentsummary += `特性${talentNumber[i]} `;
