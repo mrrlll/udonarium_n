@@ -17,10 +17,12 @@ import { Terrain } from '@udonarium/terrain';
 import { TextNote } from '@udonarium/text-note';
 
 import { GameTableSettingComponent } from 'component/game-table-setting/game-table-setting.component';
+import { GameCharacterGenerateWindowComponent } from 'component/game-character-generate-window/game-character-generate-window.component';
 import { ContextMenuAction, ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { CoordinateService } from 'service/coordinate.service';
 import { ImageService } from 'service/image.service';
 import { ModalService } from 'service/modal.service';
+import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopActionService } from 'service/tabletop-action.service';
 import { TabletopSelectionService } from 'service/tabletop-selection.service';
@@ -30,7 +32,6 @@ import { GridLineRender } from './grid-line-render';
 import { TableMouseGesture } from './table-mouse-gesture';
 import { TablePickGesture } from './table-pick-gesture';
 import { TableTouchGesture } from './table-touch-gesture';
-
 
 @Component({
   selector: 'game-table',
@@ -83,6 +84,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private ngZone: NgZone,
     private contextMenuService: ContextMenuService,
+    private panelService: PanelService,
     private pointerDeviceService: PointerDeviceService,
     private coordinateService: CoordinateService,
     private imageService: ImageService,
@@ -313,6 +315,13 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     Array.prototype.push.apply(menuActions, this.tabletopActionService.makeDefaultContextMenuActions(objectPosition));
+    menuActions.push(ContextMenuSeparator);
+    menuActions.push({
+      name: 'URLからコマ生成', action: () => {
+        const option = { width: 600, height: 140, left: 100, };
+        this.panelService.open(GameCharacterGenerateWindowComponent, option);
+      }
+    });
     menuActions.push(ContextMenuSeparator);
     menuActions.push(
       {
