@@ -212,24 +212,8 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
     let kemonosheet = null;
     this.http.get('assets/kemonosheet.json').subscribe(data => {
       kemonosheet = data;
-      const handlename: string = charadata.base.handlename;
-
-      const talent: any = charadata.base.talent
-      const useTalent = [];
-      let anyChecked: boolean = false;
-      for (let i = 1; i <= 6; i++) {
-        const nameKey = `name${i}`;
-        const useKey = `use${i}`;
-
-        if (talent[useKey] === "on") {
-          useTalent.push(talent[nameKey]);
-          anyChecked = true;
-        }
-      }
-      if (!anyChecked) {
-        useTalent.push(talent.name1, talent.name2);
-      }
-
+      const handlename: string = charadata.base.handlename ? charadata.base.handlename : '名無しのキャラクター';
+      const talent: any = charadata.base.talent;
       let character_note: string = "";
       let facepower: string = "";
       const truename: string = charadata.base.name;
@@ -354,22 +338,31 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       // 仮名
       kemonosheet.character.data.data[1].data[0]["#text"] = handlename;
       // 余裕
-      kemonosheet.character.data.data[2].data[0].data[0]["#text"] = charadata.status.margin.limit;
-      kemonosheet.character.data.data[2].data[0].data[0]["@_currentValue"] = charadata.status.margin.limit;
+      kemonosheet.character.data.data[2].data[0].data[0]["#text"] = charadata.status.margin.limit ? charadata.status.margin.limit : 10;
+      kemonosheet.character.data.data[2].data[0].data[0]["@_currentValue"] = charadata.status.margin.limit ? charadata.status.margin.limit : 10;
       // 予算
-      if(charadata.status.budget.limit === null) charadata.status.budget.limit = 0;
-      kemonosheet.character.data.data[2].data[0].data[3]["#text"] = charadata.status.budget.limit;
-      kemonosheet.character.data.data[2].data[0].data[3]["@_currentValue"] = charadata.status.budget.limit;
+      kemonosheet.character.data.data[2].data[0].data[3]["#text"] = charadata.status.budget.limit ? charadata.status.budget.limit : 0;
+      kemonosheet.character.data.data[2].data[0].data[3]["@_currentValue"] = charadata.status.budget.limit ? charadata.status.budget.limit : 0;
       // 特性
-      kemonosheet.character.data.data[2].data[0].data[4]["#text"] = useTalent[0]; // 特性①
-      kemonosheet.character.data.data[2].data[0].data[5]["#text"] = useTalent[1]; // 特性②
+      let number: string[] = ["①", "②", "③", "④", "⑤", "⑥"]
+      for(let i = 0; i <= 6; i++){
+        if (talent[`name${i+1}`] === null) break;
+        data = {
+          "@_name": `特性${number[i]}`,
+          "#text": talent[`name${i+1}`],
+          "@_type": "check"
+        }
+        kemonosheet.character.data.data[2].data[0].data.splice(4+i, 0, data);
+      };
+      // kemonosheet.character.data.data[2].data[0].data[4]["#text"] = useTalent[0]; // 特性①
+      // kemonosheet.character.data.data[2].data[0].data[5]["#text"] = useTalent[1]; // 特性②
       // 獸憑き
       if (charadata.beastpoint.value === null) charadata.beastpoint.value = 0;
       kemonosheet.character.data.data[2].data[0].data[6]["#text"] = charadata.beastpoint.value;
       // 状態異常
       kemonosheet.character.data.data[2].data[0].data[7]["#text"] = debuff;
       // キャラノート
-      kemonosheet.character.data.data[1].data[4]['#text'] = character_note;
+      kemonosheet.character.data.data[1].data[4]['#text'] = character_note ? character_note : "";
       // 貌力の強度
       kemonosheet.character.data.data[1].data[3]['#text'] = Object.keys(charadata.facepower).length;
       // 武器
@@ -387,17 +380,17 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       /// 能力値
       let ability = charadata.base.ability;
       // 移動
-      kemonosheet.character.data.data[2].data[2].data[0]['#text'] = ability.move;
+      kemonosheet.character.data.data[2].data[2].data[0]['#text'] = ability.move ? ability.move : 0;
       // 格闘
-      kemonosheet.character.data.data[2].data[2].data[1]['#text'] = ability.fight;
+      kemonosheet.character.data.data[2].data[2].data[1]['#text'] = ability.fight ? ability.fight : 0;
       // 射撃
-      kemonosheet.character.data.data[2].data[2].data[2]['#text'] = ability.shooting;
+      kemonosheet.character.data.data[2].data[2].data[2]['#text'] = ability.shooting ? ability.shooting : 0;
       // 製作
-      kemonosheet.character.data.data[2].data[2].data[3]['#text'] = ability.create;
+      kemonosheet.character.data.data[2].data[2].data[3]['#text'] = ability.create ? ability.create : 0;
       // 察知
-      kemonosheet.character.data.data[2].data[2].data[4]['#text'] = ability.awareness;
+      kemonosheet.character.data.data[2].data[2].data[4]['#text'] = ability.awareness ? ability.awareness : 0;
       // 自制
-      kemonosheet.character.data.data[2].data[2].data[5]['#text'] = ability.restraint;
+      kemonosheet.character.data.data[2].data[2].data[5]['#text'] = ability.restraint ? ability.restraint : 0;
       // 日常
       for (let i = 0; i <= 2; i++){
         kemonosheet.character.data.data[2].data[3].data[i]["@_name"] = charadata.days[i].name;
@@ -410,9 +403,10 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       }
       // 仲間
       let friends = charadata.friends;
-      // friends[0].nameがnullならば、仲間①を追加
       if (friends[0].name === null) {
         friends[0].name = `仲間のキャラクター名を入力`;
+        friends[0].level = 0;
+        friends[0].current = 0;
       }
       for (let friend of friends) {
         if (friend.name === null) break;
