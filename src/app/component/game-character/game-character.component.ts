@@ -1,6 +1,5 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import {
-  ApplicationInitStatus,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -499,7 +498,9 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
         SoundEffect.play(PresetSound.sweep);
       }
     });
-    actions.push(ContextMenuSeparator);
+    if(this.isGM){
+      actions.push(ContextMenuSeparator);
+    }
     if(this.isGM && this.isStealth){
       actions.push({
         name: '☑ ステルスモード', action: () => {
