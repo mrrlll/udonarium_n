@@ -234,7 +234,7 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
 雰囲気:${atmosphere}
 動機:${motivation}`;
 
-      let debuff = "";
+      let debuff = "なし";
       if (charadata.status.bad.value !== null){
         debuff = charadata.status.bad.value;
       };
@@ -334,7 +334,6 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
           itemsText += `${i+1}.${items[i]}\n`;
         }
       }
-
       // 仮名
       kemonosheet.character.data.data[1].data[0]["#text"] = handlename;
       // 余裕
@@ -344,18 +343,18 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       kemonosheet.character.data.data[2].data[0].data[3]["#text"] = charadata.status.budget.limit ? charadata.status.budget.limit : 0;
       kemonosheet.character.data.data[2].data[0].data[3]["@_currentValue"] = charadata.status.budget.limit ? charadata.status.budget.limit : 0;
       // 特性
-      let number: string[] = ["①", "②", "③", "④", "⑤", "⑥"]
+      let talentNumber: string[] = ["①", "②", "③", "④", "⑤", "⑥"]
+      let talentsummary: string = "";
       for(let i = 0; i <= 6; i++){
         if (talent[`name${i+1}`] === null) break;
         data = {
-          "@_name": `特性${number[i]}`,
+          "@_name": `特性${talentNumber[i]}`,
           "#text": talent[`name${i+1}`],
           "@_type": "check"
         }
         kemonosheet.character.data.data[2].data[0].data.splice(4+i, 0, data);
+        talentsummary += `特性${talentNumber[i]} `;
       };
-      // kemonosheet.character.data.data[2].data[0].data[4]["#text"] = useTalent[0]; // 特性①
-      // kemonosheet.character.data.data[2].data[0].data[5]["#text"] = useTalent[1]; // 特性②
       // 獸憑き
       if (charadata.beastpoint.value === null) charadata.beastpoint.value = 0;
       kemonosheet.character.data.data[2].data[0].data[6]["#text"] = charadata.beastpoint.value;
@@ -421,7 +420,7 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       };
 
       let summary = `<?xml version="1.0" encoding="UTF-8"?>
-      <summary-setting sortTag="先制値" sortOrder="ASC" dataTag="先制値 開始条件 展開 耐久度 余裕 食事 水分 予算 威力 軽減値 特性① 特性② 特性③ 特殊効果 異形 獸憑き 状態異常 移動 格闘 射撃 製作 察知 自制 貌力 装備 武器 防具 小道具① 小道具② 持ち物 情報 絆 コマ画像"></summary-setting>
+      <summary-setting sortTag="先制値" sortOrder="ASC" dataTag="先制値 開始条件 展開 耐久度 余裕 食事 水分 予算 威力 軽減値 ${talentsummary}特殊効果 異形 獸憑き 状態異常 移動 格闘 射撃 製作 察知 自制 貌力 装備 武器 防具 小道具① 小道具② 持ち物 情報 絆 コマ画像"></summary-setting>
       `
       this.generateKoma(kemonosheet, summary, 'kemono');
       return;
