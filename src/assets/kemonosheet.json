@@ -49,13 +49,13 @@
                 {
                   "#text": 24,
                   "@_type": "numberResource",
-                  "@_currentValue": "",
+                  "@_currentValue": "0",
                   "@_name": "食事"
                 },
                 {
                   "#text": 24,
                   "@_type": "numberResource",
-                  "@_currentValue": "",
+                  "@_currentValue": "0",
                   "@_name": "水分"
                 },
                 {
