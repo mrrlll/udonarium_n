@@ -294,13 +294,20 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
 
       for (const armor of armors) {
         if (armor.equipment === "装備") {
+          if (armor.name == null){
+            armor.name = "";
+          }
+          if (armor.damage == null){
+            armor.damage = "";
+          }
+          if (armor.explain == null){
+            armor.explain = "";
+          }
+
           armorName = armor.name;
           armorMitigation = armor.damage;
-          if (armor.explain == null){
-            armorExplain = "";
-          } else {
-            armorExplain = armor.explain;
-          }
+          armorExplain = armor.explain;
+
           break;
         }
       }
@@ -310,6 +317,9 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       const equipmentAccessories: { name: string; explain: string | null }[] = [];
       for (const accessory of accessories) {
         if (accessory.equipment === "装備") {
+          if (accessory.name == null){
+            accessory.name = "";
+          }
           if (accessory.explain == null){
             accessory.explain = "";
           }
@@ -322,6 +332,24 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
           }
         }
       };
+
+      // その他アイテム
+      let items = [];
+      for(let item of charadata['others']){
+        if(item.equipment === "荷物"){
+          items.push(item.name ? item.name : "");
+        }
+      }
+
+      // "1.\n2.\n3.\n4.\n5.\n6.\n7.\n8."の{数字}.の後にアイテムを追加
+      let itemsText: string = "";
+      for (let i = 0; i <= 7; i++){
+        if(items[i] === undefined){
+          itemsText += `${i+1}.\n`;
+        }else{
+          itemsText += `${i+1}.${items[i]}\n`;
+        }
+      }
 
       // 仮名
       kemonosheet.character.data.data[1].data[0]["#text"] = handlename;
@@ -354,6 +382,8 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
           kemonosheet.character.data.data[2].data[1].data[i+2]["#text"] = `「${equipmentAccessories[i].name}」(特殊効果:${equipmentAccessories[i].explain})`;
         }
       };
+      // その他持ち物
+      kemonosheet.character.data.data[2].data[1].data[4]["#text"] = itemsText;
       /// 能力値
       let ability = charadata.base.ability;
       // 移動
@@ -380,6 +410,10 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       }
       // 仲間
       let friends = charadata.friends;
+      // friends[0].nameがnullならば、仲間①を追加
+      if (friends[0].name === null) {
+        friends[0].name = `仲間のキャラクター名を入力`;
+      }
       for (let friend of friends) {
         if (friend.name === null) break;
         if (friend.current === null) friend.current = friend.level
@@ -393,7 +427,7 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       };
 
       let summary = `<?xml version="1.0" encoding="UTF-8"?>
-      <summary-setting sortTag="先制値" sortOrder="ASC" dataTag="先制値 開始条件 展開 耐久度 余裕 食事 水分 予算 威力 軽減値 特性① 特性② 特性③ 特殊効果 異形 獸憑き 状態異常 移動 格闘 射撃 製作 察知 自制 貌力 装備 武器 防具 小道具① 小道具② 持ち物 情報 絆"></summary-setting>
+      <summary-setting sortTag="先制値" sortOrder="ASC" dataTag="先制値 開始条件 展開 耐久度 余裕 食事 水分 予算 威力 軽減値 特性① 特性② 特性③ 特殊効果 異形 獸憑き 状態異常 移動 格闘 射撃 製作 察知 自制 貌力 装備 武器 防具 小道具① 小道具② 持ち物 情報 絆 コマ画像"></summary-setting>
       `
       this.generateKoma(kemonosheet, summary, 'kemono');
       return;
