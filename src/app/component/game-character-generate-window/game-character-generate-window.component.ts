@@ -2,7 +2,6 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
 import { GenerateService } from 'service/generate.service';
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 import { XmlUtil } from '@udonarium/core/system/util/xml-util';
-import { EventSystem } from '@udonarium/core/system';
 import { TableSelecter } from '@udonarium/table-selecter';
 import { TabletopService } from 'service/tabletop.service';
 
