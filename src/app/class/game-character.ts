@@ -35,9 +35,7 @@ export class GameCharacter extends TabletopObject {
 
   @SyncVar() owner: string = '';
 
-  continueDice: number | null = null;
-
-  // @SyncVar() isStealth: boolean = false;
+  @SyncVar() continueDice: number | null = null;
 
   _targeted: boolean = false;
   get targeted(): boolean {
