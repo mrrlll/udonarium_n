@@ -205,6 +205,17 @@ export class DiceBot extends GameObject {
         }
 
         const gameType: string = chatMessage.tags ? chatMessage.tags[0] : '';
+
+        if (text.startsWith('/')) {
+          const [_, command, arg] = /^\/(\w+)\s*(.*)/i.exec(text) || [];
+          if (command) {
+            const commandResult = await DiceBot.chatCommandAsync(command, arg);
+            if (commandResult.result) {
+              this.sendChatCommandResultMessage(commandResult, chatMessage);
+            }
+          }
+        }
+
         try {
           const regArray = /^((\d+)?\s+)?(.*)?/ig.exec(text);
           const repeat: number = (regArray[2] != null) ? Number(regArray[2]) : 1;
@@ -852,24 +863,25 @@ export class DiceBot extends GameObject {
     if (chatTab) chatTab.addMessage(diceBotMessage);
   }
 
-  static async chatCommandAsync(command: string, arg: string, gameType: string): Promise<ChatCommandResult> {
+  static async chatCommandAsync(command: string, arg: string): Promise<ChatCommandResult> {
+    const id = 'ChatCommands';
     switch (command) {
       case 'test':
         // console.log(command)
-        return { id: gameType, command: command, arg: arg, result: 'test', isSecret: false };
+        return { id: id, command: command, arg: arg, result: 'test', isSecret: false };
       case 'cutin':
       case 'c':
       case 'youtube':
       case 'y':
-        return { id: gameType, command: command, arg: arg, result: null, isSecret: false };
+        return { id: id, command: command, arg: arg, result: null, isSecret: false };
       case 'help':
       case 'h':
-        return { id: gameType, command: command, arg: arg, result: null, isSecret: false };
+        return { id: id, command: command, arg: arg, result: null, isSecret: false };
       case 'table':
       case 't':
-        return { id: gameType, command: command, arg: arg, result: null, isSecret: false };
+        return { id: id, command: command, arg: arg, result: null, isSecret: false };
       default:
-        return { id: gameType, command: command, arg: arg, result: null, isSecret: false };
+        return { id: id, command: command, arg: arg, result: null, isSecret: false };
     }
   }
 
