@@ -36,6 +36,7 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() owner: string = '';
 
   @SyncVar() continueDice: number | null = null;
+  @SyncVar() kemonoSuccessCount: number | null = 0;
 
   _targeted: boolean = false;
   get targeted(): boolean {

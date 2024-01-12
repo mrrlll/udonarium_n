@@ -811,15 +811,18 @@ export class DiceBot extends GameObject {
         diceBotMessage.to += ' ' + originalMessage.from;
       }
     }
-    this.kemonoContinueDiceCheck(rollResult, originalMessage);
+    diceBotMessage.text = this.kemonoDiceCheck(rollResult, originalMessage, diceBotMessage);
     const chatTab = ObjectStore.instance.get<ChatTab>(originalMessage.tabIdentifier);
     if (chatTab) chatTab.addMessage(diceBotMessage);
   }
 
-  private kemonoContinueDiceCheck(rollResult: DiceRollResult, originalMessage: ChatMessage): void{
+  private kemonoDiceCheck(rollResult: DiceRollResult, originalMessage: ChatMessage, diceBotMessage: ChatMessageContext): string{
     const gameType: string = originalMessage.tags ? originalMessage.tags[0] : '';
-    const gameCharacter = ObjectStore.instance.get<GameCharacter>(originalMessage.sendFrom);
     if ( gameType != 'KemonoNoMori' ) return;
+    let kemonoDiceResult: string = diceBotMessage.text;
+
+    const gameCharacter = ObjectStore.instance.get<GameCharacter>(originalMessage.sendFrom);
+    // 継続判定確認
     if(rollResult.isSuccess){
       if(rollResult.isCritical){
         gameCharacter.continueDice = 10;
@@ -832,6 +835,25 @@ export class DiceBot extends GameObject {
     } else {
       gameCharacter.continueDice = null;
     }
+
+    // 成功度カウント
+    if(originalMessage.text.match(/^KA/)){
+      gameCharacter.kemonoSuccessCount = 0;
+      if(rollResult.isSuccess){
+        let number = Number(rollResult.result.match(/\((\d+D\d+<=)(\d+)\)/)[2]);
+        gameCharacter.kemonoSuccessCount = Math.floor(number / 10 + 1);
+        kemonoDiceResult += `現在の成功度：${gameCharacter.kemonoSuccessCount}`;
+      }
+    } else if(originalMessage.text.match(/^KC/)){
+      if(rollResult.isSuccess){
+        gameCharacter.kemonoSuccessCount++;
+        kemonoDiceResult += `現在の成功度：${gameCharacter.kemonoSuccessCount}`;
+      } else if(rollResult.isFailure){
+        kemonoDiceResult += `　成功度：${gameCharacter.kemonoSuccessCount}`;
+        gameCharacter.kemonoSuccessCount = 0;
+      }
+    }
+    return kemonoDiceResult;
   }
 
   private sendChatCommandResultMessage(chatCommandResult: ChatCommandResult, originalMessage: ChatMessage) {

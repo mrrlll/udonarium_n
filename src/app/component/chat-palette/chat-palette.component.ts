@@ -56,6 +56,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
 
   get continueDice(): Number { return this.character.continueDice; }
+  get kemonoSuccessCount(): Number { return this.character.kemonoSuccessCount; }
 
   constructor(
     public chatMessageService: ChatMessageService,
