@@ -105,7 +105,7 @@
             </div>
             <div class="inverser" [ngClass]="{inverse: isInverse}">
               <span class="aura" [ngClass]="{ black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
-                <img [hidden]="" class="image is-3d" [ngStyle]="{'width':'100%'}" *ngIf="(0 < imageFile.url.length) && !this.gameCharacter.specifyKomaImageFlag" class="image" [ngClass]="{ 'isStealth': isStealth, 'black-paint': isBlackPaint, 'hollow': isHollow}" [src]="imageFile.url | safe: 'resourceUrl'">
+                <img class="image chrome-smooth-image-trick is-3d" [ngStyle]="{'width':'100%'}" *ngIf="(0 < imageFile.url.length) && !this.gameCharacter.specifyKomaImageFlag" [ngClass]="{ 'isStealth': isStealth, 'black-paint': isBlackPaint, 'hollow': isHollow}" [src]="imageFile.url | safe: 'resourceUrl'">
               </span>
             </div>
             <div *ngIf="!isLock" class="rotate-grab rotate-grab-icon of-top"
