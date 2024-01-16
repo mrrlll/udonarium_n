@@ -275,9 +275,11 @@ export class DiceBot extends GameObject {
           let repeat: number = (regArray[2] != null) ? Number(regArray[2]) : 1;
           let rollText: string = (regArray[3] != null) ? regArray[3] : text;
           let finalResult: DiceRollResult = { id: 'DiceBot', result: '', isSecret: false };
+
           for (let i = 0; i < repeat && i < 32; i++) {
             const gameSystem = await DiceBot.loadGameSystemAsync(rollTable.diceTablePalette.dicebot);
             let rollResult = await DiceBot.diceRollAsync(rollText, gameSystem);
+            console.log(rollResult)
             if (rollResult.result.length < 1) break;
 
             finalResult.result += rollResult.result;
@@ -289,8 +291,6 @@ export class DiceBot extends GameObject {
           let rolledDiceNum = finalResult.result.match(/\d+$/);
           let tableAns = "ダイス目の番号が表にありません";
           if( rolledDiceNum ){
-            // console.log('rolledDiceNum:' + rolledDiceNum[0] );
-
             let tablePalette = rollTable.diceTablePalette.getPalette();
               // console.log('tablePalette:' + tablePalette );
             for( let i in tablePalette ){
@@ -818,7 +818,7 @@ export class DiceBot extends GameObject {
 
   private kemonoDiceCheck(rollResult: DiceRollResult, originalMessage: ChatMessage, diceBotMessage: ChatMessageContext): string{
     const gameType: string = originalMessage.tags ? originalMessage.tags[0] : '';
-    if ( gameType != 'KemonoNoMori' ) return;
+    if ( gameType != 'KemonoNoMori' ) return diceBotMessage.text;
     let kemonoDiceResult: string = diceBotMessage.text;
 
     const gameCharacter = ObjectStore.instance.get<GameCharacter>(originalMessage.sendFrom);
