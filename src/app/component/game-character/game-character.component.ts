@@ -274,7 +274,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
 
   onDoubleClick() {
     this.ngZone.run(() => {
-      console.log('ダブルクリック！')
+
     });
   }
 
