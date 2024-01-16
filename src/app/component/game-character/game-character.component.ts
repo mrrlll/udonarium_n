@@ -21,6 +21,7 @@ import { GameCharacterSheetComponent } from 'component/game-character-sheet/game
 import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { ObjectInteractGesture } from 'component/game-table/object-interact-gesture';
 import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuAction, ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { PanelOption, PanelService } from 'service/panel.service';
@@ -122,6 +123,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   rotableOption: RotableOption = {};
   rollOption: RotableOption = {};
   private input: InputHandler = null;
+  private interactGesture: ObjectInteractGesture = null;
 
   private highlightTimer: NodeJS.Timeout;
   private unhighlightTimer: NodeJS.Timeout;
@@ -219,15 +221,16 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.input.destroy();
+    this.interactGesture.destroy();
     EventSystem.unregister(this);
   }
 
   ngAfterViewInit() {
     this.ngZone.runOutsideAngular(() => {
-      this.input = new InputHandler(this.elementRef.nativeElement);
+      this.interactGesture = new ObjectInteractGesture(this.elementRef.nativeElement);
     });
-    this.input.onStart = this.onInputStart.bind(this);
+    this.interactGesture.onstart = this.onInputStart.bind(this);
+    this.interactGesture.oninteract = this.onDoubleClick.bind(this);
   }
 
   @HostListener('dragstart', ['$event'])
@@ -261,11 +264,15 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   }
 
   onInputStart(e: any) {
-    this.input.cancel();
-
     if (this.isLock) {
       EventSystem.trigger('DRAG_LOCKED_OBJECT', {});
     }
+  }
+
+  onDoubleClick() {
+    this.ngZone.run(() => {
+      console.log('ダブルクリック！')
+    });
   }
 
   private makeSelectionContextMenu(): ContextMenuAction[] {
