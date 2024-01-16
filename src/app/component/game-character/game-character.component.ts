@@ -221,6 +221,9 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
+    if (this.subs) {
+      this.subs.unsubscribe();
+    }
     this.interactGesture.destroy();
     EventSystem.unregister(this);
   }
