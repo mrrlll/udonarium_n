@@ -279,7 +279,6 @@ export class DiceBot extends GameObject {
           for (let i = 0; i < repeat && i < 32; i++) {
             const gameSystem = await DiceBot.loadGameSystemAsync(rollTable.diceTablePalette.dicebot);
             let rollResult = await DiceBot.diceRollAsync(rollText, gameSystem);
-            console.log(rollResult)
             if (rollResult.result.length < 1) break;
 
             finalResult.result += rollResult.result;
