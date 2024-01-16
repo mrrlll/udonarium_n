@@ -18,7 +18,7 @@ import { GameCharacter } from '@udonarium/game-character';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.component';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
-import { InputHandler } from 'directive/input-handler';
+// import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { ObjectInteractGesture } from 'component/game-table/object-interact-gesture';
@@ -100,7 +100,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   set isNotRide(isNotRide: boolean) { this.gameCharacter.isNotRide = isNotRide; }
 
   get isStealth(): boolean { return this.gameCharacter.isStealth; }
-  set isStealth(isStealth: boolean) { this.gameCharacter.isStealth = this.isStealth; }
+  set isStealth(isStealth: boolean) { this.gameCharacter.isStealth = isStealth; }
 
   get selectionState(): SelectionState { return this.selectionService.state(this.gameCharacter); }
   get isSelected(): boolean { return this.selectionState !== SelectionState.NONE; }
@@ -114,6 +114,9 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     return +((this.gameCharacter.posZ + (this.altitude * this.gridSize)) / this.gridSize).toFixed(1);
   }
 
+  get dbclickActionNum(): number { return this.gameCharacter.dbclickActionNum; }
+  set dbclickActionNum(dbclickActionNum: number) { this.gameCharacter.dbclickActionNum = dbclickActionNum; }
+
   gridSize: number = 50;
   viewRotateX = 50;
   viewRotateZ = 10;
@@ -122,7 +125,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   movableOption: MovableOption = {};
   rotableOption: RotableOption = {};
   rollOption: RotableOption = {};
-  private input: InputHandler = null;
+  // private input: InputHandler = null;
   private interactGesture: ObjectInteractGesture = null;
 
   private highlightTimer: NodeJS.Timeout;
@@ -274,7 +277,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
 
   onDoubleClick() {
     this.ngZone.run(() => {
-
+      this.dbclickAction(this.gameCharacter);
     });
   }
 
@@ -445,6 +448,56 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     )
     actions.push(ContextMenuSeparator);
     actions.push({ name: '画像効果', action: null, subActions: subActions });
+    let dbActionList: ContextMenuAction[] = [];
+    dbActionList.push(
+      this.dbclickActionNum === 99
+      ? {
+        name: '◉ 無効', action: () => {
+          this.dbclickActionNum = 99;
+        }
+      }:{
+        name: '○ 無効', action: () => {
+          this.dbclickActionNum = 99;
+        }
+      }
+    )
+    dbActionList.push(
+      this.dbclickActionNum === 0
+      ? {
+        name: '◉ 詳細を表示', action: () => {
+          this.dbclickActionNum = 0;
+        }
+      }:{
+        name: '○ 詳細を表示', action: () => {
+          this.dbclickActionNum = 0;
+        }
+      }
+    )
+    dbActionList.push(
+      this.dbclickActionNum === 1
+      ? {
+        name: '◉ チャットパレットを表示', action: () => {
+          this.dbclickActionNum = 1;
+        }
+      }:{
+        name: '○ チャットパレットを表示', action: () => {
+          this.dbclickActionNum = 1;
+        }
+      }
+    )
+    dbActionList.push(
+      this.dbclickActionNum === 2
+      ? {
+        name: '◉ リモコンを表示', action: () => {
+          this.dbclickActionNum = 2;
+        }
+      }:{
+        name: '○ リモコンを表示', action: () => {
+          this.dbclickActionNum = 2;
+        }
+      }
+    )
+    actions.push({ name: 'ダブルクリックアクション', action: null, subActions: dbActionList})
     actions.push(ContextMenuSeparator);
     if(this.roomAltitude){
       actions.push({
@@ -554,6 +607,22 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     }
 
     //出力
+  }
+
+  dbclickAction(gameCharacter: GameCharacter) {
+    switch (gameCharacter.dbclickActionNum) {
+      case 0:
+        this.showDetail(gameCharacter);
+        break;
+      case 1:
+        this.showChatPalette(gameCharacter);
+        break;
+      case 2:
+        this.showRemoteController(gameCharacter);
+        break;
+      case 99:
+        break;
+    }
   }
 
   private showDetail(gameObject: GameCharacter) {

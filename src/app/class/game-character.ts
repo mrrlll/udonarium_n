@@ -38,6 +38,8 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() continueDice: number | null = null;
   @SyncVar() kemonoSuccessCount: number | null = 0;
 
+  @SyncVar() dbclickActionNum: number | null = 99;
+
   _targeted: boolean = false;
   get targeted(): boolean {
     return this._targeted;
