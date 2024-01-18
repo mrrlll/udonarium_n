@@ -10,9 +10,9 @@
 }
 
 nav ul {
-    list-style:none;
-    padding: 0px;
-    margin: 0px;
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
   /*
   border: 1px solid #bbb;
   border-radius: 5px;
@@ -24,7 +24,7 @@ nav ul {
 nav ul > li {
   text-align: center;
   padding: 5px;
-  color: #CCC;
+  color: #ccc;
   color: #444;
 
   cursor: -moz-pointer;
@@ -34,7 +34,7 @@ nav ul > li {
 }
 
 nav ul > li:hover {
-  color: #CCC;
+  color: #ccc;
   background-color: rgba(30, 30, 30, 0.8);
 }
 nav ul > li > a {
@@ -51,7 +51,10 @@ nav ul > li > a > label {
 nav ul i {
   font-size: 24px;
 }
-nav ul a, nav ul a:hover, nav ul a:active, nav ul a:visited {
+nav ul a,
+nav ul a:hover,
+nav ul a:active,
+nav ul a:visited {
   text-decoration: none;
 }
 
@@ -65,9 +68,9 @@ nav ul a, nav ul a:hover, nav ul a:active, nav ul a:visited {
   box-sizing: border-box;
   overflow: auto;
   position: absolute;
-  color: #CCC;
+  color: #ccc;
   background-color: rgba(30, 30, 30, 0.8);
-  border:solid 1px #999;
+  border: solid 1px #999;
   padding: 0px;
   height: 100%;
   width: 300px;
@@ -89,9 +92,15 @@ nav ul a, nav ul a:hover, nav ul a:active, nav ul a:visited {
 }
 
 @keyframes vibration {
-  0%   { transform: scale(1.0, 1.0) translate(0%, 0%); }
-  50%  { transform: scale(1.02, 0.95) translate(0%, 5%); }
-  100% { transform: scale(1.0, 1.0) translate(0%, 0%); }
+  0% {
+    transform: scale(1, 1) translate(0%, 0%);
+  }
+  50% {
+    transform: scale(1.02, 0.95) translate(0%, 5%);
+  }
+  100% {
+    transform: scale(1, 1) translate(0%, 0%);
+  }
 }
 
 .horizontal ul {
@@ -143,4 +152,8 @@ nav ul a, nav ul a:hover, nav ul a:active, nav ul a:visited {
   background-position: center top;
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+mat-toolbar {
+  height: 2em;
 }
