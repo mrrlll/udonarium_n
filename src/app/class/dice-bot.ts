@@ -842,14 +842,20 @@ export class DiceBot extends GameObject {
         let number = Number(rollResult.result.match(/\((\d+D\d+<=)(\d+)\)/)[2]);
         gameCharacter.kemonoSuccessCount = Math.floor(number / 10 + 1);
         kemonoDiceResult += `現在の成功度：${gameCharacter.kemonoSuccessCount}`;
+        return kemonoDiceResult;
       }
     } else if(originalMessage.text.match(/^KC/)){
+      if(rollResult.isFumble){
+        kemonoDiceResult += ` 成功度：0`;
+        return kemonoDiceResult;
+      }
       if(rollResult.isSuccess){
         gameCharacter.kemonoSuccessCount++;
         kemonoDiceResult += `現在の成功度：${gameCharacter.kemonoSuccessCount}`;
+        return kemonoDiceResult;
       } else if(rollResult.isFailure){
         kemonoDiceResult += `　成功度：${gameCharacter.kemonoSuccessCount}`;
-        gameCharacter.kemonoSuccessCount = 0;
+        return kemonoDiceResult;
       }
     }
     return kemonoDiceResult;
