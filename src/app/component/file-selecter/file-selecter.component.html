@@ -36,10 +36,10 @@
   </span>
   <div *ngFor="let file of images; trackBy: identify" @scaleInOut class="image" style="text-align: center; min-width: 100px; height: 120px; position: relative" [ngClass]="{'current-images': getCurrent(file)}">
     <div style="position: absolute; font-size: xx-small; text-align: left; bottom: 0px; width: 100%; height: 100%; overflow: hidden; pointer-events: none">
-      <ng-container *ngIf="getTagWords(file).length > 0; then tagsBlock; else noTagBlock"></ng-container> 
+      <ng-container *ngIf="getTagWords(file).length > 0; then tagsBlock; else noTagBlock"></ng-container>
       <ng-template #tagsBlock>
         <div style="position: absolute; bottom: 0px; z-index: 5">
-          <ng-container *ngFor="let word of getTagWords(file); index as i">  
+          <ng-container *ngFor="let word of getTagWords(file); index as i">
             <label *ngIf="i < 6" class="word-tag grow" style="display: block; width: 88px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">{{ word }}</label>
             <span *ngIf="i == 6" class="grow" style="display: block; width: 88px; overflow: hidden; padding-left: 2px; font-weight: bold; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">…</span>
           </ng-container>
@@ -50,6 +50,11 @@
           <s class="grow" style="color:gray; display: block; padding-left: 2px; font-weight: bold; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">No Tag</s>
         </div>
       </ng-template>
+      <div class="zoom-in" style="z-index: 10; position: absolute; right: 0px; bottom: 2px">
+        <button class="zoom-button" (click)="chanageImageView(file)">
+          <i class="material-icons">zoom_in</i>
+        </button>
+      </div>
     </div>
     <div *ngIf="getHidden(file)" style="position: absolute; text-align: right; top: 0px; right: 0px; pointer-events: none; z-index: 5">
       <i class="material-icons red-eye" style="z-index: 5; margin-right: 2px; font-size: 16px; display: block">visibility</i>

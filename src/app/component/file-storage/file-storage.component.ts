@@ -1,11 +1,12 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
-import { ImageFile } from '@udonarium/core/file-storage/image-file';
+import { ImageFile, ImageState } from '@udonarium/core/file-storage/image-file';
 import { EventSystem } from '@udonarium/core/system';
 import { ModalService } from 'service/modal.service';
 
 import { PanelOption, PanelService } from 'service/panel.service';
+import { AppComponent } from 'src/app/app.component';
 import { UnsplashsearchComponent } from 'component/unsplashsearch/unsplashsearch.component';
 
 import { ImageTagList } from '@udonarium/image-tag-list';
@@ -355,6 +356,14 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   suggestWords(): string[] {
     const selectedWords = this.selectedImagesOwnWords(true);
     return Array.from(new Set(this.allImagesOwnWords.concat(this.deletedWords))).filter(word => word.indexOf('*') !== 0 && !selectedWords.includes(word));
+  }
+
+  chanageImageView(imageFile: ImageFile) {
+    if (imageFile.state === ImageState.COMPLETE) {
+      AppComponent.imageUrl = URL.createObjectURL(imageFile.blob);
+    } else {
+      AppComponent.imageUrl = imageFile.url;
+    }
   }
 
   unsplashsearch() {
