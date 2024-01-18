@@ -27,22 +27,6 @@ export class ChatColorSettingComponent implements OnInit, OnDestroy, AfterViewIn
 
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
-  changeColor( event , num ){
-    
-    if( this.tabletopObject ){
-      this.tabletopObject.chatColorCode[num] = event;
-
-      if( this.tabletopObject.syncDummyCounter < 2 ){
-        this.tabletopObject.syncDummyCounter = this.tabletopObject.syncDummyCounter + 1;
-      }else{
-        this.tabletopObject.syncDummyCounter = 0;
-      }
-      console.log('changeColor:count:'+this.tabletopObject.syncDummyCounter);
-    }else{
-      this.myPeer.chatColorCode[num] = event;
-    }
-  }
-
   constructor(
     private changeDetector: ChangeDetectorRef,
     private panelService: PanelService,
@@ -53,16 +37,7 @@ export class ChatColorSettingComponent implements OnInit, OnDestroy, AfterViewIn
 
   ngOnInit() {
   }
-  
-  chatColorCode( num : number){
-    if( this.tabletopObject ){
-      return this.tabletopObject.chatColorCode[num];
-    }else{
-      return this.myPeer.chatColorCode[num];
-    }
 
-  }
-  
   ngAfterViewInit() {
   }
 

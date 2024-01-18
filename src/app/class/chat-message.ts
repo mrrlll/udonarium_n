@@ -101,7 +101,6 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get isFailure(): boolean { return this.isDicebot && -1 < this.tags.indexOf('failure'); }
   get isCritical(): boolean { return this.isDicebot && -1 < this.tags.indexOf('critical'); }
   get isFumble(): boolean { return this.isDicebot && -1 < this.tags.indexOf('fumble'); }
-  get isGMMode(): boolean{ return PeerCursor.myCursor ? PeerCursor.myCursor.isGMMode : false; }
   get isOperationLog(): boolean { return -1 < this.tags.indexOf('opelog') ? true : false; }
 
   private locale = 'en-US';

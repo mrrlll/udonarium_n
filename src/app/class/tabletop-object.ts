@@ -151,7 +151,7 @@ export class TabletopObject extends ObjectNode {
 
   @SyncVar() isStealth: boolean = false;
 
-  get isGMMode(): boolean{ return PeerCursor.myCursor ? PeerCursor.myCursor.isGMMode : false; }
+  // get isGMMode(): boolean{ return PeerCursor.myCursor ? PeerCursor.myCursor.isGMMode : false; }
 
   calcSqrDistance(other: TabletopObject): number {
     let pos1 = { x: this.location.x, y: this.location.y, z: this.posZ };

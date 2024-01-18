@@ -120,8 +120,6 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     if (PeerCursor.myCursor) PeerCursor.myCursor.name = name;
   }
 
-  get isGMHold(): boolean { return PeerCursor.isGMHold; }
-
   constructor(
     private ngZone: NgZone,
     private modalService: ModalService,
@@ -220,11 +218,6 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   findPeerName(peerId: string) {
     const peerCursor = PeerCursor.findByPeerId(peerId);
     return peerCursor ? peerCursor.name : '';
-  }
-
-  findPeerIsGMMode(peerId: string): boolean {
-    const peerCursor = PeerCursor.findByPeerId(peerId);
-    return peerCursor ? peerCursor.isGMMode : false;
   }
 
   output() {
