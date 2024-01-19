@@ -7,7 +7,7 @@ import { DataElement } from './data-element';
 import { TabletopObject } from './tabletop-object';
 import { UUID } from '@udonarium/core/system/util/uuid';
 
-import { Network } from './core/system';
+import { EventSystem, Network } from './core/system';
 import { ObjectStore } from './core/synchronize-object/object-store';
 
 @SyncObject('character')
@@ -584,10 +584,12 @@ export class GameCharacter extends TabletopObject {
 
   hideOn() {
     this.isStealth = true;
+    EventSystem.call('UPDATE_INVENTORY', null);
   }
 
   hideOff() {
     this.isStealth = false;
+    EventSystem.call('UPDATE_INVENTORY', null);
   }
 
   resetPopSize() {
