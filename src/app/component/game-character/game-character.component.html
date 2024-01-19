@@ -1,5 +1,6 @@
 <div class="dummy-will-change" appMovable [movable.option]="movableOption"></div>
-<div
+@if(!isStealth || isGM){
+  <div
   [ngClass]="{ 'isHide': isStealth }"
   class="component is-3d is-grab is-pointer-events-none"
   [style.width.px]="size * gridSize"
@@ -9,133 +10,168 @@
   (movable.ondragstart)="onMove()"
   (movable.ondragend)="onMoved()"
   (mousedown)="checkKey($event)"
-  #root
-  *ngIf="!isStealth || isGM"
-  >
-  <div class="component-content is-3d" [@bounceInOut]="'in'">
-    <div class="component-content is-3d is-pointer-events-auto" appRotable [rotable.option]="rotableOption"
-      (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
-      <div *ngIf="!isLock" class="pedestal-grab rotate-grab">
-        <div class="pedestal-grab-border">
-          <div class="material-icons of-front">autorenew</div>
-          <div class="material-icons of-back">autorenew</div>
-        </div>
-      </div>
-      <div *ngIf="!this.gameCharacter.hideInventory" class="pedestal-inner is-3d" [style]="{ 'border': 'solid 6px #FFCC80'}"></div>
-      <div *ngIf="this.gameCharacter.hideInventory" class="pedestal-inner is-3d" [style]="{ 'border': 'solid 6px #A0E0FF'}"></div>
-      <div *ngIf="isSelected" class="selected-highlight" [ngClass]="{'is-magnetic': isMagnetic}"></div>
-      <div class="pedestal-outer"></div>
-      <span class="aura" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}"><img class="image" *ngIf="isDropShadow && 0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" style="filter: brightness(0) blur(1px)" [ngStyle]="{'opacity': isHollow ? 0.4 : 0.7, 'transform': 'scale(' + (isInverse ? -1 : 1) + ', 0.6) translateY(-40%) rotateZ(' + ((isInverse ? -1 : 1) * roll) + 'deg)'}"></span>
-      <div class="upright-transform is-fit-width is-3d" [ngClass]="{fall: altitude == 0}" [ngStyle]="{'transform': 'rotateY(90deg) rotateZ(-90deg) rotateY(-90deg) translateY(-50%) translateY(' + (-altitude) * gridSize +'px)'}">
-        <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
-          appRotable [rotable.option]="rollOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
-          <div class="rotate-inner is-3d">
-            <!-- バフ表示 -->
-            <div class="is-3d" *ngIf="gameCharacter.buffDataElement" >
-              <ng-container *ngIf="gameCharacter.buffDataElement.children.length == 1">
-                <ng-container *ngFor="let child of gameCharacter.buffDataElement.children">
-                  <ng-container *ngIf="child.children.length > 0">
-                    <div *ngIf="gameCharacter.buffDataElement" class="buff-tag is-nowrap is-buff-background is-3d backface-off"
-                      [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%)'}">
-                      <div [hidden]="!gameCharacter.targeted" class="target-icon-buff scrolldown5"><img src="./assets/images/target/target.png"></div>
-                      <div [hidden]="foldingBuff">
-                        <div class="buff-folding-icon " (mousedown)="foldingBuffFlag(true)">▼</div>
-                        <div class="!table is-3d">
-                          <div class="flex-item is-3d" *ngFor="let childElement of gameCharacter.buffDataElement.children">
-                            <div class="table-row is-3d" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="true"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div [hidden]="!foldingBuff">
-                        <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(false)">▲</div>
-                        <div class="table is-3d">
-                          <div class="flex-item is-3d">
-                            <div class="table-row is-3d" style="font-family: Cambria, Georgia; font-size: 12px;">簡易表示中/バフ{{buffNum}}個</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div *ngIf="gameCharacter.buffDataElement" class="buff-tag is-nowrap is-buff-background is-3d backface-off"
-                     [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%) rotateY(180deg)'}">
-                      <div class="target-icon-buff2 scrolldown5" [hidden]="!gameCharacter.targeted"
-                      [ngStyle]="{'transform': 'rotateY(180deg)'}"><img src="./assets/images/target/target.png"></div>
-                      <div [hidden]="foldingBuff">
-                        <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(true)">▼</div>
-                        <div class="table is-3d">
-                          <div class="flex-item is-3d" *ngFor="let childElement of gameCharacter.buffDataElement.children">
-                            <div class="table-row is-3d" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="true"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div [hidden]="!foldingBuff">
-                        <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(false)">▲</div>
-                        <div class="table is-3d">
-                          <div class="flex-item is-3d">
-                            <div class="table-row is-3d" style="font-family: Cambria, Georgia; font-size: 12px;">簡易表示中/バフ{{buffNum}}個</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </ng-container>
-                </ng-container>
-              </ng-container>
+  #root>
+    <div class="component-content is-3d" [@bounceInOut]="'in'">
+      <div class="component-content is-3d is-pointer-events-auto" appRotable [rotable.option]="rotableOption"
+        (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
+        @if(!isLock){
+          <div class="pedestal-grab rotate-grab">
+            <div class="pedestal-grab-border">
+              <div class="material-icons of-front">autorenew</div>
+              <div class="material-icons of-back">autorenew</div>
             </div>
-            <div [hidden]="!(this.buffNum==0)">
-              <div class="target-icon scrolldown4" [hidden]="!gameCharacter.targeted"
-                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
-                <img src="./assets/images/target/target.png">
-              </div>
-            </div>
-            <!-- 名前表示 -->
-            <ng-container *ngIf="0 < name.length">
-              <div *ngFor="let rotateY of ['0', '180deg']"
-                class="name-tag is-nowrap is-black-background" [ngClass]="{'nonTalkFlag': gameCharacter.nonTalkFlag}"
-                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateY(' + rotateY + ')'}">
-                <div class="has-length-limit">{{name}}
-                  <ng-container *ngIf="isLock">
-                    <i class="material-icons lock-icon" style="display: inline;">lock</i>
+          </div>
+        }
+        @if(!this.gameCharacter.hideInventory){
+          <div class="pedestal-inner is-3d" [style]="{ 'border': 'solid 6px #FFCC80'}"></div>
+        }
+        @else if(this.gameCharacter.hideInventory){
+          <div class="pedestal-inner is-3d" [style]="{ 'border': 'solid 6px #A0E0FF'}"></div>
+        }
+        @if(isSelected){
+          <div class="selected-highlight" [ngClass]="{'is-magnetic': isMagnetic}"></div>
+        }
+        <div class="pedestal-outer"></div>
+        <span class="aura" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
+          @if(isDropShadow && 0 < imageFile.url.length){
+            <img
+            class="image"
+            [src]="imageFile.url | safe: 'resourceUrl'"
+            style="filter: brightness(0) blur(1px)"
+            [ngStyle]="{
+              'opacity': isHollow ? 0.4 : 0.7,
+              'transform': 'scale(' + (isInverse ? -1 : 1) + ', 0.6) translateY(-40%) rotateZ('+ ((isInverse ? -1 : 1) * roll) + 'deg)'}">
+          }
+        </span>
+        <div class="upright-transform is-fit-width is-3d" [ngClass]="{fall: altitude == 0}" [ngStyle]="{'transform': 'rotateY(90deg) rotateZ(-90deg) rotateY(-90deg) translateY(-50%) translateY(' + (-altitude) * gridSize +'px)'}">
+          <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
+            appRotable [rotable.option]="rollOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
+            <div class="rotate-inner is-3d">
+              <!-- バフ表示 -->
+              <div class="is-3d" *ngIf="gameCharacter.buffDataElement">
+                @if(gameCharacter.buffDataElement.children.length == 1){
+                  <ng-container>
+                    @for(child of gameCharacter.buffDataElement.children; track $index){
+                      <ng-container>
+                        @if(child.children.length > 0){
+                          <ng-container>
+                            @if(gameCharacter.buffDataElement){
+                              <div class="buff-tag is-nowrap is-buff-background is-3d backface-off"
+                              [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%)'}">
+                              <div [hidden]="!gameCharacter.targeted" class="target-icon-buff scrolldown5"><img src="./assets/images/target/target.png"></div>
+                              <div [hidden]="foldingBuff">
+                                <div class="buff-folding-icon " (mousedown)="foldingBuffFlag(true)">▼</div>
+                                <div class="!table is-3d">
+                                  <div class="flex-item is-3d" *ngFor="let childElement of gameCharacter.buffDataElement.children">
+                                    <div class="table-row is-3d" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="true"></div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div [hidden]="!foldingBuff">
+                                <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(false)">▲</div>
+                                <div class="table is-3d">
+                                  <div class="flex-item is-3d">
+                                    <div class="table-row is-3d" style="font-family: Cambria, Georgia; font-size: 12px;">簡易表示中/バフ{{buffNum}}個</div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            }
+                            <div *ngIf="gameCharacter.buffDataElement" class="buff-tag is-nowrap is-buff-background is-3d backface-off"
+                            [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%) rotateY(180deg)'}">
+                              <div class="target-icon-buff2 scrolldown5" [hidden]="!gameCharacter.targeted"
+                              [ngStyle]="{'transform': 'rotateY(180deg)'}"><img src="./assets/images/target/target.png"></div>
+                              <div [hidden]="foldingBuff">
+                                <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(true)">▼</div>
+                                <div class="table is-3d">
+                                  <div class="flex-item is-3d" *ngFor="let childElement of gameCharacter.buffDataElement.children">
+                                    <div class="table-row is-3d" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="true"></div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div [hidden]="!foldingBuff">
+                                <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(false)">▲</div>
+                                <div class="table is-3d">
+                                  <div class="flex-item is-3d">
+                                    <div class="table-row is-3d" style="font-family: Cambria, Georgia; font-size: 12px;">簡易表示中/バフ{{buffNum}}個</div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-container>
+                        }
+                      </ng-container>
+                    }
                   </ng-container>
+                }
+                </div>
+              <div [hidden]="!(this.buffNum==0)">
+                <div class="target-icon scrolldown4" [hidden]="!gameCharacter.targeted"
+                  [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
+                  <img src="./assets/images/target/target.png">
                 </div>
               </div>
-            </ng-container>
-            <div class="inverser" [ngClass]="{inverse: isInverse}">
-              <span class="aura" [ngClass]="{ black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
-                <img class="image chrome-smooth-image-trick is-3d" [ngStyle]="{'height':+ this.gameCharacter.komaImageHeignt + 'px','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}" *ngIf="(0 < imageFile.url.length) && this.gameCharacter.specifyKomaImageFlag" [ngClass]="{ 'isStealth': isStealth, 'black-paint': isBlackPaint, 'hollow': isHollow}" [src]="imageFile.url | safe: 'resourceUrl'">
-              </span>
-            </div>
-            <div class="inverser" [ngClass]="{inverse: isInverse}">
-              <span class="aura" [ngClass]="{ black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
-                <img class="image chrome-smooth-image-trick is-3d" [ngStyle]="{'width':'100%'}" *ngIf="(0 < imageFile.url.length) && !this.gameCharacter.specifyKomaImageFlag" [ngClass]="{ 'isStealth': isStealth, 'black-paint': isBlackPaint, 'hollow': isHollow}" [src]="imageFile.url | safe: 'resourceUrl'">
-              </span>
-            </div>
-            <div *ngIf="!isLock" class="rotate-grab rotate-grab-icon of-top"
-              [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
-              <i class="material-icons">autorenew</i>
-            </div>
-            <div *ngIf="!isLock" class="rotate-grab rotate-grab-icon of-bottom"
-              [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px'}">
-              <i class="material-icons">autorenew</i>
-            </div>
+              <!-- 名前表示 -->
+              @if(0 < name.length){
+                <ng-container>
+                  @for(rotateY of ['0', '180deg']; track $index){
+                    <div
+                    class="name-tag is-nowrap is-black-background" [ngClass]="{'nonTalkFlag': gameCharacter.nonTalkFlag}"
+                    [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateY(' + rotateY + ')'}">
+                      <div class="has-length-limit">{{name}}
+                        @if(isLock){
+                          <ng-container>
+                            <i class="material-icons lock-icon" style="display: inline;">lock</i>
+                          </ng-container>
+                        }
+                      </div>
+                    </div>
+                  }
+                </ng-container>
+              }
+              <div class="inverser" [ngClass]="{inverse: isInverse}">
+                <span class="aura" [ngClass]="{ black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
+                  <img class="image chrome-smooth-image-trick is-3d" [ngStyle]="{'height':+ this.gameCharacter.komaImageHeignt + 'px','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}" *ngIf="(0 < imageFile.url.length) && this.gameCharacter.specifyKomaImageFlag" [ngClass]="{ 'isStealth': isStealth, 'black-paint': isBlackPaint, 'hollow': isHollow}" [src]="imageFile.url | safe: 'resourceUrl'">
+                </span>
+              </div>
+              <div class="inverser" [ngClass]="{inverse: isInverse}">
+                <span class="aura" [ngClass]="{ black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
+                  <img class="image chrome-smooth-image-trick is-3d" [ngStyle]="{'width':'100%'}" *ngIf="(0 < imageFile.url.length) && !this.gameCharacter.specifyKomaImageFlag" [ngClass]="{ 'isStealth': isStealth, 'black-paint': isBlackPaint, 'hollow': isHollow}" [src]="imageFile.url | safe: 'resourceUrl'">
+                </span>
+              </div>
+              @if(!isLock){
+                <div class="rotate-grab rotate-grab-icon of-top"
+                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
+                  <i class="material-icons">autorenew</i>
+                </div>
+              }
+              @if(!isLock){
+                <div class="rotate-grab rotate-grab-icon of-bottom"
+                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px'}">
+                  <i class="material-icons">autorenew</i>
+                </div>
+              }
+              </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="is-3d" *ngIf="isAltitudeIndicate && (altitude <= -0.5 || 0.5 <= altitude)"
-      style="display: flex; flex-flow: column nowrap; justify-content: space-between; border-left: 2px dashed black;  transform-origin: top left"
-      [style.height.px]="math.abs(altitude * gridSize) - (altitude > 0 ? 0 : size * gridSize + characterImageHeight)"
-      [ngStyle]="{transform: 'translateX(' + (size * gridSize / 2) + 'px) translateY(' + (-size * gridSize / 2) + 'px) rotateX(-90deg) translateY(' + (altitude > 0 ? -altitude * gridSize : 0) + 'px) rotateY(' + (viewRotateZ) + 'deg)'}">
-      <div [style.visibility]="altitude > 0 ? 'visible' : 'hidden'">
-        <span class="elevation-indicator" style="position: absolute"><i>{{ elevation }}</i></span>
-        <span class="elevation-indicator" style="position: absolute; transform: rotateY(-180deg)"><i>{{ elevation }}</i></span>
-      </div>
-      <div>
-        <span class="altitude-indicator">{{ math.abs(altitude) }}</span>
-        <span class="altitude-indicator" style="position: absolute; transform: rotateY(-180deg)">{{ math.abs(altitude) }}</span>
-      </div>
-      <div [style.visibility]="altitude < 0 ? 'visible' : 'hidden'">
-        <span class="elevation-indicator" style="position: absolute"><i>{{ elevation }}</i></span>
-        <span class="elevation-indicator" style="position: absolute; transform: rotateY(-180deg)"><i>{{ elevation }}</i></span>
+      <div class="is-3d" *ngIf="isAltitudeIndicate && (altitude <= -0.5 || 0.5 <= altitude)"
+        style="display: flex; flex-flow: column nowrap; justify-content: space-between; border-left: 2px dashed black;  transform-origin: top left"
+        [style.height.px]="math.abs(altitude * gridSize) - (altitude > 0 ? 0 : size * gridSize + characterImageHeight)"
+        [ngStyle]="{transform: 'translateX(' + (size * gridSize / 2) + 'px) translateY(' + (-size * gridSize / 2) + 'px) rotateX(-90deg) translateY(' + (altitude > 0 ? -altitude * gridSize : 0) + 'px) rotateY(' + (viewRotateZ) + 'deg)'}">
+        <div [style.visibility]="altitude > 0 ? 'visible' : 'hidden'">
+          <span class="elevation-indicator" style="position: absolute"><i>{{ elevation }}</i></span>
+          <span class="elevation-indicator" style="position: absolute; transform: rotateY(-180deg)"><i>{{ elevation }}</i></span>
+        </div>
+        <div>
+          <span class="altitude-indicator">{{ math.abs(altitude) }}</span>
+          <span class="altitude-indicator" style="position: absolute; transform: rotateY(-180deg)">{{ math.abs(altitude) }}</span>
+        </div>
+        <div [style.visibility]="altitude < 0 ? 'visible' : 'hidden'">
+          <span class="elevation-indicator" style="position: absolute"><i>{{ elevation }}</i></span>
+          <span class="elevation-indicator" style="position: absolute; transform: rotateY(-180deg)"><i>{{ elevation }}</i></span>
+        </div>
       </div>
     </div>
   </div>
-</div>
+}

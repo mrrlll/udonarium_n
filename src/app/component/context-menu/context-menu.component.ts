@@ -16,6 +16,7 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() title: string = '';
   @Input() actions: ContextMenuAction[] = [];
+  @Input() titleBold = false;
 
   @Input() isSubmenu: boolean = false;
 

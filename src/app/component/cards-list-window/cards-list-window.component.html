@@ -5,25 +5,33 @@
     <label for="HideOnlyShow">非表示のカードのみ</label>
   </div>
   <hr>
-  <ng-container class="cards" *ngFor="let card of cards; trackBy: trackByCard">
-    <div *ngIf="card" class="card" [ngClass]="{ 'selected': selectedIdentifier === card.identifier }">
-      <ng-container class="card-name" style="font-weight: bold; display: flex;">
-        <button (click)="showDetail(card)">編集画面</button>
-        <!-- <span style="padding-left: 2%; font-weight: bold;">{{card.name}}</span> -->
-        <input type="text" [(ngModel)]="card.name">
-      </ng-container>
-      <div class="card-tags-box">
-        <ng-container class="table-cell image-box" style="display: flex;">
-          <img class="card-image backimage" *ngIf="card.backImage?.url" [src]="card.backImage?.url | safe: 'resourceUrl'" />
-          <img class="card-image frontimage" *ngIf="card.frontImage?.url" [src]="card.frontImage?.url | safe: 'resourceUrl'" />
-        </ng-container>
-        <div class="card-ishide">
-          <input type="checkbox" id="Hide" [(ngModel)]="card.isHide" (click)="toggleChangeIsHide(card)" />
-          <label for="Hide">非表示にする(GMには表示されます)</label>
-          <br>
+  @for(card of cards; track trackByCard){
+    <ng-container class="cards">
+      @if(card){
+        <div class="card">
+          <ng-container class="card-name" style="font-weight: bold; display: flex;">
+            <button (click)="showDetail(card)">編集画面</button>
+            <!-- <span style="padding-left: 2%; font-weight: bold;">{{card.name}}</span> -->
+            <input type="text" [(ngModel)]="card.name">
+          </ng-container>
+          <div class="card-tags-box">
+            <ng-container class="table-cell image-box" style="display: flex;">
+              @if(card.backImage?.url){
+                <img class="card-image backimage" [src]="card.backImage?.url | safe: 'resourceUrl'" />
+              }
+              @if(card.frontImage?.url){
+                <img class="card-image frontimage" [src]="card.frontImage?.url | safe: 'resourceUrl'" />
+              }
+            </ng-container>
+            <div class="card-ishide">
+              <input type="checkbox" id="Hide" [(ngModel)]="card.isHide" (click)="toggleChangeIsHide(card)" />
+              <label for="Hide" style="user-select: none;">非表示にする(GMには表示されます)</label>
+              <br>
+            </div>
+            <hr>
+          </div>
         </div>
-        <hr>
-      </div>
-    </div>
-  </ng-container>
+      }
+    </ng-container>
+  }
 </div>

@@ -656,7 +656,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     component.character = gameObject;
   }
 
-  private foldingBuffFlag(flag: boolean){
+  foldingBuffFlag(flag: boolean){
     console.log('private foldingBuffFlag');
     this.foldingBuff = flag;
   }

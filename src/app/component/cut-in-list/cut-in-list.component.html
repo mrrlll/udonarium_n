@@ -4,7 +4,9 @@
       <button (click)="createCutIn()">新しいカットインを作る</button>
     </div>
     <select style="width: 15em;" size="20" (change)="selectCutIn($event.target.value)" [ngModel]="selectedCutIn?.identifier">
-      <option *ngFor="let cutIn of getCutIns()" value="{{cutIn.identifier}}">{{cutIn.name}}</option>
+      @for(cutIn of getCutIns(); track $index){
+        <option value="{{cutIn.identifier}}">{{cutIn.name}}</option>
+      }
     </select>
   </div>
   <div class="flex-item" style="width:380px">
@@ -50,7 +52,7 @@
       </div>
       <div>
         Width :<input class="is-caret" [(ngModel)]="cutInWidth" type="number" min="{{minSizeWidth}}" max="{{maxSizeWidth}}" style="width: 5em;" [attr.disabled]="!isEditable || cutInOriginalSize ? '' : null">
-        縦横比を維持 :<input type="checkbox" [(ngModel)]="keepImageAspect" name="keepImageAspect" 
+        縦横比を維持 :<input type="checkbox" [(ngModel)]="keepImageAspect" name="keepImageAspect"
         [attr.disabled]="!isEditable || cutInOriginalSize ? '' : null" (click)="chkImageAspect()" />
       </div>
       <div>

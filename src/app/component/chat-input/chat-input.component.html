@@ -1,29 +1,40 @@
 <div class="table" [ngClass]="{ 'direct-message': isDirect }">
   <div class="table-cell imagebox">
-    <img *ngIf="0 < imageFile.url.length" class="image" [src]="imageFile.url | safe: 'resourceUrl'" />
+    @if(0 < imageFile.url.length){
+      <img class="image" [src]="imageFile.url | safe: 'resourceUrl'" />
+    }
   </div>
   <div class="table-cell">
     <div>
       <ng-select class="ud-select is-caret" style="width: 12em;" [(ngModel)]="sendFrom" [clearable]="false">
-        <ng-option *ngIf="!onlyCharacters" [value]="myPeer?.identifier">{{myPeer?.name}}（あなた）</ng-option>
-        <ng-option *ngFor="let gameCharacter of gameCharacters" [value]="gameCharacter.identifier">{{gameCharacter.name}}
-        </ng-option>
+        @if(!onlyCharacters){
+          <ng-option [value]="myPeer?.identifier">{{myPeer?.name}}（あなた）</ng-option>
+        }
+        @for(gameCharacter of gameCharacters; track $index){
+          <ng-option [value]="gameCharacter.identifier">{{gameCharacter.name}}</ng-option>
+        }
       </ng-select> ＞
       <ng-select class="ud-select is-caret" style="width: 10em;" [(ngModel)]="sendTo" [clearable]="false">
         <ng-option [value]="''">全員</ng-option>
-        <ng-option *ngFor="let peer of otherPeers" [value]="peer.identifier">{{peer.name}}
-          <ng-container *ngIf="peer === myPeer">（あなた）</ng-container>
-        </ng-option>
+        @for(peer of otherPeers; track $index){
+          <ng-option [value]="peer.identifier">{{peer.name}}
+            <ng-container *ngIf="peer === myPeer">（あなた）</ng-container>
+          </ng-option>
+        }
       </ng-select>
       <ng-select class="ud-select is-caret" style="width: 15em; margin-left:.1em;" (change)="loadDiceBot($event)" [(ngModel)]="gameType"
         [ngModelOptions]="{standalone: true}" [clearable]="false">
-        <ng-option *ngFor="let diceBotInfo of diceBotInfos" [value]="diceBotInfo.id">{{diceBotInfo.name}}</ng-option>
+        @for(diceBotInfo of diceBotInfos; track $index){
+          <ng-option [value]="diceBotInfo.id">{{diceBotInfo.name}}</ng-option>
+        }
       </ng-select>
-      <ng-container *ngIf="diceBotInfos.length < 1">
-        <select style="width: 12em;" disabled>
-          <option value="">ダイスボット読込中...</option>
-        </select>
-      </ng-container>
+      @if(diceBotInfos.length < 1){
+        <ng-container>
+          <select style="width: 12em;" disabled>
+            <option value="">ダイスボット読込中...</option>
+          </select>
+        </ng-container>
+      }
       <button (click)="showDicebotHelp()" [disabled]="diceBotInfos.length < 1">?</button>
     </div>
     <div>
@@ -36,11 +47,18 @@
       </form>
     </div>
     <div class="writing-info">
-      <ng-container *ngIf="0 < writingPeerNames.length">
-        <span *ngFor="let peerName of writingPeerNames; index as i" style="font-weight: bold;">{{peerName}}<span
-            *ngIf="writingPeerNames.length !== (i + 1)">, </span></span>
-        <span> が入力中...</span>
-      </ng-container>
+      @if(0 < writingPeerNames.length){
+        <ng-container>
+          @for(peerName of writingPeerNames; track $index){
+            <span style="font-weight: bold;">{{peerName}}
+              @if(writingPeerNames.length !== ($index + 1)){
+                <span>, </span>
+              }
+            </span>
+            <span> が入力中...</span>
+          }
+        </ng-container>
+      }
     </div>
   </div>
 </div>

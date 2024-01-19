@@ -2,32 +2,57 @@
   <div style="flex-grow: 0;">
     <form>
       <div class="chat-tab">
-        <label *ngFor="let chatTab of chatMessageService.chatTabs">
-          <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [(ngModel)]="chatTabidentifier">
-          <div>{{chatTab.name}}<badge *ngIf="chatTab.hasUnread" class="badge" [count]="chatTab.unreadLength"></badge></div>
-        </label>
+        @for(chatTab of chatMessageService.chatTabs; track $index){
+          <label>
+            <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [(ngModel)]="chatTabidentifier">
+            <div>{{chatTab.name}}
+              @if(chatTab.hasUnread){
+                <badge class="badge" [count]="chatTab.unreadLength"></badge>
+              }
+            </div>
+          </label>
+        }
       </div>
     </form>
     <chat-input [onlyCharacters]="true" [chatTabidentifier]="chatTabidentifier"
     [(gameType)]="gameType" [(sendFrom)]="sendFrom" [(text)]="text" [(filterText)]="filterText" (chat)="sendChat($event)" #chatInput></chat-input>
-    <div *ngIf="isEdit" class="edit-info"><i class="material-icons" style="vertical-align: bottom; size:0.8rem;">info_outline</i> チャットパレット編集中です</div>
+    @if(isEdit){
+      <div class="edit-info">
+        <i class="material-icons" style="vertical-align: bottom; size:0.8rem;">info_outline</i>
+        チャットパレット編集中です</div>
+    }
   </div>
-  <div *ngIf="!isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
-    <select #chatPlette class="palette" style="overflow-y: auto;" size="5" (keydown.enter)="chatInputComponent.sendChat(null)" (input)="selectPalette(chatPlette.value)" (click)="clickPalette(chatPlette.value)">
-      <ng-container *ngIf="palette">
-        <option *ngFor="let palette of palette.getPalette()" value="{{palette}}">{{palette}}</option>
-      </ng-container>
-    </select>
-  </div>
-  <div *ngIf="isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
-    <textarea class="palette" style="resize: none;" [(ngModel)]="editPalette" placeholder="チャットパレット"></textarea>
-  </div>
-  <div style="flex-grow: 0;">
+  @if(!isEdit){
+    <div style="flex-grow: 1; height: 0; min-height: 100px;">
+      <select #chatPlette class="palette" style="overflow-y: auto;" size="5" (keydown.enter)="chatInputComponent.sendChat(null)" (input)="selectPalette(chatPlette.value)" (click)="clickPalette(chatPlette.value)">
+        @if(palette){
+          <ng-container>
+            @for(palette of palette.getPalette(); track $index){
+              <option value="{{palette}}">{{palette}}</option>
+            }
+          </ng-container>
+        }
+      </select>
+    </div>
+  }
+  @if(isEdit){
+    <div style="flex-grow: 1; height: 0; min-height: 100px;">
+      <textarea class="palette" style="resize: none;" [(ngModel)]="editPalette" placeholder="チャットパレット"></textarea>
+    </div>
+  }
+  <div style="flex-grow: 0; display: flex;">
     <button type="submit" (click)="toggleEditMode()">
-      <span *ngIf="!isEdit">チャットパレットの編集</span>
-      <span *ngIf="isEdit">チャットパレットを確定</span>
+      @if(!isEdit){
+        <span>チャットパレットの編集</span>
+      } @else {
+        <span>チャットパレットを確定</span>
+      }
     </button>
-    <button *ngIf="gameType === 'KemonoNoMori'" style="margin: 0 0 0 auto;" [disabled]="!character.continueDice" (click)="continueDiceRoll()">継続判定(KC{{character.continueDice}})</button>
-    <span *ngIf="gameType === 'KemonoNoMori'" style="user-select: none;">現在の成功度：{{character.kemonoSuccessCount}}</span>
+    @if(gameType === 'KemonoNoMori'){
+      <div style="flex-grow: 0;">
+        <button style="margin: 0 0 0 auto;" [disabled]="!character.continueDice" (click)="continueDiceRoll()">継続判定(KC{{character.continueDice}})</button>
+        <span style="user-select: none;">現在の成功度：{{character.kemonoSuccessCount}}</span>
+      </div>
+    }
   </div>
 </div>
