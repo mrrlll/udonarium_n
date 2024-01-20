@@ -1,22 +1,14 @@
 <div class="log" [style.minHeight.px]="minScrollHeight" #logContainer>
   <div class="virtual-scroll-container" [style.marginBottom.px]="bottomSpace" #messageContainer>
-    @if(0 < chatMessages.length){
-      <ng-container>
-        @for(chatMessage of chatMessages; track trackByChatMessage){
-          <ng-container>
-            @if(chatMessage.isDisplayable){
-              <chat-message [chatMessage]="chatMessage"></chat-message>
-            }
-          </ng-container>
-        }
+    <ng-container *ngIf="0 < chatMessages.length">
+      <ng-container *ngFor="let chatMessage of chatMessages; trackBy: trackByChatMessage">
+        <chat-message *ngIf="chatMessage.isDisplayable" [chatMessage]="chatMessage">
+        </chat-message>
       </ng-container>
-    }
-    @if(chatMessages.length <= 0){
-      <ng-container>
-        @for(chatMessage of sampleMessages; track $index){
-          <chat-message [chatMessage]="chatMessage"></chat-message>
-        }
-      </ng-container>
-    }
+    </ng-container>
+    <ng-container *ngIf="chatMessages.length <= 0">
+      <chat-message *ngFor="let chatMessage of sampleMessages" [chatMessage]="chatMessage">
+      </chat-message>
+    </ng-container>
   </div>
 </div>

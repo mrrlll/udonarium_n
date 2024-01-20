@@ -1,10 +1,8 @@
 <div class="container">
   <div class="message" [ngClass]="{'direct-message': (chatMessage.isDirect || chatMessage.isSecret), 'system-message':chatMessage.isSystem, 'dicebot-message': chatMessage.isDicebot}"
-  [@flyInOut]="animeState">
+    [@flyInOut]="animeState">
     <div class="image">
-      @if(0 < imageFile?.url?.length){
-        <img [src]="imageFile?.url | safe: 'resourceUrl'" />
-      }
+      <img *ngIf="0 < imageFile?.url?.length" [src]="imageFile?.url | safe: 'resourceUrl'" />
     </div>
     <div class="body">
       <div class="title">
@@ -13,20 +11,14 @@
         <span class='tip msg-timestamp'>{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
       </div>
       <div class="text msg-text" [ngClass]="{ 'is-success': chatMessage.isSuccess, 'is-failure': chatMessage.isFailure, 'is-critical': chatMessage.isCritical, 'is-fumble': chatMessage.isFumble }">
-        @if(!chatMessage.isSecret || chatMessage.isSendFromSelf){
-          <ng-container *ngTemplateOutlet="visible"></ng-container>
-        } @else {
-          <ng-container *ngTemplateOutlet="secret"></ng-container>
-        }
+        <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; then visible; else secret"></ng-container>
       </div>
     </div>
   </div>
 </div>
 <ng-template #visible>
   <span [innerHTML]="escapeHtml(chatMessage.text) | linky:{stripPrefix: false}"></span>
-  @if(chatMessage.isSecret){
-    <button (click)="discloseMessage()" style="padding-top: 1px; padding-bottom: 1px;">内容を公開</button>
-  }
+  <button *ngIf="chatMessage.isSecret" (click)="discloseMessage()" style="padding-top: 1px; padding-bottom: 1px;">内容を公開</button>
 </ng-template>
 <ng-template #secret>
   <span>（シークレットダイス）</span>
