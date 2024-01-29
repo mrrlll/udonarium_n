@@ -175,12 +175,6 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     }, 100);
   }
 
-  openCutInList() {
-    let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x+25, top: coordinate.y+25, width: 650, height: 740 };
-    this.panelService.open<CutInListComponent>(CutInListComponent, option);
-  }
-
   deleteAudioFile(audio) {
     if (this.auditionPlayer.audio && this.auditionPlayer.audio.identifier === audio.identifier) {
       this.stopAudition();
@@ -192,13 +186,6 @@ export class JukeboxComponent implements OnInit, OnDestroy {
       this.seBox.stop();
     }
     EventSystem.call('DELETE_AUDIO_FILE', audio.identifier);
-  }
-
-  openaudioControl() {
-    let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x+25, top: coordinate.y+25, width: 650, height: 740 };
-    // 仮でカットインリストを開く
-    this.panelService.open<CutInListComponent>(CutInListComponent, option);
   }
 
   fadeoutInProgress = false;
