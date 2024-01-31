@@ -106,6 +106,15 @@ export class TabletopService {
         } else if (gameObject instanceof ChatTab) {
           ChatTabList.instance.addChatTab(gameObject);
         }
+
+        let objects: TabletopObject[] = ObjectStore.instance.getObjects(GameCharacter);
+        for (let gameObject of objects) {
+          if (gameObject instanceof GameCharacter) {
+            console.log('GameCharacter Load 追加データ確認');
+            let gameCharacter:GameCharacter =  gameObject;
+            gameCharacter.addExtendData();
+          }
+        }
       });
   }
 
