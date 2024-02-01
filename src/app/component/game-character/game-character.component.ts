@@ -497,6 +497,18 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
         }
       }
     )
+    dbActionList.push(
+      this.dbclickActionNum === 3
+      ? {
+        name: '◉ 固定', action: () => {
+          this.dbclickActionNum = 3;
+        }
+      }:{
+        name: '○ 固定', action: () => {
+          this.dbclickActionNum = 3;
+        }
+      }
+    )
     actions.push({ name: 'ダブルクリックアクション', action: null, subActions: dbActionList})
     actions.push(ContextMenuSeparator);
     if(this.roomAltitude){
@@ -620,6 +632,8 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
       case 2:
         this.showRemoteController(gameCharacter);
         break;
+      case 3:
+        this.isLock = !this.isLock;
       case 99:
         break;
     }
