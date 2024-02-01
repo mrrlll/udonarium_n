@@ -129,7 +129,9 @@ export class AudioSharingSystem {
       name: audio.name,
       blob: null,
       type: '',
-      url: null
+      url: null,
+      bgm: audio.bgm,
+      se: audio.se,
     };
 
     if (audio.state === AudioState.URL) {

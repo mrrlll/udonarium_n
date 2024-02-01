@@ -13,9 +13,8 @@ export interface AudioFileContext {
   type: string;
   blob: Blob;
   url: string;
-  loopStart?: number;
-  loopLength?: number;
-  loopEnd?: number;
+  bgm: boolean;
+  se: boolean;
 }
 
 export class AudioFile {
@@ -25,6 +24,8 @@ export class AudioFile {
     blob: null,
     type: '',
     url: '',
+    bgm: true,
+    se: false,
   };
 
   get identifier(): string {
@@ -46,6 +47,19 @@ export class AudioFile {
     if (!this.url && !this.blob) return AudioState.NULL;
     if (this.url && !this.blob) return AudioState.URL;
     return AudioState.COMPLETE;
+  }
+  get bgm(): boolean {
+    return this.context.bgm;
+  }
+  get se(): boolean {
+    return this.context.se;
+  }
+
+  set bgm(bgm: boolean) {
+    this.context.bgm = bgm;
+  }
+  set se(se: boolean) {
+    this.context.se = se;
   }
 
   set name(name: string) {
@@ -71,6 +85,7 @@ export class AudioFile {
       audio.context.identifier = arg;
       audio.context.name = arg;
       audio.context.url = arg;
+      audio.context.bgm = true;
       return audio;
     } else {
       let audio = new AudioFile();
@@ -141,6 +156,8 @@ export class AudioFile {
       blob: this.context.blob,
       type: this.context.type,
       url: this.context.url,
+      bgm: this.context.bgm,
+      se: this.context.se,
     }
   }
 }

@@ -40,3 +40,74 @@
 .volume-area span {
   user-select: none;
 }
+
+.tab {
+  padding : 5px;
+  user-select: none;
+}
+
+.tab {
+  padding : 0px;
+  border: solid 1px #555;
+  border-radius: 0.3em;
+  overflow: hidden;
+
+  display: flex;
+  flex-flow:  row nowrap;
+  justify-content: space-around;
+  align-items: stretch;
+
+  text-align: center;
+
+  margin: 0px;
+  max-width: 500px;
+
+  background-color: rgba(240,218,189, 0.9);
+}
+
+.tab label {
+  display: inline-block;
+  flex: 1 0 auto;
+  flex-grow: 1;
+}
+
+.tab label:hover {
+  background-color: #888;
+  color: #eee;
+  border-color: #555;
+}
+
+.tab label:checked {
+  background: #555;
+  color: #CCC;
+}
+
+.tab input[type="radio"] {
+  display: none;
+}
+
+.tab input[type="radio"] + div {
+  vertical-align: middle;
+  outline: 0;
+  font-size: 0.6em;
+  background-color: transparent;
+  color: #444;
+
+  box-sizing: border-box;
+
+  margin: 0px;
+  padding: 2px 8px;
+
+  cursor: pointer;
+}
+
+.tab input[type="radio"] + div:hover {
+  background-color: #888;
+  color: #eee;
+  border-color: #555;
+}
+
+.tab input[type="radio"]:checked + div {
+  background: #555;
+  color: #CCC;
+}

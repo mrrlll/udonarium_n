@@ -9,7 +9,7 @@ import { Jukebox } from '@udonarium/Jukebox';
 import { Config } from '@udonarium/config';
 import { ModalService } from 'service/modal.service';
 
-import { CutInListComponent } from 'component/cut-in-list/cut-in-list.component';
+import { ContextMenuAction, ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 
@@ -25,6 +25,9 @@ import { AppConfigCustomService } from 'service/app-config-custom.service';
 export class JukeboxComponent implements OnInit, OnDestroy {
 
   @Input() isViewer: boolean;
+
+  selectTab: string = '全て';
+  filteredAudioList: AudioFile[] = [];
 
   get roomVolume(): number {
     let conf = ObjectStore.instance.get<Config>('Config');
@@ -95,6 +98,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   private lazyUpdateTimer: NodeJS.Timer = null;
 
   constructor(
+    private contextMenuService: ContextMenuService,
     private modalService: ModalService,
     private panelService: PanelService,
     private pointerDeviceService: PointerDeviceService,
@@ -115,12 +119,16 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.getAudioObjects('BGM');
     this.isViewer = this.appCustomService.dataViewer;
     Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'ジュークボックス');
     this.auditionPlayer.volumeType = VolumeType.AUDITION;
     EventSystem.register(this)
       .on('*', event => {
-        if (event.eventName.startsWith('FILE_')) this.lazyNgZoneUpdate();
+        if (event.eventName.startsWith('FILE_')) {
+          this.lazyNgZoneUpdate();
+          this.getAudioObjects(this.selectTab);
+        }
       });
   }
 
@@ -331,5 +339,75 @@ export class JukeboxComponent implements OnInit, OnDestroy {
 
   hideTooltip(target: string): void {
     this.tooltipVisible[target] = false;
+  }
+
+  // get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
+
+  getAudioObjects(AudioType: string): void {
+    // audiosから指定されたタイプのオーディオを抽出
+    // AudioTypeがbgmの場合はaudio.bgmがtrueのものを抽出
+    // AudioTypeがseの場合はaudio.seがtrueのものを抽出
+    let audioObjects: AudioFile[] = [];
+    for (let audio of this.audios) {
+      if (AudioType == 'BGM' && audio.bgm) {
+        audioObjects.push(audio);
+      }
+      if (AudioType == 'SE' && audio.se) {
+        audioObjects.push(audio);
+      }
+      if (AudioType == '全て') {
+        audioObjects.push(audio);
+      }
+    }
+    this.filteredAudioList = audioObjects;
+  }
+
+  updateFilteredAudioList() {
+    if (this.selectTab == 'BGM') {
+      this.getAudioObjects('BGM');
+    }
+    if (this.selectTab == 'SE') {
+      this.getAudioObjects('SE');
+    }
+    if (this.selectTab == '全て')
+      this.filteredAudioList = this.audios;
+  }
+
+  trackByfilteredAudioList(index: number, gameObject: AudioFile){
+    return gameObject ? gameObject.identifier : index;
+  }
+
+  onContextMenu(event: Event, gameObject: AudioFile) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
+
+    const target = <HTMLElement>event.target;
+    let position;
+    if (target && target.tagName === 'BUTTON') {
+      const clientRect = target.getBoundingClientRect();
+      position = {
+        x: window.pageXOffset + clientRect.left + target.clientWidth,
+        y: window.pageYOffset + clientRect.top
+      };
+    } else {
+      position = this.pointerDeviceService.pointers[0];
+    }
+
+    let actions: ContextMenuAction[] = [];
+
+    if(gameObject.bgm){
+      actions.push({ name: '☑ BGM', action: () => { gameObject.bgm = false; this.updateFilteredAudioList(); } });
+    } else {
+      actions.push({ name: '☐ BGM', action: () => { gameObject.bgm = true; this.updateFilteredAudioList(); } });
+    }
+    if(gameObject.se){
+      actions.push({ name: '☑ SE', action: () => { gameObject.se = false; this.updateFilteredAudioList(); } });
+    } else {
+      actions.push({ name: '☐ SE', action: () => { gameObject.se = true; this.updateFilteredAudioList(); } });
+    }
+
+    this.contextMenuService.open(position, actions, gameObject.name);
   }
 }

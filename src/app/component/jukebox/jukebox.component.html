@@ -30,7 +30,8 @@
     👁GM&観戦者モードを有効にして開き直すと表示されます。
   </label>
   <div *ngIf="isViewer">
-    <div *ngFor="let audio of audios" class="box">
+    <ng-container *ngTemplateOutlet="inventoryTab"></ng-container>
+    <div *ngFor="let audio of filteredAudioList" class="box" (contextmenu)="onContextMenu($event, audio)">
       <div class="audiolist">
         <button *ngIf="audio !== auditionPlayer?.audio || auditionPlayer?.paused" (click)="playAudition(audio)" [disabled]="!audio.isReady" >試聴</button>
         <button *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused" (click)="stopAudition()" [disabled]="!audio.isReady" >停止</button>
@@ -46,7 +47,6 @@
       <div class="deletebutton">
         <button (click)="deleteAudioFile(audio)">削除</button>
       </div>
-
     </div>
     <!-- <div *ngIf="audios.length < 1" >アップロードされた音楽ファイルはここに表示されます。</div> -->
   </div>
@@ -64,4 +64,21 @@
   </label>
 </div>
 
-
+<ng-template #inventoryTab>
+  <form class="is-sticky-top">
+    <div class="tab">
+      <label>
+        <input name="tab" type="radio" value="全て" ng-control="options" [(ngModel)]="selectTab" (change)="updateFilteredAudioList()">
+        <div>全て</div>
+      </label>
+      <label>
+        <input name="tab" type="radio" value="BGM" ng-control="options" [(ngModel)]="selectTab" (change)="updateFilteredAudioList()">
+        <div>BGM</div>
+      </label>
+      <label>
+        <input name="tab" type="radio" value="SE" ng-control="options" [(ngModel)]="selectTab" (change)="updateFilteredAudioList()">
+        <div>SE</div>
+      </label>
+    </div>
+  </form>
+</ng-template>
