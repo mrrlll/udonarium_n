@@ -15,6 +15,7 @@ export interface AudioFileContext {
   url: string;
   bgm: boolean;
   se: boolean;
+  isLoop: boolean;
 }
 
 export class AudioFile {
@@ -26,6 +27,7 @@ export class AudioFile {
     url: '',
     bgm: true,
     se: false,
+    isLoop: true,
   };
 
   get identifier(): string {
@@ -60,6 +62,13 @@ export class AudioFile {
   }
   set se(se: boolean) {
     this.context.se = se;
+  }
+
+  get isLoop(): boolean {
+    return this.context.isLoop;
+  }
+  set isLoop(isLoop: boolean) {
+    this.context.isLoop = isLoop;
   }
 
   set name(name: string) {
@@ -158,6 +167,7 @@ export class AudioFile {
       url: this.context.url,
       bgm: this.context.bgm,
       se: this.context.se,
+      isLoop: this.context.isLoop,
     }
   }
 }

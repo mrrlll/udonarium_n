@@ -23,8 +23,9 @@
 }
 
 .audiolist {
+  user-select: none;
   display: inline-block;
-  width: 100%;
+  width: 95%;
   border-bottom:1px dotted #888;
   overflow: hidden;
   text-overflow: ellipsis;

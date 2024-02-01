@@ -48,7 +48,7 @@ export class SeBox extends GameObject {
       this.playAfterFileUpdate();
       return;
     }
-    this.audioPlayer.loop = this.isLoop;
+    this.audioPlayer.loop = false;
     this.audioPlayer.volumeType = VolumeType.SE;
     this.audioPlayer.endMusic = () => {
       this.stop();

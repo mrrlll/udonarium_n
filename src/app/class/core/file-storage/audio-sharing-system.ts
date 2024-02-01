@@ -128,6 +128,7 @@ export class AudioSharingSystem {
       url: null,
       bgm: audio.bgm,
       se: audio.se,
+      isLoop: audio.isLoop,
     };
 
     if (audio.state === AudioState.URL) {

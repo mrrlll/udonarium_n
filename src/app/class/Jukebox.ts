@@ -60,7 +60,7 @@ export class Jukebox extends GameObject {
       this.playAfterFileUpdate();
       return;
     }
-    this.audioPlayer.loop = true;
+    this.audioPlayer.loop = this.isLoop;
     this.audioPlayer.play(this.audio);
   }
 

@@ -151,7 +151,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     //BGM駆動のためのインスタンスを別にしているため現状この処理で止める
     this.cutInLauncher.stopBlankTagCutIn();
 
-    this.jukebox.play(audio.identifier, true);
+    this.jukebox.play(audio.identifier, audio.isLoop);
 
   }
 
@@ -166,13 +166,6 @@ export class JukeboxComponent implements OnInit, OnDestroy {
 
   stopSE(audio: AudioFile) {
     if (this.seBox.audio === audio) this.seBox.stop();
-  }
-
-  handleFileSelect(event: Event) {
-    let input = <HTMLInputElement>event.target;
-    let files = input.files;
-    if (files.length) FileArchiver.instance.load(files);
-    input.value = '';
   }
 
   private lazyNgZoneUpdate() {
@@ -387,6 +380,8 @@ export class JukeboxComponent implements OnInit, OnDestroy {
 
     let actions: ContextMenuAction[] = [];
 
+
+
     if(gameObject.bgm){
       actions.push({ name: '☑ BGM', action: () => { gameObject.bgm = false; this.updateFilteredAudioList(); } });
     } else {
@@ -396,6 +391,15 @@ export class JukeboxComponent implements OnInit, OnDestroy {
       actions.push({ name: '☑ SE', action: () => { gameObject.se = false; this.updateFilteredAudioList(); } });
     } else {
       actions.push({ name: '☐ SE', action: () => { gameObject.se = true; this.updateFilteredAudioList(); } });
+    }
+    actions.push(ContextMenuSeparator);
+    // ループオンオフ
+    if(gameObject.bgm){
+      if(gameObject.isLoop){
+        actions.push({ name: '☑ ループ再生(BGM再生時のみ)', action: () => { gameObject.isLoop = false; } });
+      } else {
+        actions.push({ name: '☐ ループ再生(BGM再生時のみ)', action: () => { gameObject.isLoop = true; } });
+      }
     }
 
     this.contextMenuService.open(position, actions, gameObject.name);
