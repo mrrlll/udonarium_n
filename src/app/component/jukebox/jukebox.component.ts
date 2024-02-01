@@ -394,12 +394,10 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     }
     actions.push(ContextMenuSeparator);
     // ループオンオフ
-    if(gameObject.bgm){
-      if(gameObject.isLoop){
-        actions.push({ name: '☑ ループ再生(BGM再生時のみ)', action: () => { gameObject.isLoop = false; } });
-      } else {
-        actions.push({ name: '☐ ループ再生(BGM再生時のみ)', action: () => { gameObject.isLoop = true; } });
-      }
+    if(gameObject.isLoop){
+      actions.push({ name: '☑ ループ再生(BGM再生時のみ)', action: () => { gameObject.isLoop = false; } });
+    } else {
+      actions.push({ name: '☐ ループ再生(BGM再生時のみ)', action: () => { gameObject.isLoop = true; } });
     }
 
     this.contextMenuService.open(position, actions, gameObject.name);
