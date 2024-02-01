@@ -28,7 +28,6 @@ export class AudioSharingSystem {
         AudioStorage.instance.synchronize();
       })
       .on('SYNCHRONIZE_AUDIO_LIST', event => {
-        console.log(event)
         if (event.isSendFromSelf) return;
         console.log('SYNCHRONIZE_AUDIO_LIST ' + event.sendFrom);
 
