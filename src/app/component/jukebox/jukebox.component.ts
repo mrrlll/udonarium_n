@@ -119,7 +119,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.getAudioObjects('BGM');
+    this.getAudioObjects('全て');
     this.isViewer = this.appCustomService.dataViewer;
     Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'ジュークボックス');
     this.auditionPlayer.volumeType = VolumeType.AUDITION;
@@ -127,7 +127,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
       .on('*', event => {
         if (event.eventName.startsWith('FILE_')) {
           this.lazyNgZoneUpdate();
-          this.getAudioObjects(this.selectTab);
+          this.updateFilteredAudioList();
         }
       });
   }
@@ -181,19 +181,6 @@ export class JukeboxComponent implements OnInit, OnDestroy {
       this.lazyUpdateTimer = null;
       this.ngZone.run(() => { });
     }, 100);
-  }
-
-  deleteAudioFile(audio) {
-    if (this.auditionPlayer.audio && this.auditionPlayer.audio.identifier === audio.identifier) {
-      this.stopAudition();
-    }
-    if (this.jukebox.audio && this.jukebox.audio.identifier === audio.identifier) {
-      this.jukebox.stop();
-    }
-    if (this.seBox.audio && this.seBox.audio.identifier === audio.identifier) {
-      this.seBox.stop();
-    }
-    EventSystem.call('DELETE_AUDIO_FILE', audio.identifier);
   }
 
   fadeoutInProgress = false;
@@ -341,7 +328,10 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     this.tooltipVisible[target] = false;
   }
 
-  // get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
+  songNameChange(audio: AudioFile) {
+    EventSystem.trigger('SYNCHRONIZE_AUDIO_LIST', audio);
+    AudioStorage.instance.synchronize();
+  }
 
   getAudioObjects(AudioType: string): void {
     // audiosから指定されたタイプのオーディオを抽出

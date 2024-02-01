@@ -24,21 +24,19 @@
 
 .audiolist {
   display: inline-block;
-  max-width: 85%;
+  width: 100%;
   border-bottom:1px dotted #888;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.deletebutton {
-  /* border-left: 2px solid #000; */
-  display: inline-block;
-  float: right;
-}
-
 .volume-area span {
   user-select: none;
+}
+
+.volume-area {
+  width: 100%;
 }
 
 .tab {

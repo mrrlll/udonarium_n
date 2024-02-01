@@ -28,6 +28,7 @@ export class AudioSharingSystem {
         AudioStorage.instance.synchronize();
       })
       .on('SYNCHRONIZE_AUDIO_LIST', event => {
+        console.log(event)
         if (event.isSendFromSelf) return;
         console.log('SYNCHRONIZE_AUDIO_LIST ' + event.sendFrom);
 
@@ -107,10 +108,6 @@ export class AudioSharingSystem {
         } else {
           this.startReceiveTask(identifier);
         }
-      })
-      .on('DELETE_AUDIO_FILE', event => {
-        let identifier: string = event.data;
-        this.deleteAudioFile(identifier);
       });
   }
 
@@ -210,7 +207,9 @@ export class AudioSharingSystem {
     return false;
   }
 
-  private deleteAudioFile(identifier: string) {
+  private deleteAudioFile(audio: AudioFile) {
+    const identifier = audio.identifier;
+    // audio.isHidden = true;
     if (this.sendTaskMap.has(identifier)) {
       this.stopSendTask(identifier);
     }

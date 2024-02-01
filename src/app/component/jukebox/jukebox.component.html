@@ -2,25 +2,25 @@
   <span style="user-select: none;">【音量】</span>
   <div class="volume-area">
     <span (dblclick)="toggleMute('audition')" [innerHTML]="auditionLabel" [title]="getTooltip('audition')" (mouseover)="showTooltip('audition')" (mouseout)="hideTooltip('audition')"></span>
-    <input [(ngModel)]="auditionVolume" type="range" min="0" max="1" step="0.01" />
+    <input [(ngModel)]="auditionVolume" type="range" min="0" max="1" step="0.01" style="width: 75%;"/>
     <input type="text" [(ngModel)]="percentAuditionVolume" (input)="updateAuditionVolume()" style="width: 25px;"/>%
   </div>
   <div class="volume-area" >
     <span (dblclick)="toggleMute('bgm')" [innerHTML]="bgmLabel" [title]="getTooltip('bgm')" (mouseover)="showTooltip('bgm')" (mouseout)="hideTooltip('bgm')" ></span>
-    <input [(ngModel)]="volume" type="range" min="0" max="1" step="0.01" />
+    <input [(ngModel)]="volume" type="range" min="0" max="1" step="0.01" style="width: 75%;"/>
     <input type="text" [(ngModel)]="percentVolume" (input)="updateVolume()" style="width: 25px;"/>%
   </div>
   <div class="volume-area" >
     <span (dblclick)="toggleMute('se')" [innerHTML]="seLabel" [title]="getTooltip('se')" (mouseover)="showTooltip('se')" (mouseout)="hideTooltip('se')"></span>
-    <input [(ngModel)]="seVolume" type="range" min="0" max="1" step="0.01" />
-    <input type="text" [(ngModel)]="percentSEVolume" (input)="updateSeVolume()" style="width: 25px;"/>% <span style="font-size: 15px;">※アラームの音量もこちら</span>
+    <input [(ngModel)]="seVolume" type="range" min="0" max="1" step="0.01" style="width: 80%;"/>
+    <input type="text" [(ngModel)]="percentSEVolume" (input)="updateSeVolume()" style="width: 25px;"/>%
   </div>
   <span class="volume-save-description" style="font-size: 0.8em;">音量設定はブラウザに保存されます。</span>
   <hr/>
   <div *ngIf="isViewer" class="volume-area" >
     <span (dblclick)="toggleMute('room')" [innerHTML]="roomLabel" [title]="getTooltip('room')" (mouseover)="showTooltip('room')" (mouseout)="hideTooltip('room')"></span>
-    <input [(ngModel)]="roomVolume" type="range" min="0" max="2" step="0.01" />
-    <input type="text" [(ngModel)]="percentRoomVolume" (input)="updateRoomVolume()" style="width: 25px;"/>% <span style="font-size: 15px;">※全プレイヤー一括変更</span>
+    <input [(ngModel)]="roomVolume" type="range" min="0" max="2" step="0.01" style="width: 75%;"/>
+    <input type="text" [(ngModel)]="percentRoomVolume" (input)="updateRoomVolume()" style="width: 25px;"/>%
     <div class="fade-button">
       <button *ngIf="isViewer" (click)="fadeout()" [disabled]="0" >フェードアウト</button><button *ngIf="isViewer" (click)="fadein()" [disabled]="0" >フェードイン</button>
     </div>
@@ -31,6 +31,8 @@
   </label>
   <div *ngIf="isViewer">
     <ng-container *ngTemplateOutlet="inventoryTab"></ng-container>
+  </div>
+  <div *ngIf="isViewer">
     <div *ngFor="let audio of filteredAudioList" class="box" (contextmenu)="onContextMenu($event, audio)">
       <div class="audiolist">
         <button *ngIf="audio !== auditionPlayer?.audio || auditionPlayer?.paused" (click)="playAudition(audio)" [disabled]="!audio.isReady" >試聴</button>
@@ -43,9 +45,6 @@
         <span *ngIf="audio === jukebox?.audio">【BGM】</span>
         <span *ngIf="audio === seBox?.audio">【SE】</span>
         <span>{{audio.name}}</span>
-      </div>
-      <div class="deletebutton">
-        <button (click)="deleteAudioFile(audio)">削除</button>
       </div>
     </div>
     <!-- <div *ngIf="audios.length < 1" >アップロードされた音楽ファイルはここに表示されます。</div> -->
