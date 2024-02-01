@@ -34,7 +34,7 @@
   </div>
   <div *ngIf="isViewer">
     <div *ngFor="let audio of filteredAudioList" class="box" (contextmenu)="onContextMenu($event, audio)">
-      <div class="audiolist">
+      <div class="audiolist" style="display: flex;">
         <button *ngIf="audio !== auditionPlayer?.audio || auditionPlayer?.paused" (click)="playAudition(audio)" [disabled]="!audio.isReady" >試聴</button>
         <button *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused" (click)="stopAudition()" [disabled]="!audio.isReady" >停止</button>
         <button *ngIf="audio !== jukebox?.audio" (click)="playBGM(audio)" [disabled]="!audio.isReady" >BGM</button>
@@ -44,12 +44,15 @@
         <span *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused">【試聴中】</span>
         <span *ngIf="audio === jukebox?.audio">【BGM】</span>
         <span *ngIf="audio === seBox?.audio">【SE】</span>
-        <span>{{audio.name}}</span>
+        <span style="margin: auto 0 auto 0;">{{audio.name}}</span>
+        <div class="deletebutton" style="margin: 0 0 0 auto;">
+          <button (click)="onContextMenu($event, audio)">︙</button>
+        </div>
       </div>
     </div>
     <!-- <div *ngIf="audios.length < 1" >アップロードされた音楽ファイルはここに表示されます。</div> -->
   </div>
-  <label *ngIf="isViewer">
+  <!-- <label *ngIf="isViewer">
     <div class="drop-zone">
       <div>
         <i class="material-icons large-font">playlist_add</i>
@@ -60,7 +63,7 @@
       <div class="small-font">
         <br>１ファイルにつき10MBまで</div>
     </div>
-  </label>
+  </label> -->
 </div>
 
 <ng-template #inventoryTab>

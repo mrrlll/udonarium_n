@@ -109,3 +109,12 @@
   background: #555;
   color: #CCC;
 }
+
+.deletebutton button {
+  color: #000000;
+  cursor: pointer;
+  border: none;
+  background: none;
+  display: block;
+  position: relative;
+}
