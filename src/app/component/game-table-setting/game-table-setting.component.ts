@@ -9,6 +9,7 @@ import { TableSelecter } from '@udonarium/table-selecter';
 
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { ImageService } from 'service/image.service';
+import { ImageTag } from '@udonarium/image-tag';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
@@ -45,6 +46,9 @@ export class GameTableSettingComponent implements OnInit, OnDestroy {
 
   get tableDistanceviewImage(): ImageFile {
     return this.imageService.getEmptyOr(this.selectedTable ? this.selectedTable.backgroundImageIdentifier : null);
+  }
+  get tableDistanceviewImage2(): ImageFile {
+    return this.imageService.getEmptyOr(this.selectedTable ? this.selectedTable.backgroundImageIdentifier2 : null);
   }
 
   get tableName(): string { return this.selectedTable.name; }
@@ -169,11 +173,26 @@ export class GameTableSettingComponent implements OnInit, OnDestroy {
     }
   }
 
+  getHidden(image: ImageFile): boolean {
+    const imageTag = ImageTag.get(image.identifier);
+    return imageTag ? imageTag.hide : false;
+  }
+
   openBgImageModal() {
     if (this.isDeleted) return;
     this.modalService.open<string>(FileSelecterComponent).then(value => {
       if (!this.selectedTable || !value) return;
       this.selectedTable.imageIdentifier = value;
+    });
+  }
+
+  openDistanceViewImageModal2() {
+    if (this.isDeleted) return;
+    let currentImageIdentifires: string[] = [];
+    if (this.selectedTable && this.selectedTable.backgroundImageIdentifier2) currentImageIdentifires = [this.selectedTable.backgroundImageIdentifier2];
+    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: true, currentImageIdentifires: currentImageIdentifires }).then(value => {
+      if (!this.selectedTable || !value) return;
+      this.selectedTable.backgroundImageIdentifier2 = value;
     });
   }
 

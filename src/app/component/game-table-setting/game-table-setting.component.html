@@ -4,7 +4,7 @@
       <button (click)="createGameTable()">新規作成</button>
       <button (click)="cloneGameTable()">複製</button>
     </div>
-    <select style="width: 10em;" size="10" (change)="selectGameTable($event.target.value)" [ngModel]="selectedTable?.identifier">
+    <select style="width: 10em;" size="19" (change)="selectGameTable($event.target.value)" [ngModel]="selectedTable?.identifier">
       <option *ngFor="let gameTable of getGameTables()" value="{{gameTable.identifier}}">{{gameTable.name}}</option>
     </select>
   </div>
@@ -12,7 +12,7 @@
     <ng-container *ngIf="selectedTable">
       <div class="images-select">
         <div>
-          画像
+          <b>テーブル画像</b>
           <div *ngIf="!tableBackgroundImage.url">
             <button (click)="openBgImageModal()" style="height: 120px;" [disabled]="!isEditable">画像を追加</button>
           </div>
@@ -20,13 +20,24 @@
             <img height="120" [src]="tableBackgroundImage.url | safe: 'resourceUrl'">
           </div>
         </div>
+      </div>
+      <div class="images-select">
         <div>
-          背景
+          <b>背景１（前景）</b>
           <div *ngIf="!tableDistanceviewImage.url">
-            <button (click)="openDistanceViewImageModal()" style="height: 120px;" [disabled]="!isEditable">背景画像を追加</button>
+            <button (click)="openDistanceViewImageModal()" style="height: 120px;" [disabled]="!isEditable">背景１画像を追加</button>
           </div>
           <div *ngIf="tableDistanceviewImage.url" (click)="openDistanceViewImageModal()">
-            <img height="120" [src]="tableDistanceviewImage.url | safe: 'resourceUrl'">
+            <img height="120" [src]="tableDistanceviewImage.url | safe: 'resourceUrl'" draggable="false">
+          </div>
+        </div>
+        <div>
+          <b>背景２（最背面）</b>
+          <div *ngIf="!tableDistanceviewImage2.url">
+            <button (click)="openDistanceViewImageModal2()" style="height: 120px;" [disabled]="!isEditable">背景２画像を追加</button>
+          </div>
+          <div *ngIf="tableDistanceviewImage2.url" style="display: block; position: relative; overflow: hidden" [style.cursor]="(!isEditable || tableGridType == -1) ? 'default' : 'pointer'" (click)="openDistanceViewImageModal2()">
+            <img height="120" [src]="tableDistanceviewImage2.url | safe: 'resourceUrl'" draggable="false">
           </div>
         </div>
       </div>

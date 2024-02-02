@@ -72,6 +72,8 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
     }) : searchResultImages;
   }
 
+  get empty(): ImageFile { return ImageFile.Empty; }
+
   isViewFile(file: ImageFile): boolean {
     if (!this.isViewAblePdf && file?.blob?.type.match(/pdf/)) {
       return false;
@@ -90,8 +92,6 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
 
     return file.url;
   }
-
-  get empty(): ImageFile { return ImageFile.Empty; }
 
   get searchNoTagImage(): boolean {
     return this._searchNoTagImage;
@@ -252,7 +252,6 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onSelectedFile(file: ImageFile) {
-    if (file.url.length <= 0) return;
     // 今のところGameCharacterGeneratorComponentでしか使ってない？
     //EventSystem.call('SELECT_FILE', { fileIdentifier: file.identifier }, Network.peerId);
     this.modalService.resolve(file.identifier);
