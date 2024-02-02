@@ -90,6 +90,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
   private _currentBackgroundImage2 :ImageFile;
   private _currentBackgroundImageUrl2: string = '';
   isBackgroundImageLoaded = false;
+  isBackgroundImageLoaded2 = false;
   get tableImageUrls(): string[] {
     let revokeTableImageUrl = '';
     let revokeBackgroundImageUrl = '';
@@ -107,9 +108,9 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     if (isFlash || this._currentBackgroundImage?.identifier != this.backgroundImage.identifier) {
       this._currentBackgroundImage = this.backgroundImage;
-      this.isBackgroundImageLoaded = false;
       if (this.backgroundImage.state === ImageState.COMPLETE) {
         if (this._currentBackgroundImageUrl) revokeBackgroundImageUrl = this._currentBackgroundImageUrl;
+        this.isBackgroundImageLoaded = false;
         this._currentBackgroundImageUrl = URL.createObjectURL(this.backgroundImage.blob);
       } else {
         this._currentBackgroundImageUrl = this.backgroundImage.url;
@@ -119,6 +120,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
       this._currentBackgroundImage2 = this.backgroundImage2;
       if (this.backgroundImage2.state === ImageState.COMPLETE) {
         if (this._currentBackgroundImageUrl2) revokeBackgroundImageUrl2 = this._currentBackgroundImageUrl2;
+        this.isBackgroundImageLoaded2 = false;
         this._currentBackgroundImageUrl2 = URL.createObjectURL(this.backgroundImage2.blob);
       } else {
         this._currentBackgroundImageUrl2 = this.backgroundImage2.url;
@@ -137,11 +139,15 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
   get tableImageUrl(): string { return this.tableImageUrls[0]; }
   get backgroundImageUrl(): string { return this.tableImageUrls[1]; }
   get backgroundImageUrl2(): string { return this.tableImageUrls[2]; }
+
+  private _currentBackgroundImageCss = '';
   get backgroundImageCss(): string {
+    if (this._currentBackgroundImageCss && ((this.backgroundImageUrl && !this.isBackgroundImageLoaded) || (this.backgroundImageUrl2 && !this.isBackgroundImageLoaded2))) return this._currentBackgroundImageCss;
     let ret: string[] = [];
     if (this.backgroundImageUrl) ret.push(`url(${this.backgroundImageUrl})`);
     if (this.backgroundImageUrl2 && (!this.backgroundImageUrl || (this.backgroundImageUrl && this.isBackgroundImageLoaded))) ret.push(`url(${this.backgroundImageUrl2})`);
-    return ret.join(',');
+    this._currentBackgroundImageCss = ret.join(',');
+    return this._currentBackgroundImageCss;
   }
 
   constructor(
