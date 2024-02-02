@@ -230,6 +230,13 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     this.interactGesture.destroy();
     EventSystem.unregister(this);
   }
+  // マウスホイールクリックイベント
+  @HostListener('mousedown', ['$event'])
+  onMousedown(e: any) {
+    if (e.button === 1) {
+      console.log('マウスホイールクリック');
+    }
+  }
 
   ngAfterViewInit() {
     this.ngZone.runOutsideAngular(() => {
@@ -601,16 +608,11 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     let key_meta = (key_event.metaKey);
     //キーに対応した処理
 
-    if (key_shift) console.log("shiftキー");
-    if (key_ctrl) console.log("ctrlキー");
     if (key_alt) {
-      console.log("altキー");
       this.gameCharacter.targeted = this.gameCharacter.targeted ? false : true;
     }
-    if (key_meta) console.log("metaキー");
 
     if (key_shift && key_alt) {
-      console.log("shift+ALTキー");
       let objects = ObjectStore.instance.getObjects(GameCharacter);
       for (let object of objects) {
         object.targeted = false;
