@@ -584,11 +584,13 @@ export class GameCharacter extends TabletopObject {
 
   hideOn() {
     this.isStealth = true;
+    this.hideInventory = true;
     EventSystem.call('UPDATE_INVENTORY', null);
   }
 
   hideOff() {
     this.isStealth = false;
+    this.hideInventory = false;
     EventSystem.call('UPDATE_INVENTORY', null);
   }
 
