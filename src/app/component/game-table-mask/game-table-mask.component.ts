@@ -262,6 +262,19 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
       }
     ));
     actions.push(
+      (this.gameTableMask.isLockIcon
+        ? {
+          name: '☑ 固定マークを表示', action: () => {
+            this.gameTableMask.isLockIcon = false;
+          }
+        } : {
+          name: '☐ 固定マークを表示', action: () => {
+            this.gameTableMask.isLockIcon = true;
+          }
+        }
+      )
+    );
+    actions.push(
       (this.maskborder
         ? {
           name: '☑ ボーターを表示', action: () => {

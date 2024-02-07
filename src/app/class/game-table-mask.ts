@@ -8,6 +8,7 @@ export class GameTableMask extends TabletopObject {
   @SyncVar() maskborder: boolean = true;
   @SyncVar() isHide: boolean = false;
   @SyncVar() isOverviewOnlyGMShow: boolean = false;
+  @SyncVar() isLockIcon: boolean = true;
 
   get name(): string { return this.getCommonValue('name', ''); }
   set name(name: string) { this.setCommonValue('name', name); }
