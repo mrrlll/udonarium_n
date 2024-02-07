@@ -34,6 +34,8 @@ export class GameObjectInventoryComponent implements AfterViewInit, OnInit, OnDe
   disptimer = null;
   isMultiMove: boolean = false;
 
+  isShowHideKomas: boolean = false;
+
   get config(): Config { return ObjectStore.instance.get<Config>('Config')};
 
   get sortTag(): string { return this.inventoryService.sortTag; }
@@ -134,9 +136,10 @@ export class GameObjectInventoryComponent implements AfterViewInit, OnInit, OnDe
 
         let tableCharacterList_dest = [] ;
         let tableCharacterList_scr = this.inventoryService.tableInventory.tabletopObjects;
+        if(this.isShowHideKomas) return tableCharacterList_scr;
         for (let character of tableCharacterList_scr) {
           let character_ : GameCharacter = <GameCharacter>character;
-          if( !character_.hideInventory ) tableCharacterList_dest.push( <TabletopObject>character );
+          if( !character_.hideInventory) tableCharacterList_dest.push( <TabletopObject>character );
         }
         return tableCharacterList_dest;
 

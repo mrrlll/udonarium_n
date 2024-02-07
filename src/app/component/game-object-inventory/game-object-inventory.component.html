@@ -61,6 +61,12 @@
           <ng-container *ngIf="sortTag2nd.length < 1">-</ng-container>
         </td>
         <td><button class="tab-setting small-font" (click)="toggleEdit()"><i class="material-icons small-font">settings</i>設定</button></td>
+        <td>
+          <label sytle="white-space: nowrap">
+            <input name="show-hide-koma" type="checkbox" value="Show Hides" [(ngModel)]="isShowHideKomas">
+            <b>非表示コマを表示</b>
+          </label>
+        </td>
       </tr>
     </table>
   </ng-container>
