@@ -55,6 +55,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
   get isHide(): boolean { return this.gameTableMask.isHide; }
   set isHide(isHide: boolean) { this.gameTableMask.isHide = isHide; }
   get tableMasks(): GameTableMask[] { return this.tabletopService.tableMasks; }
+  get isLockIcon(): boolean { return this.gameTableMask.isLockIcon; }
 
   get selectionState(): SelectionState { return this.selectionService.state(this.gameTableMask); }
   get isSelected(): boolean { return this.selectionState !== SelectionState.NONE; }
