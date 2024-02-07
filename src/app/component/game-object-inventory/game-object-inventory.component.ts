@@ -180,6 +180,20 @@ export class GameObjectInventoryComponent implements AfterViewInit, OnInit, OnDe
     actions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(gameObject) }, disabled: gameObject.location.name === 'graveyard' });
 
     actions.push(ContextMenuSeparator);
+    // テーブルインベントリ非表示
+    actions.push((gameObject.hideInventory
+      ? {
+        name: '☑ インベントリ非表示', action: () => {
+          gameObject.hideInventory = false;
+          EventSystem.trigger('UPDATE_INVENTORY', null);
+        }
+      } : {
+        name: '☐ インベントリ非表示', action: () => {
+          gameObject.hideInventory = true;
+          EventSystem.trigger('UPDATE_INVENTORY', null);
+        }
+    }));
+    actions.push(ContextMenuSeparator);
     actions.push({ name: '画像効果', action: null,
     subActions: [
       (gameObject.isInverse
