@@ -328,9 +328,9 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
         }
       }
 
-      // "1.\n2.\n3.\n4.\n5.\n6.\n7.\n8."の{数字}.の後にアイテムを追加
+      // "1.\n2.\n3.\n4.\n5.\n6.\n7.\n8.\n9."の{数字}.の後にアイテムを追加
       let itemsText: string = "";
-      for (let i = 0; i <= 7; i++){
+      for (let i = 0; i <= 8; i++){
         if(items[i] === undefined){
           itemsText += `${i+1}.\n`;
         }else{
