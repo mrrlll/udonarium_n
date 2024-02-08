@@ -648,8 +648,10 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
         break;
       case 3:
         this.isLock = !this.isLock;
+        break;
       case 4:
         this.isStealth = !this.isStealth;
+        break;
       case 99:
         break;
     }
