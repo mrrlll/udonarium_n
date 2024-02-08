@@ -507,12 +507,24 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     dbActionList.push(
       this.dbclickActionNum === 3
       ? {
-        name: '◉ 固定', action: () => {
+        name: '◉ 固定切り替え', action: () => {
           this.dbclickActionNum = 3;
         }
       }:{
-        name: '○ 固定', action: () => {
+        name: '○ 固定切り替え', action: () => {
           this.dbclickActionNum = 3;
+        }
+      }
+    )
+    dbActionList.push(
+      this.dbclickActionNum === 4
+      ? {
+        name: '◉ ステルスモード切り替え', action: () => {
+          this.dbclickActionNum = 4;
+        }
+      }:{
+        name: '○ ステルスモード切り替え', action: () => {
+          this.dbclickActionNum = 4;
         }
       }
     )
@@ -636,6 +648,8 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
         break;
       case 3:
         this.isLock = !this.isLock;
+      case 4:
+        this.isStealth = !this.isStealth;
       case 99:
         break;
     }
