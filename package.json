@@ -28,7 +28,7 @@
     "autolinker": "^4.0.0",
     "axios": "^1.6.7",
     "base-x": "^4.0.0",
-    "bcdice": "^4.5.0",
+    "bcdice": "^4.6.0",
     "crypto-js": "^4.2.0",
     "fast-xml-parser": "^4.3.3",
     "file-saver": "^2.0.5",
