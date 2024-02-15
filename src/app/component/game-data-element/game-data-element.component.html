@@ -64,7 +64,11 @@
       </ng-container>
       <ng-container *ngIf="!isCommonValue">
         <ng-container [ngSwitch]="gameDataElement.type">
-        <ng-container *ngSwitchCase="'simpleNumber'">
+          <ng-container *ngSwitchCase="'check'">
+            <input type="checkbox" [(ngModel)]="check"/>
+            {{value}}
+          </ng-container>
+          <ng-container *ngSwitchCase="'simpleNumber'">
             <!-- size属性がないと小さくならない -->
             <div class="hidden-spacer" style="font-size: 1.0em; font-family: Cambria, Georgia;">{{value}}</div>
             <input [type]="(value && value == +value) ? 'number' : 'text'" style="width:100%; max-width:8em; text-align:right;" size="1" [(ngModel)]="value" placeholder="Number" />
