@@ -372,14 +372,20 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
       });
       subActions.push(ContextMenuSeparator);
       subActions.push({
-        name: this.isRotate ? '☑ 回転' : '☐ 回転', action: () => {
+        name: this.isRotate
+        ? '☑ 回転'
+        : '☐ 回転',
+        action: () => {
           selectedCards().forEach(card => card.toggleRotate());
         }
       });
       // すべてカードを表示/非表示
       if(this.isGM){
         subActions.push({
-          name: this.isHide ? '☑ すべて非表示' : '☐ すべて非表示', action: () => {
+          name: this.isHide
+          ? '☑ すべて非表示'
+          : '☐ すべて非表示',
+          action: () => {
             selectedCards().forEach(card => card.toggleHide());
           }
         });
@@ -405,11 +411,14 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
 
     actions.push({ name: 'カードを編集', action: () => { this.showDetail(this.card); } });
     actions.push(ContextMenuSeparator);
-    actions.push(
-      this.isLocked
-        ? { name: '☑ 固定', action: () => { this.isLocked = false; } }
-        : { name: '☐ 固定', action: () => { this.isLocked = true; } }
-    )
+    actions.push({
+      name: this.isLocked
+      ? '☑ 固定'
+      : '☐ 固定',
+      action: () => {
+        this.isLocked = !this.isLocked;
+      }
+    })
     actions.push(ContextMenuSeparator);
     actions.push(!this.isVisible || this.isHand
       ? {
@@ -474,17 +483,22 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit, OnChange
     });
     actions.push(ContextMenuSeparator);
     actions.push({
-      name: this.isRotate ? '☑ 回転' : '☐ 回転', action: () => {
+      name: this.isRotate
+      ? '☑ 回転'
+      : '☐ 回転',
+      action: () => {
         this.card.toggleRotate();
       }
     });
-    if(this.isGM){
-      actions.push({
-        name: this.isHide ? '☑ 非表示' : '☐ 非表示', action: () => {
-          this.card.toggleHide();
-        }
-      });
-    };
+    actions.push({
+      name: this.isHide
+      ? '☑ 非表示'
+      : '☐ 非表示',
+      action: () => {
+        this.card.toggleHide();
+      },
+      disabled: !this.isGM
+    });
     return actions;
   }
 

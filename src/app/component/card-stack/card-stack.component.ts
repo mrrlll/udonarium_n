@@ -395,17 +395,22 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
       });
       subActions.push(ContextMenuSeparator);
       subActions.push({
-        name: this.isRotate ? '☑ 回転' : '☐ 回転', action: () => {
+        name: this.isRotate
+        ? '☑ 回転'
+        : '☐ 回転',
+        action: () => {
           selectedCardStacks().forEach(cardStack => cardStack.toggleRotate());
         }
       });
-      if(this.isGM){
-        subActions.push({
-          name: this.isHide ? '☑ 非表示' : '☐ 非表示', action: () => {
-            selectedCardStacks().forEach(cardStack => cardStack.toggleHide());
-          }
-        });
-      }
+      subActions.push({
+        name: this.isHide
+        ? '☑ 非表示'
+        : '☐ 非表示',
+        action: () => {
+          selectedCardStacks().forEach(cardStack => cardStack.toggleHide());
+        },
+        disabled: !this.isGM
+      });
       subActions.push(ContextMenuSeparator);
       subActions.push({
         name: '削除する', action: () => {
@@ -420,7 +425,6 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
         }
       );
     }
-
     actions.push(ContextMenuSeparator);
     return actions;
   }
@@ -431,7 +435,9 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
     actions.push({ name: '詳細を表示', action: () => { this.showDetail(this.cardStack); } });
     actions.push(ContextMenuSeparator);
     actions.push({
-      name: this.isLocked ? '☑ 固定' : '☐ 固定',
+      name: this.isLocked
+      ? '☑ 固定'
+      : '☐ 固定',
       action: () => {
         this.isLocked = !this.isLocked;
         if (!this.isHide) SoundEffect.play(this.isLocked ? PresetSound.lock : PresetSound.unlock);
@@ -485,13 +491,27 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
         EventSystem.call('SHUFFLE_CARD_STACK', { identifier: this.cardStack.identifier });
       }
     });
-    actions.push({ name: 'カード一覧', action: () => { this.showStackList(this.cardStack); } });
+    actions.push({
+      name: 'カード一覧',
+      action: () => {
+        this.showStackList(this.cardStack);
+      }
+    });
     actions.push(ContextMenuSeparator);
-    actions.push((this.isShowTotal
-      ? { name: '☑ 枚数を表示', action: () => { this.cardStack.isShowTotal = false; } }
-      : { name: '☐ 枚数を表示', action: () => { this.cardStack.isShowTotal = true; } }
-    ));
-    actions.push({ name: 'カードサイズを揃える', action: () => { if (this.cardStack.topCard) this.cardStack.unifyCardsSize(this.cardStack.topCard.size); } });
+    actions.push(
+      { name: this.isShowTotal
+      ? '☑ 枚数を表示'
+      : '☐ 枚数を表示',
+      action: () => {
+        this.cardStack.isShowTotal = !this.cardStack.isShowTotal;
+      }
+    });
+    actions.push({
+      name: 'カードサイズを揃える',
+      action: () => {
+        if (this.cardStack.topCard) this.cardStack.unifyCardsSize(this.cardStack.topCard.size);
+      }
+    });
     actions.push(ContextMenuSeparator);
     actions.push({
       name: '山札を人数分に分割する', action: () => {
@@ -525,14 +545,21 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy, OnC
     });
     actions.push(ContextMenuSeparator);
     actions.push({
-      name: this.isRotate ? '☑ 回転' : '☐ 回転', action: () => {
+      name: this.isRotate
+      ? '☑ 回転'
+      : '☐ 回転',
+      action: () => {
         this.cardStack.toggleRotate();
       }
     });
     actions.push({
-      name: this.isGM && this.isHide ? '☑ 非表示' : '☐ 非表示', action: () => {
+      name: this.isHide
+      ? '☑ 非表示'
+      : '☐ 非表示',
+      action: () => {
         this.cardStack.toggleHide();
-      }
+      },
+      disabled: !this.isGM
     })
     return actions;
   }

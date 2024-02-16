@@ -508,39 +508,34 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
 
     actions.push({ name: 'ダブルクリックアクション', action: null, subActions: dbActionList})
     actions.push(ContextMenuSeparator);
+    actions.push({
+      name: '高さを0にする',
+      action: () => {
+        this.altitude = 0;
+      },
+      altitudeHande: this.gameCharacter,
+      disabled: !this.roomAltitude
+    });
+    actions.push({
+      name: this.isAltitudeIndicate
+      ? '☑ 高度を表示'
+      : '☐ 高度を表示',
+      action: () => {
+        this.isAltitudeIndicate = !this.isAltitudeIndicate;
+      },
+      disabled: !this.roomAltitude
+    });
+    actions.push({
+      name: !this.isNotRide
+      ? '☑ 他のキャラクターに乗る'
+      : '☐ 他のキャラクターに乗る',
+      action: () => {
+        this.isNotRide = !this.isNotRide;
+      },
+      altitudeHande: this.gameCharacter,
+      disabled: !this.roomAltitude
+    });
     if(this.roomAltitude){
-      actions.push({
-          name: '高さを0にする', action: () => {
-            this.altitude = 0;
-          },
-          altitudeHande: this.gameCharacter
-      })
-      actions.push(
-        this.isAltitudeIndicate
-        ?{
-          name: '☑ 高度を表示', action: () => {
-            this.isAltitudeIndicate = false;
-          }
-        }:{
-          name: '☐ 高度を表示', action: () => {
-            this.isAltitudeIndicate = true;
-          }
-        }
-      )
-      actions.push(
-        !this.isNotRide
-        ?{
-          name: '☑ 他のキャラクターに乗る', action: () => {
-            this.isNotRide = true;
-          },
-          altitudeHande: this.gameCharacter
-        }:{
-          name: '☐ 他のキャラクターに乗る', action: () => {
-            this.isNotRide = false;
-          },
-          altitudeHande: this.gameCharacter
-        }
-      )
       actions.push(ContextMenuSeparator);
     }
     actions.push({
@@ -573,19 +568,15 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     if(this.isGM){
       actions.push(ContextMenuSeparator);
     }
-    if(this.isGM && this.isStealth){
-      actions.push({
-        name: '☑ ステルスモード', action: () => {
-          this.gameCharacter.hideOff();
-        }
-      });
-    }else if(this.isGM && !this.isStealth){
-      actions.push({
-        name: '☐ ステルスモード', action: () => {
-          this.gameCharacter.hideOn();
-        }
-      });
-    }
+    actions.push({
+      name: this.isStealth
+      ? '☑ ステルスモード'
+      : '☐ ステルスモード',
+      action: () => {
+        this.gameCharacter.isStealth = !this.gameCharacter.isStealth;
+      },
+      disabled: !this.isGM
+    });
     return actions;
   }
 

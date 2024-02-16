@@ -346,14 +346,11 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   }
 
   updateFilteredAudioList() {
-    if (this.selectTab == 'BGM') {
-      this.getAudioObjects('BGM');
-    }
-    if (this.selectTab == 'SE') {
-      this.getAudioObjects('SE');
-    }
     if (this.selectTab == '全て')
       this.filteredAudioList = this.audios;
+    else {
+      this.getAudioObjects(this.selectTab);
+    }
   }
 
   trackByfilteredAudioList(index: number, gameObject: AudioFile){
