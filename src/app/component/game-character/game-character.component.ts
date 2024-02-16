@@ -519,11 +519,11 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     dbActionList.push(
       this.dbclickActionNum === 4
       ? {
-        name: '◉ ステルスモード切り替え', action: () => {
+        name: '◉ ステルス切り替え(要GM権限)', action: () => {
           this.dbclickActionNum = 4;
         }
       }:{
-        name: '○ ステルスモード切り替え', action: () => {
+        name: '○ ステルス切り替え(要GM権限)', action: () => {
           this.dbclickActionNum = 4;
         }
       }
@@ -650,7 +650,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
         this.isLock = !this.isLock;
         break;
       case 4:
-        this.isStealth = !this.isStealth;
+        if(this.isGM) this.isStealth = !this.isStealth;
         break;
       case 99:
         break;
