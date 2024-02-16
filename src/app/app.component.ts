@@ -396,10 +396,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       ModalService.defaultParentViewContainerRef =
         ContextMenuService.defaultParentViewContainerRef =
           this.modalLayerViewContainerRef;
-    PanelService.defaultParentViewContainerRef =
-      ModalService.defaultParentViewContainerRef =
-        ContextMenuService.defaultParentViewContainerRef =
-          this.modalLayerViewContainerRef;
 
     setTimeout(() => {
       this.panelService.open(PeerMenuComponent, { width: 450, height: 550, left: 100 });
@@ -552,21 +548,17 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           this.open("game-character-generate")
         }
       },
-      this.isGM
-      ? { name: `カード一覧`,
+      { name: `カード一覧`,
         action: () => {
-          if(this.isGM) this.open("CardsListWindowComponent")
-        }
-      }: {
-        name: null, disabled: true
+          this.open("CardsListWindowComponent")
+        },
+        disabled: !this.isGM
       },
-      this.isGM
-      ? { name: `マスクインベントリ(WIP)`,
+      { name: `マスクインベントリ(WIP)`,
         action: () => {
-          if(this.isGM) this.open("GameTableMaskInventoryComponent")
-        }
-      }: {
-        name: null, disabled: true
+          this.open("GameTableMaskInventoryComponent")
+        },
+        disabled: !this.isGM
       },
     ])
   }
@@ -579,20 +571,13 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       y: window.pageYOffset + clientRect.top + (this.isHorizontal ? button.clientHeight * 0.9 : 0)
     };
     this.contextMenuService.open(position, [
-      this.showtoast
-        ? {
-          name: `トースト通知をオフにする`,
-          action: () => {
-            this.showtoast = false;
-          }
-        } : {
-          name: `トースト通知をオンにする`,
-          action: () => {
-            this.showtoast = true;
-          }
-        },
-      ]
-    )
+      { name: this.showtoast
+        ? `☑ トースト通知`
+        : `☐ トースト通知`,
+        action: () => {
+          this.showtoast = !this.showtoast;
+      }}
+    ]);
   }
 
   handleFileSelect(event: Event) {

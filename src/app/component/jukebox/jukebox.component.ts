@@ -380,25 +380,33 @@ export class JukeboxComponent implements OnInit, OnDestroy {
 
     let actions: ContextMenuAction[] = [];
 
-
-
-    if(gameObject.bgm){
-      actions.push({ name: '☑ BGM', action: () => { gameObject.bgm = false; this.updateFilteredAudioList(); } });
-    } else {
-      actions.push({ name: '☐ BGM', action: () => { gameObject.bgm = true; this.updateFilteredAudioList(); } });
-    }
-    if(gameObject.se){
-      actions.push({ name: '☑ SE', action: () => { gameObject.se = false; this.updateFilteredAudioList(); } });
-    } else {
-      actions.push({ name: '☐ SE', action: () => { gameObject.se = true; this.updateFilteredAudioList(); } });
-    }
+    actions.push({
+      name: gameObject.bgm
+      ? '☑ BGM'
+      : '☐ BGM',
+      action: () => {
+        gameObject.bgm = !gameObject.bgm;
+        this.updateFilteredAudioList();
+      }
+    });
+    actions.push({
+      name: gameObject.se
+      ? '☑ SE'
+      : '☐ SE',
+      action: () => {
+        gameObject.se = !gameObject.se;
+        this.updateFilteredAudioList();
+      }
+    });
     actions.push(ContextMenuSeparator);
-    // ループオンオフ
-    if(gameObject.isLoop){
-      actions.push({ name: '☑ ループ再生(BGM再生時のみ)', action: () => { gameObject.isLoop = false; } });
-    } else {
-      actions.push({ name: '☐ ループ再生(BGM再生時のみ)', action: () => { gameObject.isLoop = true; } });
-    }
+    actions.push({
+      name: gameObject.isLoop
+      ? '☑ ループ再生(BGM再生時のみ)'
+      : '☐ ループ再生(BGM再生時のみ)',
+      action: () => {
+        gameObject.isLoop = !gameObject.isLoop;
+      }
+    });
 
     this.contextMenuService.open(position, actions, gameObject.name);
   }
