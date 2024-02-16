@@ -454,6 +454,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     switch (componentName) {
       case 'PeerMenuComponent':
         component = PeerMenuComponent;
+        option = { width: 470, height: 600, left: 100 }
         break;
       case 'ChatWindowComponent':
         component = ChatWindowComponent;
@@ -479,6 +480,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
       case 'GameObjectInventoryComponent':
         component = GameObjectInventoryComponent;
+        option = { width: 460, height: 600, left: 100 }
         break;
       case 'GamePanelSettingComponent':
         component = GamePanelSettingComponent;

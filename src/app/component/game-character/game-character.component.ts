@@ -456,78 +456,56 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     actions.push(ContextMenuSeparator);
     actions.push({ name: '画像効果', action: null, subActions: subActions });
     let dbActionList: ContextMenuAction[] = [];
-    dbActionList.push(
-      this.dbclickActionNum === 99
-      ? {
-        name: '◉ 無効', action: () => {
-          this.dbclickActionNum = 99;
-        }
-      }:{
-        name: '○ 無効', action: () => {
-          this.dbclickActionNum = 99;
-        }
+    dbActionList.push({
+      name: this.dbclickActionNum === 99
+      ? '◉ 無効'
+      : '○ 無効',
+      action: () => {
+        this.dbclickActionNum = 99;
       }
-    )
-    dbActionList.push(
-      this.dbclickActionNum === 0
-      ? {
-        name: '◉ 詳細を表示', action: () => {
-          this.dbclickActionNum = 0;
-        }
-      }:{
-        name: '○ 詳細を表示', action: () => {
-          this.dbclickActionNum = 0;
-        }
+    });
+    dbActionList.push({
+      name: this.dbclickActionNum === 0
+      ? '◉ 詳細を表示'
+      : '○ 詳細を表示',
+      action: () => {
+        this.dbclickActionNum = 0;
       }
-    )
-    dbActionList.push(
-      this.dbclickActionNum === 1
-      ? {
-        name: '◉ チャットパレットを表示', action: () => {
-          this.dbclickActionNum = 1;
-        }
-      }:{
-        name: '○ チャットパレットを表示', action: () => {
-          this.dbclickActionNum = 1;
-        }
+    });
+    dbActionList.push({
+      name: this.dbclickActionNum === 1
+      ? '◉ チャットパレットを表示'
+      : '○ チャットパレットを表示',
+      action: () => {
+        this.dbclickActionNum = 1;
       }
-    )
-    dbActionList.push(
-      this.dbclickActionNum === 2
-      ? {
-        name: '◉ リモコンを表示', action: () => {
-          this.dbclickActionNum = 2;
-        }
-      }:{
-        name: '○ リモコンを表示', action: () => {
-          this.dbclickActionNum = 2;
-        }
+    });
+    dbActionList.push({
+      name: this.dbclickActionNum === 2
+      ? '◉ リモコンを表示'
+      : '○ リモコンを表示',
+      action: () => {
+        this.dbclickActionNum = 2;
       }
-    )
-    dbActionList.push(
-      this.dbclickActionNum === 3
-      ? {
-        name: '◉ 固定切り替え', action: () => {
-          this.dbclickActionNum = 3;
-        }
-      }:{
-        name: '○ 固定切り替え', action: () => {
-          this.dbclickActionNum = 3;
-        }
+    });
+    dbActionList.push({
+      name: this.dbclickActionNum === 3
+      ? '◉ 固定切り替え'
+      : '○ 固定切り替え',
+      action: () => {
+        this.dbclickActionNum = 3;
       }
-    )
-    dbActionList.push(
-      this.dbclickActionNum === 4
-      ? {
-        name: '◉ ステルス切り替え(要GM権限)', action: () => {
-          this.dbclickActionNum = 4;
-        }
-      }:{
-        name: '○ ステルス切り替え(要GM権限)', action: () => {
-          this.dbclickActionNum = 4;
-        }
-      }
-    )
+    });
+    dbActionList.push({
+      name: this.dbclickActionNum === 4
+      ? '◉ ステルス切り替え(要GM権限)'
+      : '○ ステルス切り替え(要GM権限)',
+      action: () => {
+        this.dbclickActionNum = 4;
+      },
+      disabled: !this.isGM
+    });
+
     actions.push({ name: 'ダブルクリックアクション', action: null, subActions: dbActionList})
     actions.push(ContextMenuSeparator);
     if(this.roomAltitude){
