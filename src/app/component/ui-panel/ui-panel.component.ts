@@ -67,8 +67,8 @@ export class UIPanelComponent implements OnInit {
   private saveWidth: number = 1034;
   private saveHeight: number = 100;
 
-  private isFullScreen: boolean = false;
-  private isMinimized: boolean = false;
+  isFullScreen: boolean = false;
+  isMinimized: boolean = false;
   isHorizontal: boolean = false;
 
   private timerCheckWindowSize = null;
