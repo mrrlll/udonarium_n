@@ -11,7 +11,7 @@
   appResizable
   #draggablePanel
 >
-  <div class="title" #titleBar (dblclick)="toggleMinimize()">
+  <div class="title" #titleBar (dblclick)="isFullScreen ? toggleFullScreen() : toggleMinimize()">
     <button *ngIf="isAbleRotateButton" style="padding: 0px; height: 14px; margin-top: 3px; margin-left: 1px" (click)="toggleRotate()"><i class="material-icons" style="font-size: 14px;">pivot_table_chart</i></button>
     <div [ngClass]="{'rotateble': isAbleRotateButton}">{{panelService.title}}</div>
     <div class="title-button">
