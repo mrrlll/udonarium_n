@@ -40,6 +40,8 @@ export class GameCharacter extends TabletopObject {
 
   @SyncVar() dbclickActionNum: number | null = 99;
 
+  @SyncVar() isHideOverView: boolean = false;
+
   _targeted: boolean = false;
   get targeted(): boolean {
     return this._targeted;
