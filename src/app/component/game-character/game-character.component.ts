@@ -543,6 +543,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
         let cloneObject = this.gameCharacter.clone();
         cloneObject.location.x += this.gridSize;
         cloneObject.location.y += this.gridSize;
+        cloneObject.isLock = false;
         cloneObject.update();
         SoundEffect.play(PresetSound.piecePut);
       }
