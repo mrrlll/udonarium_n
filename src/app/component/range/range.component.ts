@@ -534,23 +534,13 @@ export class RangeComponent implements OnChanges, OnDestroy, AfterViewInit {
       { name: '射程・範囲を編集', action: () => { this.showDetail(this.range); } }
     );
     menuArray.push(ContextMenuSeparator);
-    menuArray.push(
-      this.isLocked
-        ? {
-          name: '☑ 固定', action: () => {
-            this.isLocked = false;
-            SoundEffect.play(PresetSound.unlock);
-          },
-          checkBox: 'check'
-        }
-        : {
-          name: '☐ 固定', action: () => {
-            this.isLocked = true;
-            SoundEffect.play(PresetSound.lock);
-          },
-          checkBox: 'check'
-        }
-    )
+    menuArray.push({
+      name: this.isLocked ? '☑ 固定' : '☐ 固定', action: () => {
+        this.isLocked = !this.isLocked;
+        if (!this.isLocked) SoundEffect.play(PresetSound.unlock);
+        else SoundEffect.play(PresetSound.lock);
+      }
+    });
     menuArray.push(
       {
         name: '影響グリッドの判定方法', action: null,
@@ -591,60 +581,41 @@ export class RangeComponent implements OnChanges, OnDestroy, AfterViewInit {
               this.followingCharactor = null;
             },
             disabled: !this.followingCharactor
-          });
+        });
       //}
       menuArray.push({
           name: '付近のキャラクターに追従', action: null,
           subActions: menu
-        });
-      menuArray.push(
-        this.range.isExpandByFollowing
-        ? {
-          name: '☑ 追従時サイズに合わせて拡大', action: () => {
-            this.range.isExpandByFollowing = false;
-          },
-          checkBox: 'check'
-        }
-        : {
-          name: '☐ 追従時サイズに合わせて拡大', action: () => {
-            this.range.isExpandByFollowing = true;
-          },
-          checkBox: 'check'
-        });
-        if(this.roomAltitude){
-          menuArray.push(
-            this.range.isFollowAltitude
-            ? {
-              name: '☑ 高さ・高度にも追従', action: () => {
-                this.range.isFollowAltitude = false;
-              },
-              checkBox: 'check'
-            }
-            : {
-              name: '☐ 高さ・高度にも追従', action: () => {
-                this.range.isFollowAltitude = true;
-                if (this.followingCharactor) this.range.following();
-              },
-              checkBox: 'check'
-            }
-          );
-        }
+      });
+      menuArray.push({
+        name: this.range.isExpandByFollowing
+        ? '☑ 追従時サイズに合わせて拡大'
+        : '☐ 追従時サイズに合わせて拡大',
+        action: () => {
+          this.range.isExpandByFollowing = !this.range.isExpandByFollowing;
+        },
+        checkBox: 'check'
+      });
+      menuArray.push({
+        name: this.range.isFollowAltitude
+        ? '☑ 高さ・高度にも追従'
+        : '☐ 高さ・高度にも追従',
+        action: () => {
+          this.range.isFollowAltitude = !this.range.isFollowAltitude;
+        },
+        checkBox: 'check',
+        disabled: !this.roomAltitude
+      });
     } else {
-      menuArray.push(
-        this.range.subDivisionSnapPolygonal
-        ? {
-          name: '☑ 細かい角度で回転', action: () => {
-            this.range.subDivisionSnapPolygonal = false;
-          },
-          checkBox: 'check'
-        } :
-        {
-          name: '☐ 細かい角度で回転', action: () => {
-            this.range.subDivisionSnapPolygonal = true;
-          },
-          checkBox: 'check'
-        }
-      );
+      menuArray.push({
+        name: this.range.subDivisionSnapPolygonal
+        ? '☑ 細かい角度で回転'
+        : '☐ 細かい角度で回転',
+        action: () => {
+          this.range.subDivisionSnapPolygonal = !this.range.subDivisionSnapPolygonal;
+        },
+        checkBox: 'check'
+      });
     }
     menuArray.push(ContextMenuSeparator);
 /*
@@ -666,29 +637,29 @@ export class RangeComponent implements OnChanges, OnDestroy, AfterViewInit {
         disabled: this.range.fillType == 0
       }
     );
+
 */
+    menuArray.push({
+      name: this.isAltitudeIndicate
+      ? '☑ 高度の表示'
+      : '☐ 高度の表示',
+      action: () => {
+        this.isAltitudeIndicate = !this.isAltitudeIndicate;
+      },
+      checkBox: 'check',
+      disabled: !this.roomAltitude
+    },
+    {
+      name: '高度を0にする', action: () => {
+        if (this.altitude != 0) {
+          this.altitude = 0;
+          SoundEffect.play(PresetSound.sweep);
+        }
+      },
+      altitudeHande: this.range,
+      disabled: !this.roomAltitude
+    });
     if(this.roomAltitude){
-      menuArray.push(this.isAltitudeIndicate
-        ? {
-          name: '☑ 高度の表示', action: () => {
-            this.isAltitudeIndicate = false;
-          },
-          checkBox: 'check'
-        } : {
-          name: '☐ 高度の表示', action: () => {
-            this.isAltitudeIndicate = true;
-          },
-          checkBox: 'check'
-        });
-      menuArray.push({
-        name: '高度を0にする', action: () => {
-          if (this.altitude != 0) {
-            this.altitude = 0;
-            SoundEffect.play(PresetSound.sweep);
-          }
-        },
-        altitudeHande: this.range
-      });
       menuArray.push(ContextMenuSeparator);
     }
     menuArray.push(

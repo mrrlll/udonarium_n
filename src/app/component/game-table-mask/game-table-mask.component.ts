@@ -56,6 +56,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
   set isHide(isHide: boolean) { this.gameTableMask.isHide = isHide; }
   get tableMasks(): GameTableMask[] { return this.tabletopService.tableMasks; }
   get isLockIcon(): boolean { return this.gameTableMask.isLockIcon; }
+  set isLockIcon(isLockIcon: boolean) { this.gameTableMask.isLockIcon = isLockIcon; }
 
   get selectionState(): SelectionState { return this.selectionService.state(this.gameTableMask); }
   get isSelected(): boolean { return this.selectionState !== SelectionState.NONE; }
@@ -248,48 +249,33 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
 
     actions.push({ name: 'マップマスクを編集', action: () => { this.showDetail(this.gameTableMask); } });
     actions.push(ContextMenuSeparator);
-    actions.push((this.isLock
-      ? {
-        name: '☑ 固定', action: () => {
-          this.isLock = false;
-          SoundEffect.play(PresetSound.unlock);
-        }
+    actions.push({
+      name: this.isLock
+      ? '☑ 固定'
+      : '☐ 固定',
+      action: () => {
+        this.isLock = !this.isLock;
+        if (!this.isLock) SoundEffect.play(PresetSound.unlock);
+        else SoundEffect.play(PresetSound.lock);
       }
-      : {
-        name: '☐ 固定', action: () => {
-          this.isLock = true;
-          SoundEffect.play(PresetSound.lock);
-        }
+    });
+    actions.push({
+      name: this.isLockIcon
+      ? '☑ 固定マークを表示'
+      : '☐ 固定マークを表示',
+      action: () => {
+        this.isLockIcon = !this.isLockIcon;
       }
-    ));
-    actions.push(
-      (this.gameTableMask.isLockIcon
-        ? {
-          name: '☑ 固定マークを表示', action: () => {
-            this.gameTableMask.isLockIcon = false;
-          }
-        } : {
-          name: '☐ 固定マークを表示', action: () => {
-            this.gameTableMask.isLockIcon = true;
-          }
-        }
-      )
-    );
-    actions.push(
-      (this.maskborder
-        ? {
-          name: '☑ ボーターを表示', action: () => {
-            this.maskborder = false;
-          }
-        } : {
-          name: '☐ ボーターを表示', action: () => {
-            this.maskborder = true;
-          }
-        }
-      )
-    );
+    });
+    actions.push({
+      name: this.maskborder
+      ? '☑ ボーダーを表示'
+      : '☐ ボーダーを表示',
+      action: () => {
+        this.maskborder = !this.maskborder;
+      }
+    });
     actions.push(ContextMenuSeparator);
-
     actions.push({
       name: 'コピーを作る', action: () => {
         let cloneObject = this.gameTableMask.clone();
@@ -300,15 +286,13 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
         SoundEffect.play(PresetSound.cardPut);
       }
     });
-    if(this.isGM){
-      actions.push(ContextMenuSeparator);
-      actions.push({
-        name: 'インベントリにしまう', action: () => {
-          this.gameTableMask.toInventory(this.gameTableMask);
-          SoundEffect.play(PresetSound.sweep);
-        },
-      });
-    }
+    actions.push({
+      name: 'インベントリにしまう', action: () => {
+        this.gameTableMask.toInventory(this.gameTableMask);
+        SoundEffect.play(PresetSound.sweep);
+      },
+      disabled: !this.isGM
+    });
     actions.push(ContextMenuSeparator);
     actions.push({
       name: '削除する', action: () => {
