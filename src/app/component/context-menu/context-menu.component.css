@@ -86,10 +86,8 @@ td.altitude {
 }
 
 input.altitude {
-  writing-mode: bt-lr;
-  appearance: slider-vertical;
+  writing-mode: vertical-lr;
   width: 8px;
-  height: 100%;
   padding: 3px;
 }
 
