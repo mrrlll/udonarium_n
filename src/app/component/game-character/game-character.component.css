@@ -166,6 +166,10 @@
   filter: brightness(0);
 }
 
+.invert-color {
+  filter: invert(100%);
+}
+
 .aura {
   transition: filter 0.2s ease-in-out;
 }

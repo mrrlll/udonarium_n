@@ -94,6 +94,8 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   set isHollow(isHollow: boolean) { this.gameCharacter.isHollow = isHollow; }
   get isBlackPaint(): boolean { return this.gameCharacter.isBlackPaint; }
   set isBlackPaint(isBlackPaint: boolean) { this.gameCharacter.isBlackPaint = isBlackPaint; }
+  get isInvertColor(): boolean { return this.gameCharacter.isInvertColor; }
+  set isInvertColor(isInvertColor: boolean) { this.gameCharacter.isInvertColor = isInvertColor; }
   get aura(): number { return this.gameCharacter.aura; }
   set aura(aura: number) { this.gameCharacter.aura = aura; }
 
@@ -415,6 +417,20 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
         } : {
           name: '☐ 黒塗り', action: () => {
             this.isBlackPaint = true;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        }
+    );
+    subActions.push(
+      this.isInvertColor
+        ? {
+          name: '☑ 色を反転', action: () => {
+            this.isInvertColor = false;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        } : {
+          name: '☐ 色を反転', action: () => {
+            this.isInvertColor = true;
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         }
