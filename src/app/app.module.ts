@@ -93,6 +93,7 @@ import { GameDataElementBuffComponent } from 'component/game-data-element-buff/g
 import { ControllerInputComponent } from 'component/controller-input/controller-input.component';
 import { ChatColorSettingComponent } from 'component/chat-color-setting/chat-color-setting.component';
 import { GameCharacterBuffViewComponent } from 'component/game-character-buff-view/game-character-buff-view.component';
+import { InsaneSkillTableComponent } from 'component/insane-skill-table/insane-skill-table.component';
 
 @NgModule({
   declarations: [
@@ -163,7 +164,8 @@ import { GameCharacterBuffViewComponent } from 'component/game-character-buff-vi
     GameDataElementBuffComponent,
     ControllerInputComponent,
     ChatColorSettingComponent,
-    GameCharacterBuffViewComponent
+    GameCharacterBuffViewComponent,
+    InsaneSkillTableComponent
   ],
   imports: [
     BrowserModule,

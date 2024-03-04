@@ -1,0 +1,17 @@
+.isSkill {
+  background-color: black;
+  color: white;
+}
+.isCuriosity {
+  background-color: black;
+  color: white;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.highlighted {
+  background-color: black;
+  color: white;
+}

@@ -34,6 +34,7 @@ import { TableSelecter } from '@udonarium/table-selecter';
 import { Config } from '@udonarium/config';
 import { RemoteControllerComponent } from 'component/remote-controller/remote-controller.component';
 import { GameCharacterBuffViewComponent } from 'component/game-character-buff-view/game-character-buff-view.component';
+import { InsaneSkillTableComponent } from 'component/insane-skill-table/insane-skill-table.component';
 
 @Component({
   selector: 'game-character',
@@ -109,6 +110,10 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   get roomAltitude(): boolean { return this.config.roomAltitude; }
 
   get tableSelecter(): TableSelecter { return TableSelecter.instance; }
+
+  get insaneSkills(): string[] { return this.gameCharacter.insaneSkills; }
+  get insaneFears(): string[] { return this.gameCharacter.insaneFears; }
+  get insaneCuriosity(): string { return this.gameCharacter.insaneCuriosity; }
 
   get elevation(): number {
     return +((this.gameCharacter.posZ + (this.altitude * this.gridSize)) / this.gridSize).toFixed(1);
@@ -366,6 +371,9 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
 
     actions.push({ name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } });
     actions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } });
+    if(this.gameCharacter.chatPalette.dicebot === 'Insane'){
+      actions.push({ name: '特技表を表示(WIP)', action: () => { this.showInsaneSkillTable(this.gameCharacter) } });
+    }
     actions.push({ name: 'リモコンを表示', action: () => { this.showRemoteController(this.gameCharacter) } });
     actions.push({ name: 'バフ編集', action: () => { this.showBuffEdit(this.gameCharacter) } });
     actions.push(ContextMenuSeparator);
@@ -655,6 +663,13 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 420, height: 300 };
     option.title = gameObject.name + 'のバフ編集';
     let component = this.panelService.open<GameCharacterBuffViewComponent>(GameCharacterBuffViewComponent, option);
+    component.character = gameObject;
+  }
+
+  private showInsaneSkillTable(gameObject: GameCharacter) {
+    let coordinate = this.pointerDeviceService.pointer[0];
+    let option: PanelOption = { width: 815, height: 550 };
+    let component = this.panelService.open<InsaneSkillTableComponent>(InsaneSkillTableComponent, option);
     component.character = gameObject;
   }
 

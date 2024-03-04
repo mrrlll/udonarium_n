@@ -1,0 +1,32 @@
+<chat-input [onlyCharacters]="true" [chatTabidentifier]="chatTabidentifier"
+  [(gameType)]="gameType" [(sendFrom)]="sendFrom" [(text)]="text" [(filterText)]="filterText" (chat)="null" #chatInput>
+</chat-input>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th *ngFor="let header of skillsTable[0]"
+        [ngClass]="{'isCuriosity': isInsaneCuriosity(header), 'highlighted': getColumnsToHighlight().includes(skillsTable[0].indexOf(header))}"
+        style="user-select: none;">
+        {{ header }}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let row of skillsTable.slice(1); let i = index">
+      <ng-container *ngFor="let cell of row; let j = index">
+        <td
+          (click)="onCellClick(cell)"
+          style="user-select: none; text-align: center; width: 5em; font-size: 0.8rem;"
+          [ngClass]="{
+            'pointer': cell,
+            'isSkill': isInsaneSkill(cell),
+            'highlighted': getColumnsToHighlight().includes(j) && cell === ''
+          }"
+          [ngStyle]="{ 'font-weight': cell === selectedCell ? 'bold' : 'normal' }">
+          {{ cell }}
+        </td>
+      </ng-container>
+    </tr>
+  </tbody>
+</table>

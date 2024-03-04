@@ -42,6 +42,10 @@ export class GameCharacter extends TabletopObject {
 
   @SyncVar() isHideOverView: boolean = false;
 
+  @SyncVar() insaneSkills: string[] = ['切断', '悦び', '手触り', '味', '医学', '薬品'];
+  @SyncVar() insaneFears: string[] = ['死'];
+  @SyncVar() insaneCuriosity: string = '知覚';
+
   _targeted: boolean = false;
   get targeted(): boolean {
     return this._targeted;
