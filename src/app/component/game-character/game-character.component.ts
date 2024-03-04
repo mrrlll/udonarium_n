@@ -458,10 +458,11 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
         this.isInverse = false;
         this.isHollow = false;
         this.isBlackPaint = false;
+        this.isInvertColor = false;
         this.aura = -1;
         EventSystem.trigger('UPDATE_INVENTORY', null);
       },
-      disabled: !this.isInverse && !this.isHollow && !this.isBlackPaint && this.aura == -1
+      disabled: !this.isInverse && !this.isHollow && !this.isBlackPaint && this.aura == -1 && !this.isInvertColor
     });
     actions.push(
       this.isLock
