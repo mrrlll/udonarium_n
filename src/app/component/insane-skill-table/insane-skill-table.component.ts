@@ -13,6 +13,14 @@ import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 import { ChatMessage, ChatMessageContext, ChatMessageTargetContext } from '@udonarium/chat-message';
 
+type SkillTable = string[][];
+
+interface ElementPositions {
+  [key: string]: [number, number];
+}
+
+const elementPositions: ElementPositions = {};
+
 @Component({
   selector: 'insane-skill-table',
   templateUrl: './insane-skill-table.component.html',
@@ -39,8 +47,10 @@ export class InsaneSkillTableComponent implements OnInit{
 
   filterText: string = '';
   selectedCell: string | null = null;
+  skillJudges: string[] | null = null;
+  judgevalue: number = 5;
 
-  skillsTable = [
+  skillsTable: SkillTable = [
     ['暴力', 'A', '情動', 'B', '知覚', 'C', '技術', 'D', '知識', 'E', '怪異'],
     ['焼却', '', '恋', '', '痛み', '', '分解', '', '物理学', '', '時間'],
     ['拷問', '', '悦び', '', '官能', '', '電子機器', '', '数学', '', '混沌'],
@@ -55,13 +65,25 @@ export class InsaneSkillTableComponent implements OnInit{
     ['埋葬', '', '愛', '', '物陰', '', '兵器', '', '天文学', '', '宇宙'],
   ];
 
+
+
+
   constructor(
     private panelService: PanelService,
     private modalService: ModalService
   ) { }
 
   ngOnInit(): void {
-    this.character.insaneSkills
+    this.character.insaneSkills;
+
+    for (let i = 0; i < this.skillsTable.length; i++) {
+      for (let j = 0; j < this.skillsTable[i].length; j++) {
+          const element = this.skillsTable[i][j];
+          if (element !== '') {
+              elementPositions[element] = [i, j];
+          }
+      }
+    }
   }
 
   onSelectedCharacter(identifier: string) {
@@ -73,10 +95,26 @@ export class InsaneSkillTableComponent implements OnInit{
     }
   }
 
-  // セルがクリックされたときの処理
   onCellClick(value: string) {
-    console.log(value);
+    if(value === '') return;
+
+    let judges: string[] = [];
+    let skillDistances = [];
     this.selectedCell = value === this.selectedCell ? null : value;
+
+    // 選択したセルと各所持スキルが離れている距離を計算して判定値が低い順にソート
+    for (const skill of this.character.insaneSkills) {
+      const distance: number = this.calculateDistance(skill, value);
+      skillDistances.push({'name': skill, 'distance': distance})
+    }
+    skillDistances.sort((a, b) => a.distance > b.distance ? 1 : -1 );
+
+    // 判定文を生成
+    for(let key in skillDistances) {
+      judges.push(`2D6>=${this.judgevalue + skillDistances[key].distance} (判定：${skillDistances[key].name})`);
+    }
+
+    this.skillJudges = judges;
   }
 
   // セルがinsaneSkillsに含まれるかどうかを判定
@@ -98,4 +136,12 @@ export class InsaneSkillTableComponent implements OnInit{
     const adjacentIndices = [curiosityIndex - 1, curiosityIndex + 1].filter(index => index >= 0 && index < this.skillsTable[0].length);
     return [curiosityIndex, ...adjacentIndices];
   }
+
+  calculateDistance(skill1: string, skill2: string): number {
+    const insaneSkills: string[] = this.character.insaneSkills;
+    const pos1 = elementPositions[skill1];
+    const pos2 = elementPositions[skill2];
+    const distance = Math.abs(pos1[0] - pos2[0]) + Math.abs(pos1[1] - pos2[1]);
+    return distance;
+}
 }

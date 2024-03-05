@@ -1,7 +1,6 @@
 <chat-input [onlyCharacters]="true" [chatTabidentifier]="chatTabidentifier"
   [(gameType)]="gameType" [(sendFrom)]="sendFrom" [(text)]="text" [(filterText)]="filterText" (chat)="null" #chatInput>
 </chat-input>
-
 <table border="1">
   <thead>
     <tr>
@@ -30,3 +29,8 @@
     </tr>
   </tbody>
 </table>
+<ng-container>
+  <div *ngFor="let skillJudge of skillJudges; let i = index">
+    <input type="text" [(ngModel)]="skillJudges[i]" [ngClass]="{ 'bold-text': i === 0 }" readonly />
+  </div>
+</ng-container>
