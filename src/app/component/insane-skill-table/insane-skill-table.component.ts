@@ -102,9 +102,12 @@ export class InsaneSkillTableComponent implements OnInit{
     let skillDistances = [];
     this.selectedCell = value === this.selectedCell ? null : value;
 
+    // 選択したセルの分野を取得
+    const selectedField = this.character.insaneCuriosity;
+
     // 選択したセルと各所持スキルが離れている距離を計算して判定値が低い順にソート
     for (const skill of this.character.insaneSkills) {
-      const distance: number = this.calculateDistance(skill, value);
+      const distance: number = this.calculateDistance(skill, value, selectedField);
       skillDistances.push({'name': skill, 'distance': distance})
     }
     skillDistances.sort((a, b) => a.distance > b.distance ? 1 : -1 );
@@ -137,11 +140,21 @@ export class InsaneSkillTableComponent implements OnInit{
     return [curiosityIndex, ...adjacentIndices];
   }
 
-  calculateDistance(skill1: string, skill2: string): number {
-    const insaneSkills: string[] = this.character.insaneSkills;
+  calculateDistance(skill1: string, skill2: string, selectedField: string): number {
     const pos1 = elementPositions[skill1];
     const pos2 = elementPositions[skill2];
-    const distance = Math.abs(pos1[0] - pos2[0]) + Math.abs(pos1[1] - pos2[1]);
+    let distance = Math.abs(pos1[0] - pos2[0]) + Math.abs(pos1[1] - pos2[1]);
+
+    // 選択した分野が知覚であれば、左右のセルを経由しないように調整
+    if (selectedField === '知覚') {
+      const fieldIndex = this.skillsTable[0].indexOf(selectedField);
+      if (fieldIndex % 2 !== 0) { // 奇数列（特技の列）の場合
+        const column = (pos2[1] - pos1[1]) > 0 ? pos1[1] + 1 : pos1[1] - 1;
+        if (column === fieldIndex) {
+          distance -= 2; // セルの左右のマスを経由しないように
+        }
+      }
+    }
     return distance;
-}
+  }
 }

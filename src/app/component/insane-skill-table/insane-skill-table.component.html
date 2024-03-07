@@ -5,7 +5,7 @@
   <thead>
     <tr>
       <th *ngFor="let header of skillsTable[0]"
-        [ngClass]="{'isCuriosity': isInsaneCuriosity(header), 'highlighted': getColumnsToHighlight().includes(skillsTable[0].indexOf(header))}"
+        [ngClass]="{'isCuriosity': isInsaneCuriosity(header), 'highlightedheader': getColumnsToHighlight().includes(skillsTable[0].indexOf(header))}"
         style="user-select: none;">
         {{ header }}
       </th>
@@ -20,7 +20,7 @@
           [ngClass]="{
             'pointer': cell,
             'isSkill': isInsaneSkill(cell),
-            'highlighted': getColumnsToHighlight().includes(j) && cell === ''
+            'highlightedskills': getColumnsToHighlight().includes(j) && (cell === '' || cell === 'skip')
           }"
           [ngStyle]="{ 'font-weight': cell === selectedCell ? 'bold' : 'normal' }">
           {{ cell }}

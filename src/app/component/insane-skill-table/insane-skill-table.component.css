@@ -11,9 +11,19 @@
   cursor: pointer;
 }
 
-.highlighted {
+.highlightedheader {
   background-color: black;
   color: white;
+}
+
+.highlightedskills {
+  background-color: black;
+  color: white;
+}
+
+.highlightedskills::after {
+  content: 'skip';
+  color: black;
 }
 
 .bold-text {
