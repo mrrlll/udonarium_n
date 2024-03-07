@@ -20,6 +20,7 @@ export class GameCharacter extends TabletopObject {
 
   @SyncVar() rotate: number = 0;
   @SyncVar() roll: number = 0;
+  @SyncVar() isRotate: boolean = true;
   @SyncVar() isDropShadow: boolean = false;
 
   @SyncVar() hideInventory: boolean = false;
@@ -41,6 +42,7 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() dbclickActionNum: number | null = 99;
 
   @SyncVar() isHideOverView: boolean = false;
+  @SyncVar() isHideKomaWaku: boolean = false;
 
   @SyncVar() insaneSkills: string[] = ['切断', '悦び', '手触り', '味', '医学', '薬品'];
   @SyncVar() insaneFears: string[] = ['死'];

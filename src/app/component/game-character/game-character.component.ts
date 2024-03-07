@@ -88,6 +88,8 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameCharacter.isAltitudeIndicate = isAltitudeIndicate; }
   get isLock(): boolean { return this.gameCharacter.isLock; }
   set isLock(isLock: boolean) { this.gameCharacter.isLock = isLock; }
+  get isRotate(): boolean { return this.gameCharacter.isRotate; }
+  set isRotate(isRotate: boolean) { this.gameCharacter.isRotate = isRotate; }
   get isInverse(): boolean { return this.gameCharacter.isInverse; }
   set isInverse(isInverse: boolean) { this.gameCharacter.isInverse = isInverse; }
   get isHollow(): boolean { return this.gameCharacter.isHollow; }
@@ -98,29 +100,23 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   set isInvertColor(isInvertColor: boolean) { this.gameCharacter.isInvertColor = isInvertColor; }
   get aura(): number { return this.gameCharacter.aura; }
   set aura(aura: number) { this.gameCharacter.aura = aura; }
-
   get isNotRide(): boolean { return this.gameCharacter.isNotRide; }
   set isNotRide(isNotRide: boolean) { this.gameCharacter.isNotRide = isNotRide; }
-
   get isStealth(): boolean { return this.gameCharacter.isStealth; }
   set isStealth(isStealth: boolean) { this.gameCharacter.isStealth = isStealth; }
-
+  get isHideKomaWaku(): boolean { return this.gameCharacter.isHideKomaWaku; }
+  set isHideKomaWaku(isHideKomaWaku: boolean) { this.gameCharacter.isHideKomaWaku = isHideKomaWaku; }
   get selectionState(): SelectionState { return this.selectionService.state(this.gameCharacter); }
   get isSelected(): boolean { return this.selectionState !== SelectionState.NONE; }
   get isMagnetic(): boolean { return this.selectionState === SelectionState.MAGNETIC; }
-
   get roomAltitude(): boolean { return this.config.roomAltitude; }
-
   get tableSelecter(): TableSelecter { return TableSelecter.instance; }
-
   get insaneSkills(): string[] { return this.gameCharacter.insaneSkills; }
   get insaneFears(): string[] { return this.gameCharacter.insaneFears; }
   get insaneCuriosity(): string { return this.gameCharacter.insaneCuriosity; }
-
   get elevation(): number {
     return +((this.gameCharacter.posZ + (this.altitude * this.gridSize)) / this.gridSize).toFixed(1);
   }
-
   get dbclickActionNum(): number { return this.gameCharacter.dbclickActionNum; }
   set dbclickActionNum(dbclickActionNum: number) { this.gameCharacter.dbclickActionNum = dbclickActionNum; }
 
@@ -478,6 +474,22 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
         }
       }
     )
+    actions.push({
+      name: this.isRotate
+      ? '☑ 回転'
+      : '☐ 回転',
+      action: () => {
+        this.isRotate = !this.isRotate;
+      }
+    })
+    actions.push({
+      name: !this.isHideKomaWaku
+      ? '☑ コマ枠を表示'
+      : '☐ コマ枠を表示',
+      action: () => {
+        this.isHideKomaWaku = !this.isHideKomaWaku;
+      }
+    })
     actions.push(ContextMenuSeparator);
     actions.push({ name: '画像効果', action: null, subActions: subActions });
     let dbActionList: ContextMenuAction[] = [];

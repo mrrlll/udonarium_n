@@ -14,7 +14,7 @@
     <div class="component-content is-3d" [@bounceInOut]="'in'">
       <div class="component-content is-3d is-pointer-events-auto" appRotable [rotable.option]="rotableOption"
         (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
-        @if(!isLock){
+        @if(isRotate && !isLock){
           <div class="pedestal-grab rotate-grab">
             <div class="pedestal-grab-border">
               <div class="material-icons of-front">autorenew</div>
@@ -22,16 +22,18 @@
             </div>
           </div>
         }
-        @if(!this.gameCharacter.hideInventory){
-          <div class="pedestal-inner is-3d" [style]="{ 'border': 'solid 6px #FFCC80'}"></div>
+        @if(!isHideKomaWaku){
+          @if(!this.gameCharacter.hideInventory){
+            <div class="pedestal-inner is-3d" [style]="{ 'border': 'solid 6px #FFCC80'}"></div>
+          }
+          @else if(this.gameCharacter.hideInventory){
+            <div class="pedestal-inner is-3d" [style]="{ 'border': 'solid 6px #A0E0FF'}"></div>
+          }
+          @if(isSelected){
+            <div class="selected-highlight" [ngClass]="{'is-magnetic': isMagnetic}"></div>
+          }
+          <div class="pedestal-outer"></div>
         }
-        @else if(this.gameCharacter.hideInventory){
-          <div class="pedestal-inner is-3d" [style]="{ 'border': 'solid 6px #A0E0FF'}"></div>
-        }
-        @if(isSelected){
-          <div class="selected-highlight" [ngClass]="{'is-magnetic': isMagnetic}"></div>
-        }
-        <div class="pedestal-outer"></div>
         <span class="aura" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
           @if(isDropShadow && 0 < imageFile.url.length){
             <img
@@ -139,13 +141,13 @@
                   <img class="image chrome-smooth-image-trick is-3d" [ngStyle]="{'width':'100%'}" *ngIf="(0 < imageFile.url.length) && !this.gameCharacter.specifyKomaImageFlag" [ngClass]="{ 'isStealth': isStealth, 'black-paint': isBlackPaint, 'hollow': isHollow, 'invert-color': isInvertColor }" [src]="imageFile.url | safe: 'resourceUrl'">
                 </span>
               </div>
-              @if(!isLock){
+              @if(isRotate && !isLock){
                 <div class="rotate-grab rotate-grab-icon of-top"
                 [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
                   <i class="material-icons">autorenew</i>
                 </div>
               }
-              @if(!isLock){
+              @if(isRotate && !isLock){
                 <div class="rotate-grab rotate-grab-icon of-bottom"
                 [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px'}">
                   <i class="material-icons">autorenew</i>
