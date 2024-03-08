@@ -8,7 +8,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "buildprod": "ng build --configuration production  && sudo rm -rf /var/www/html/udonariumN && mv dist/* /var/www/html/"
+    "build2d": "ng build --configuration production  && sudo rm -rf /var/www/html/udonariumN2D && mv dist/udonarium2D /var/www/html/"
   },
   "private": true,
   "dependencies": {
