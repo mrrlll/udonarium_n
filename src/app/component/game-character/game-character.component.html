@@ -14,14 +14,14 @@
     <div class="component-content is-3d" [@bounceInOut]="'in'">
       <div class="component-content is-3d is-pointer-events-auto" appRotable [rotable.option]="rotableOption"
         (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
-        @if(isRotate && !isLock){
+        <!-- @if(isRotate && !isLock){
           <div class="pedestal-grab rotate-grab">
             <div class="pedestal-grab-border">
               <div class="material-icons of-front">autorenew</div>
               <div class="material-icons of-back">autorenew</div>
             </div>
           </div>
-        }
+        } -->
         @if(!isHideKomaWaku){
           @if(!this.gameCharacter.hideInventory){
             <div class="pedestal-inner is-3d" [style]="{ 'border': 'solid 6px #FFCC80'}"></div>
@@ -45,7 +45,7 @@
               'transform': 'scale(' + (isInverse ? -1 : 1) + ', 0.6) translateY(-40%) rotateZ('+ ((isInverse ? -1 : 1) * roll) + 'deg)'}">
           }
         </span>
-        <div class="upright-transform is-fit-width is-3d" [ngClass]="{fall: altitude == 0}" [ngStyle]="{'transform': 'rotateY(90deg) rotateZ(-90deg) rotateY(-90deg) translateY(-50%) translateY(' + (-altitude) * gridSize +'px)'}">
+        <div class="upright-transform is-fit-width is-3d" [ngClass]="{fall: altitude == 0}">
           <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
             appRotable [rotable.option]="rollOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
             <div class="rotate-inner is-3d">

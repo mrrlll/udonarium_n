@@ -19,7 +19,7 @@
       </div>
     </ng-container>
     <ng-container *ngIf="hasFloor && isVisibleFloor && 0 < floorImage?.url.length">
-      <div class="texture" [ngClass]="{'blinking-animation': !isLocked}" [ngStyle]="{'transform': 'translateZ(' + ((height + altitude) * gridSize) + 'px)'}"
+      <div class="texture" [ngClass]="{'blinking-animation': !isLocked}"
         [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'">
         <div *ngIf="isSelected" class="selected-highlight" [ngClass]="{'is-magnetic': isMagnetic}"></div>
       </div>

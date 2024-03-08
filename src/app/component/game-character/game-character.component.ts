@@ -546,36 +546,6 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     actions.push({ name: 'ダブルクリックアクション', action: null, subActions: dbActionList})
     actions.push(ContextMenuSeparator);
     actions.push({
-      name: '高さを0にする',
-      action: () => {
-        this.altitude = 0;
-      },
-      altitudeHande: this.gameCharacter,
-      disabled: !this.roomAltitude
-    });
-    actions.push({
-      name: this.isAltitudeIndicate
-      ? '☑ 高度を表示'
-      : '☐ 高度を表示',
-      action: () => {
-        this.isAltitudeIndicate = !this.isAltitudeIndicate;
-      },
-      disabled: !this.roomAltitude
-    });
-    actions.push({
-      name: !this.isNotRide
-      ? '☑ 他のキャラクターに乗る'
-      : '☐ 他のキャラクターに乗る',
-      action: () => {
-        this.isNotRide = !this.isNotRide;
-      },
-      altitudeHande: this.gameCharacter,
-      disabled: !this.roomAltitude
-    });
-    if(this.roomAltitude){
-      actions.push(ContextMenuSeparator);
-    }
-    actions.push({
       name: 'コピーを作る', action: () => {
         let cloneObject = this.gameCharacter.clone();
         cloneObject.location.x += this.gridSize;

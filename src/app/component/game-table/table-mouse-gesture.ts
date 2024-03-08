@@ -84,8 +84,8 @@ export class TableMouseGesture {
 
     if (this.buttonCode === 2) {
       event = TableMouseGestureEvent.ROTATE;
-      rotateZ = -deltaX / 5;
-      rotateX = -deltaY / 5;
+      // rotateZ = -deltaX / 5;
+      // rotateX = -deltaY / 5;
     } else {
       transformX = deltaX;
       transformY = deltaY;

@@ -228,10 +228,6 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
           SoundEffect.play(PresetSound.sweep);
         }
       });
-      // this.isGMがtrueの時だけ表示する
-      // すべてインベントリにしまう
-
-
       actions.push(
         {
           name: '選択したマップマスク', action: null, subActions: subActions

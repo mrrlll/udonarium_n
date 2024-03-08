@@ -64,7 +64,7 @@
   right: 0;
   backface-visibility: hidden;
   transform-origin: 50% 100%;
-  transform: rotateX(-90deg);
+  /* transform: rotateX(-90deg); */
 }
 
 .is-front {

@@ -3,7 +3,7 @@
   <div class="is-3d" appRotable [rotable.option]="rotableOption" [rotable.disable]="isLocked" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
     <div class="component-content is-3d is-pointer-events-auto"
       [style.width.px]="width * gridSize">
-      <div class="upright-transform is-3d is-bg-color is-bg-texture" [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px) rotateY(90deg) rotateZ(' + (isUpright ? -90 : 0) + 'deg) rotateY(-90deg)'}"
+      <div class="upright-transform is-3d is-bg-color is-bg-texture"
         [style.background-image]="'url(' + imageFile?.url + ')' | safe: 'style'" [style.width.px]="width * gridSize" [style.min-height.px]="height * gridSize">
         <div *ngIf="title.length" class="title is-black-background is-pointer-events-none">{{title}}</div>
         <textarea (input)="calcFitHeight();" class="textarea" #textArea [ngClass]="{'is-pointer-events-none': !isSelected, 'is-pointer-events-auto': isSelected, 'is-outline-text': !isSelected}"
@@ -13,7 +13,7 @@
         [ngStyle]="{'transform': 'translateX(' + gridSize / 2 + 'px) translateY(' + (-gridSize / 4) + 'px)'}"
         [style.width.px]="(width - 1) * gridSize"
         [style.min-height.px]="gridSize / 2"></div>
-      <div [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px)'}">
+      <!-- <div [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px)'}">
         <div class="rotate-grab of-left-top">
           <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
         </div>
@@ -28,7 +28,7 @@
         <div class="rotate-grab of-right-top">
           <i class="material-icons">autorenew</i>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
   <div class="is-3d" *ngIf="isAltitudeIndicate && math.abs(textNoteAltitude) >= 0.5"

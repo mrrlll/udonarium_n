@@ -263,55 +263,6 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
         }
       }));
     actions.push(ContextMenuSeparator);
-    // 影を表示非表示
-    actions.push(this.isDropShadow
-      ? {
-        name: '☑ 影を表示', action: () => {
-          this.isDropShadow = false;
-        }
-      } : {
-        name: '☐ 影を表示', action: () => {
-          this.isDropShadow = true;
-        }
-      }
-    );
-    actions.push(ContextMenuSeparator);
-    if(this.roomAltitude){
-      actions.push(
-        this.isAltitudeIndicate
-        ? {
-          name: '☑ 高度を表示', action: () => {
-            this.isAltitudeIndicate = false;
-          }
-        } : {
-          name: '☐ 高度を表示', action: () => {
-            this.isAltitudeIndicate = true;
-          }
-        }
-      );
-      actions.push({
-        name: '高さを0にする', action: () => {
-          this.altitude = 0;
-        },
-        altitudeHande: this.terrain
-      })
-      actions.push(ContextMenuSeparator);
-    }
-    actions.push((this.hasWall
-      ? {
-        name: '☑ 壁を表示', action: () => {
-          this.mode = TerrainViewState.FLOOR;
-          if (this.depth * this.width === 0) {
-            this.terrain.width = this.width <= 0 ? 1 : this.width;
-            this.terrain.depth = this.depth <= 0 ? 1 : this.depth;
-          }
-        }
-      } : {
-        name: '☐ 壁を表示', action: () => {
-          this.mode = TerrainViewState.ALL;
-        }
-      }));
-    actions.push(ContextMenuSeparator);
     actions.push({
       name: 'コピーを作る', action: () => {
         let cloneObject = this.terrain.clone();

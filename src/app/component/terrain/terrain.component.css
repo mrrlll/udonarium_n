@@ -71,6 +71,7 @@
 }
 
 .of-wall-top {
+  display: none;
   top: 0px;
   left: 0px;
 
@@ -80,6 +81,7 @@
 }
 
 .of-wall-bottom {
+  display: none;
   bottom: 0px;
   left: 0px;
 
@@ -89,6 +91,7 @@
 }
 
 .of-wall-left {
+  display: none;
   top: 0px;
   left: 0px;
 
@@ -98,6 +101,7 @@
 }
 
 .of-wall-right {
+  display: none;
   top: 0px;
   right: 0px;
 

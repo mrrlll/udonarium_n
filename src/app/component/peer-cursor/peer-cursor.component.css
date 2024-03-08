@@ -39,11 +39,11 @@
 }
 
 .is-front {
-  transform: translateX(-100%) translateY(-100%) rotateZ(45deg);
+  transform: translateX(-100%) translateY(-100%) rotate(45deg);
 }
 
 .is-back {
-  transform: translateX(-100%) translateY(-100%) rotateY(180deg) rotateZ(45deg);
+  transform: translateX(-100%) translateY(-100%) rotateY(180deg) rotate(45deg);
 }
 
 .icon {

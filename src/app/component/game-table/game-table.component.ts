@@ -64,9 +64,9 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
   private viewPotisonY: number = 0;
   private viewPotisonZ: number = 0;
 
-  private viewRotateX: number = 50;
+  private viewRotateX: number = 0;
   private viewRotateY: number = 0;
-  private viewRotateZ: number = 10;
+  private viewRotateZ: number = 0;
 
   private mouseGesture: TableMouseGesture = null;
   private touchGesture: TableTouchGesture = null;
@@ -437,7 +437,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     }
 
-    this.gameTable.nativeElement.style.transform = `translateZ(${this.viewPotisonZ.toFixed(4)}px) translateY(${this.viewPotisonY.toFixed(4)}px) translateX(${this.viewPotisonX.toFixed(4)}px) rotateY(${this.viewRotateY.toFixed(4)}deg) rotateX(${this.viewRotateX.toFixed(4) + 'deg) rotateZ(' + this.viewRotateZ.toFixed(4)}deg)`;
+    this.gameTable.nativeElement.style.transform = `translateZ(${this.viewPotisonZ.toFixed(4)}px) translateY(${this.viewPotisonY.toFixed(4)}px) translateX(${this.viewPotisonX.toFixed(4)}px) rotateY(${this.viewRotateY.toFixed(4)}deg)`;
   }
 
   private setGameTableGrid(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#000000e6') {

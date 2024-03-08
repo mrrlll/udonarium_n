@@ -596,16 +596,6 @@ export class RangeComponent implements OnChanges, OnDestroy, AfterViewInit {
         },
         checkBox: 'check'
       });
-      menuArray.push({
-        name: this.range.isFollowAltitude
-        ? '☑ 高さ・高度にも追従'
-        : '☐ 高さ・高度にも追従',
-        action: () => {
-          this.range.isFollowAltitude = !this.range.isFollowAltitude;
-        },
-        checkBox: 'check',
-        disabled: !this.roomAltitude
-      });
     } else {
       menuArray.push({
         name: this.range.subDivisionSnapPolygonal
@@ -618,50 +608,6 @@ export class RangeComponent implements OnChanges, OnDestroy, AfterViewInit {
       });
     }
     menuArray.push(ContextMenuSeparator);
-/*
-    menuArray.push(
-      {
-        name: 'グリッド表示をずらす', action: null,
-        subActions: [
-          this.range.offSetX
-          ? { name: '☑ 横(左右) 方向', action: () => { this.range.offSetX = false; },
-                checkBox: 'check' }
-          : { name: '☐ 横(左右) 方向', action: () => { this.range.offSetX = true; },
-                checkBox: 'check' },
-          this.range.offSetY
-          ? { name: `☑ 縦(上下) 方向`, action: () => { this.range.offSetY = false; },
-                checkBox: 'check' }
-          : { name: `☐ 縦(上下) 方向`, action: () => { this.range.offSetY = true; },
-                checkBox: 'check' },
-        ],
-        disabled: this.range.fillType == 0
-      }
-    );
-
-*/
-    menuArray.push({
-      name: this.isAltitudeIndicate
-      ? '☑ 高度の表示'
-      : '☐ 高度の表示',
-      action: () => {
-        this.isAltitudeIndicate = !this.isAltitudeIndicate;
-      },
-      checkBox: 'check',
-      disabled: !this.roomAltitude
-    },
-    {
-      name: '高度を0にする', action: () => {
-        if (this.altitude != 0) {
-          this.altitude = 0;
-          SoundEffect.play(PresetSound.sweep);
-        }
-      },
-      altitudeHande: this.range,
-      disabled: !this.roomAltitude
-    });
-    if(this.roomAltitude){
-      menuArray.push(ContextMenuSeparator);
-    }
     menuArray.push(
       {
         name: 'コピーを作る', action: () => {

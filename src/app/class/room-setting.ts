@@ -16,7 +16,7 @@ export class RoomSetting extends GameObject {
   @SyncVar() cutinAuthority: boolean = false;
   @SyncVar() gamePanelSettingAuthority: boolean = false;
   @SyncVar() overViewPanelAuthority: boolean = false;
-  @SyncVar() isRoomAltitude: boolean = true;
+  @SyncVar() isRoomAltitude: boolean = false;
 
   getMenuHeight(): number {
     let count = 0;

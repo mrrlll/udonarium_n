@@ -233,40 +233,7 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
         }
       }
     );
-    actions.push(
-      this.isUpright
-      ?{
-        name: '☑ 直立', action: () => {
-          this.isUpright = false;
-        }
-      }:{
-        name: '☐ 直立', action: () => {
-          this.isUpright = true;
-        }
-      }
-    )
     actions.push(ContextMenuSeparator);
-    if(this.roomAltitude){
-      actions.push(
-        this.isAltitudeIndicate
-        ?{
-          name: '☑ 高度の表示', action: () => {
-            this.isAltitudeIndicate = false;
-          }
-        }:{
-          name: '☐ 高度の表示', action: () => {
-            this.isAltitudeIndicate = true;
-          }
-        }
-      );
-      actions.push({
-        name: '高さを0にする', action: () => {
-          this.altitude = 0;
-        },
-        altitudeHande: this.textNote
-      });
-      actions.push(ContextMenuSeparator);
-    }
     actions.push({
       name: 'コピーを作る', action: () => {
         let cloneObject = this.textNote.clone();
