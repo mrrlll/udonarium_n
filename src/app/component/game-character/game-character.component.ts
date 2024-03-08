@@ -370,7 +370,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
     actions.push({ name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } });
     actions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } });
     if(this.gameCharacter.chatPalette.dicebot === 'Insane'){
-      actions.push({ name: '特技表を表示(WIP)', action: () => { this.showInsaneSkillTable(this.gameCharacter) } });
+      actions.push({ name: 'インセイン特技表を表示(WIP)', action: () => { this.showInsaneSkillTable(this.gameCharacter) } });
     }
     actions.push({ name: 'リモコンを表示', action: () => { this.showRemoteController(this.gameCharacter) } });
     actions.push({ name: 'バフ編集', action: () => { this.showBuffEdit(this.gameCharacter) } });
