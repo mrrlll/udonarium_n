@@ -19,14 +19,7 @@ export class TextNote extends TabletopObject {
   set text(text: string) { this.setCommonValue('text', text); }
 
   complement(): void {
-    let element = this.getElement('color', this.commonDataElement);
-    if (!element && this.commonDataElement) {
-      this.commonDataElement.appendChild(DataElement.create('color', "#555555", { type: 'color' }, 'color_' + this.identifier));
-    }
-    element = this.getElement('altitude', this.commonDataElement);
-    if (!element && this.commonDataElement) {
-      this.commonDataElement.appendChild(DataElement.create('altitude', 0, {}, 'altitude_' + this.identifier));
-    }
+
   }
 
   toTopmost() {
@@ -42,7 +35,6 @@ export class TextNote extends TabletopObject {
     object.commonDataElement.appendChild(DataElement.create('fontsize', fontSize, {}, 'fontsize_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('title', title, {}, 'title_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('text', text, { type: 'note', currentValue: text }, 'text_' + object.identifier));
-    object.commonDataElement.appendChild(DataElement.create('altitude', 0, {}, 'altitude_' + object.identifier));
     object.initialize();
 
     return object;

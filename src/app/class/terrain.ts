@@ -33,10 +33,7 @@ export class Terrain extends TabletopObject {
   get hasFloor(): boolean { return this.mode & TerrainViewState.FLOOR ? true : false; }
 
   complement(): void {
-    let element = this.getElement('altitude', this.commonDataElement);
-    if (!element && this.commonDataElement) {
-      this.commonDataElement.appendChild(DataElement.create('altitude', 0, {}, 'altitude_' + this.identifier));
-    }
+
   }
 
   static create(name: string, width: number, depth: number, height: number, wall: string, floor: string, identifier?: string): Terrain {
@@ -52,8 +49,6 @@ export class Terrain extends TabletopObject {
     object.commonDataElement.appendChild(DataElement.create('name', name, {}, 'name_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('width', width, {}, 'width_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('height', height, {}, 'height_' + object.identifier));
-    object.commonDataElement.appendChild(DataElement.create('depth', depth, {}, 'depth_' + object.identifier));
-    object.commonDataElement.appendChild(DataElement.create('altitude', 0, {}, 'altitude_' + object.identifier));
     object.imageDataElement.appendChild(DataElement.create('wall', wall, { type: 'image' }, 'wall_' + object.identifier));
     object.imageDataElement.appendChild(DataElement.create('floor', floor, { type: 'image' }, 'floor_' + object.identifier));
     object.initialize();

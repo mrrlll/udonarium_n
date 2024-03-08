@@ -1,5 +1,6 @@
 <div style="display: flex; flex-direction: column" class="component" [ngClass]="{'submenu-panel': isSubmenu, 'is-max-limit': !isSubmenu, 'pointer-events-none': isPointerDragging}"
   (mouseleave)="hideSubMenu()"  #root>
+  <div class="title" [style.font-weight]="titleBold ? 'bolder' : 'normal'">{{title}}</div>
   <div style="display: flex; align-items: center">
     <div style="flex-grow: 1">
       <ul>

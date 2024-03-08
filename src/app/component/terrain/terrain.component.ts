@@ -57,13 +57,6 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
   get height(): number { return MathUtil.clampMin(this.terrain.height); }
   get width(): number { return MathUtil.clampMin(this.terrain.width); }
   get depth(): number { return MathUtil.clampMin(this.terrain.depth); }
-
-  get altitude(): number { return this.terrain.altitude; }
-  set altitude(altitude: number) { this.terrain.altitude = altitude; }
-
-  get isAltitudeIndicate(): boolean { return this.terrain.isAltitudeIndicate; }
-  set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.terrain.isAltitudeIndicate = isAltitudeIndicate; }
-
   get isDropShadow(): boolean { return this.terrain.isDropShadow; }
   set isDropShadow(isDropShadow: boolean) { this.terrain.isDropShadow = isDropShadow; }
 
@@ -74,21 +67,12 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
   get selectionState(): SelectionState { return this.selectionService.state(this.terrain); }
   get isSelected(): boolean { return this.selectionState !== SelectionState.NONE; }
   get isMagnetic(): boolean { return this.selectionState === SelectionState.MAGNETIC; }
-
-  get roomAltitude(): boolean { return this.config.roomAltitude; }
-
   get tableSelecter(): TableSelecter { return TableSelecter.instance; }
 
   gridSize: number = 50;
 
   get isWallExist(): boolean {
     return this.hasWall && this.wallImage && this.wallImage.url && this.wallImage.url.length > 0;
-  }
-
-  get terreinAltitude(): number {
-    let ret = this.altitude;
-    if (this.altitude < 0 || !this.isWallExist) ret += this.height;
-    return ret;
   }
 
   movableOption: MovableOption = {};
@@ -132,9 +116,6 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
           this.viewRotateZ = event.data['z'];
           this.changeDetector.markForCheck();
         });
-      })
-      .on('NO_ROOM_ALTITUDE', event => {
-        this.terrain.altitude = 0;
       })
       .on(`UPDATE_SELECTION/identifier/${this.terrain?.identifier}`, event => {
         this.changeDetector.markForCheck();

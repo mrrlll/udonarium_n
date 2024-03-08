@@ -50,27 +50,9 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
   set rotate(rotate: number) { this.textNote.rotate = rotate; }
   get height(): number { return MathUtil.clampMin(this.textNote.height); }
   get width(): number { return MathUtil.clampMin(this.textNote.width); }
-  get altitude(): number { return this.textNote.altitude; }
-  set altitude(altitude: number) { this.textNote.altitude = altitude; }
-
-  get roomAltitude(): boolean { return this.config.roomAltitude; }
 
   get tableSelecter(): TableSelecter { return TableSelecter.instance; }
 
-  get textNoteAltitude(): number {
-    let ret = this.altitude;
-    if (this.isUpright && this.altitude < 0) {
-      if (-this.height <= this.altitude) return 0;
-      ret += this.height;
-    }
-    return +ret.toFixed(1);
-  }
-
-  get isUpright(): boolean { return this.textNote.isUpright; }
-  set isUpright(isUpright: boolean) { this.textNote.isUpright = isUpright; }
-
-  get isAltitudeIndicate(): boolean { return this.textNote.isAltitudeIndicate; }
-  set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.textNote.isAltitudeIndicate = isAltitudeIndicate; }
 
   get isLocked(): boolean { return this.textNote.isLocked; }
   set isLocked(isLocked: boolean) { this.textNote.isLocked = isLocked; }
@@ -115,9 +97,6 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
       })
       .on('UPDATE_FILE_RESOURE', event => {
         this.changeDetector.markForCheck();
-      })
-      .on('NO_ROOM_ALTITUDE', event => {
-        this.textNote.altitude = 0;
       })
       .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
         this.ngZone.run(() => {

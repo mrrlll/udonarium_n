@@ -355,7 +355,7 @@ export class RangeComponent implements OnChanges, OnDestroy, AfterViewInit {
     return this.followingCharactor
       && this.followingCharactor.location.x <= this.range.location.x && this.range.location.x <= (this.followingCharactor.location.x + this.followingCharactor.size * this.gridSize)
       && this.followingCharactor.location.y <= this.range.location.y && this.range.location.y <= (this.followingCharactor.location.y + this.followingCharactor.size * this.gridSize)
-      && (this.followingCharactor.altitude + this.followingCharactor.posZ - 0.5) <= (this.range.altitude + this.range.posZ) && (this.range.altitude + this.range.posZ) <= (this.followingCharactor.altitude + this.followingCharactor.posZ + 0.5)
+      // && (this.followingCharactor.altitude + this.followingCharactor.posZ - 0.5) <= (this.range.altitude + this.range.posZ) && (this.range.altitude + this.range.posZ) <= (this.followingCharactor.altitude + this.followingCharactor.posZ + 0.5)
   }
 
   get dockableCharacters(): GameCharacter[] {
@@ -393,7 +393,7 @@ export class RangeComponent implements OnChanges, OnDestroy, AfterViewInit {
   }
 
   get config(): Config { return ObjectStore.instance.get<Config>('Config')};
-  get roomAltitude(): boolean { return this.config.roomAltitude; }
+
 
   gridSize: number = 50;
 

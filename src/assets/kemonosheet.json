@@ -21,10 +21,6 @@
               "@_name": "size"
             },
             {
-              "#text": 0,
-              "@_name": "altitude"
-            },
-            {
               "#text": 3,
               "@_name": "貌力の強度"
             },

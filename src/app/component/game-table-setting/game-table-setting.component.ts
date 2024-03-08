@@ -74,9 +74,6 @@ export class GameTableSettingComponent implements OnInit, OnDestroy {
     this.tableSelecter.gridSnap = tableGridSnap;
   }
 
-  get roomAltitude(): boolean { return this.config._roomAltitude }
-  set roomAltitude(roomAltitude: boolean) { this.config._roomAltitude = roomAltitude; }
-
   get tableGridType(): GridType { return this.selectedTable.gridType; }
   set tableGridType(gridType: GridType) { if (this.isEditable) this.selectedTable.gridType = Number(gridType); }
 
@@ -207,12 +204,6 @@ export class GameTableSettingComponent implements OnInit, OnDestroy {
   cloneGameTable() {
     let xmlString = ObjectSerializer.instance.toXml(this.selectedTable);
     return ObjectSerializer.instance.parseXml(xmlString);
-  }
-
-  roomAltitudeChange() {
-    if(!this.roomAltitude){
-      EventSystem.trigger('NO_ROOM_ALTITUDE', null);
-    }
   }
 
   shouldDisableDelete(): boolean {

@@ -63,7 +63,7 @@ export class TabletopActionService {
     let viewTable = this.getViewTable();
     if (!viewTable) return;
 
-    let terrain = Terrain.create('地形', 2, 2, 0, image.identifier, image.identifier);
+    let terrain = Terrain.create('地形', 2, 0.1, 2, image.identifier, image.identifier);
     terrain.location.x = position.x - 50;
     terrain.location.y = position.y - 50;
     terrain.posZ = position.z;

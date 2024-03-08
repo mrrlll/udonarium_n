@@ -344,17 +344,6 @@
   display: inline;
 }
 
-.altitude-indicator {
-  font-size: 10px;
-}
-
-.elevation-indicator, .altitude-indicator {
-  padding-left: 2px;
-  color: black;
-  text-shadow: whitesmoke 0px 0px 3px;
-  backface-visibility: hidden;
-}
-
 .backface-off {
   backface-visibility: hidden;
   transform: rotateY(0deg);

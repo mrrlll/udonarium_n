@@ -303,7 +303,7 @@
         <div class="tag">{{dataElm.name}}</div>
         <div class="value">
           <div class="hidden-spacer">{{dataElm.value}}</div>
-          <input class="input" type="{{dataElm.name === 'size' || dataElm.name === 'altitude' ? 'number' : 'text'}}" min="{{dataElm.name === 'size' ? '0' : ''}}" size="1" [(ngModel)]="dataElm.value" />
+          <input class="input" type="{{dataElm.name === 'size'}}" min="{{dataElm.name === 'size' ? '0' : ''}}" size="1" [(ngModel)]="dataElm.value" />
         </div>
       </ng-container>
     </ng-container>

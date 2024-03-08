@@ -57,8 +57,6 @@ export class GameObjectInventoryComponent implements AfterViewInit, OnInit, OnDe
 
   get newLineString(): string { return this.inventoryService.newLineString; }
 
-  get roomAltitude(): boolean { return this.config.roomAltitude; }
-
   constructor(
     private changeDetector: ChangeDetectorRef,
     private panelService: PanelService,
@@ -263,46 +261,6 @@ export class GameObjectInventoryComponent implements AfterViewInit, OnInit, OnDe
         }
       ]
     });
-    if(this.roomAltitude){
-      actions.push(
-        (gameObject.isAltitudeIndicate
-        ? {
-          name: '☑ 高度の表示', action: () => {
-            gameObject.isAltitudeIndicate = false;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        } : {
-          name: '☐ 高度の表示', action: () => {
-            gameObject.isAltitudeIndicate = true;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        })
-      );
-      actions.push(ContextMenuSeparator);
-      actions.push(
-      {
-        name: '高度を0にする', action: () => {
-          if (gameObject.altitude != 0) {
-            gameObject.altitude = 0;
-            if (gameObject.location.name === 'table') SoundEffect.play(PresetSound.sweep);
-          }
-        },
-        altitudeHande: gameObject
-      });
-      actions.push((!gameObject.isNotRide
-        ? {
-          name: '☑ 他のキャラクターに乗る', action: () => {
-            gameObject.isNotRide = true;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        } : {
-          name: '☐ 他のキャラクターに乗る', action: () => {
-            gameObject.isNotRide = false;
-            EventSystem.trigger('UPDATE_INVENTORY', null);
-          }
-        }));
-      actions.push(ContextMenuSeparator);
-    }
     let locations = [
       { name: 'table', alias: 'テーブルに移動' },
       { name: 'common', alias: '共有イベントリに移動' },

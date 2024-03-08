@@ -75,8 +75,6 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
 
   get name(): string { return this.gameCharacter.name; }
   get size(): number { return MathUtil.clampMin(this.gameCharacter.size); }
-  get altitude(): number { return this.gameCharacter.altitude; }
-  set altitude(altitude: number) { this.gameCharacter.altitude = altitude; }
   get imageFile(): ImageFile { return this.gameCharacter.imageFile; }
   get rotate(): number { return this.gameCharacter.rotate; }
   set rotate(rotate: number) { this.gameCharacter.rotate = rotate; }
@@ -84,8 +82,6 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   set roll(roll: number) { this.gameCharacter.roll = roll; }
   get isDropShadow(): boolean { return this.gameCharacter.isDropShadow; }
   set isDropShadow(isDropShadow: boolean) { this.gameCharacter.isDropShadow = isDropShadow; }
-  get isAltitudeIndicate(): boolean { return this.gameCharacter.isAltitudeIndicate; }
-  set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameCharacter.isAltitudeIndicate = isAltitudeIndicate; }
   get isLock(): boolean { return this.gameCharacter.isLock; }
   set isLock(isLock: boolean) { this.gameCharacter.isLock = isLock; }
   get isRotate(): boolean { return this.gameCharacter.isRotate; }
@@ -100,8 +96,6 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   set isInvertColor(isInvertColor: boolean) { this.gameCharacter.isInvertColor = isInvertColor; }
   get aura(): number { return this.gameCharacter.aura; }
   set aura(aura: number) { this.gameCharacter.aura = aura; }
-  get isNotRide(): boolean { return this.gameCharacter.isNotRide; }
-  set isNotRide(isNotRide: boolean) { this.gameCharacter.isNotRide = isNotRide; }
   get isStealth(): boolean { return this.gameCharacter.isStealth; }
   set isStealth(isStealth: boolean) { this.gameCharacter.isStealth = isStealth; }
   get isHideKomaWaku(): boolean { return this.gameCharacter.isHideKomaWaku; }
@@ -109,14 +103,10 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   get selectionState(): SelectionState { return this.selectionService.state(this.gameCharacter); }
   get isSelected(): boolean { return this.selectionState !== SelectionState.NONE; }
   get isMagnetic(): boolean { return this.selectionState === SelectionState.MAGNETIC; }
-  get roomAltitude(): boolean { return this.config.roomAltitude; }
   get tableSelecter(): TableSelecter { return TableSelecter.instance; }
   get insaneSkills(): string[] { return this.gameCharacter.insaneSkills; }
   get insaneFears(): string[] { return this.gameCharacter.insaneFears; }
   get insaneCuriosity(): string { return this.gameCharacter.insaneCuriosity; }
-  get elevation(): number {
-    return +((this.gameCharacter.posZ + (this.altitude * this.gridSize)) / this.gridSize).toFixed(1);
-  }
   get dbclickActionNum(): number { return this.gameCharacter.dbclickActionNum; }
   set dbclickActionNum(dbclickActionNum: number) { this.gameCharacter.dbclickActionNum = dbclickActionNum; }
 
@@ -159,9 +149,6 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
-      })
-      .on('NO_ROOM_ALTITUDE', event => {
-        this.gameCharacter.altitude = 0;
       })
       .on('CHK_TARGET_CHANGE', -1000, event => {
         let objct = ObjectStore.instance.get(event.data.identifier);

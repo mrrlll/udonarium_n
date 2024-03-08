@@ -161,7 +161,6 @@ export class GameDataElementComponent implements OnInit, OnChanges, OnDestroy {
         || this.gameDataElement.name === 'depth'
         || this.gameDataElement.name === 'length'
         || this.gameDataElement.name === 'fontsize'
-        || this.gameDataElement.name === 'altitude'
         || this.gameDataElement.name === 'color');
     }
     return false;

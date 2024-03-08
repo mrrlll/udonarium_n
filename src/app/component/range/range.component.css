@@ -201,20 +201,6 @@ https://opensource.org/licenses/mit-license.php
   transition: transform 132ms ease-in-out;
 }
 
-.altitude-indicator {
-  font-size: 10px;
-}
-.elevation-indicator, .altitude-indicator {
-  padding-left: 2px;
-  color: black;
-  text-shadow: whitesmoke 0px 0px 3px;
-  backface-visibility: hidden;
-}
-.elevation-indicator {
-  font-weight: bolder;
-  font-size: 12px;
-}
-
 .selected-highlight {
   backface-visibility: hidden;
   position: absolute;
