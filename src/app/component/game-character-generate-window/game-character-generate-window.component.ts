@@ -370,12 +370,13 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       for (let i = 0; i < count; i++) {
         talentsummary += `特性${talentNumber[i]} `;
       }
+      console.log(talentcount)
 
       // 獸憑き
       if (charadata.beastpoint.value === null) charadata.beastpoint.value = 0;
-      kemonosheet.character.data.data[2].data[0].data[6]["#text"] = charadata.beastpoint.value;
+      kemonosheet.character.data.data[2].data[0].data[4+talentcount]["#text"] = charadata.beastpoint.value;
       // 状態異常
-      kemonosheet.character.data.data[2].data[0].data[7]["#text"] = debuff;
+      kemonosheet.character.data.data[2].data[0].data[5+talentcount]["#text"] = debuff;
       // キャラノート
       kemonosheet.character.data.data[1].data[4]['#text'] = character_note ? character_note : "";
       // 貌力の強度
