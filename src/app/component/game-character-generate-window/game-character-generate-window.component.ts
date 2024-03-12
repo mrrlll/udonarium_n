@@ -93,9 +93,9 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
     this.http.get('assets/insanesheet.json').subscribe(data => {
       insanesheet = data;
 
-      const NAME = charadata.base.name;
-      const HP = charadata.hitpoint.max;
-      const INSANE = charadata.sanepoint.max;
+      const NAME = charadata.base.name === null ? "名無し" : charadata.base.name;
+      const HP = charadata.hitpoint.max === null ? 6 : charadata.hitpoint.max;
+      const INSANE = charadata.sanepoint.max === null ? 6 : charadata.sanepoint.max;
 
       insanesheet.character.data.data[1].data[0]["#text"] = NAME;
       insanesheet.character.data.data[2].data[0].data[0]["#text"] = HP;
@@ -280,19 +280,10 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
 
       for (const weapon of weapons) {
         if (weapon.equipment === "装備") {
-          weaponName = weapon.name;
-          weaponDamage = weapon.damage;
-          weaponRange = weapon.range;
-          if (weapon.damage === null){
-            weaponDamage = "";
-          } else {
-            weaponDamage = weapon.damage;
-          }
-          if (weapon.explain == null){
-            weaponExplain = "";
-          } else {
-            weaponExplain = weapon.explain;
-          }
+          weaponName = weapon.name === null ? "" : weapon.name;
+          weaponDamage = weapon.damage === null ? "" : weapon.damage;
+          weaponRange = weapon.range === null ? "" : weapon.range;
+          weaponExplain = weapon.explain === null ? "" : weapon.explain;
           break;
         };
       };
@@ -308,20 +299,9 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
 
       for (const armor of armors) {
         if (armor.equipment === "装備") {
-          if (armor.name == null){
-            armor.name = "";
-          }
-          if (armor.damage == null){
-            armor.damage = "";
-          }
-          if (armor.explain == null){
-            armor.explain = "";
-          }
-
-          armorName = armor.name;
-          armorMitigation = armor.damage;
-          armorExplain = armor.explain;
-
+          armorName = armor.name === null ? "" : armor.name;
+          armorMitigation = armor.damage === null ? "" : armor.damage;
+          armorExplain = armor.explain === null ? "" : armor.explain;
           break;
         }
       }
@@ -331,15 +311,9 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       const equipmentAccessories: { name: string; explain: string | null }[] = [];
       for (const accessory of accessories) {
         if (accessory.equipment === "装備") {
-          if (accessory.name == null){
-            accessory.name = "";
-          }
-          if (accessory.explain == null){
-            accessory.explain = "";
-          }
           equipmentAccessories.push({
-            name: accessory.name,
-            explain: accessory.explain,
+            name: accessory.name === null ? "" : accessory.name,
+            explain: accessory.explain === null ? "" : accessory.explain,
           });
           if (equipmentAccessories.length >= 2) {
             break;
