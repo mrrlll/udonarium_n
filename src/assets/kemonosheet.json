@@ -74,6 +74,12 @@
                   "@_name": "状態異常"
                 },
                 {
+                  "#text": 10,
+                  "@_type": "numberResource",
+                  "@_currentValue": "0",
+                  "@_name": "負傷"
+                },
+                {
                   "#text": 0,
                   "@_name": "先制値"
                 }
