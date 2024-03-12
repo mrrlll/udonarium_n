@@ -54,7 +54,8 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
     const supportSiteSystems = {
       "character-sheets.appspot.com": {
         "tiw": this.appspot_kemono,
-        "skynauts2": this.appspot_skynauts2
+        "skynauts2": this.appspot_skynauts2,
+        "insane": this.appspot_insane,
       }
     };
 
@@ -85,6 +86,32 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
     }, (error) => {
       this.isKeyNotFound = true;
     });
+  }
+
+  appspot_insane(charadata){
+    let insanesheet = null;
+    this.http.get('assets/insanesheet.json').subscribe(data => {
+      insanesheet = data;
+
+      const NAME = charadata.base.name;
+      const HP = charadata.hitpoint.max;
+      const INSANE = charadata.sanepoint.max;
+
+      insanesheet.character.data.data[1].data[0]["#text"] = NAME;
+      insanesheet.character.data.data[2].data[0].data[0]["#text"] = HP;
+      insanesheet.character.data.data[2].data[0].data[0]['@_currentValue'] = HP;
+      insanesheet.character.data.data[2].data[0].data[1]["#text"] = INSANE;
+      insanesheet.character.data.data[2].data[0].data[1]['@_currentValue'] = INSANE;
+      insanesheet.character.data.data[2].data[1].data[0]['@_currentValue'] = charadata.item[0]["count"] !== null ? charadata.item[0]["count"] : 0;
+      insanesheet.character.data.data[2].data[1].data[1]['@_currentValue'] = charadata.item[1]["count"] !== null ? charadata.item[1]["count"] : 0;
+      insanesheet.character.data.data[2].data[1].data[2]['@_currentValue'] = charadata.item[2]["count"] !== null ? charadata.item[2]["count"] : 0;
+
+      let summary = `<?xml version="1.0" encoding="UTF-8"?>
+      <summary-setting sortTag="name" sortOrder="ASC" dataTag="生命力 正気度 アイテム"></summary-setting>
+      `
+      this.generateKoma(insanesheet, summary, 'insane');
+      return;
+    })
   }
 
   appspot_skynauts2(charadata){
@@ -370,7 +397,6 @@ export class GameCharacterGenerateWindowComponent implements OnInit, AfterViewIn
       for (let i = 0; i < count; i++) {
         talentsummary += `特性${talentNumber[i]} `;
       }
-      console.log(talentcount)
 
       // 獸憑き
       if (charadata.beastpoint.value === null) charadata.beastpoint.value = 0;

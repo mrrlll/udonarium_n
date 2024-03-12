@@ -1,0 +1,80 @@
+{
+  "character": {
+    "data": {
+      "data": [
+        {
+          "data": {
+            "#text": "testCharacter_4_image",
+            "@_type": "image",
+            "@_name": "imageIdentifier"
+          },
+          "@_name": "image"
+        },
+        {
+          "data": [
+            {
+                "#text": "名前",
+                "@_name": "name"
+            },
+            {
+                "#text": 1,
+                "@_name": "size"
+            }
+          ],
+          "@_name": "common"
+        },
+        {
+          "data": [
+            {
+              "data": [
+                {
+                  "#text": 6,
+                  "@_type": "numberResource",
+                  "@_currentValue": "6",
+                  "@_name": "生命力"
+                },
+                {
+                  "#text": 6,
+                  "@_type": "numberResource",
+                  "@_currentValue": "6",
+                  "@_name": "正気度"
+                }
+              ],
+              "@_name": "リソース"
+            },
+            {
+              "data": [
+                {
+                  "#text": "5",
+                  "@_type": "numberResource",
+                  "@_currentValue": "0",
+                  "@_name": "鎮静剤"
+                },
+                {
+                  "#text": "5",
+                  "@_type": "numberResource",
+                  "@_currentValue": "0",
+                  "@_name": "武器"
+                },
+                {
+                  "#text": "5",
+                  "@_type": "numberResource",
+                  "@_currentValue": "0",
+                  "@_name": "お守り"
+                }
+              ],
+              "@_name": "アイテム"
+            }
+          ],
+          "@_name": "detail"
+        }
+      ],
+      "@_name": "character"
+    },
+    "chat-palette": {
+      "#text": "",
+      "@_dicebot": "Insane"
+    },
+    "@_location.name": "table"
+  }
+}
