@@ -821,6 +821,18 @@ export class DiceBot extends GameObject {
     let kemonoDiceResult: string = diceBotMessage.text;
 
     const gameCharacter = ObjectStore.instance.get<GameCharacter>(originalMessage.sendFrom);
+
+    // 先制値決定かどうか
+    if(originalMessage.text.includes("先制値決定")){
+      console.log("先制値",rollResult.result);
+      const results: string[] = rollResult.result.split(" ");
+      const firstValue: string = results[results.length - 1];
+      const element = gameCharacter.detailDataElement.getElementsByName("先制値")[0];
+      if(element !== undefined){
+        element.value = firstValue;
+      }
+      return diceBotMessage.text;
+    }
     // 継続判定確認
     if(rollResult.isSuccess){
       if(rollResult.isCritical){
